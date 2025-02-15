@@ -1,7 +1,16 @@
 import { useSignal } from "@preact/signals";
 import Counter from "../islands/Counter.tsx";
+import { getKv } from "../lib/kv.ts";
+import { FreshContext } from "$fresh/server.ts";
 
-export default function Home() {
+export default async function handler(req: Request, _ctx: FreshContext) {
+  const kv = await getKv();
+  const jokes = (await kv.get<string[]>(["jokes"])).value;
+  await kv.get<string[]>(["jokes"]);
+  return <Home jokes={jokes ?? []} />;
+}
+
+function Home(props: { jokes: string[] }) {
   const count = useSignal(3);
   return (
     <div class="px-4 py-8 mx-auto bg-[#86efac]">
@@ -18,6 +27,12 @@ export default function Home() {
           Try updating this message in the
           <code class="mx-2">./routes/index.tsx</code> file, and refresh.
         </p>
+        <ul>
+          {props.jokes.map((joke) => (
+            <li>{joke}</li>
+          ))}
+          <li>lol</li>
+        </ul>
         <Counter count={count} />
       </div>
     </div>

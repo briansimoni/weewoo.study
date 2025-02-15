@@ -1,4 +1,7 @@
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext, Handlers } from "$fresh/server.ts";
+import { getKv } from "../../lib/kv.ts";
+
+const kv = await getKv();
 
 // Jokes courtesy of https://punsandoneliners.com/randomness/programmer-jokes/
 const JOKES = [
@@ -14,8 +17,28 @@ const JOKES = [
   "An SEO expert walked into a bar, pub, inn, tavern, hostelry, public house.",
 ];
 
-export const handler = (_req: Request, _ctx: FreshContext): Response => {
-  const randomIndex = Math.floor(Math.random() * JOKES.length);
-  const body = JOKES[randomIndex];
-  return new Response(body);
+export const handler: Handlers = {
+  async GET(_req: Request, ctx: FreshContext) {
+    const jokes = (await kv.get<string[]>(["jokes"])).value!;
+    const randomIndex = Math.floor(Math.random() * jokes.length);
+    const body = jokes[randomIndex];
+    const r = new Response(
+      JSON.stringify({
+        body,
+      })
+    );
+    r.headers.set("content-type", "application/json");
+    return r;
+  },
+
+  async POST(req: Request, ctx: FreshContext) {
+    const { joke } = await req.json();
+    const jokes = (await kv.get<string[]>(["jokes"])).value;
+    if (!jokes) {
+      return new Response("OK");
+    }
+    jokes.push(joke);
+    await kv.set(["jokes"], jokes);
+    return new Response("OK");
+  },
 };
