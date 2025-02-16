@@ -15,7 +15,7 @@
     }
   },
   "exclude": ["**/_fresh/*"],
-  "nodeModulesDir": true,
+  "nodeModulesDir": "auto",
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "preact": "https://esm.sh/preact@10.22.0",
