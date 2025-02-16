@@ -2,7 +2,7 @@ import { useSignal } from "@preact/signals";
 import Counter from "../islands/Counter.tsx";
 import { getKv } from "../lib/kv.ts";
 import { FreshContext } from "$fresh/server.ts";
-import { Question } from "../lib/questions.ts";
+import { Question } from "../lib/question_store.ts";
 
 export default async function handler(req: Request, _ctx: FreshContext) {
   console.log("getting stuff");
@@ -38,9 +38,7 @@ function Home(props: { jokes: string[]; questions: Question[] }) {
           <code class="mx-2">./routes/index.tsx</code> file, and refresh.
         </p>
         <ul>
-          {props.jokes.map((joke) => (
-            <li>{joke}</li>
-          ))}
+          {props.jokes.map((joke) => <li>{joke}</li>)}
           <li>lol</li>
         </ul>
         <Counter count={count} />
@@ -50,9 +48,7 @@ function Home(props: { jokes: string[]; questions: Question[] }) {
             <div>
               <h2>{question.question}</h2>
               <ul>
-                {question.choices.map((choice) => (
-                  <li>{choice}</li>
-                ))}
+                {question.choices.map((choice) => <li>{choice}</li>)}
               </ul>
               <p>{question.explanation}</p>
             </div>
