@@ -22,7 +22,12 @@ async function setup() {
   await kv.set(["emt", "questions", "count"], 0);
 }
 
-function teardown() {
+async function teardown() {
+  const entries = kv.list({ prefix: ["emt", "questions"] });
+  for await (const entry of entries) {
+    await kv.delete(entry.key);
+  }
+  await kv.delete(["emt", "question_count"]);
   questionStore.closeConnection();
 }
 
@@ -38,13 +43,13 @@ const sampleQuestion: Partial<Question> = {
 Deno.test("Add a question", async () => {
   await setup();
 
-  await questionStore.addQuestion(sampleQuestion);
-  const question = await questionStore.getQuestion("1");
+  const q = await questionStore.addQuestion(sampleQuestion);
+  const question = await questionStore.getQuestion(q.id);
 
   assertEquals(question?.question, sampleQuestion.question);
   assertEquals(question?.correct_answer, sampleQuestion.correct_answer);
   assertEquals(question?.choices, sampleQuestion.choices);
-  teardown();
+  await teardown();
 });
 
 Deno.test("Get a random question", async () => {
@@ -55,7 +60,7 @@ Deno.test("Get a random question", async () => {
 
   assertEquals(randomQuestion.question, sampleQuestion.question);
   assertEquals(randomQuestion.correct_answer, sampleQuestion.correct_answer);
-  teardown();
+  await teardown();
 });
 
 Deno.test("List questions", async () => {
@@ -74,7 +79,7 @@ Deno.test("List questions", async () => {
     sampleQuestion.question!,
     "What is the normal heart rate for an adult?",
   ]);
-  teardown();
+  await teardown();
 });
 
 Deno.test("Delete a question", async () => {
@@ -89,7 +94,7 @@ Deno.test("Delete a question", async () => {
   const questionAfter = (await kv.get<Question>(["emt", "questions", "1"]))
     .value;
   assertEquals(questionAfter, null);
-  teardown();
+  await teardown();
 });
 
 Deno.test("Get random question throws error if none exist", async () => {
@@ -102,5 +107,5 @@ Deno.test("Get random question throws error if none exist", async () => {
     Error,
     "No question found",
   );
-  teardown();
+  await teardown();
 });

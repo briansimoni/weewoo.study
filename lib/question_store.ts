@@ -11,14 +11,17 @@ export interface Question {
 export class QuestionStore {
   constructor(private kv: Deno.Kv) {}
 
+  private async getCount(): Promise<number> {
+    const result = await this.kv.get<number>(["emt", "question_count"]);
+    return result.value || 0;
+  }
+
   async addQuestion(question: Partial<Question>) {
     // Get the current count or default to 0
-    const count =
-      (await this.kv.get<number>(["emt", "question_count"])).value ??
-        0;
-
+    const count = await this.getCount();
+    const id = count + 1;
     // Assign ID and created_at
-    question.id = String(count + 1);
+    question.id = String(id);
     question.created_at = new Date().toISOString();
     // Atomic transaction with chained .set() calls
     const transaction = this.kv.atomic()
@@ -26,10 +29,10 @@ export class QuestionStore {
       .set(["emt", "question_count"], count + 1);
 
     const result = await transaction.commit();
-
     if (!result.ok) {
       throw new Error("Failed to add question");
     }
+    return question as Question;
   }
 
   async getQuestion(id: string) {
@@ -42,7 +45,7 @@ export class QuestionStore {
   }
 
   async getRandomQuestion(): Promise<Question> {
-    const count = (await this.kv.get<number>(["emt", "questions"])).value ?? 1;
+    const count = await this.getCount();
     const randomIndex = Math.floor(Math.random() * count) + 1;
     const question =
       (await this.kv.get<Question>(["emt", "questions", String(randomIndex)]))
