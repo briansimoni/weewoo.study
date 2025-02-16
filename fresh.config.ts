@@ -1,3 +1,7 @@
 import { defineConfig } from "$fresh/server.ts";
 
-export default defineConfig({});
+import tailwind from "$fresh/plugins/tailwind.ts";
+
+export default defineConfig({
+  plugins: [tailwind()],
+});

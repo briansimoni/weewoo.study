@@ -1,35 +1,44 @@
-import { useSignal } from "@preact/signals";
-import Counter from "../islands/Counter.tsx";
-import { getKv } from "../lib/kv.ts";
-import { FreshContext } from "$fresh/server.ts";
-import { Question, QuestionStore } from "../lib/question_store.ts";
+// export default function Home() {
+//   return (
+//     <div class="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
+//       <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center bg-white p-10 rounded-lg shadow-xl">
+//         <img
+//           class="my-6 w-32 h-32"
+//           src="/ambulance.svg"
+//           alt="ambulance logo"
+//         />
+//         <h1 class="text-5xl font-bold text-gray-800 mb-6">
+//           Welcome to AmbuLOL 🚑
+//         </h1>
+//         <a
+//           href="/emt/practice"
+//           class="btn btn-primary text-lg"
+//         >
+//           Start Practice
+//         </a>
+//       </div>
+//     </div>
+//   );
+// }
 
-export default async function handler(req: Request, _ctx: FreshContext) {
-  const kv = await getKv();
-
-  const questionStore = new QuestionStore(kv);
-  const questions = await questionStore.listQuestions();
-  return <Home questions={questions} />;
-}
-
-function Home(props: { questions: Question[] }) {
+export default function Home() {
   return (
-    <div class="px-4 py-8 mx-auto bg-[#86efac]">
-      <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center">
-        <img
-          class="my-6"
-          src="/ambulance.svg"
-          width="128"
-          height="128"
-          alt="ambulance logo"
-        />
-        <h1 class="text-4xl font-bold">Welcome to AmbuLOL</h1>
-        {/* styled button link to /emt/practice */}
-        <a
-          href="/emt/practice"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Practice
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary to-secondary text-white">
+      <div className="flex flex-col items-center gap-6">
+        <div className="avatar">
+          <div className="w-32 rounded-full">
+            <img src="ambulance.svg" alt="EMS Logo" />
+          </div>
+        </div>
+        <h1 className="text-4xl font-bold text-center">
+          Welcome to EMS Practice Questions
+        </h1>
+        <p className="text-lg text-center">
+          Prepare for your EMT and Paramedic exams with interactive practice
+          questions.
+        </p>
+        <a href="/emt/practice">
+          <button className="btn btn-primary btn-lg">Start Practice</button>
         </a>
       </div>
     </div>

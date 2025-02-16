@@ -34,13 +34,10 @@ export default function QuestionPage({ data }: PageProps<QuestionProps>) {
   const answered = typeof correct === "boolean";
 
   return (
-    <div
-      class="app-container"
-      style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #fff;"
-    >
-      <h1 style="text-align: center; color: #007BFF;">
+    <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg bg-white font-sans">
+      <h1 class="text-center text-blue-500 text-2xl font-bold mb-4">
         {correct === undefined
-          ? "Practice Test 🚑"
+          ? "Practice Question 🚑"
           : correct
           ? "✅ Correct!"
           : "❌ Wrong!"}
@@ -74,13 +71,13 @@ function QuestionForm(
     <form
       method="POST"
       action="/emt/practice"
-      style={`display: flex; flex-direction: column; gap: 15px;`}
+      class="flex flex-col gap-4"
     >
       <input type="hidden" name="questionId" value={question.id} />
-      <div class="question" style="font-size: 1.2em; margin-bottom: 20px;">
+      <div class="text-lg mb-4">
         {question.question}
       </div>
-      <div class="answers">
+      <div class="flex flex-col gap-2">
         {question.choices.map((choice, i) => {
           const isSelected = selectedAnswer === choice;
           const isDisabled = answered;
@@ -88,9 +85,7 @@ function QuestionForm(
           return (
             <label
               key={i}
-              style={`display: block; margin: 10px 0; color: ${
-                isSelected ? "blue" : "black"
-              };`}
+              class={`block ${isSelected ? "text-blue-600" : "text-gray-900"}`}
             >
               <input
                 type="radio"
@@ -99,10 +94,9 @@ function QuestionForm(
                 required
                 checked={isSelected}
                 disabled={isDisabled}
+                class="mr-2"
               />
-              <span style="margin-left: 10px;">
-                {letters[i]} {choice}
-              </span>
+              {letters[i]}) {choice}
             </label>
           );
         })}
@@ -111,8 +105,7 @@ function QuestionForm(
       {!answered && (
         <button
           type="submit"
-          class="submit-button"
-          style="padding: 15px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.2em; transition: background-color 0.3s;"
+          class="mt-4 py-3 px-6 bg-red-600 text-white rounded-lg hover:bg-red-700 text-xl"
         >
           Submit Answer
         </button>
@@ -124,19 +117,19 @@ function QuestionForm(
 function Feedback(
   { correct, explanation }: { correct: boolean; explanation: string },
 ) {
-  const color = correct ? "green" : "red";
+  const color = correct ? "text-green-600" : "text-red-600";
 
   return (
-    <div style="margin-top: 20px;">
-      <p style={`color: ${color}; font-weight: bold; font-size: 1.5em;`}>
+    <div class="mt-6">
+      <p class={`font-bold text-xl ${color}`}>
         {correct ? "🎉 Correct! Great job!" : "👎 Keep practicing!"}
       </p>
-      <div class="explanation" style="margin-top: 20px;">
-        <p style="font-size: 1.1em; margin-bottom: 10px;">
+      <div class="mt-4">
+        <p class="text-lg mb-4">
           <strong>Explanation:</strong> {explanation}
         </p>
         <a href="/emt/practice">
-          <button style="padding: 15px; background-color: rgb(53, 59, 220); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.2em; transition: background-color 0.3s;">
+          <button class="py-3 px-6 bg-blue-700 text-white rounded-lg hover:bg-blue-800 text-xl">
             Next Question →
           </button>
         </a>

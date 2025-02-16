@@ -15,13 +15,18 @@
     }
   },
   "exclude": ["**/_fresh/*"],
+  "nodeModulesDir": "auto",
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
-    "$std/": "https://deno.land/std@0.216.0/"
+    "$std/": "https://deno.land/std@0.216.0/",
+    "tailwindcss": "npm:tailwindcss@3.4.1",
+    "tailwindcss/": "npm:/tailwindcss@3.4.1/",
+    "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin",
+    "daisyui": "npm:daisyui@4.7.0"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

@@ -14,5 +14,6 @@
   "[javascript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
-  "deno.testing.args": ["--unstable-kv", "--allow-env"]
+  "deno.testing.args": ["--unstable-kv", "--allow-env"],
+  "css.customData": [".vscode/tailwind.json"]
 }
