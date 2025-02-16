@@ -41,7 +41,7 @@ export default function QuestionPage({ data }: PageProps<QuestionProps>) {
       <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg bg-white font-sans">
         <h1 class="text-center text-blue-500 text-2xl font-bold mb-4">
           {correct === undefined
-            ? "Practice Question 🚑"
+            ? "Practice Question"
             : correct
             ? "✅ Correct!"
             : "❌ Wrong!"}
