@@ -14,7 +14,7 @@ export class QuestionStore {
   async addQuestion(question: Partial<Question>) {
     // Get the current count or default to 0
     const count =
-      (await this.kv.get<number>(["emt", "questions", "count"])).value ??
+      (await this.kv.get<number>(["emt", "question_count"])).value ??
         0;
 
     // Assign ID and created_at
@@ -23,7 +23,7 @@ export class QuestionStore {
     // Atomic transaction with chained .set() calls
     const transaction = this.kv.atomic()
       .set(["emt", "questions", question.id], question)
-      .set(["emt", "questions", "count"], count + 1);
+      .set(["emt", "question_count"], count + 1);
 
     const result = await transaction.commit();
 

@@ -89,7 +89,7 @@ async function saveToKv(question: Partial<Question>) {
   question.hash = hashHex;
   const kv = await getKv();
   const questionStore = new QuestionStore(kv);
-  questionStore.addQuestion(question);
+  await questionStore.addQuestion(question);
 }
 
 // Main function
@@ -100,7 +100,11 @@ async function main() {
       await saveToKv(question);
     }
     saveToFile(JSON.stringify(questions));
-    console.log("Questions generated and stored successfully!");
+    console.log(
+      "Questions generated and stored successfully!",
+      "Total",
+      questions.length,
+    );
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error?.message);

@@ -2,25 +2,18 @@ import { useSignal } from "@preact/signals";
 import Counter from "../islands/Counter.tsx";
 import { getKv } from "../lib/kv.ts";
 import { FreshContext } from "$fresh/server.ts";
-import { Question } from "../lib/question_store.ts";
+import { Question, QuestionStore } from "../lib/question_store.ts";
 
 export default async function handler(req: Request, _ctx: FreshContext) {
-  console.log("getting stuff");
   const kv = await getKv();
-  const jokes = (await kv.get<string[]>(["jokes"])).value;
 
-  await kv.get<string[]>(["jokes"]);
-
-  const entries = kv.list<Question>({ prefix: ["emt"] });
-  const questions: Question[] = [];
-  for await (const entry of entries) {
-    questions.push(entry.value);
-    console.log(entry.value);
-  }
-  return <Home jokes={jokes ?? []} questions={questions} />;
+  const questionStore = new QuestionStore(kv);
+  const questions = await questionStore.listQuestions();
+  return <Home questions={questions} />;
 }
 
-function Home(props: { jokes: string[]; questions: Question[] }) {
+function Home(props: { questions: Question[] }) {
+  const { questions } = props;
   const count = useSignal(3);
   return (
     <div class="px-4 py-8 mx-auto bg-[#86efac]">
@@ -37,14 +30,13 @@ function Home(props: { jokes: string[]; questions: Question[] }) {
           Try updating this message in the
           <code class="mx-2">./routes/index.tsx</code> file, and refresh.
         </p>
-        <ul>
-          {props.jokes.map((joke) => <li>{joke}</li>)}
-          <li>lol</li>
-        </ul>
         <Counter count={count} />
         <br />
         <div>
-          {props.questions.map((question) => (
+          {questions.map((q) => <QuestionComponent question={q} />)}
+
+          {
+            /* {props.questions.map((question) => (
             <div>
               <h2>{question.question}</h2>
               <ul>
@@ -52,9 +44,23 @@ function Home(props: { jokes: string[]; questions: Question[] }) {
               </ul>
               <p>{question.explanation}</p>
             </div>
-          ))}
+          ))} */
+          }
         </div>
       </div>
+    </div>
+  );
+}
+
+function QuestionComponent(props: { question: Question }) {
+  const { question } = props;
+  return (
+    <div>
+      <h2>{question.question}</h2>
+      <ul>
+        {question.choices.map((choice) => <li>{choice}</li>)}
+      </ul>
+      <p>{question.explanation}</p>
     </div>
   );
 }

@@ -1,8 +1,7 @@
 import { FreshContext, Handlers } from "$fresh/server.ts";
+import { getKv } from "../../lib/kv.ts";
 
-const kv = await Deno.openKv(
-  "https://api.deno.com/databases/b445b136-1d4f-4549-9aa3-1a1d5429b24e/connect"
-);
+const kv = await getKv();
 
 export const handler: Handlers = {
   async GET(_req: Request, ctx: FreshContext) {
@@ -10,7 +9,7 @@ export const handler: Handlers = {
     const r = new Response(
       JSON.stringify({
         jokes,
-      })
+      }),
     );
     r.headers.set("content-type", "application/json");
     return r;
