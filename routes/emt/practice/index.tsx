@@ -1,4 +1,6 @@
 import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
+import { Header } from "../../../components/Header.tsx";
+import { Feedback } from "../../../islands/Feedback.tsx";
 import { getKv } from "../../../lib/kv.ts";
 import { Question, QuestionStore } from "../../../lib/question_store.ts";
 
@@ -34,24 +36,27 @@ export default function QuestionPage({ data }: PageProps<QuestionProps>) {
   const answered = typeof correct === "boolean";
 
   return (
-    <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg bg-white font-sans">
-      <h1 class="text-center text-blue-500 text-2xl font-bold mb-4">
-        {correct === undefined
-          ? "Practice Question 🚑"
-          : correct
-          ? "✅ Correct!"
-          : "❌ Wrong!"}
-      </h1>
+    <div>
+      <Header />
+      <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg bg-white font-sans">
+        <h1 class="text-center text-blue-500 text-2xl font-bold mb-4">
+          {correct === undefined
+            ? "Practice Question 🚑"
+            : correct
+            ? "✅ Correct!"
+            : "❌ Wrong!"}
+        </h1>
 
-      <QuestionForm
-        question={question}
-        selectedAnswer={selectedAnswer}
-        answered={answered}
-      />
+        <QuestionForm
+          question={question}
+          selectedAnswer={selectedAnswer}
+          answered={answered}
+        />
 
-      {answered && (
-        <Feedback correct={correct} explanation={question.explanation} />
-      )}
+        {answered && (
+          <Feedback correct={correct} explanation={question.explanation} />
+        )}
+      </div>
     </div>
   );
 }
@@ -65,8 +70,6 @@ function QuestionForm(
     answered: boolean;
   },
 ) {
-  const letters = ["A", "B", "C", "D"];
-
   return (
     <form
       method="POST"
@@ -83,57 +86,27 @@ function QuestionForm(
           const isDisabled = answered;
 
           return (
-            <label
-              key={i}
-              class={`block ${isSelected ? "text-blue-600" : "text-gray-900"}`}
-            >
-              <input
-                type="radio"
-                name="answer"
-                value={choice}
-                required
-                checked={isSelected}
-                disabled={isDisabled}
-                class="mr-2"
-              />
-              {letters[i]}) {choice}
-            </label>
+            <div class="form-control mb-4">
+              <label class="label cursor-pointer">
+                <input
+                  type="radio"
+                  class="radio"
+                  value={choice}
+                  name="answer"
+                  required
+                  checked={isSelected}
+                  disabled={isDisabled}
+                />
+                <span class="label-text ml-2">{choice}</span>
+              </label>
+            </div>
           );
         })}
       </div>
 
       {!answered && (
-        <button
-          type="submit"
-          class="mt-4 py-3 px-6 bg-red-600 text-white rounded-lg hover:bg-red-700 text-xl"
-        >
-          Submit Answer
-        </button>
+        <button type="submit" class="btn btn-primary">Submit Answer</button>
       )}
     </form>
-  );
-}
-
-function Feedback(
-  { correct, explanation }: { correct: boolean; explanation: string },
-) {
-  const color = correct ? "text-green-600" : "text-red-600";
-
-  return (
-    <div class="mt-6">
-      <p class={`font-bold text-xl ${color}`}>
-        {correct ? "🎉 Correct! Great job!" : "👎 Keep practicing!"}
-      </p>
-      <div class="mt-4">
-        <p class="text-lg mb-4">
-          <strong>Explanation:</strong> {explanation}
-        </p>
-        <a href="/emt/practice">
-          <button class="py-3 px-6 bg-blue-700 text-white rounded-lg hover:bg-blue-800 text-xl">
-            Next Question →
-          </button>
-        </a>
-      </div>
-    </div>
   );
 }
