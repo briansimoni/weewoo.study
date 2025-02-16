@@ -8,7 +8,9 @@ import * as $api_joke from "./routes/api/joke.ts";
 import * as $api_jokes from "./routes/api/jokes.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
+import * as $login from "./routes/login.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $LoginIsland from "./islands/LoginIsland.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -19,9 +21,11 @@ const manifest = {
     "./routes/api/jokes.ts": $api_jokes,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
+    "./routes/login.tsx": $login,
   },
   islands: {
     "./islands/Counter.tsx": $Counter,
+    "./islands/LoginIsland.tsx": $LoginIsland,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
