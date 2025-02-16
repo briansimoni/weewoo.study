@@ -30,7 +30,7 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "ems-questions-app"
-          entrypoint: ""
-          root: ""
+          entrypoint: "main.ts"
+          root: "."
           
           
