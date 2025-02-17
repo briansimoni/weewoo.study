@@ -8,10 +8,8 @@ export default function LoginIsland() {
 
   useEffect(() => {
     async function discover() {
-      const issuer = new URL("https://oauth.dev.aurasvc.io");
-      const response = await oauth.discoveryRequest(
-        new URL("https://oauth.dev.aurasvc.io"),
-      );
+      const issuer = new URL("https://dev-1m7qee3nty5n5ck1.us.auth0.com");
+      const response = await oauth.discoveryRequest(issuer);
       const as = await oauth.processDiscoveryResponse(issuer, response);
       setAuthorizationServer(as);
     }

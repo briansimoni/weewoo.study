@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Deno Server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/dev.ts",
+      "runtimeExecutable": "deno",
+      "runtimeArgs": [
+        "run",
+        "--inspect",
+        "-A",
+        "--unstable-kv",
+        "--watch=static/,routes/",
+        "${workspaceFolder}/dev.ts"
+      ],
+      "attachSimplePort": 9229,
+      "outputCapture": "std",
+      "env": {
+        "DENO_DIR": "${workspaceFolder}/.deno_cache"
+      },
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "console": "integratedTerminal"
+    }
+  ]
+}

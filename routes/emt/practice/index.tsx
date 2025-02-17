@@ -1,5 +1,4 @@
 import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
-import { Header } from "../../../components/Header.tsx";
 import { Feedback } from "../../../islands/Feedback.tsx";
 import { getKv } from "../../../lib/kv.ts";
 import { Question, QuestionStore } from "../../../lib/question_store.ts";
@@ -37,7 +36,6 @@ export default function QuestionPage({ data }: PageProps<QuestionProps>) {
 
   return (
     <div>
-      <Header />
       <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg bg-white font-sans">
         <h1 class="text-center text-blue-500 text-2xl font-bold mb-4">
           {correct === undefined

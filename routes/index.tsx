@@ -1,27 +1,14 @@
-// export default function Home() {
-//   return (
-//     <div class="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
-//       <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center bg-white p-10 rounded-lg shadow-xl">
-//         <img
-//           class="my-6 w-32 h-32"
-//           src="/ambulance.svg"
-//           alt="ambulance logo"
-//         />
-//         <h1 class="text-5xl font-bold text-gray-800 mb-6">
-//           Welcome to AmbuLOL 🚑
-//         </h1>
-//         <a
-//           href="/emt/practice"
-//           class="btn btn-primary text-lg"
-//         >
-//           Start Practice
-//         </a>
-//       </div>
-//     </div>
-//   );
-// }
+import { PageProps } from "$fresh/server.ts";
 
-export default function Home() {
+interface ExtendedPageProps extends PageProps {
+  state: {
+    session?: {
+      user_id?: string;
+    };
+  };
+}
+
+export default function Home(props: ExtendedPageProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary to-secondary text-white">
       <div className="flex flex-col items-center gap-6">
