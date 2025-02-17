@@ -1,7 +1,7 @@
 import * as oauth from "npm:oauth4webapi";
-import { code_verifier } from "../../lib/temp.ts";
 import { AppHandlers } from "../_middleware.ts";
 import { UserStore } from "../../lib/user_store.ts";
+import { getCookies, setCookie } from "@std/http/cookie";
 
 const client_id = Deno.env.get("CLIENT_ID");
 const client_secret = Deno.env.get("CLIENT_SECRET");
@@ -27,7 +27,10 @@ export const handler: AppHandlers = {
     const params = oauth.validateAuthResponse(as, client, currentUrl);
     const clientAuth = oauth.ClientSecretPost(client_secret);
 
-    const response = await oauth.authorizationCodeGrantRequest(
+    const cookies = getCookies(req.headers);
+    const code_verifier = cookies["code_verifier"];
+
+    const authorizationCodeResponse = await oauth.authorizationCodeGrantRequest(
       as,
       client,
       clientAuth,
@@ -39,7 +42,7 @@ export const handler: AppHandlers = {
     const result = await oauth.processAuthorizationCodeResponse(
       as,
       client,
-      response,
+      authorizationCodeResponse,
       {
         requireIdToken: true,
       },
@@ -82,12 +85,24 @@ export const handler: AppHandlers = {
       });
     }
 
-    return new Response(null, {
+    const response = new Response(null, {
       status: 302,
       headers: {
         Location: "/",
       },
     });
+
+    // remove code verifier cookie
+    setCookie(response.headers, {
+      name: "code_verifier",
+      value: "",
+      path: "/",
+      httpOnly: true,
+      sameSite: "Lax",
+      maxAge: 0,
+    });
+
+    return response;
   },
 };
 
