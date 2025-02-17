@@ -1,4 +1,6 @@
 import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
+import * as http from "@std/http";
+import { Cookie, setCookie } from "@std/http/cookie";
 import diff from "https://deno.land/x/microdiff@v1.2.0/index.ts";
 
 const SECRET_KEY = Deno.env.get("COOKIE_SECRET") || "super_secret_key";
@@ -61,19 +63,14 @@ async function verify(
 export async function handler(req: Request, ctx: FreshContext) {
   let sessionData: Partial<SessionData> | undefined = undefined;
 
+  const cookies = http.getCookies(req.headers);
   // Hydrate session
-  const cookie = req.headers.get("cookie");
-  if (cookie) {
-    const data = cookie
-      .split("; ")
-      .find((c) => c.startsWith("test_question_app_data="))?.split("=")[1];
-    const signatureCookie = cookie
-      .split("; ")
-      .find((c) => c.startsWith("test_question_app_signature="));
+  if (Object.keys(cookies).length > 0) {
+    const data = cookies["test_question_app_data"];
+    const signature = cookies["test_question_app_signature"];
 
-    if (data && signatureCookie) {
-      const signature = splitOnFirst(signatureCookie, "=")[1];
-      const verified = await verify(data, signature!);
+    if (data && signature) {
+      const verified = await verify(data, signature);
       if (verified) {
         try {
           sessionData = JSON.parse(decodeURIComponent(data));
@@ -94,15 +91,25 @@ export async function handler(req: Request, ctx: FreshContext) {
 
   // Delete the cookies if session is missing
   if (!ctx.state.session || Object.keys(ctx.state.session).length === 0) {
-    resp.headers.append(
-      "Set-Cookie",
-      "test_question_app_data=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax",
-    );
+    const appDataCookie: Cookie = {
+      name: "test_question_app_data",
+      value: "",
+      path: "/",
+      httpOnly: true,
+      sameSite: "Lax",
+      maxAge: 0,
+    };
+    const signatureCookie: Cookie = {
+      name: "test_question_app_signature",
+      value: "",
+      path: "/",
+      httpOnly: true,
+      sameSite: "Lax",
+      maxAge: 0,
+    };
+    setCookie(resp.headers, appDataCookie);
+    setCookie(resp.headers, signatureCookie);
 
-    resp.headers.append(
-      "Set-Cookie",
-      "test_question_app_signature=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax",
-    );
     return resp;
   }
 
@@ -115,24 +122,23 @@ export async function handler(req: Request, ctx: FreshContext) {
   const payload = encodeURIComponent(serialized);
   const signature = await sign(payload);
 
-  resp.headers.append(
-    "Set-Cookie",
-    `test_question_app_data=${payload}; Path=/; HttpOnly; Secure; SameSite=Lax`,
-  );
-  resp.headers.append(
-    "Set-Cookie",
-    `test_question_app_signature=${signature}; Path=/; HttpOnly; Secure; SameSite=Lax`,
-  );
+  // TODO: use secure true conditionally based on whether the server is running https or not
+  const appDataCookie: Cookie = {
+    name: "test_question_app_data",
+    value: payload,
+    path: "/",
+    httpOnly: true,
+    sameSite: "Lax",
+  };
 
+  const signatureCookie: Cookie = {
+    name: "test_question_app_signature",
+    value: signature,
+    path: "/",
+    httpOnly: true,
+    sameSite: "Lax",
+  };
+  http.setCookie(resp.headers, appDataCookie);
+  http.setCookie(resp.headers, signatureCookie);
   return resp;
-}
-
-function splitOnFirst(input: string, delimiter: string): [string, string?] {
-  const index = input.indexOf(delimiter);
-  if (index === -1) {
-    return [input];
-  }
-  const before = input.slice(0, index);
-  const after = input.slice(index + delimiter.length);
-  return [before, after];
 }
