@@ -10,6 +10,7 @@ import * as $about from "./routes/about.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
 import * as $api_jokes from "./routes/api/jokes.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
+import * as $auth_logged_out from "./routes/auth/logged-out.tsx";
 import * as $auth_login from "./routes/auth/login.tsx";
 import * as $auth_logout from "./routes/auth/logout.tsx";
 import * as $emt_practice_index from "./routes/emt/practice/index.tsx";
@@ -32,6 +33,7 @@ const manifest = {
     "./routes/api/joke.ts": $api_joke,
     "./routes/api/jokes.ts": $api_jokes,
     "./routes/auth/callback.ts": $auth_callback,
+    "./routes/auth/logged-out.tsx": $auth_logged_out,
     "./routes/auth/login.tsx": $auth_login,
     "./routes/auth/logout.tsx": $auth_logout,
     "./routes/emt/practice/index.tsx": $emt_practice_index,
