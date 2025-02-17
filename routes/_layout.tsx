@@ -18,6 +18,11 @@ export default function Layout({ Component, state }: AppProps) {
               <a href="/about">About</a>
             </li>
           </ul>
+          <ul class="menu menu-horizontal px-1">
+            <li>
+              <a href="/leaderboard">Leaderboard</a>
+            </li>
+          </ul>
         </div>
         <div class="flex-none">
           {!state.session &&

@@ -16,7 +16,7 @@ export interface User {
   stats: UserStats;
 }
 
-interface LeaderBoardEntry {
+export interface LeaderBoardEntry {
   user_id: string;
   display_name: string;
   questions_correct: number;
