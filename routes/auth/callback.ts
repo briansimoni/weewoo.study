@@ -1,6 +1,7 @@
 import * as oauth from "npm:oauth4webapi";
 import { code_verifier } from "../../lib/temp.ts";
 import { AppHandlers } from "../_middleware.ts";
+import { UserStore } from "../../lib/user_store.ts";
 
 const client_id = Deno.env.get("CLIENT_ID");
 const client_secret = Deno.env.get("CLIENT_SECRET");
@@ -50,7 +51,7 @@ export const handler: AppHandlers = {
 
     const r = await oauth.userInfoRequest(as, client, access_token);
 
-    const res = await oauth.processUserInfoResponse(
+    const userinfo = await oauth.processUserInfoResponse(
       as,
       client,
       sub,
@@ -61,8 +62,25 @@ export const handler: AppHandlers = {
       access_token,
       user_id: sub,
       ...claims,
-      ...res,
+      ...userinfo,
     };
+
+    const userStore = await UserStore.make();
+    const user = await userStore.getUser(sub);
+    if (!user) {
+      await userStore.createUser({
+        user_id: sub,
+        display_name: sub, // they can change display_name later
+        created_at: new Date().toISOString(),
+        stats: {
+          questions_answered: 0,
+          questions_correct: 0,
+          streak: {
+            days: 0,
+          },
+        },
+      });
+    }
 
     return new Response(null, {
       status: 302,

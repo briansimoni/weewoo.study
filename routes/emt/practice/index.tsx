@@ -1,24 +1,41 @@
 import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
 import { Feedback } from "../../../islands/Feedback.tsx";
-import { getKv } from "../../../lib/kv.ts";
 import { Question, QuestionStore } from "../../../lib/question_store.ts";
+import { UserStore } from "../../../lib/user_store.ts";
+import { AppHandlers } from "../../_middleware.ts";
 
-export const handler: Handlers = {
-  async POST(req: Request, ctx: FreshContext) {
-    const kv = await getKv();
-    const questionStore = new QuestionStore(kv);
+export const handler: AppHandlers = {
+  async POST(req, ctx) {
+    const questionStore = await QuestionStore.make();
     const formData = await req.formData();
     const questionId = formData.get("questionId") as string;
     const answer = formData.get("answer") as string;
     const question = await questionStore.getQuestion(questionId);
     const isCorrect = question?.correct_answer === answer;
 
+    // if you're logged in let's update your stats
+    const user_id = ctx.state.session?.user_id;
+    if (user_id) {
+      const userStore = await UserStore.make();
+      const user = await userStore.getUser(user_id);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      await userStore.updateUser({
+        ...user,
+        stats: {
+          ...user.stats,
+          questions_answered: user.stats.questions_answered + 1,
+          questions_correct: user.stats.questions_correct + (isCorrect ? 1 : 0),
+        },
+      });
+    }
+
     return ctx.render({ question, correct: isCorrect, selectedAnswer: answer });
   },
 
   async GET(_req: Request, ctx: FreshContext) {
-    const kv = await getKv();
-    const questionStore = new QuestionStore(kv);
+    const questionStore = await QuestionStore.make();
     const question = await questionStore.getRandomQuestion();
     return ctx.render({ question });
   },

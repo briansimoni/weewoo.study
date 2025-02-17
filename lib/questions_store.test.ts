@@ -12,7 +12,7 @@ let kv: Deno.Kv;
 
 async function setup() {
   kv = await Deno.openKv();
-  questionStore = new QuestionStore(kv);
+  questionStore = await QuestionStore.make(kv);
   // clear test questions
   const entries = kv.list({ prefix: ["emt", "questions"] });
   for await (const entry of entries) {

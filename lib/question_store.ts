@@ -1,3 +1,5 @@
+import { getKv } from "./kv.ts";
+
 export interface Question {
   id: string;
   hash: string;
@@ -9,7 +11,14 @@ export interface Question {
 }
 
 export class QuestionStore {
-  constructor(private kv: Deno.Kv) {}
+  private constructor(private kv: Deno.Kv) {}
+
+  static async make(kv?: Deno.Kv) {
+    if (!kv) {
+      kv = await getKv();
+    }
+    return new QuestionStore(kv);
+  }
 
   private async getCount(): Promise<number> {
     const result = await this.kv.get<number>(["emt", "question_count"]);
