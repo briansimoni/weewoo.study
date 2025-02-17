@@ -48,8 +48,6 @@ export const handler: AppHandlers = {
     const claims = oauth.getValidatedIdTokenClaims(result)!;
     const { sub } = claims;
 
-    // // UserInfo Request
-
     const r = await oauth.userInfoRequest(as, client, access_token);
 
     const res = await oauth.processUserInfoResponse(

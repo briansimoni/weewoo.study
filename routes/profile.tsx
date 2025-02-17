@@ -1,4 +1,6 @@
-export default function () {
+import { AppProps } from "./_middleware.ts";
+
+export default function (props: AppProps) {
   return (
     <div class="bg-gray-100 min-h-screen flex items-center justify-center">
       <div class="card w-full max-w-3xl bg-white shadow-xl rounded-xl p-6">
@@ -7,7 +9,7 @@ export default function () {
             <div class="avatar">
               <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                 <img
-                  src="https://via.placeholder.com/150"
+                  src={props.state.session?.picture ?? "placeholder-image-url"}
                   alt="Profile Image"
                 />
               </div>
@@ -16,7 +18,7 @@ export default function () {
           </div>
 
           <div class="flex-1">
-            <h2 class="text-2xl font-bold mb-4">Placeholder Name and data</h2>
+            <h2 class="text-2xl font-bold mb-4">{props.state.session?.name}</h2>
             <div class="grid grid-cols-2 gap-4">
               <div class="stat bg-blue-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Questions Answered</div>

@@ -1,15 +1,7 @@
-import { PageProps } from "$fresh/server.ts";
-
-interface ExtendedPageProps extends PageProps {
-  state: {
-    session?: {
-      [key: string]: any;
-    };
-  };
-}
+import { AppProps } from "./_middleware.ts";
 
 // todo: type state better
-export default function Layout({ Component, state }: ExtendedPageProps) {
+export default function Layout({ Component, state }: AppProps) {
   let avatarPlaceHolderLetter = "";
   if (state.session?.name) {
     avatarPlaceHolderLetter = state.session.name[0].toUpperCase();
@@ -47,7 +39,7 @@ export default function Layout({ Component, state }: ExtendedPageProps) {
               </div>
               <ul
                 tabindex={0}
-                class="menu menu-sm dropdown-content bg-base-200 rounded-box z-[1] mt-3 w-52 p-2"
+                class="menu menu-sm dropdown-content bg-base-300 rounded-box z-[1] mt-3 w-52 p-2"
               >
                 <li>
                   <a href="/profile">Profile</a>

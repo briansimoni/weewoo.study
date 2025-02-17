@@ -1,14 +1,6 @@
-import { PageProps } from "$fresh/server.ts";
+import { AppProps } from "./_middleware.ts";
 
-interface ExtendedPageProps extends PageProps {
-  state: {
-    session?: {
-      user_id?: string;
-    };
-  };
-}
-
-export default function Home(props: ExtendedPageProps) {
+export default function Home(props: AppProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary to-secondary text-white">
       <div className="flex flex-col items-center gap-6">

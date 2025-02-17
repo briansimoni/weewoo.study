@@ -1,4 +1,4 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
+import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
 import diff from "https://deno.land/x/microdiff@v1.2.0/index.ts";
 
 const SECRET_KEY = Deno.env.get("COOKIE_SECRET") || "super_secret_key";
@@ -6,6 +6,20 @@ const SECRET_KEY = Deno.env.get("COOKIE_SECRET") || "super_secret_key";
 interface SessionData {
   user_id?: string;
   access_token?: string;
+  nickname?: string;
+  name?: string;
+  picture?: string;
+  [key: string]: any;
+}
+
+/**
+ * same as Fresh's PageProps type but with state modified
+ * by the app's middleware. It has the session object in it
+ */
+export interface AppProps extends PageProps {
+  state: {
+    session?: SessionData;
+  };
 }
 
 export type AppHandlers = Handlers<any, { session?: SessionData }>;
