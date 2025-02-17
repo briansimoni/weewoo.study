@@ -15,6 +15,7 @@ import * as $auth_logout from "./routes/auth/logout.tsx";
 import * as $emt_practice_index from "./routes/emt/practice/index.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
+import * as $profile from "./routes/profile.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $Feedback from "./islands/Feedback.tsx";
 import * as $LoginIsland from "./islands/LoginIsland.tsx";
@@ -36,6 +37,7 @@ const manifest = {
     "./routes/emt/practice/index.tsx": $emt_practice_index,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
+    "./routes/profile.tsx": $profile,
   },
   islands: {
     "./islands/Counter.tsx": $Counter,
