@@ -39,7 +39,9 @@ export default function (props: ProfileProps) {
                 />
               </div>
             </div>
-            <button class="btn btn-primary mt-4">Change Photo</button>
+            <button class="btn btn-primary mt-4">
+              Todo: make this do something
+            </button>
           </div>
 
           <div class="flex-1">
@@ -48,29 +50,28 @@ export default function (props: ProfileProps) {
               <div class="stat bg-blue-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Questions Answered</div>
                 <div class="stat-value text-blue-700">
-                  {props.data.user.stats.questions_answered}
+                  {props.data.user.stats.questions_answered} 📖
                 </div>
               </div>
               <div class="stat bg-green-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Correct Answers</div>
                 <div class="stat-value text-green-700">
-                  {props.data.user.stats.questions_correct}
+                  {props.data.user.stats.questions_correct} ✅
                 </div>
               </div>
               <div class="stat bg-yellow-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Accuracy</div>
                 <div class="stat-value text-yellow-700">
-                  {accuracy}%
+                  {accuracy}% 🎯
                 </div>
               </div>
               <div class="stat bg-purple-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Streak</div>
                 <div class="stat-value text-purple-700">
-                  {user.stats.streak.days}
+                  {user.stats.streak.days} 🔥
                 </div>
               </div>
             </div>
-            <button class="btn btn-secondary mt-6">Edit Profile</button>
           </div>
         </div>
       </div>

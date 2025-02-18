@@ -1,8 +1,12 @@
-import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
+import { FreshContext, PageProps } from "$fresh/server.ts";
 import { Feedback } from "../../../islands/Feedback.tsx";
 import { Question, QuestionStore } from "../../../lib/question_store.ts";
 import { UserStore } from "../../../lib/user_store.ts";
+import { updateStreak } from "../../../lib/utils.ts";
 import { AppHandlers } from "../../_middleware.ts";
+//import dayjsPluginUTC from "npm:dayjs-plugin-utc";
+
+// dayjs.extend(dayjsPluginUTC);
 
 export const handler: AppHandlers = {
   async POST(req, ctx) {
@@ -21,6 +25,11 @@ export const handler: AppHandlers = {
       if (!user) {
         throw new Error("User not found");
       }
+
+      if (isCorrect) {
+        updateStreak(user);
+      }
+
       await userStore.updateUser({
         ...user,
         stats: {
