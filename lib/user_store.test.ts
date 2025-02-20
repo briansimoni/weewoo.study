@@ -4,6 +4,7 @@ import {
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import { User, UserStore } from "./user_store.ts";
 import { assertObjectMatch } from "$std/assert/assert_object_match.ts";
+import { assertEquals } from "$std/assert/assert_equals.ts";
 
 let userStore: UserStore;
 let kv: Deno.Kv;
@@ -121,5 +122,50 @@ Deno.test("update leaderboard and list streaks", async () => {
     { user_id: "2", display_name: "Brian", questions_correct: 2 },
     { user_id: "1", display_name: "Brian", questions_correct: 1 },
   ]);
+  teardown();
+});
+
+Deno.test("when you are a new user and you get the first ever question wrong it doesn't mess things up", async () => {
+  await setup();
+
+  const user = {
+    ...testUser,
+    stats: {
+      questions_answered: 0,
+      questions_correct: 0,
+      streak: {
+        days: 0,
+      },
+    },
+  };
+
+  // user created for the first time
+  await userStore.createUser(user);
+
+  // user got the first question wrong
+  const updatedUser = await userStore.updateUser({
+    ...user,
+    stats: {
+      ...user.stats,
+      questions_answered: user.stats.questions_answered + 1,
+      questions_correct: user.stats.questions_correct + 0,
+    },
+  });
+
+  // user get's a question right
+  await userStore.updateUser({
+    ...user,
+    stats: {
+      ...user.stats,
+      questions_answered: updatedUser.stats.questions_answered + 1,
+      questions_correct: updatedUser.stats.questions_correct + 1,
+    },
+  });
+
+  const leaderboard = await userStore.listTopStreaks();
+
+  // there was a bug where two entries were being saved. There should only be one
+  assertEquals(leaderboard.length, 1);
+
   teardown();
 });

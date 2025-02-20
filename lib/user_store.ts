@@ -72,7 +72,7 @@ export class UserStore {
     // Only delete old entry if it exists
     // and the stats have actually changed
     if (
-      oldCorrect > 0 &&
+      oldCorrect >= 0 &&
       initialUser.stats.questions_answered !== user.stats.questions_answered
     ) {
       txn.mutate({
