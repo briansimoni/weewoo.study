@@ -11,23 +11,11 @@ let questionStore: QuestionStore;
 let kv: Deno.Kv;
 
 async function setup() {
-  kv = await Deno.openKv();
+  kv = await Deno.openKv(":memory:");
   questionStore = await QuestionStore.make(kv);
-  // clear test questions
-  const entries = kv.list({ prefix: ["emt", "questions"] });
-  for await (const entry of entries) {
-    await kv.delete(entry.key);
-  }
-  // Reset the count
-  await kv.set(["emt", "questions", "count"], 0);
 }
 
-async function teardown() {
-  const entries = kv.list({ prefix: ["emt", "questions"] });
-  for await (const entry of entries) {
-    await kv.delete(entry.key);
-  }
-  await kv.delete(["emt", "question_count"]);
+function teardown() {
   questionStore.closeConnection();
 }
 
@@ -49,7 +37,7 @@ Deno.test("Add a question", async () => {
   assertEquals(question?.question, sampleQuestion.question);
   assertEquals(question?.correct_answer, sampleQuestion.correct_answer);
   assertEquals(question?.choices, sampleQuestion.choices);
-  await teardown();
+  teardown();
 });
 
 Deno.test("Get a random question", async () => {
@@ -60,7 +48,7 @@ Deno.test("Get a random question", async () => {
 
   assertEquals(randomQuestion.question, sampleQuestion.question);
   assertEquals(randomQuestion.correct_answer, sampleQuestion.correct_answer);
-  await teardown();
+  teardown();
 });
 
 Deno.test("List questions", async () => {
@@ -79,7 +67,7 @@ Deno.test("List questions", async () => {
     sampleQuestion.question!,
     "What is the normal heart rate for an adult?",
   ]);
-  await teardown();
+  teardown();
 });
 
 Deno.test("Delete a question", async () => {
@@ -94,7 +82,7 @@ Deno.test("Delete a question", async () => {
   const questionAfter = (await kv.get<Question>(["emt", "questions", "1"]))
     .value;
   assertEquals(questionAfter, null);
-  await teardown();
+  teardown();
 });
 
 Deno.test("Get random question throws error if none exist", async () => {
@@ -107,5 +95,5 @@ Deno.test("Get random question throws error if none exist", async () => {
     Error,
     "No question found",
   );
-  await teardown();
+  teardown();
 });

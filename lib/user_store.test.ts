@@ -9,23 +9,11 @@ let userStore: UserStore;
 let kv: Deno.Kv;
 
 async function setup() {
-  kv = await Deno.openKv();
+  kv = await Deno.openKv(":memory:");
   userStore = await UserStore.make(kv);
-  const entries = kv.list({ prefix: ["users"] });
-  for await (const entry of entries) {
-    await kv.delete(entry.key);
-  }
-  const leaderboardEntries = kv.list({ prefix: ["leaderboard"] });
-  for await (const entry of leaderboardEntries) {
-    await kv.delete(entry.key);
-  }
 }
 
-async function teardown() {
-  const entries = kv.list({ prefix: ["users"] });
-  for await (const entry of entries) {
-    await kv.delete(entry.key);
-  }
+function teardown() {
   userStore.closeConnection();
 }
 
@@ -52,7 +40,7 @@ Deno.test("Add and retrieve a user", async () => {
     ...testUser,
   });
 
-  await teardown();
+  teardown();
 });
 
 Deno.test("update a user", async () => {
@@ -81,7 +69,7 @@ Deno.test("update a user", async () => {
     },
   });
 
-  await teardown();
+  teardown();
 });
 
 Deno.test("update leaderboard and list streaks", async () => {
@@ -133,5 +121,5 @@ Deno.test("update leaderboard and list streaks", async () => {
     { user_id: "2", display_name: "Brian", questions_correct: 2 },
     { user_id: "1", display_name: "Brian", questions_correct: 1 },
   ]);
-  await teardown();
+  teardown();
 });
