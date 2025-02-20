@@ -18,6 +18,7 @@
   "nodeModulesDir": "auto",
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
+    "@deno-library/logger": "jsr:@deno-library/logger@^1.1.9",
     "@std/http": "jsr:@std/http@^1.0.13",
     "dayjs": "npm:dayjs@^1.11.13",
     "dayjs-plugin-utc": "npm:dayjs-plugin-utc@^0.1.2",

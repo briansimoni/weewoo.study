@@ -13,6 +13,7 @@ import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_logged_out from "./routes/auth/logged-out.tsx";
 import * as $auth_login from "./routes/auth/login.tsx";
 import * as $auth_logout from "./routes/auth/logout.tsx";
+import * as $debug from "./routes/debug.tsx";
 import * as $emt_practice_index from "./routes/emt/practice/index.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
@@ -37,6 +38,7 @@ const manifest = {
     "./routes/auth/logged-out.tsx": $auth_logged_out,
     "./routes/auth/login.tsx": $auth_login,
     "./routes/auth/logout.tsx": $auth_logout,
+    "./routes/debug.tsx": $debug,
     "./routes/emt/practice/index.tsx": $emt_practice_index,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,

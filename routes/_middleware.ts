@@ -1,7 +1,8 @@
-import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
+import { FreshContext, Handler, Handlers, PageProps } from "$fresh/server.ts";
 import * as http from "@std/http";
 import { Cookie, setCookie } from "@std/http/cookie";
 import diff from "https://deno.land/x/microdiff@v1.2.0/index.ts";
+import { log } from "../lib/logger.ts";
 
 const SECRET_KEY = Deno.env.get("COOKIE_SECRET") || "super_secret_key";
 
@@ -24,6 +25,7 @@ export interface AppProps extends PageProps {
   };
 }
 
+export type AppHandler = Handler<any, { session?: SessionData }>;
 export type AppHandlers = Handlers<any, { session?: SessionData }>;
 
 // Helper function to generate HMAC signature using crypto.subtle
@@ -60,9 +62,11 @@ async function verify(
 /**
  * session middleware
  */
-export async function handler(req: Request, ctx: FreshContext) {
+const sessionMiddleware: Handler = async function handler(
+  req: Request,
+  ctx: FreshContext,
+) {
   let sessionData: Partial<SessionData> | undefined = undefined;
-
   const cookies = http.getCookies(req.headers);
   // Hydrate session
   if (Object.keys(cookies).length > 0) {
@@ -123,6 +127,7 @@ export async function handler(req: Request, ctx: FreshContext) {
   const signature = await sign(payload);
 
   // TODO: use secure true conditionally based on whether the server is running https or not
+  // TODO: set the max age and make in configurable
   const appDataCookie: Cookie = {
     name: "test_question_app_data",
     value: payload,
@@ -141,4 +146,23 @@ export async function handler(req: Request, ctx: FreshContext) {
   http.setCookie(resp.headers, appDataCookie);
   http.setCookie(resp.headers, signatureCookie);
   return resp;
-}
+};
+
+const logMiddleware: AppHandler = async function (req, ctx) {
+  const start = Date.now();
+  log.debug("request started", req.url);
+  const res = await ctx.next();
+  const end = Date.now();
+  log.info(req.method, req.url, {
+    user_id: ctx.state.session?.user_id,
+    name: ctx.state.session?.name,
+    status: res.status,
+    responseTime: end - start,
+  });
+  return res;
+};
+
+export const handler: AppHandler[] = [
+  logMiddleware,
+  sessionMiddleware,
+];
