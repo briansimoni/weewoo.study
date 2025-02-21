@@ -12,6 +12,7 @@ interface SessionData {
   nickname?: string;
   name?: string;
   picture?: string;
+  display_name?: string;
   [key: string]: any;
 }
 

@@ -63,19 +63,12 @@ export const handler: AppHandlers = {
       r,
     );
 
-    ctx.state.session = {
-      access_token,
-      user_id: sub,
-      ...claims,
-      ...userinfo,
-    };
-
     log.info("logged in", userinfo);
 
     const userStore = await UserStore.make();
-    const user = await userStore.getUser(sub);
+    let user = await userStore.getUser(sub);
     if (!user) {
-      await userStore.createUser({
+      user = await userStore.createUser({
         user_id: sub,
         display_name: generateName(),
         created_at: new Date().toISOString(),
@@ -88,6 +81,14 @@ export const handler: AppHandlers = {
         },
       });
     }
+
+    ctx.state.session = {
+      access_token,
+      user_id: sub,
+      ...claims,
+      ...userinfo,
+      display_name: user.display_name,
+    };
 
     const response = new Response(null, {
       status: 302,

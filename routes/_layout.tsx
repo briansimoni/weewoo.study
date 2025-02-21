@@ -3,8 +3,8 @@ import { AppProps } from "./_middleware.ts";
 // todo: type state better
 export default function Layout({ Component, state }: AppProps) {
   let avatarPlaceHolderLetter = "";
-  if (state.session?.name) {
-    avatarPlaceHolderLetter = state.session.name[0].toUpperCase();
+  if (state.session?.display_name) {
+    avatarPlaceHolderLetter = state.session.display_name[0].toUpperCase();
   }
   return (
     <>

@@ -144,6 +144,7 @@ export const medicalRoles = [
   "Hypnotist",
   "Shaman",
   "Mortician",
+  "Lord",
 ];
 
 export function generateName(): string {
