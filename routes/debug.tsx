@@ -60,6 +60,7 @@ export default function Debug(props: DebugProps) {
     return (
       <div class="card bg-base-200 shadow-md p-4 my-4">
         <h2 class="text-lg font-bold">{title}</h2>
+        <h4>length {data.length}</h4>
         <table class="table w-full">
           <thead>
             <tr>

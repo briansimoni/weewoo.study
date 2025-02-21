@@ -1,10 +1,4 @@
-// import {
-//   readDir,
-//   readTextFile,
-//   writeTextFile,
-// } from "https://deno.land/std@0.217.0/fs/mod.ts";
 import "$std/dotenv/load.ts";
-import { getKv } from "../lib/kv.ts";
 import { QuestionStore } from "../lib/question_store.ts";
 
 async function mergeQuestionFiles() {
@@ -36,8 +30,12 @@ async function mergeQuestionFiles() {
   // await Deno.writeTextFile(outputFile, JSON.stringify(allQuestions, null, 2));
   // console.log(`Merged ${allQuestions.length} questions into ${outputFile}`);
 
-  const kv = await getKv();
-  const questionStore = new QuestionStore(kv);
+  const questionStore = await QuestionStore.make();
+  //const existingQuestions = await questionStore.listQuestions();
+  // for (const question of existingQuestions) {
+  //   console.log("deleting", question.id);
+  //   await questionStore.deleteQuestion(question.id);
+  // }
   for (const question of allQuestions) {
     await questionStore.addQuestion(question);
   }

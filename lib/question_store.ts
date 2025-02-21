@@ -20,7 +20,7 @@ export class QuestionStore {
     return new QuestionStore(kv);
   }
 
-  private async getCount(): Promise<number> {
+  async getCount(): Promise<number> {
     const result = await this.kv.get<number>(["emt", "question_count"]);
     return result.value || 0;
   }
@@ -32,6 +32,21 @@ export class QuestionStore {
     // Assign ID and created_at
     question.id = String(id);
     question.created_at = new Date().toISOString();
+
+    // Generate a SHA-256 hash of the questions
+    const hashBuffer = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(question.question),
+    );
+
+    // Convert hash buffer to hex string
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    question.hash = hashHex;
+
     // Atomic transaction with chained .set() calls
     const transaction = this.kv.atomic()
       .set(["emt", "questions", question.id], question)
@@ -42,6 +57,14 @@ export class QuestionStore {
       throw new Error("Failed to add question");
     }
     return question as Question;
+  }
+
+  async deleteQuestion(id: string) {
+    const count = await this.getCount();
+    const tx = this.kv.atomic()
+      .delete(["emt", "questions", id])
+      .set(["emt", "question_count"], count - 1);
+    await tx.commit();
   }
 
   async getQuestion(id: string) {
@@ -72,10 +95,6 @@ export class QuestionStore {
       questions.push(entry.value);
     }
     return questions;
-  }
-
-  async deleteQuestion(id: string) {
-    await this.kv.delete(["emt", "questions", id]);
   }
 
   closeConnection() {

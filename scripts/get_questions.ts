@@ -34,7 +34,7 @@ async function generateQuestions() {
         {
           role: "system",
           content:
-            "You are an expert EMT instructor. Generate three multiple-choice questions for the NREMT exam. Each question should have a question, four answer choices, a correct answer, and an explanation, and category ('Airway, Respiration, and Ventilation', 'Cardiology and Resuscitation', 'Trauma', 'Medical and Obstetrics/Gynecology', 'EMS Operations'). Format as JSON. The choices should be in an array. Please do not provide any additional text as this will go into a database. Do not wrap the response in markdown.",
+            "You are an expert EMT instructor. Generate ten multiple-choice questions for the NREMT exam. Each question should have a question, four answer choices, a correct answer, and an explanation, and category ('Airway, Respiration, and Ventilation', 'Cardiology and Resuscitation', 'Trauma', 'Medical and Obstetrics/Gynecology', 'EMS Operations'). Format as JSON. The choices should be in an array. Please do not provide any additional text as this will go into a database. Do not wrap the response in markdown.",
         },
       ],
       max_tokens: 2000,
@@ -87,8 +87,7 @@ async function saveToKv(question: Partial<Question>) {
     .join("");
 
   question.hash = hashHex;
-  const kv = await getKv();
-  const questionStore = new QuestionStore(kv);
+  const questionStore = await QuestionStore.make();
   await questionStore.addQuestion(question);
 }
 
@@ -96,9 +95,9 @@ async function saveToKv(question: Partial<Question>) {
 async function main() {
   try {
     const questions = await generateQuestions();
-    for (const question of questions) {
-      await saveToKv(question);
-    }
+    // for (const question of questions) {
+    //   await saveToKv(question);
+    // }
     saveToFile(JSON.stringify(questions));
     console.log(
       "Questions generated and stored successfully!",

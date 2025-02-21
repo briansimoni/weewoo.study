@@ -12,5 +12,6 @@ node_modules/
 
 
 question_data
+question_data_old
 
 .deno_cache

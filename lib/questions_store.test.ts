@@ -6,6 +6,8 @@ import {
   assertRejects,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import { Question, QuestionStore } from "./question_store.ts";
+import { assert } from "$std/assert/assert.ts";
+import { assertExists } from "$std/assert/assert_exists.ts";
 
 let questionStore: QuestionStore;
 let kv: Deno.Kv;
@@ -25,7 +27,6 @@ const sampleQuestion: Partial<Question> = {
   choices: ["6-12", "12-20", "20-30", "30-40"],
   correct_answer: "12-20",
   explanation: "Normal adult respiratory rate is 12-20 breaths per minute.",
-  hash: "testhash123",
 };
 
 Deno.test("Add a question", async () => {
@@ -37,6 +38,7 @@ Deno.test("Add a question", async () => {
   assertEquals(question?.question, sampleQuestion.question);
   assertEquals(question?.correct_answer, sampleQuestion.correct_answer);
   assertEquals(question?.choices, sampleQuestion.choices);
+  assertExists(question.hash);
   teardown();
 });
 
@@ -81,7 +83,10 @@ Deno.test("Delete a question", async () => {
   await questionStore.deleteQuestion("1");
   const questionAfter = (await kv.get<Question>(["emt", "questions", "1"]))
     .value;
+
+  const count = await questionStore.getCount();
   assertEquals(questionAfter, null);
+  assertEquals(count, 0);
   teardown();
 });
 
