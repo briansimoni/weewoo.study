@@ -6,7 +6,7 @@ import { log } from "../lib/logger.ts";
 
 const SECRET_KEY = Deno.env.get("COOKIE_SECRET") || "super_secret_key";
 
-interface SessionData {
+export interface SessionData {
   user_id?: string;
   access_token?: string;
   nickname?: string;

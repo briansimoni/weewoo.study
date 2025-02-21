@@ -35,7 +35,14 @@ export default function (props: LeaderboardProps) {
                 leaderboard.map((entry, index) => (
                   <tr key={entry.user_id} className="hover">
                     <td className="text-center">{index + 1}</td>
-                    <td className="text-center">{entry.display_name}</td>
+                    <td className="text-center">
+                      <a
+                        className="link-primary"
+                        href={`/user/${entry.user_id}`}
+                      >
+                        {entry.display_name}
+                      </a>
+                    </td>
                     <td className="text-center">{entry.questions_correct}</td>
                   </tr>
                 ))
