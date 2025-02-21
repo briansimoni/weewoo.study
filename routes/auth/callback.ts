@@ -3,6 +3,7 @@ import { AppHandlers } from "../_middleware.ts";
 import { UserStore } from "../../lib/user_store.ts";
 import { getCookies, setCookie } from "@std/http/cookie";
 import { log } from "../../lib/logger.ts";
+import { generateName } from "../../lib/name_generator.ts";
 
 const client_id = Deno.env.get("CLIENT_ID");
 const client_secret = Deno.env.get("CLIENT_SECRET");
@@ -76,7 +77,7 @@ export const handler: AppHandlers = {
     if (!user) {
       await userStore.createUser({
         user_id: sub,
-        display_name: sub, // they can change display_name later
+        display_name: generateName(),
         created_at: new Date().toISOString(),
         stats: {
           questions_answered: 0,

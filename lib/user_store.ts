@@ -73,7 +73,8 @@ export class UserStore {
     // and the stats have actually changed
     if (
       oldCorrect >= 0 &&
-      initialUser.stats.questions_answered !== user.stats.questions_answered
+      initialUser.stats.questions_answered !==
+        proposedUpdate.stats.questions_answered
     ) {
       txn.mutate({
         type: "delete",
@@ -113,6 +114,23 @@ export class UserStore {
       }
     } catch (error) {
       console.error("Error listing top streaks:", error);
+    }
+
+    return entries.map((entry) => entry.value);
+  }
+
+  async listUsers() {
+    const entries = [];
+    try {
+      for await (
+        const entry of this.kv.list<User>({
+          prefix: ["users"],
+        })
+      ) {
+        entries.push(entry);
+      }
+    } catch (error) {
+      console.error("Error listing users:", error);
     }
 
     return entries.map((entry) => entry.value);

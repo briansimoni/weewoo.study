@@ -45,7 +45,7 @@ export default function (props: ProfileProps) {
           </div>
 
           <div class="flex-1">
-            <h2 class="text-2xl font-bold mb-4">{props.state.session?.name}</h2>
+            <h2 class="text-2xl font-bold mb-4">{user.display_name}</h2>
             <div class="grid grid-cols-2 gap-4">
               <div class="stat bg-blue-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Questions Answered</div>
