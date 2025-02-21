@@ -6,11 +6,10 @@ import { log } from "../../lib/logger.ts";
 
 const client_id = Deno.env.get("CLIENT_ID");
 const client_secret = Deno.env.get("CLIENT_SECRET");
-const redirect_uri = Deno.env.get("REDIRECT_URI");
 
 export const handler: AppHandlers = {
   async GET(req, ctx) {
-    if (!client_id || !client_secret || !redirect_uri) {
+    if (!client_id || !client_secret) {
       throw new Error("Missing environment variables");
     }
 
@@ -31,6 +30,7 @@ export const handler: AppHandlers = {
     const cookies = getCookies(req.headers);
     const code_verifier = cookies["code_verifier"];
 
+    const redirect_uri = `${currentUrl.origin}/auth/callback`;
     const authorizationCodeResponse = await oauth.authorizationCodeGrantRequest(
       as,
       client,
