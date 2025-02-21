@@ -4,11 +4,10 @@ import { Cookie, setCookie } from "@std/http/cookie";
 
 const client_id = Deno.env.get("CLIENT_ID");
 const client_secret = Deno.env.get("CLIENT_SECRET");
-const redirect_uri = Deno.env.get("REDIRECT_URI");
 
 export const handler: AppHandlers = {
-  async GET(_req, _ctx) {
-    if (!client_id || !client_secret || !redirect_uri) {
+  async GET(req, _ctx) {
+    if (!client_id || !client_secret) {
       throw new Error("Missing environment variables");
     }
     const issuer = new URL("https://dev-1m7qee3nty5n5ck1.us.auth0.com");
@@ -18,6 +17,9 @@ export const handler: AppHandlers = {
     const code_challenge = await oauth.calculatePKCECodeChallenge(
       code_verifier,
     );
+
+    const requestUrl = new URL(req.url);
+    const redirect_uri = `${requestUrl.origin}/auth/callback`;
 
     const authorizationUrl = new URL(as.authorization_endpoint!);
     authorizationUrl.searchParams.set("client_id", client_id);
