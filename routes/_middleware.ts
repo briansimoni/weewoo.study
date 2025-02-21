@@ -158,9 +158,6 @@ const logMiddleware: AppHandler = async function (req, ctx) {
     name: ctx.state.session?.name,
     status: res.status,
     responseTime: end - start,
-    reqHeaders: req.headers,
-    credentials: req.credentials,
-    destination: req.destination,
   });
   return res;
 };

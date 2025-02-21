@@ -111,7 +111,7 @@ function QuestionForm(
 
           return (
             <div class="form-control mb-4">
-              <label class="label cursor-pointer">
+              <label class="label cursor-pointer justify-start">
                 <input
                   type="radio"
                   class="radio"
