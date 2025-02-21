@@ -68,7 +68,7 @@ export default function (props: ProfileProps) {
               <div class="stat bg-purple-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Streak</div>
                 <div class="stat-value text-purple-700">
-                  {user.stats.streak.days} 🔥
+                  {user.stats.streak.days} Days 🔥
                 </div>
               </div>
             </div>
