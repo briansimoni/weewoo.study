@@ -126,8 +126,6 @@ export default function QuestionPage() {
   );
 }
 
-// -------------------- COMPONENTS -------------------- //
-
 function QuestionForm(
   { question, selectedAnswer, answered, submit, submitted }: {
     question: Question;
