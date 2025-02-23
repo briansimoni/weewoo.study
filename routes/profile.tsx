@@ -1,4 +1,5 @@
-import Profile from "../components/Profile.tsx";
+import Profile from "../islands/Profile.tsx";
+
 import { User, UserStore } from "../lib/user_store.ts";
 import { AppHandlers, AppProps } from "./_middleware.ts";
 

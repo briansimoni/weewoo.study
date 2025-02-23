@@ -20,6 +20,7 @@ export const handler: AppHandlers = {
   },
 
   // answer a question
+  // TODO: return JSON when there is an error. This could be done with middleware
   async POST(req, ctx) {
     const questionStore = await QuestionStore.make();
     const body = await req.json();

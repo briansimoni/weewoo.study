@@ -52,7 +52,7 @@ export class UserStore {
     return user;
   }
 
-  async updateUser(user: User) {
+  async updateUser(user: Partial<User> & { user_id: string }) {
     const initialUser = await this.getUser(user.user_id);
     if (!initialUser) {
       throw new Error("User not found");
@@ -99,7 +99,8 @@ export class UserStore {
     return proposedUpdate as User;
   }
 
-  async listTopStreaks() {
+  // TODO: infinite scroll
+  async listLeaderbaord() {
     const entries = [];
     try {
       for await (

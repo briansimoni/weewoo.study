@@ -6,12 +6,6 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 
 // dayjs.extend(dayjsPluginUTC);
 
-type QuestionPageProps = {
-  question: Question;
-  correct?: boolean;
-  selectedAnswer?: string;
-};
-
 export default function QuestionPage() {
   const [question, setQuestion] = useState<Question | undefined>();
   const [correct, setCorrect] = useState<boolean | undefined>();

@@ -5,6 +5,7 @@ import {
 import { User, UserStore } from "./user_store.ts";
 import { assertObjectMatch } from "$std/assert/assert_object_match.ts";
 import { assertEquals } from "$std/assert/assert_equals.ts";
+import { assert } from "$std/assert/assert.ts";
 
 let userStore: UserStore;
 let kv: Deno.Kv;
@@ -107,7 +108,7 @@ Deno.test("update leaderboard and list streaks", async () => {
   await Promise.all(users.map((user) => userStore.createUser(user)));
   await Promise.all(proposedUpdates.map((user) => userStore.updateUser(user)));
 
-  const leaderboard = await userStore.listTopStreaks();
+  const leaderboard = await userStore.listLeaderbaord();
 
   assertArrayIncludes(leaderboard, [
     { user_id: "10", display_name: "Brian", questions_correct: 10 },
@@ -162,10 +163,40 @@ Deno.test("when you are a new user and you get the first ever question wrong it 
     },
   });
 
-  const leaderboard = await userStore.listTopStreaks();
+  const leaderboard = await userStore.listLeaderbaord();
 
   // there was a bug where two entries were being saved. There should only be one
   assertEquals(leaderboard.length, 1);
 
+  teardown();
+});
+
+Deno.test("updating the display name should also update the leaderboard entry", async () => {
+  await setup();
+
+  const user = {
+    ...testUser,
+    stats: {
+      questions_answered: 1,
+      questions_correct: 1,
+      streak: {
+        days: 1,
+      },
+    },
+  };
+
+  await userStore.createUser(user);
+  await userStore.updateUser({
+    user_id: user.user_id,
+    display_name: "peepoop",
+  });
+  const updatedUser = await userStore.getUser(user.user_id);
+  assertEquals(updatedUser?.display_name, "peepoop");
+
+  const leaderboard = await userStore.listLeaderbaord();
+  const leaderboardEntry = leaderboard.find((entry) =>
+    entry.user_id === user.user_id
+  );
+  assertEquals(leaderboardEntry?.display_name, "peepoop");
   teardown();
 });

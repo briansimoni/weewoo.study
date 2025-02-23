@@ -1,11 +1,10 @@
 import { User } from "../lib/user_store.ts";
-import { SessionData } from "../routes/_middleware.ts";
 
 interface Props {
   user: User;
-  session?: SessionData;
 }
 
+// The page that you see when you inspect a user other than yourself
 export default function (props: Props) {
   const { user } = props;
   let accuracy = user.stats.questions_correct / user.stats.questions_answered;
@@ -18,29 +17,11 @@ export default function (props: Props) {
       <div class="card w-full max-w-3xl bg-white shadow-xl rounded-xl p-6">
         <div class="flex flex-col md:flex-row items-center gap-6">
           <div class="flex flex-col items-center">
-            {props.session && (
-              <div class="avatar">
-                <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                  {props.session && (
-                    <img
-                      src={props.session.picture ?? "placeholder-image-url"}
-                      alt="Profile Image"
-                    />
-                  )}
-                </div>
+            <div className="avatar placeholder">
+              <div className="bg-neutral text-neutral-content w-24 rounded-full">
+                <span className="text-3xl">{user.display_name[0]}</span>
               </div>
-            )}
-
-            {!props.session && (
-              <div className="avatar placeholder">
-                <div className="bg-neutral text-neutral-content w-24 rounded-full">
-                  <span className="text-3xl">{user.display_name[0]}</span>
-                </div>
-              </div>
-            )}
-            <button type="button" class="btn btn-primary mt-4">
-              Todo: make this do something
-            </button>
+            </div>
           </div>
 
           <div class="flex-1">

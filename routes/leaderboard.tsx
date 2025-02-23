@@ -4,7 +4,7 @@ import { AppHandlers, AppProps } from "./_middleware.ts";
 export const handler: AppHandlers = {
   async GET(_req, ctx) {
     const userStore = await UserStore.make();
-    const leaderboard = await userStore.listTopStreaks();
+    const leaderboard = await userStore.listLeaderbaord();
     return ctx.render({ leaderboard });
   },
 };
@@ -38,7 +38,9 @@ export default function (props: LeaderboardProps) {
                     <td className="text-center">
                       <a
                         className="link-primary"
-                        href={`/user/${entry.user_id}`}
+                        href={props.state.session?.user_id === entry.user_id
+                          ? "/profile"
+                          : `/user/${entry.user_id}`}
                       >
                         {entry.display_name}
                       </a>

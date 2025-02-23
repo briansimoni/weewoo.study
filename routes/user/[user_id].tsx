@@ -1,4 +1,4 @@
-import Profile from "../../components/Profile.tsx";
+import UserPage from "../../components/UserPage.tsx";
 import { log } from "../../lib/logger.ts";
 import { UserStore } from "../../lib/user_store.ts";
 import { AppHandlers, AppProps } from "../_middleware.ts";
@@ -14,5 +14,5 @@ export const handler: AppHandlers = {
 };
 
 export default function (props: AppProps) {
-  return <Profile user={props.data.user} />;
+  return <UserPage user={props.data.user} />;
 }

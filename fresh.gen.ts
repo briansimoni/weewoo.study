@@ -7,6 +7,7 @@ import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $about from "./routes/about.tsx";
+import * as $api_profile from "./routes/api/profile.ts";
 import * as $api_question from "./routes/api/question.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_logged_out from "./routes/auth/logged-out.tsx";
@@ -21,6 +22,7 @@ import * as $user_user_id_ from "./routes/user/[user_id].tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $LoginIsland from "./islands/LoginIsland.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
+import * as $Profile from "./islands/Profile.tsx";
 import * as $Question from "./islands/Question.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
@@ -31,6 +33,7 @@ const manifest = {
     "./routes/_layout.tsx": $_layout,
     "./routes/_middleware.ts": $_middleware,
     "./routes/about.tsx": $about,
+    "./routes/api/profile.ts": $api_profile,
     "./routes/api/question.ts": $api_question,
     "./routes/auth/callback.ts": $auth_callback,
     "./routes/auth/logged-out.tsx": $auth_logged_out,
@@ -47,6 +50,7 @@ const manifest = {
     "./islands/Counter.tsx": $Counter,
     "./islands/LoginIsland.tsx": $LoginIsland,
     "./islands/NavAvatar.tsx": $NavAvatar,
+    "./islands/Profile.tsx": $Profile,
     "./islands/Question.tsx": $Question,
   },
   baseUrl: import.meta.url,
