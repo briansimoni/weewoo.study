@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 
-export default function () {
+export default function ThemeController() {
   const [theme, setTheme] = useState("light"); // default theme
 
   useEffect(() => {
@@ -15,13 +15,10 @@ export default function () {
   }, [theme]);
 
   const handleThemeToggle = (e: Event) => {
-    console.log(e);
-    localStorage.setItem(
-      "theme",
-      (e.target as HTMLInputElement).checked ? "dark" : "light",
-    );
     const isChecked = (e.target as HTMLInputElement).checked;
-    setTheme(isChecked ? "dark" : "light");
+    const newTheme = isChecked ? "dark" : "light";
+    localStorage.setItem("theme", newTheme);
+    setTheme(newTheme);
   };
 
   return (
@@ -44,8 +41,8 @@ export default function () {
         <input
           onChange={handleThemeToggle}
           type="checkbox"
-          value="synthwave"
           className="toggle theme-controller"
+          checked={theme === "dark"}
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,8 +55,7 @@ export default function () {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z">
-          </path>
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
         </svg>
       </label>
     </li>

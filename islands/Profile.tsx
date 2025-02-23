@@ -75,8 +75,8 @@ export default function Profile(props: Props) {
   const streakDays = streak?.days ?? 0;
 
   return (
-    <div class="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div class="card w-full max-w-3xl bg-white shadow-xl rounded-xl p-6">
+    <div class="min-h-screen flex items-center justify-center">
+      <div class="card card-bordered bg-primary-content w-full max-w-3xl shadow-xl rounded-xl p-6">
         <div class="flex flex-col md:flex-row items-center gap-6">
           <div class="flex flex-col items-center">
             {session && (
