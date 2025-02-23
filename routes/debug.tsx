@@ -1,4 +1,3 @@
-import { FreshContext } from "$fresh/server.ts";
 import { getKv } from "../lib/kv.ts";
 import { AppHandlers, AppProps } from "./_middleware.ts";
 
@@ -14,6 +13,12 @@ async function list(prefix: string) {
 
 export const handler: AppHandlers = {
   async GET(req, ctx) {
+    if (ctx.state.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
+      throw new Error("Unauthorized access.");
+    }
+    if (new URL(req.url).searchParams.get("throw")) {
+      throw new Error("Test error");
+    }
     const users = await list("users");
     const leaderboard = await list("leaderboard");
     const emt = await list("emt");
@@ -21,6 +26,9 @@ export const handler: AppHandlers = {
   },
 
   async POST(req, ctx) {
+    if (ctx.state.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
+      throw new Error("Unauthorized access.");
+    }
     const kv = await getKv();
     const form = await req.formData();
     const action = form.get("action");
@@ -47,10 +55,6 @@ interface DebugProps extends AppProps {
 }
 
 export default function Debug(props: DebugProps) {
-  if (props.data.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
-    throw new Error("Unauthorized access.");
-  }
-
   const { leaderboard, users, emt } = props.data;
 
   function renderTable(
