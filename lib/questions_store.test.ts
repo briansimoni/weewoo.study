@@ -6,7 +6,6 @@ import {
   assertRejects,
 } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import { Question, QuestionStore } from "./question_store.ts";
-import { assert } from "$std/assert/assert.ts";
 import { assertExists } from "$std/assert/assert_exists.ts";
 
 let questionStore: QuestionStore;

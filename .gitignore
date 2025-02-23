@@ -15,3 +15,4 @@ question_data
 question_data_old
 
 .deno_cache
+cov_out

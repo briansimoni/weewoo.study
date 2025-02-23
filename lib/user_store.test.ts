@@ -5,7 +5,6 @@ import {
 import { User, UserStore } from "./user_store.ts";
 import { assertObjectMatch } from "$std/assert/assert_object_match.ts";
 import { assertEquals } from "$std/assert/assert_equals.ts";
-import { assert } from "$std/assert/assert.ts";
 
 let userStore: UserStore;
 let kv: Deno.Kv;
@@ -24,9 +23,6 @@ const testUser: User = {
   display_name: "Brian",
   created_at: "",
   stats: {
-    streak: {
-      days: 0,
-    },
     questions_answered: 0,
     questions_correct: 0,
   },
@@ -55,9 +51,6 @@ Deno.test("update a user", async () => {
     stats: {
       questions_answered: 1,
       questions_correct: 1,
-      streak: {
-        days: 0,
-      },
     },
   });
   const user = await userStore.getUser("auth0|1234");
@@ -85,9 +78,6 @@ Deno.test("update leaderboard and list streaks", async () => {
       stats: {
         questions_answered: 1,
         questions_correct: 1,
-        streak: {
-          days: 0,
-        },
       },
     });
   }
@@ -134,9 +124,6 @@ Deno.test("when you are a new user and you get the first ever question wrong it 
     stats: {
       questions_answered: 0,
       questions_correct: 0,
-      streak: {
-        days: 0,
-      },
     },
   };
 
@@ -179,9 +166,6 @@ Deno.test("updating the display name should also update the leaderboard entry", 
     stats: {
       questions_answered: 1,
       questions_correct: 1,
-      streak: {
-        days: 1,
-      },
     },
   };
 

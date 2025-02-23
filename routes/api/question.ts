@@ -1,6 +1,6 @@
 import { QuestionStore } from "../../lib/question_store.ts";
+import { StreakStore } from "../../lib/streak_store.ts";
 import { UserStore } from "../../lib/user_store.ts";
-import { updateStreak } from "../../lib/utils.ts";
 import { AppHandlers } from "../_middleware.ts";
 import { z } from "npm:zod";
 
@@ -43,7 +43,8 @@ export const handler: AppHandlers = {
       }
 
       if (isCorrect) {
-        updateStreak(user);
+        const streakStore = await StreakStore.make();
+        await streakStore.update(user.user_id);
       }
 
       await userStore.updateUser({

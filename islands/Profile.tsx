@@ -1,19 +1,54 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { User } from "../lib/user_store.ts";
 import { SessionData } from "../routes/_middleware.ts";
+import { Streak } from "../lib/streak_store.ts";
+import dayjs from "npm:dayjs";
 
 interface Props {
   user: User;
+  streak?: Streak;
   session?: SessionData;
 }
 
 export default function Profile(props: Props) {
-  const { user, session } = props;
+  const { user, session, streak } = props;
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(user.display_name);
+  const [streakTimer, setStreakTimer] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const [timerColor, setTimerColor] = useState<string | undefined>();
+
+  useEffect(() => {
+    let interval: number | undefined;
+    function updateTimer() {
+      const hours = dayjs(streak?.expires_on).diff(dayjs(), "hours");
+      const minutes = dayjs(streak?.expires_on).diff(dayjs(), "minutes") % 60;
+      const seconds = dayjs(streak?.expires_on).diff(dayjs(), "seconds") % 60;
+      setStreakTimer({ hours, minutes, seconds });
+      if (hours > 24) {
+        setTimerColor("green");
+      }
+      if (hours <= 24 && hours > 1) {
+        setTimerColor("orange");
+      }
+      if (hours <= 1) {
+        setTimerColor("red");
+      }
+    }
+    if (streak) {
+      updateTimer();
+      interval = setInterval(updateTimer, 1000);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [streak]);
 
   const handleSave = () => {
-    // TODO: Add API call or other logic to persist the new display name.
     async function updateUser() {
       const res = await fetch("/api/profile", {
         method: "PATCH",
@@ -37,6 +72,7 @@ export default function Profile(props: Props) {
     accuracy = 0;
   }
   accuracy = Math.round(accuracy * 100);
+  const streakDays = streak?.days ?? 0;
 
   return (
     <div class="bg-gray-100 min-h-screen flex items-center justify-center">
@@ -127,7 +163,37 @@ export default function Profile(props: Props) {
               <div class="stat bg-purple-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Streak</div>
                 <div class="stat-value text-purple-700">
-                  {user.stats.streak.days} Days 🔥
+                  {streakDays}
+                  {streakDays > 1 && " Days 🔥"}
+                  {streakDays <= 1 && " Day 🔥"}
+                </div>
+              </div>
+              <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+                <h2 class="text-2xl font-semibold content-center">
+                  Streak Expires In
+                </h2>
+                <div
+                  class="flex gap-5"
+                  style={{ color: timerColor }}
+                >
+                  <div>
+                    <span class="countdown font-mono text-4xl">
+                      <span style={{ "--value": streakTimer.hours }}></span>
+                    </span>
+                    hours
+                  </div>
+                  <div>
+                    <span class="countdown font-mono text-4xl">
+                      <span style={{ "--value": streakTimer.minutes }}></span>
+                    </span>
+                    min
+                  </div>
+                  <div>
+                    <span class="countdown font-mono text-4xl">
+                      <span style={{ "--value": streakTimer.seconds }}></span>
+                    </span>
+                    sec
+                  </div>
                 </div>
               </div>
             </div>

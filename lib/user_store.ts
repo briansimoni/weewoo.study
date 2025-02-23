@@ -1,11 +1,6 @@
 import { getKv } from "./kv.ts";
 
 export interface UserStats {
-  streak: {
-    days: number;
-    start_date?: string;
-    last_date?: string;
-  };
   questions_answered: number;
   questions_correct: number;
 }

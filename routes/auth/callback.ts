@@ -75,9 +75,6 @@ export const handler: AppHandlers = {
         stats: {
           questions_answered: 0,
           questions_correct: 0,
-          streak: {
-            days: 0,
-          },
         },
       });
     }
