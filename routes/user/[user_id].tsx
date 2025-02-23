@@ -1,6 +1,6 @@
 import Profile from "../../components/Profile.tsx";
 import { log } from "../../lib/logger.ts";
-import { User, UserStore } from "../../lib/user_store.ts";
+import { UserStore } from "../../lib/user_store.ts";
 import { AppHandlers, AppProps } from "../_middleware.ts";
 
 export const handler: AppHandlers = {
@@ -13,10 +13,6 @@ export const handler: AppHandlers = {
   },
 };
 
-interface ProfileProps extends AppProps {
-  user: User;
-}
-
-export default function (props: ProfileProps) {
+export default function (props: AppProps) {
   return <Profile user={props.data.user} />;
 }
