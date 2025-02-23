@@ -78,11 +78,10 @@ export default function QuestionPage() {
   });
 
   function nextQuestion() {
-    setQuestion(undefined);
     setCorrect(undefined);
     setSubmitted(undefined);
     setSelectedAnswer(undefined);
-    fetchQuestion();
+    setQuestion(undefined);
   }
 
   if (!question) {

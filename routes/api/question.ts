@@ -2,10 +2,11 @@ import { QuestionStore } from "../../lib/question_store.ts";
 import { UserStore } from "../../lib/user_store.ts";
 import { updateStreak } from "../../lib/utils.ts";
 import { AppHandlers } from "../_middleware.ts";
+import { z } from "npm:zod";
 
 export const handler: AppHandlers = {
   // get a question
-  async GET(req, ctx) {
+  async GET() {
     const questionStore = await QuestionStore.make();
     const question = await questionStore.getRandomQuestion();
     return new Response(
@@ -21,9 +22,13 @@ export const handler: AppHandlers = {
   // answer a question
   async POST(req, ctx) {
     const questionStore = await QuestionStore.make();
-    // todo: input validation
     const body = await req.json();
-    const { questionId, answer }: { questionId: string; answer: string } = body;
+    const schema = z.object({
+      questionId: z.string(),
+      answer: z.string(),
+    });
+    const submission = schema.parse(body);
+    const { questionId, answer } = submission;
     const question = await questionStore.getQuestion(questionId);
     const isCorrect = question?.correct_answer === answer;
 

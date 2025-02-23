@@ -30,7 +30,8 @@
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin",
-    "daisyui": "npm:daisyui@4.7.0"
+    "daisyui": "npm:daisyui@4.7.0",
+    "zod": "npm:zod@^3.24.2"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
