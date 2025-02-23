@@ -168,7 +168,7 @@ export default function Profile(props: Props) {
                   {streakDays <= 1 && " Day 🔥"}
                 </div>
               </div>
-              <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+              <div class="col-span-2 flex flex-col md:flex-row items-center gap-5 text-center">
                 <h2 class="text-2xl font-semibold content-center">
                   Streak Expires In
                 </h2>

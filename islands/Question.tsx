@@ -81,7 +81,7 @@ export default function QuestionPage() {
   if (!question) {
     return (
       <div>
-        <div class="flex justify-center max-w-md mx-auto p-6 border border-gray-300 rounded-lg bg-white font-sans">
+        <div class="flex justify-center max-w-md mx-auto p-6 border border-gray-300 rounded-lg  font-sans">
           <div className="loading loading-spinner"></div>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default function QuestionPage() {
 
   return (
     <div>
-      <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg bg-white font-sans">
+      <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg  font-sans">
         <h1 class="text-center text-blue-500 text-2xl font-bold mb-4">
           {correct === undefined
             ? "Practice Question"

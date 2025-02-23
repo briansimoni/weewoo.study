@@ -25,8 +25,8 @@ export default function App({ Component }: PageProps) {
           property="og:description"
           content="Prepare for your NREMT Basic, Advanced, or Paramedic exam with the most fun study app out there."
         />
-        <meta property="og:image" content="/path/to/your-image.png" />
-        <meta property="og:url" content="https://yourappdomain.com" />
+        <meta property="og:image" content="/static/ambulance.svg" />
+        <meta property="og:url" content="https://weewoo.study" />
         <meta property="og:type" content="website" />
       </head>
       <body>

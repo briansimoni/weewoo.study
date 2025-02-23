@@ -24,6 +24,7 @@ import * as $LoginIsland from "./islands/LoginIsland.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
 import * as $Profile from "./islands/Profile.tsx";
 import * as $Question from "./islands/Question.tsx";
+import * as $ThemeController from "./islands/ThemeController.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -52,6 +53,7 @@ const manifest = {
     "./islands/NavAvatar.tsx": $NavAvatar,
     "./islands/Profile.tsx": $Profile,
     "./islands/Question.tsx": $Question,
+    "./islands/ThemeController.tsx": $ThemeController,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
