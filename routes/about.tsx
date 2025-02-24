@@ -3,7 +3,7 @@ export default function About() {
     <div className="min-h-screen bg-base-200 flex flex-col items-center p-6">
       <div className="max-w-xl w-full text-center">
         <h1 className="text-4xl font-bold mb-6 text-primary">
-          About EMS Practice Questions 🚑
+          🚨 About WeeWoo.study 🚑
         </h1>
 
         <p className="mb-4 text-lg">
