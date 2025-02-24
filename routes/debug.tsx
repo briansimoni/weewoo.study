@@ -22,7 +22,14 @@ export const handler: AppHandlers = {
     const users = await list("users");
     const leaderboard = await list("leaderboard");
     const emt = await list("emt");
-    return ctx.render({ session: ctx.state.session, users, leaderboard, emt });
+    const streak = await list("streaks");
+    return ctx.render({
+      session: ctx.state.session,
+      users,
+      leaderboard,
+      emt,
+      streak,
+    });
   },
 
   async POST(req, ctx) {
@@ -51,11 +58,12 @@ interface DebugProps extends AppProps {
     users: { key: Deno.KvKey; value: unknown }[];
     leaderboard: { key: Deno.KvKey; value: unknown }[];
     emt: { key: Deno.KvKey; value: unknown }[];
+    streak: { key: Deno.KvKey; value: unknown }[];
   };
 }
 
 export default function Debug(props: DebugProps) {
-  const { leaderboard, users, emt } = props.data;
+  const { leaderboard, users, emt, streak } = props.data;
 
   function renderTable(
     title: string,
@@ -132,6 +140,7 @@ export default function Debug(props: DebugProps) {
     <div class="container mx-auto p-4">
       <h1 class="text-2xl font-bold mb-4">Debug Page</h1>
       {renderTable("Users", users)}
+      {renderTable("Streaks", streak)}
       {renderTable("Leaderboard", leaderboard)}
       {renderTable("EMT Data", emt)}
     </div>
