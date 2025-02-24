@@ -13,6 +13,7 @@ export interface SessionData {
   name?: string;
   picture?: string;
   display_name?: string;
+  streakDays?: number;
   [key: string]: any;
 }
 

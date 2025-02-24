@@ -4,6 +4,7 @@ import { UserStore } from "../../lib/user_store.ts";
 import { getCookies, setCookie } from "@std/http/cookie";
 import { log } from "../../lib/logger.ts";
 import { generateName } from "../../lib/name_generator.ts";
+import { StreakStore } from "../../lib/streak_store.ts";
 
 const client_id = Deno.env.get("CLIENT_ID");
 const client_secret = Deno.env.get("CLIENT_SECRET");
@@ -66,6 +67,7 @@ export const handler: AppHandlers = {
     log.info("logged in", userinfo);
 
     const userStore = await UserStore.make();
+    const streakStore = await StreakStore.make();
     let user = await userStore.getUser(sub);
     if (!user) {
       user = await userStore.createUser({
@@ -78,10 +80,12 @@ export const handler: AppHandlers = {
         },
       });
     }
+    const streak = await streakStore.get(user.user_id);
 
     ctx.state.session = {
       access_token,
       user_id: sub,
+      streakDays: streak?.days ?? 0,
       ...claims,
       ...userinfo,
       display_name: user.display_name,

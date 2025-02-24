@@ -44,7 +44,8 @@ export const handler: AppHandlers = {
 
       if (isCorrect) {
         const streakStore = await StreakStore.make();
-        await streakStore.update(user.user_id);
+        const streak = await streakStore.update(user.user_id);
+        ctx.state.session.streakDays = streak.days;
       }
 
       await userStore.updateUser({

@@ -16,6 +16,12 @@ export default function Layout({ Component, state }: AppProps) {
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
             <li>
+              {state.session && <span>🔥 {state.session?.streakDays ?? 0}
+              </span>}
+            </li>
+          </ul>
+          <ul className="menu menu-horizontal px-1">
+            <li>
               <a href="/about">About</a>
             </li>
           </ul>
