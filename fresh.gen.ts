@@ -19,7 +19,6 @@ import * as $index from "./routes/index.tsx";
 import * as $leaderboard from "./routes/leaderboard.tsx";
 import * as $profile from "./routes/profile.tsx";
 import * as $user_user_id_ from "./routes/user/[user_id].tsx";
-import * as $Counter from "./islands/Counter.tsx";
 import * as $LoginIsland from "./islands/LoginIsland.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
 import * as $Profile from "./islands/Profile.tsx";
@@ -48,7 +47,6 @@ const manifest = {
     "./routes/user/[user_id].tsx": $user_user_id_,
   },
   islands: {
-    "./islands/Counter.tsx": $Counter,
     "./islands/LoginIsland.tsx": $LoginIsland,
     "./islands/NavAvatar.tsx": $NavAvatar,
     "./islands/Profile.tsx": $Profile,
