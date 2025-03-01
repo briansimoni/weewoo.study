@@ -18,7 +18,7 @@ export default defineRoute((req, ctx) => {
           max="100"
         >
         </progress>
-        <p className="text-sm text-base-content/60">70% Complete</p>
+        <p className="text-sm text-base-content/60">69% Complete</p>
       </div>
       <a href="/" className="btn btn-primary">
         Back to Home
