@@ -1,5 +1,5 @@
 import { useEffect } from "preact/hooks";
-import { signal } from "@preact/signals";
+import { signal } from "preact/signals";
 
 export const streakDays = signal(0);
 
