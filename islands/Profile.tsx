@@ -81,7 +81,7 @@ export default function Profile(props: Props) {
           <div class="flex flex-col items-center">
             {session && (
               <div class="avatar">
-                <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <div class="w-32 rounded-full ring-3 ring-primary ring-offset-base-100 ring-offset-2">
                   <img
                     src={session.picture ?? "placeholder-image-url"}
                     alt="Profile Image"
