@@ -1,12 +1,14 @@
+import { Streak } from "../lib/streak_store.ts";
 import { User } from "../lib/user_store.ts";
 
 interface Props {
   user: User;
+  streak?: Streak;
 }
 
 // The page that you see when you inspect a user other than yourself
 export default function (props: Props) {
-  const { user } = props;
+  const { user, streak } = props;
   let accuracy = user.stats.questions_correct / user.stats.questions_answered;
   if (isNaN(accuracy)) {
     accuracy = 0;
@@ -48,7 +50,7 @@ export default function (props: Props) {
               <div class="stat bg-purple-100 p-4 rounded-lg">
                 <div class="stat-title text-gray-600">Streak</div>
                 <div class="stat-value text-purple-700">
-                  {user.stats.streak.days} Days 🔥
+                  {streak?.days ?? 0} Days 🔥
                 </div>
               </div>
             </div>
