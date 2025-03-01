@@ -1,4 +1,2 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import "https://cdn.jsdelivr.net/npm/daisyui@4.6.0/dist/full.css";
+@import "tailwindcss";
+@plugin "daisyui";
