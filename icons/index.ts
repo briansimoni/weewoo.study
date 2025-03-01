@@ -6,7 +6,7 @@ import {
   ShoppingBag as ShoppingBagIcon,
   Sun as SunIcon,
   Trophy as TrophyIcon,
-} from "lucide-preact";
+} from "npm:lucide-preact";
 import type { ComponentType } from "preact"; // Import Preact’s ComponentType
 
 // For some reason Preact or Deno or Typescript doesn't like the lucide-preact component types out of the box which is dumb
