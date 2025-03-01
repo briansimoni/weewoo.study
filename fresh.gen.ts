@@ -7,6 +7,7 @@ import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $about from "./routes/about.tsx";
+import * as $admin_question_generator from "./routes/admin/question-generator.tsx";
 import * as $api_profile from "./routes/api/profile.ts";
 import * as $api_question from "./routes/api/question.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
@@ -20,6 +21,7 @@ import * as $leaderboard from "./routes/leaderboard.tsx";
 import * as $profile from "./routes/profile.tsx";
 import * as $shop from "./routes/shop.tsx";
 import * as $user_user_id_ from "./routes/user/[user_id].tsx";
+import * as $AdminQuestionGenerator from "./islands/AdminQuestionGenerator.tsx";
 import * as $LoginIsland from "./islands/LoginIsland.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
 import * as $Profile from "./islands/Profile.tsx";
@@ -35,6 +37,7 @@ const manifest = {
     "./routes/_layout.tsx": $_layout,
     "./routes/_middleware.ts": $_middleware,
     "./routes/about.tsx": $about,
+    "./routes/admin/question-generator.tsx": $admin_question_generator,
     "./routes/api/profile.ts": $api_profile,
     "./routes/api/question.ts": $api_question,
     "./routes/auth/callback.ts": $auth_callback,
@@ -50,6 +53,7 @@ const manifest = {
     "./routes/user/[user_id].tsx": $user_user_id_,
   },
   islands: {
+    "./islands/AdminQuestionGenerator.tsx": $AdminQuestionGenerator,
     "./islands/LoginIsland.tsx": $LoginIsland,
     "./islands/NavAvatar.tsx": $NavAvatar,
     "./islands/Profile.tsx": $Profile,

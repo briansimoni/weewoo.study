@@ -7,7 +7,7 @@ import { AppProps } from "./_middleware.ts";
 export default function Layout(props: AppProps) {
   const { state, Component } = props;
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen">
       <div className="navbar bg-base-100">
         {/* Logo */}
         <div className="navbar-start">
@@ -17,9 +17,11 @@ export default function Layout(props: AppProps) {
         {/* Right Side: Streak and Menus */}
         <div className="navbar-end flex items-center gap-4">
           {/* Streak - Always Visible */}
-          {state.session && (
+          {
+            /* {state.session && (
             <StreakIndicator initialStreak={state.session.streakDays} />
-          )}
+          )} */
+          }
 
           {/* Hamburger Menu for Mobile */}
           <div className="md:hidden">
