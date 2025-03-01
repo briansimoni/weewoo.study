@@ -42,7 +42,6 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "lib": ["deno.unstable", "dom"],
-    "strict": true
+    "lib": ["deno.unstable", "dom"]
   }
 }
