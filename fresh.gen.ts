@@ -18,11 +18,13 @@ import * as $emt_practice_index from "./routes/emt/practice/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $leaderboard from "./routes/leaderboard.tsx";
 import * as $profile from "./routes/profile.tsx";
+import * as $shop from "./routes/shop.tsx";
 import * as $user_user_id_ from "./routes/user/[user_id].tsx";
 import * as $LoginIsland from "./islands/LoginIsland.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
 import * as $Profile from "./islands/Profile.tsx";
 import * as $Question from "./islands/Question.tsx";
+import * as $StreakIndicator from "./islands/StreakIndicator.tsx";
 import * as $ThemeController from "./islands/ThemeController.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
@@ -44,6 +46,7 @@ const manifest = {
     "./routes/index.tsx": $index,
     "./routes/leaderboard.tsx": $leaderboard,
     "./routes/profile.tsx": $profile,
+    "./routes/shop.tsx": $shop,
     "./routes/user/[user_id].tsx": $user_user_id_,
   },
   islands: {
@@ -51,6 +54,7 @@ const manifest = {
     "./islands/NavAvatar.tsx": $NavAvatar,
     "./islands/Profile.tsx": $Profile,
     "./islands/Question.tsx": $Question,
+    "./islands/StreakIndicator.tsx": $StreakIndicator,
     "./islands/ThemeController.tsx": $ThemeController,
   },
   baseUrl: import.meta.url,

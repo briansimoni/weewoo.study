@@ -139,6 +139,10 @@ export default function Debug(props: DebugProps) {
   return (
     <div class="container mx-auto p-4">
       <h1 class="text-2xl font-bold mb-4">Debug Page</h1>
+      <h4>session</h4>
+      <pre>
+        {JSON.stringify(props.data.session, null, 2)}
+      </pre>
       {renderTable("Users", users)}
       {renderTable("Streaks", streak)}
       {renderTable("Leaderboard", leaderboard)}

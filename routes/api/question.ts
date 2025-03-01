@@ -1,8 +1,15 @@
-import { QuestionStore } from "../../lib/question_store.ts";
-import { StreakStore } from "../../lib/streak_store.ts";
+import { Question, QuestionStore } from "../../lib/question_store.ts";
+import { Streak, StreakStore } from "../../lib/streak_store.ts";
 import { UserStore } from "../../lib/user_store.ts";
 import { AppHandlers } from "../_middleware.ts";
 import { z } from "npm:zod";
+
+export interface QuestionPostResponse {
+  question: Question;
+  correct: boolean;
+  selectedAnswer: string;
+  streak?: Streak;
+}
 
 export const handler: AppHandlers = {
   // get a question
@@ -33,6 +40,8 @@ export const handler: AppHandlers = {
     const question = await questionStore.getQuestion(questionId);
     const isCorrect = question?.correct_answer === answer;
 
+    let streak: Streak | undefined;
+
     // if you're logged in let's update your stats
     const user_id = ctx.state.session?.user_id;
     if (user_id) {
@@ -44,8 +53,8 @@ export const handler: AppHandlers = {
 
       if (isCorrect) {
         const streakStore = await StreakStore.make();
-        const streak = await streakStore.update(user.user_id);
-        ctx.state.session.streakDays = streak.days;
+        streak = await streakStore.update(user.user_id);
+        ctx.state.session!.streakDays = streak.days;
       }
 
       await userStore.updateUser({
@@ -63,6 +72,7 @@ export const handler: AppHandlers = {
         question,
         correct: isCorrect,
         selectedAnswer: answer,
+        streak,
       }),
       {
         headers: {

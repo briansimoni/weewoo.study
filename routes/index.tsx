@@ -10,7 +10,7 @@ export default function Home(props: AppProps) {
           </div>
         </div>
         <h1 className="text-4xl font-bold text-center">
-          Welcome to EMS Practice Questions
+          Welcome to WeeWoo Study
         </h1>
         <p className="text-lg text-center">
           Prepare for your EMT and Paramedic exams with interactive practice

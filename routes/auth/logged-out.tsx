@@ -1,8 +1,5 @@
 import * as oauth from "npm:oauth4webapi";
 import { AppHandlers } from "../_middleware.ts";
-const client_id = Deno.env.get("CLIENT_ID");
-const client_secret = Deno.env.get("CLIENT_SECRET");
-const redirect_uri = Deno.env.get("REDIRECT_URI");
 
 export const handler: AppHandlers = {
   GET(_req, ctx) {

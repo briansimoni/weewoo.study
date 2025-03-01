@@ -90,7 +90,10 @@ const sessionMiddleware: Handler = async function handler(
     }
   }
 
-  ctx.state.session = sessionData;
+  // copy the object if it's not undefined
+  ctx.state.session = sessionData === undefined
+    ? undefined
+    : JSON.parse(JSON.stringify(sessionData));
 
   // Run the handlers
   const resp = await ctx.next();

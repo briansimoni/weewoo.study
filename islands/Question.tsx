@@ -1,6 +1,8 @@
 import { useEffect, useState } from "preact/hooks";
 import { Question } from "../lib/question_store.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
+import { setDisplayedStreak } from "./StreakIndicator.tsx";
+import { QuestionPostResponse } from "../routes/api/question.ts";
 
 //import dayjsPluginUTC from "npm:dayjs-plugin-utc";
 
@@ -50,7 +52,10 @@ export default function QuestionPage() {
           "Content-Type": "application/json",
         },
       });
-      const answerResponse = await res.json();
+      const answerResponse = await res.json() as QuestionPostResponse;
+      if (answerResponse.streak) {
+        setDisplayedStreak(answerResponse.streak.days);
+      }
       setCorrect(answerResponse.correct);
     }
     if (submitted) {

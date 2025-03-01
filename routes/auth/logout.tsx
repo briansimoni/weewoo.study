@@ -24,7 +24,6 @@ export const handler: AppHandlers = {
     return new Response(null, {
       status: 302,
       headers: {
-        // "Set-Cookie": `session=; Path=/; Max-Age=0`,
         location: logoutUrl.toString(),
       },
     });
