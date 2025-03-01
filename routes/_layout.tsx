@@ -41,7 +41,7 @@ export default function Layout({ Component, state }: AppProps) {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-300 rounded-box z-[1] mt-3 w-52 p-2"
+              className="menu menu-sm dropdown-content bg-base-300 rounded-box z-1 mt-3 w-52 p-2"
             >
               <ThemeController />
 
@@ -66,7 +66,7 @@ export default function Layout({ Component, state }: AppProps) {
         </div>
       </div>
       {/* Main content area that grows */}
-      <main className="flex-grow">
+      <main className="grow">
         <Component />
       </main>
     </div>
