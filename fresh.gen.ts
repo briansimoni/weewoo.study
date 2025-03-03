@@ -7,14 +7,17 @@ import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $about from "./routes/about.tsx";
+import * as $admin_middleware from "./routes/admin/_middleware.ts";
+import * as $admin_debug from "./routes/admin/debug.tsx";
 import * as $admin_question_generator from "./routes/admin/question-generator.tsx";
+import * as $api_admin_middleware from "./routes/api/admin/_middleware.ts";
+import * as $api_admin_question from "./routes/api/admin/question.ts";
 import * as $api_profile from "./routes/api/profile.ts";
 import * as $api_question from "./routes/api/question.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_logged_out from "./routes/auth/logged-out.tsx";
 import * as $auth_login from "./routes/auth/login.tsx";
 import * as $auth_logout from "./routes/auth/logout.tsx";
-import * as $debug from "./routes/debug.tsx";
 import * as $emt_practice_index from "./routes/emt/practice/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $leaderboard from "./routes/leaderboard.tsx";
@@ -37,14 +40,17 @@ const manifest = {
     "./routes/_layout.tsx": $_layout,
     "./routes/_middleware.ts": $_middleware,
     "./routes/about.tsx": $about,
+    "./routes/admin/_middleware.ts": $admin_middleware,
+    "./routes/admin/debug.tsx": $admin_debug,
     "./routes/admin/question-generator.tsx": $admin_question_generator,
+    "./routes/api/admin/_middleware.ts": $api_admin_middleware,
+    "./routes/api/admin/question.ts": $api_admin_question,
     "./routes/api/profile.ts": $api_profile,
     "./routes/api/question.ts": $api_question,
     "./routes/auth/callback.ts": $auth_callback,
     "./routes/auth/logged-out.tsx": $auth_logged_out,
     "./routes/auth/login.tsx": $auth_login,
     "./routes/auth/logout.tsx": $auth_logout,
-    "./routes/debug.tsx": $debug,
     "./routes/emt/practice/index.tsx": $emt_practice_index,
     "./routes/index.tsx": $index,
     "./routes/leaderboard.tsx": $leaderboard,

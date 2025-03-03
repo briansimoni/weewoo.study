@@ -1,27 +1,48 @@
 import { useState } from "preact/hooks";
-import { z } from "zod";
+import { AdminCreateQuestionResponse } from "../routes/api/admin/question.ts";
 
 const defaultPrompt =
-  "You are an expert EMT instructor. Generate ten multiple-choice questions for the NREMT exam. Each question should have a question, four answer choices, a correct answer, and an explanation, and category ('Airway, Respiration, and Ventilation', 'Cardiology and Resuscitation', 'Trauma', 'Medical and Obstetrics/Gynecology', 'EMS Operations'). Format as JSON. The choices should be in an array. Please do not provide any additional text as this will go into a database. Do not wrap the response in markdown.";
+  `Generate a a multiple choice question for the NREMT Basic exam. Please provide Format as JSON. Please do not provide any additional text as this will go into a database. Do not wrap the response in markdown. The question should comply with the following zod schema:
+Zod.object({
+  question: Zod.string().min(1),
+  choices: Zod.array(Zod.string().min(1)),
+  correct_answer: Zod.string().min(1),
+  explanation: Zod.string().min(1),
+  category: Zod.string(
+    Zod.enum([
+      "Airway management",
+      "Oxygenation",
+      "Ventilation",
+      "Respiratory emergencies",
+      "Basic cardiac life support (BLS)",
+      "Automated External Defibrillator (AED) use",
+      "Cardiac emergencies",
+      "Bleeding control",
+      "Shock management",
+      "Soft tissue injuries",
+      "Musculoskeletal injuries",
+      "Head, neck, and spinal injuries",
+      "Neurological emergencies (e.g., strokes, seizures)",
+      "Endocrine disorders (e.g., diabetes emergencies)",
+      "Toxicology (e.g., overdoses, poisoning)",
+      "Abdominal and gastrointestinal emergencies",
+      "Allergic reactions and anaphylaxis",
+      "Obstetrics and childbirth emergencies",
+      "Scene safety and management",
+      "Mass casualty incidents (MCI) and triage",
+      "Ambulance operations",
+      "Hazardous materials (HAZMAT) awareness",
+    ]),
+  ),
+});
+
+
+`;
+// "You are an expert EMT instructor. Generate a multiple-choice questions for the NREMT exam. The question should have a question, four answer choices, a correct answer, and an explanation, and category ('Airway, Respiration, and Ventilation', 'Cardiology and Resuscitation', 'Trauma', 'Medical and Obstetrics/Gynecology', 'EMS Operations'). Format as JSON. The choices should be in an array. Please do not provide any additional text as this will go into a database. Do not wrap the response in markdown.";
 
 export default function AdminQuestionGenerator() {
   const [prompt, setPrompt] = useState(defaultPrompt);
-  const [schema, setSchema] = useState<string>(
-    JSON.stringify(
-      {
-        type: "object",
-        properties: {
-          question: { type: "string" },
-          answer: { type: "string" },
-        },
-        required: ["question", "answer"],
-      },
-      null,
-      2,
-    ),
-  );
-  const [output, setOutput] = useState("");
-  const [isValid, setIsValid] = useState<boolean | null>(null);
+  const [question, setQuestion] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loadingGenerate, setLoadingGenerate] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
@@ -29,19 +50,20 @@ export default function AdminQuestionGenerator() {
   const handleGenerate = async () => {
     setLoadingGenerate(true);
     setError(null);
-    setOutput("");
-    setIsValid(null);
+    setQuestion("");
 
     try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
-      });
+      const encodedPrompt = encodeURIComponent(prompt);
+      const response = await fetch(
+        `/api/admin/question?prompt=${encodedPrompt}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
       if (!response.ok) throw new Error("Failed to generate response");
       const data = await response.json();
-      setOutput(JSON.stringify(data, null, 2));
-      validateOutput(data);
+      setQuestion(JSON.stringify(data, null, 2));
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -49,46 +71,20 @@ export default function AdminQuestionGenerator() {
     }
   };
 
-  const validateOutput = (data: unknown) => {
-    try {
-      const schemaObj = JSON.parse(schema);
-      const zodSchema = z.object(
-        Object.fromEntries(
-          Object.entries(schemaObj.properties).map(([key, value]) => [
-            key,
-            (value as any).type === "string" ? z.string() : z.any(),
-          ]),
-        ),
-      ).required(schemaObj.required);
-      zodSchema.parse(data);
-      setIsValid(true);
-    } catch (err) {
-      setIsValid(false);
-      setError(err instanceof Error ? err.message : "Invalid schema or output");
-    }
-  };
-
   const handleSave = async () => {
-    if (isValid !== true) {
-      setError("Cannot save: Output is invalid against schema");
-      return;
-    }
-
     setLoadingSave(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/save-question", {
+      const response = await fetch("/api/admin/question", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: JSON.parse(output) }),
+        body: question,
       });
       if (!response.ok) throw new Error("Failed to save question");
-      const data = await response.json();
+      const data = await response.json() as AdminCreateQuestionResponse;
       alert("Question saved successfully: " + JSON.stringify(data));
-      setPrompt(defaultPrompt);
-      setOutput("");
-      setIsValid(null);
+      setQuestion("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -116,38 +112,16 @@ export default function AdminQuestionGenerator() {
           />
         </div>
 
-        {/* Schema Input */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text text-xl font-semibold">
-              JSON Schema
-            </span>
-          </label>
-          <textarea
-            className="textarea textarea-bordered textarea-lg h-40 w-full rounded-lg shadow-md font-mono text-sm resize-y"
-            placeholder="Enter JSON schema..."
-            value={schema}
-            onInput={(e) => setSchema((e.target as HTMLTextAreaElement).value)}
-          />
-        </div>
-
         {/* Output Display */}
         <div className="form-control">
           <label className="label">
             <span className="label-text text-xl font-semibold">AI Output</span>
-            <div className="flex items-center gap-2">
-              {isValid === true && (
-                <span className="badge badge-success badge-lg">Valid</span>
-              )}
-              {isValid === false && (
-                <span className="badge badge-error badge-lg">Invalid</span>
-              )}
-            </div>
           </label>
           <textarea
             className="textarea textarea-bordered textarea-lg h-40 w-full rounded-lg shadow-md font-mono text-sm resize-y"
-            value={output}
-            readOnly
+            value={question}
+            onInput={(e) =>
+              setQuestion((e.target as HTMLTextAreaElement).value)}
           />
         </div>
       </div>
@@ -166,14 +140,14 @@ export default function AdminQuestionGenerator() {
             loadingGenerate ? "loading" : ""
           }`}
           onClick={handleGenerate}
-          disabled={loadingGenerate || !prompt || !schema}
+          disabled={loadingGenerate || !prompt}
         >
           Generate
         </button>
         <button
           className={`btn btn-success btn-lg ${loadingSave ? "loading" : ""}`}
           onClick={handleSave}
-          disabled={loadingSave || !output || isValid !== true}
+          disabled={loadingSave || !question}
         >
           Save
         </button>

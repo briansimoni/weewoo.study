@@ -1,5 +1,5 @@
-import { getKv } from "../lib/kv.ts";
-import { AppHandlers, AppProps } from "./_middleware.ts";
+import { getKv } from "../../lib/kv.ts";
+import { AppHandlers } from "../_middleware.ts";
 
 async function list(prefix: string) {
   const kv = await getKv();

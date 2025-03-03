@@ -25,6 +25,10 @@ export class QuestionStore {
     return result.value || 0;
   }
 
+  /**
+   * adds a question to the store. This is also responsible for creating the id
+   * and the question hash
+   */
   async addQuestion(question: Partial<Question>) {
     // Get the current count or default to 0
     const count = await this.getCount();
