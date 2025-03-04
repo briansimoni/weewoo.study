@@ -38,7 +38,6 @@ Zod.object({
 
 
 `;
-// "You are an expert EMT instructor. Generate a multiple-choice questions for the NREMT exam. The question should have a question, four answer choices, a correct answer, and an explanation, and category ('Airway, Respiration, and Ventilation', 'Cardiology and Resuscitation', 'Trauma', 'Medical and Obstetrics/Gynecology', 'EMS Operations'). Format as JSON. The choices should be in an array. Please do not provide any additional text as this will go into a database. Do not wrap the response in markdown.";
 
 export default function AdminQuestionGenerator() {
   const [prompt, setPrompt] = useState(defaultPrompt);

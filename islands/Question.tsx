@@ -4,10 +4,6 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { setDisplayedStreak } from "./StreakIndicator.tsx";
 import { QuestionPostResponse } from "../routes/api/question.ts";
 
-//import dayjsPluginUTC from "npm:dayjs-plugin-utc";
-
-// dayjs.extend(dayjsPluginUTC);
-
 export default function QuestionPage() {
   const [question, setQuestion] = useState<Question | undefined>();
   const [correct, setCorrect] = useState<boolean | undefined>();
@@ -86,7 +82,7 @@ export default function QuestionPage() {
   if (!question) {
     return (
       <div>
-        <div class="flex justify-center max-w-md mx-auto p-6 border border-gray-300 rounded-lg  font-sans">
+        <div class="flex justify-center max-w-md mx-auto p-6 border border-gray-300 rounded-lg font-sans">
           <div className="loading loading-spinner"></div>
         </div>
       </div>
@@ -95,7 +91,7 @@ export default function QuestionPage() {
 
   return (
     <div>
-      <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg  font-sans">
+      <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg font-sans">
         <h1 class="text-center text-blue-500 text-2xl font-bold mb-4">
           {correct === undefined
             ? "Practice Question"
@@ -134,32 +130,29 @@ function QuestionForm(
   },
 ) {
   return (
-    <form
-      onSubmit={submit}
-      class="flex flex-col gap-4"
-    >
+    <form onSubmit={submit} class="flex flex-col gap-4">
       <input type="hidden" name="questionId" value={question.id} />
-      <div class="text-lg mb-4">
-        {question.question}
-      </div>
-      <div class="flex flex-col gap-2">
+      <div class="text-lg mb-4">{question.question}</div>
+      <div class="flex flex-col gap-2 w-full">
         {question.choices.map((choice, i) => {
           const isSelected = selectedAnswer === choice;
           const isDisabled = answered;
 
           return (
-            <div class="form-control mb-4">
-              <label class="label cursor-pointer justify-start">
+            <div class="form-control w-full">
+              <label class="label cursor-pointer flex gap-2 items-start w-full">
                 <input
                   type="radio"
-                  class="radio"
+                  class="radio mt-1"
                   value={choice}
                   name="answer"
                   required
                   checked={isSelected}
                   disabled={isDisabled}
                 />
-                <span class="label-text ml-2">{choice}</span>
+                <span class="label-text break-words whitespace-normal flex-1">
+                  {choice}
+                </span>
               </label>
             </div>
           );
