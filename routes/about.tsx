@@ -73,18 +73,18 @@ export default function About() {
           How It Works (It's So Easy!)
         </h2>
         <div className="grid grid-cols-1 gap-4 mb-6">
-          <div className="card bg-white shadow-md p-4">
+          <div className="card bg-primary shadow-md p-4">
             <h3 className="font-bold text-xl">1. Start a Practice Session</h3>
             <p>Pick a question and get ready to show off your EMS smarts.</p>
           </div>
-          <div className="card bg-white shadow-md p-4">
+          <div className="card bg-primary shadow-md p-4">
             <h3 className="font-bold text-xl">2. Answer Questions</h3>
             <p>
               Make your choice and find out if you nailed it—or need a bit more
               caffeine.
             </p>
           </div>
-          <div className="card bg-white shadow-md p-4">
+          <div className="card bg-primary shadow-md p-4">
             <h3 className="font-bold text-xl">3. Learn & Improve</h3>
             <p>
               Read the explanation and impress your friends with your EMS

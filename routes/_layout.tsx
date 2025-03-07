@@ -13,7 +13,7 @@ import { AppProps } from "./_middleware.ts";
 export default function Layout(props: AppProps) {
   const { state, Component } = props;
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <div className="navbar bg-base-100">
         {/* Logo */}
         <div className="navbar-start">
@@ -130,7 +130,7 @@ export default function Layout(props: AppProps) {
         </a>
 
         <a
-          href="/leaderboard"
+          href="/emt/practice"
           className={`flex flex-col items-center ${
             props.route === "/emt/practice" ? "dock-active" : ""
           }`}

@@ -15,11 +15,11 @@ export default function (props: Props) {
   }
   accuracy = Math.round(accuracy * 100);
   return (
-    <div class="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div class="card w-full max-w-3xl bg-white shadow-xl rounded-xl p-6">
+    <div class=" flex items-center justify-center">
+      <div class="card w-full max-w-3xl shadow-xl rounded-xl p-6">
         <div class="flex flex-col md:flex-row items-center gap-6">
           <div class="flex flex-col items-center">
-            <div className="avatar placeholder">
+            <div className="avatar avatar-placeholder">
               <div className="bg-neutral text-neutral-content w-24 rounded-full">
                 <span className="text-3xl">{user.display_name[0]}</span>
               </div>
