@@ -2,7 +2,7 @@ import { AppProps } from "./_middleware.ts";
 
 export default function Home(props: AppProps) {
   return (
-    <div className="flex flex-col items-center justify-center bg-linear-to-br from-primary to-secondary text-white h-full">
+    <div className="flex flex-col items-center justify-center h-full">
       <div className="flex flex-col items-center gap-6">
         <div className="avatar">
           <div className="w-32 rounded-full">

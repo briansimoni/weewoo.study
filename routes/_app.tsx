@@ -29,7 +29,7 @@ export default function App({ Component }: PageProps) {
         <meta property="og:url" content="https://weewoo.study" />
         <meta property="og:type" content="website" />
       </head>
-      <body className="mb-32">
+      <body>
         <Component />
       </body>
     </html>

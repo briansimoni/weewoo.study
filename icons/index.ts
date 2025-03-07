@@ -1,5 +1,6 @@
 import {
   BarChart as BarChartIcon,
+  Dumbbell as DumbbellIcon,
   LogIn as LoginIcon,
   Menu as MenuIcon,
   Moon as MoonIcon,
@@ -27,5 +28,8 @@ export const Sun = SunIcon as ComponentType<
   { className?: string }
 >;
 export const Moon = MoonIcon as ComponentType<
+  { className?: string }
+>;
+export const Dumbbell = DumbbellIcon as ComponentType<
   { className?: string }
 >;

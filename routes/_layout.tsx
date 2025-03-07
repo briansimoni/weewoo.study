@@ -1,4 +1,10 @@
-import { BarChart, LogIn, ShoppingBag, Trophy } from "../icons/index.ts";
+import {
+  BarChart,
+  Dumbbell,
+  LogIn,
+  ShoppingBag,
+  Trophy,
+} from "../icons/index.ts";
 import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
 import { AppProps } from "./_middleware.ts";
@@ -7,7 +13,7 @@ import { AppProps } from "./_middleware.ts";
 export default function Layout(props: AppProps) {
   const { state, Component } = props;
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col">
       <div className="navbar bg-base-100">
         {/* Logo */}
         <div className="navbar-start">
@@ -107,7 +113,7 @@ export default function Layout(props: AppProps) {
       </div>
 
       {/* Main content area that grows */}
-      <main className="grow">
+      <main className="grow pb-16">
         <Component />
       </main>
 
@@ -121,6 +127,16 @@ export default function Layout(props: AppProps) {
         >
           <Trophy className="size-[1.2em]" />
           <span className="dock-label">Leaderboard</span>
+        </a>
+
+        <a
+          href="/leaderboard"
+          className={`flex flex-col items-center ${
+            props.route === "/emt/practice" ? "dock-active" : ""
+          }`}
+        >
+          <Dumbbell className="size-[1.2em]" />
+          <span className="dock-label">Practice</span>
         </a>
 
         <a
