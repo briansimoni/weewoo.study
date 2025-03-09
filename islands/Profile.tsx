@@ -27,6 +27,7 @@ export default function Profile(props: Props) {
       const hours = dayjs(streak?.expires_on).diff(dayjs(), "hours");
       const minutes = dayjs(streak?.expires_on).diff(dayjs(), "minutes") % 60;
       const seconds = dayjs(streak?.expires_on).diff(dayjs(), "seconds") % 60;
+      console.log(hours, minutes, seconds);
       setStreakTimer({ hours, minutes, seconds });
       if (hours > 24) {
         setTimerColor("green");
@@ -76,7 +77,7 @@ export default function Profile(props: Props) {
 
   return (
     <div class="flex items-start justify-center">
-      <div class="card card-bordered bg-primary-content w-full max-w-3xl shadow-xl rounded-xl p-6">
+      <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6">
         <div class="flex flex-col md:flex-row items-center gap-6">
           <div class="flex flex-col items-center">
             {session && (
@@ -168,34 +169,39 @@ export default function Profile(props: Props) {
                   {streakDays <= 1 && " Day 🔥"}
                 </div>
               </div>
-              <div class="col-span-2 flex flex-col md:flex-row items-center gap-5 text-center">
-                <h2 class="text-2xl font-semibold content-center">
-                  Streak Expires In
-                </h2>
-                <div
-                  class="flex gap-5"
-                  style={{ color: timerColor }}
-                >
-                  <div>
-                    <span class="countdown font-mono text-4xl">
-                      <span style={{ "--value": streakTimer.hours }}></span>
-                    </span>
-                    hours
+              {streak &&
+                (
+                  <div class="col-span-2 flex flex-col md:flex-row items-center gap-5 text-center">
+                    <h2 class="text-2xl font-semibold content-center">
+                      Streak Expires In
+                    </h2>
+                    <div
+                      class="flex gap-5"
+                      style={{ color: timerColor }}
+                    >
+                      <div>
+                        <span class="countdown font-mono text-4xl">
+                          <span style={{ "--value": streakTimer.hours }}></span>
+                        </span>
+                        hours
+                      </div>
+                      <div>
+                        <span class="countdown font-mono text-4xl">
+                          <span style={{ "--value": streakTimer.minutes }}>
+                          </span>
+                        </span>
+                        min
+                      </div>
+                      <div>
+                        <span class="countdown font-mono text-4xl">
+                          <span style={{ "--value": streakTimer.seconds }}>
+                          </span>
+                        </span>
+                        sec
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <span class="countdown font-mono text-4xl">
-                      <span style={{ "--value": streakTimer.minutes }}></span>
-                    </span>
-                    min
-                  </div>
-                  <div>
-                    <span class="countdown font-mono text-4xl">
-                      <span style={{ "--value": streakTimer.seconds }}></span>
-                    </span>
-                    sec
-                  </div>
-                </div>
-              </div>
+                )}
             </div>
           </div>
         </div>

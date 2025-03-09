@@ -18,8 +18,16 @@ export class StreakStore {
     return new StreakStore(kv);
   }
 
+  /**
+   * get will get the streak object and it will also purge it from the database if it's expired.
+   * Deno kv's expireIn seems sus. Plus the documentation says that it's not guaranteed to get
+   * removed from the database the moment it expires.
+   */
   async get(user_id: string) {
     const streak = (await this.kv.get<Streak>(["streaks", user_id])).value;
+    if (streak && dayjs().isAfter(dayjs(streak.expires_on))) {
+      await this.delete(user_id);
+    }
     return streak;
   }
 
@@ -66,6 +74,10 @@ export class StreakStore {
 
     // no-op. return current streak
     return streak;
+  }
+
+  async delete(user_id: string) {
+    await this.kv.delete(["streaks", user_id]);
   }
 
   closeConnection() {
