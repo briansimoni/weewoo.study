@@ -89,6 +89,9 @@ export default function Layout(props: AppProps) {
               <li>
                 <a href="/leaderboard">Leaderboard</a>
               </li>
+              <li>
+                <a href="/shop">Shop</a>
+              </li>
               {state.session && (
                 <>
                   <li>
