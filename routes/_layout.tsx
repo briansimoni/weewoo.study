@@ -13,7 +13,7 @@ import { AppProps } from "./_middleware.ts";
 export default function Layout(props: AppProps) {
   const { state, Component } = props;
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
       <div className="navbar bg-base-100">
         {/* Logo */}
         <div className="navbar-start">
@@ -113,7 +113,7 @@ export default function Layout(props: AppProps) {
       </div>
 
       {/* Main content area that grows */}
-      <main className="grow pb-16">
+      <main className="pb-16 md:pb-0">
         <Component />
       </main>
 
@@ -163,6 +163,6 @@ export default function Layout(props: AppProps) {
           <span className="dock-label">Shop</span>
         </a>
       </div>
-    </div>
+    </>
   );
 }
