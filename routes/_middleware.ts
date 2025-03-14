@@ -33,11 +33,11 @@ export type AppHandler = Handler<any, { session: SessionData }>;
 export type AppHandlers = Handlers<any, { session: SessionData }>;
 
 const statefulSessionMiddleware: Handler = async function handler(req, ctx) {
-  const excludedPaths = [
-    // todo: add static to this
-    "/favicon.ico",
+  const excluded = [
+    "static",
+    "internal",
   ];
-  if (excludedPaths.includes(new URL(req.url).pathname)) {
+  if (excluded.includes(ctx.destination)) {
     return ctx.next();
   }
   const sessionStore = await SessionStore.make();
