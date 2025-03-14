@@ -58,7 +58,7 @@ export default function Layout(props: AppProps) {
                 <li>
                   <a href="/leaderboard">Leaderboard</a>
                 </li>
-                {state.session && (
+                {state.session.user_id && (
                   <>
                     <li>
                       <a href="/profile">Profile</a>
@@ -68,13 +68,15 @@ export default function Layout(props: AppProps) {
                     </li>
                   </>
                 )}
-                {!state.session && (
+                {!state.session.user_id && (
                   <li>
                     <a href="/auth/login">Login</a>
                   </li>
                 )}
                 <li>
-                  <ThemeController />
+                  <ThemeController
+                    initial_theme={props.state.session.preferences?.theme}
+                  />
                 </li>
               </ul>
             </div>
@@ -92,7 +94,7 @@ export default function Layout(props: AppProps) {
               <li>
                 <a href="/shop">Shop</a>
               </li>
-              {state.session && (
+              {state.session.user_id && (
                 <>
                   <li>
                     <a href="/profile">Profile</a>
@@ -102,13 +104,15 @@ export default function Layout(props: AppProps) {
                   </li>
                 </>
               )}
-              {!state.session && (
+              {!state.session.user_id && (
                 <li>
                   <a href="/auth/login">Login</a>
                 </li>
               )}
               <li>
-                <ThemeController />
+                <ThemeController
+                  initial_theme={props.state.session.preferences?.theme}
+                />
               </li>
             </ul>
           </div>

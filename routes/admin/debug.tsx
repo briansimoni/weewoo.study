@@ -1,5 +1,5 @@
 import { getKv } from "../../lib/kv.ts";
-import { AppHandlers } from "../_middleware.ts";
+import { AppHandlers, AppProps } from "../_middleware.ts";
 
 async function list(prefix: string) {
   const kv = await getKv();
@@ -20,12 +20,14 @@ export const handler: AppHandlers = {
       throw new Error("Test error");
     }
     const users = await list("users");
+    const sessions = await list("sessions");
     const leaderboard = await list("leaderboard");
     const emt = await list("emt");
     const streak = await list("streaks");
     return ctx.render({
       session: ctx.state.session,
       users,
+      sessions,
       leaderboard,
       emt,
       streak,
@@ -56,6 +58,7 @@ interface DebugProps extends AppProps {
   data: {
     session: any;
     users: { key: Deno.KvKey; value: unknown }[];
+    sessions: { key: Deno.KvKey; value: unknown }[];
     leaderboard: { key: Deno.KvKey; value: unknown }[];
     emt: { key: Deno.KvKey; value: unknown }[];
     streak: { key: Deno.KvKey; value: unknown }[];
@@ -63,7 +66,7 @@ interface DebugProps extends AppProps {
 }
 
 export default function Debug(props: DebugProps) {
-  const { leaderboard, users, emt, streak } = props.data;
+  const { leaderboard, users, sessions, emt, streak } = props.data;
 
   function renderTable(
     title: string,
@@ -144,6 +147,7 @@ export default function Debug(props: DebugProps) {
         {JSON.stringify(props.data.session, null, 2)}
       </pre>
       {renderTable("Users", users)}
+      {renderTable("Sessions", sessions)}
       {renderTable("Streaks", streak)}
       {renderTable("Leaderboard", leaderboard)}
       {renderTable("EMT Data", emt)}

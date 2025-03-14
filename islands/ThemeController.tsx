@@ -1,23 +1,25 @@
 import { useEffect, useState } from "preact/hooks";
 import { Moon, Sun } from "../icons/index.ts";
 
-export default function ThemeController() {
-  const [theme, setTheme] = useState("light");
+export default function ThemeController(
+  { initial_theme }: { initial_theme?: string },
+) {
+  const [theme, setTheme] = useState(initial_theme);
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme) setTheme(storedTheme);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
+    if (theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
   }, [theme]);
 
-  const handleThemeToggle = (e: Event) => {
+  const handleThemeToggle = async (e: Event) => {
     const isChecked = (e.target as HTMLInputElement).checked;
     const newTheme = isChecked ? "dark" : "light";
-    localStorage.setItem("theme", newTheme);
     setTheme(newTheme);
+    await fetch("/api/preferences", {
+      method: "POST",
+      body: JSON.stringify({ theme: newTheme }),
+    });
   };
 
   return (

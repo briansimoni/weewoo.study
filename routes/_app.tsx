@@ -1,7 +1,7 @@
-import { type PageProps } from "$fresh/server.ts";
-export default function App({ Component }: PageProps) {
+import { AppProps } from "./_middleware.ts";
+export default function App(props: AppProps) {
   return (
-    <html data-theme="light">
+    <html data-theme={props.state.session.preferences?.theme || "light"}>
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,7 +30,7 @@ export default function App({ Component }: PageProps) {
         <meta property="og:type" content="website" />
       </head>
       <body>
-        <Component />
+        <props.Component />
       </body>
     </html>
   );
