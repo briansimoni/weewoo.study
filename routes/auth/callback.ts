@@ -83,6 +83,7 @@ export const handler: AppHandlers = {
     const streak = await streakStore.get(user.user_id);
 
     ctx.state.session = {
+      ...ctx.state.session,
       access_token,
       user_id: sub,
       streakDays: streak?.days ?? 0,
