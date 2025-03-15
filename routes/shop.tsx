@@ -40,6 +40,7 @@ const dev_items = [
 ];
 
 const items = Deno.env.get("STAGE") === "TEST" ? dev_items : prod_items;
+console.log(Deno.env.get("STAGE"));
 
 export default defineRoute((req, ctx) => {
   return (
