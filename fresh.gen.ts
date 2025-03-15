@@ -15,6 +15,7 @@ import * as $api_admin_question from "./routes/api/admin/question.ts";
 import * as $api_preferences from "./routes/api/preferences.ts";
 import * as $api_profile from "./routes/api/profile.ts";
 import * as $api_question from "./routes/api/question.ts";
+import * as $api_stripe_webhook from "./routes/api/stripe_webhook.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_logged_out from "./routes/auth/logged-out.tsx";
 import * as $auth_login from "./routes/auth/login.tsx";
@@ -49,6 +50,7 @@ const manifest = {
     "./routes/api/preferences.ts": $api_preferences,
     "./routes/api/profile.ts": $api_profile,
     "./routes/api/question.ts": $api_question,
+    "./routes/api/stripe_webhook.ts": $api_stripe_webhook,
     "./routes/auth/callback.ts": $auth_callback,
     "./routes/auth/logged-out.tsx": $auth_logged_out,
     "./routes/auth/login.tsx": $auth_login,

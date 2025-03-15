@@ -147,16 +147,16 @@ export default function Layout(props: AppProps) {
         </a>
 
         <a
-          href={state.session ? "/profile" : "/auth/login"}
+          href={state.session.user_id ? "/profile" : "/auth/login"}
           className={`flex flex-col items-center ${
             props.route === "/profile" ? "dock-active" : ""
           }`}
         >
-          {state.session
+          {state.session.user_id
             ? <BarChart className="size-[1.2em]" />
             : <LogIn className="size-[1.2em]" />}
           <span className="dock-label">
-            {state.session ? "Stats" : "Login"}
+            {state.session.user_id ? "Stats" : "Login"}
           </span>
         </a>
 

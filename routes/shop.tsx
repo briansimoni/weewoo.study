@@ -14,6 +14,7 @@ const items = [
     title: "Premium Hoodie",
     description: "A premium hoodie for premium people.",
     price: 29.99,
+    payment_link: "https://buy.stripe.com/cN29Cy8SBe06gtG7ss",
   },
 ];
 
@@ -37,7 +38,11 @@ export default defineRoute((req, ctx) => {
               <div className="card-actions text-2xl">
                 ${item.price}
               </div>
-              <button className="btn btn-primary">Buy Now</button>
+              <a href={item.payment_link}>
+                <button type="button" className="btn btn-primary">
+                  Buy Now
+                </button>
+              </a>
             </div>
           </div>
         </div>
