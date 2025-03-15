@@ -14,7 +14,7 @@ const prod_items = [
     description: "A premium hoodie for premium people.",
     price: 29.99,
     payment_link: "https://buy.stripe.com/cN29Cy8SBe06gtG7ss",
-    stripe_product_id: "prod_Rwso5hEwAvKLd5",
+    stripe_product_id: "prod_RwqBsBG4paxltt",
   },
 ];
 
@@ -34,7 +34,7 @@ const dev_items = [
     description: "A premium TEST hoodie for premium people.",
     price: 29.99,
     payment_link: "https://buy.stripe.com/test_7sIeYi9580dN59e4gg",
-    stripe_product_id: "prod_RwqBsBG4paxltt",
+    stripe_product_id: "prod_Rwso5hEwAvKLd5",
   },
 ];
 
