@@ -5,6 +5,7 @@ const items = [
   {
     "id": 377478087,
     "external_id": "67cded91916eb9",
+    "product_template_id": "85855720",
     "name": "weewoo.study hoodie",
     "variants": 66,
     "synced": 66,
@@ -15,6 +16,7 @@ const items = [
     description: "A premium hoodie for premium people.",
     price: 29.99,
     payment_link: "https://buy.stripe.com/test_7sIeYi9580dN59e4gg",
+    stripe_product_id: "prod_Rwso5hEwAvKLd5",
   },
 ];
 
