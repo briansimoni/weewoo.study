@@ -14,7 +14,7 @@ const items = [
     title: "Premium Hoodie",
     description: "A premium hoodie for premium people.",
     price: 29.99,
-    payment_link: "https://buy.stripe.com/cN29Cy8SBe06gtG7ss",
+    payment_link: "https://buy.stripe.com/test_7sIeYi9580dN59e4gg",
   },
 ];
 
