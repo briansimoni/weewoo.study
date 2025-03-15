@@ -2,12 +2,12 @@ import { AppHandlers } from "../_middleware.ts";
 import Stripe from "npm:stripe";
 
 const stripeSigningKey = Deno.env.get("STRIPE_SIGNING_SECRET");
-if (!stripeSigningKey) {
-  throw new Error("STRIPE_SIGNING_SECRET is not set");
-}
 
 export const handler: AppHandlers = {
   POST: async (req) => {
+    if (!stripeSigningKey) {
+      throw new Error("STRIPE_SIGNING_SECRET is not set");
+    }
     const stripeClient = new Stripe("not-applicable");
     if (req.body === null) {
       throw new Error("Request body is null");
