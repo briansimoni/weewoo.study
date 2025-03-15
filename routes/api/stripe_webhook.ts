@@ -4,6 +4,10 @@ import Stripe from "npm:stripe";
 const stripeSigningKey = Deno.env.get("STRIPE_SIGNING_SECRET");
 const stripeAPIKey = Deno.env.get("STRIPE_API_KEY");
 
+const stripToPrintfulMapping = {
+  "prod_Rwso5hEwAvKLd5": 377478087,
+};
+
 export const handler: AppHandlers = {
   POST: async (req) => {
     if (!stripeSigningKey) {

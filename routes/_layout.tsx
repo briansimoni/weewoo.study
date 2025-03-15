@@ -9,6 +9,8 @@ import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
 import { AppProps } from "./_middleware.ts";
 
+const stage = Deno.env.get("STAGE");
+
 // todo: type state better
 export default function Layout(props: AppProps) {
   const { state, Component } = props;
@@ -18,6 +20,7 @@ export default function Layout(props: AppProps) {
         {/* Logo */}
         <div className="navbar-start">
           <a href="/" className="btn btn-ghost text-xl">WeeWoo🚑</a>
+          {stage}
         </div>
 
         {/* Right Side: Streak and Menus */}
