@@ -21,7 +21,7 @@ export const handler: AppHandlers = {
     console.log("-------------------------");
     console.log(event);
     if (event.type === "payment_intent.succeeded") {
-      console.log("Payment succeeded");
+      console.log("Payment succeeded.");
     }
     return new Response("Hello World!");
   },
