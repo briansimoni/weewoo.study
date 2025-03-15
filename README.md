@@ -19,3 +19,8 @@ This will watch the project directory and restart as necessary.
 
 cool sounds here:
 https://freesound.org/search/?q=correct&f=grouping_pack%3A%2230761_feedback-correct%22
+
+To run the stripe CLI webhook tests
+`stripe listen --forward-to localhost:8000/api/stripe_webhook`
+
+`stripe trigger checkout.session.completed`
