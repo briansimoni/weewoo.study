@@ -38,6 +38,6 @@ const dev_items = [
   },
 ];
 
-const items = Deno.env.get("STAGE") === "TERST" ? dev_items : prod_items;
+const items = Deno.env.get("STAGE") === "TEST" ? dev_items : prod_items;
 
 export { items };
