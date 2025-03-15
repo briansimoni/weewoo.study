@@ -12,8 +12,8 @@ const prod_items = [
     "is_ignored": false,
     title: "Premium Hoodie",
     description: "A premium hoodie for premium people.",
-    price: 29.99,
-    payment_link: "https://buy.stripe.com/cN29Cy8SBe06gtG7ss",
+    price: 39.99,
+    payment_link: "https://buy.stripe.com/dR6aGC9WF09g7XacMN",
     stripe_product_id: "prod_RwqBsBG4paxltt",
   },
 ];
