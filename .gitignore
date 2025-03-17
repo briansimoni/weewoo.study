@@ -18,3 +18,5 @@ question_data_old
 cov_out
 
 static/dist.css
+
+.terraform
