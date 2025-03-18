@@ -62,7 +62,8 @@ export const handler: AppHandlers = {
         );
       }
     }
-    return new Response("Hello World!");
+    // all good! tell stripe that we successfully processed the webhook
+    return new Response();
   },
 };
 

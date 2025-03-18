@@ -20,3 +20,5 @@ cov_out
 static/dist.css
 
 .terraform
+
+scripts/products
