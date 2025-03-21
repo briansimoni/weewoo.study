@@ -145,45 +145,6 @@ const stripeClient = new Stripe(stripeTestKey);
       })
     }
   }
-
-  // currency: string;
-
-  // /**
-  //  * Prices defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
-  //  */
-  // currency_options?: {
-  //   [key: string]: DefaultPriceData.CurrencyOptions;
-  // };
-
-  // /**
-  //  * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
-  //  */
-  // custom_unit_amount?: DefaultPriceData.CustomUnitAmount;
-
-  // /**
-  //  * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
-  //  */
-  // metadata?: Stripe.MetadataParam;
-
-  // /**
-  //  * The recurring components of a price such as `interval` and `interval_count`.
-  //  */
-  // recurring?: DefaultPriceData.Recurring;
-
-  // /**
-  //  * Only required if a [default tax behavior](https://stripe.com/docs/tax/products-prices-tax-categories-tax-behavior#setting-a-default-tax-behavior-(recommended)) was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-  //  */
-  // tax_behavior?: DefaultPriceData.TaxBehavior;
-
-  // /**
-  //  * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unit_amount`, `unit_amount_decimal`, or `custom_unit_amount` is required.
-  //  */
-  // unit_amount?: number;
-
-  // /**
-  //  * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-  //  */
-  // unit_amount_decimal?: string;
 };
 
 main();

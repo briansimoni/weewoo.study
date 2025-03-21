@@ -28,9 +28,9 @@ To run the stripe CLI webhook tests
 ### Uploading new products
 1. Create the product in printful
 2. Download the images and upload them to the cloudfront CDN
-3. Upload to Stripe
-4. Promote the items to prod?
-5. Create payment links
+3. Update the google sheet
+4. Download the csv
+5. Upload to Stripe
 6. Add to the app database
 
 potentially useful for extracting the urls out of s3
