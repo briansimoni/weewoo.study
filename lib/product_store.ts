@@ -1,6 +1,6 @@
 import { getKv } from "./kv.ts";
 
-interface Product {
+export interface Product {
     /** id of the product in printful */
     printful_id: string
     /** this correspoonds to the template you made in printful. I can get it from the url in the dashboard
@@ -14,16 +14,20 @@ interface Product {
     colors: {
         name: string
         hex: string
+        thumbnail_url: string;
     }[]
   }
 
-  interface ProductVariant {
+  export interface ProductVariant {
     variant_id: string;
     printful_product_id: string;
     product_template_id: string;
-    description: string;
     price: number;
-    color: string;
+    // todo: fix this in the database
+    color: {
+      name: string;
+      hex: string;
+    };
     size: string;
     images: string[];
     stripe_product_id: string;
@@ -46,7 +50,12 @@ export class ProductStore {
     await this.kv.set(["products", product.printful_id], product)
   }
 
-  async addVariant(variant: ProductVariant) {
+  async getProduct(printful_id: string): Promise<Product | null> {
+    const product = await this.kv.get<Product>(["products", printful_id]);
+    return product.value;
+  }
+
+  async  addVariant(variant: ProductVariant) {
     await this.kv.set(["variants", variant.printful_product_id, variant.variant_id], variant)
   }
 

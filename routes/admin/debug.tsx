@@ -24,6 +24,8 @@ export const handler: AppHandlers = {
     const leaderboard = await list("leaderboard");
     const emt = await list("emt");
     const streak = await list("streaks");
+    const products = await list("products");
+    const variants = await list("variants");
     return ctx.render({
       session: ctx.state.session,
       users,
@@ -31,6 +33,8 @@ export const handler: AppHandlers = {
       leaderboard,
       emt,
       streak,
+      products,
+      variants
     });
   },
 
@@ -47,10 +51,17 @@ export const handler: AppHandlers = {
       await kv.delete(key);
     } else if (action === "update") {
       const value = form.get("value");
-      await kv.set(key, value);
+      try {
+        // Parse the value back to its original form (object/array/etc)
+        const parsedValue = JSON.parse(value as string);
+        await kv.set(key, parsedValue);
+      } catch (_e) {
+        // If parsing fails, store as plain string
+        await kv.set(key, value);
+      }
     }
 
-    return new Response(null, { status: 303, headers: { Location: "/debug" } });
+    return new Response(null, { status: 303, headers: { Location: "/admin/debug" } });
   },
 };
 
@@ -62,11 +73,13 @@ interface DebugProps extends AppProps {
     leaderboard: { key: Deno.KvKey; value: unknown }[];
     emt: { key: Deno.KvKey; value: unknown }[];
     streak: { key: Deno.KvKey; value: unknown }[];
+    products: { key: Deno.KvKey; value: unknown }[];
+    variants: { key: Deno.KvKey; value: unknown }[];
   };
 }
 
 export default function Debug(props: DebugProps) {
-  const { leaderboard, users, sessions, emt, streak } = props.data;
+  const { leaderboard, users, sessions, emt, streak, products, variants } = props.data;
 
   function renderTable(
     title: string,
@@ -151,6 +164,8 @@ export default function Debug(props: DebugProps) {
       {renderTable("Streaks", streak)}
       {renderTable("Leaderboard", leaderboard)}
       {renderTable("EMT Data", emt)}
+      {renderTable("Products", products)}
+      {renderTable("Variants", variants)}
     </div>
   );
 }

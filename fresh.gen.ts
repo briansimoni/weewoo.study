@@ -25,10 +25,13 @@ import * as $index from "./routes/index.tsx";
 import * as $leaderboard from "./routes/leaderboard.tsx";
 import * as $profile from "./routes/profile.tsx";
 import * as $shop from "./routes/shop.tsx";
+import * as $shop_id_ from "./routes/shop/[id].tsx";
 import * as $user_user_id_ from "./routes/user/[user_id].tsx";
 import * as $AdminQuestionGenerator from "./islands/AdminQuestionGenerator.tsx";
 import * as $LoginIsland from "./islands/LoginIsland.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
+import * as $ProductCard from "./islands/ProductCard.tsx";
+import * as $ProductDetails from "./islands/ProductDetails.tsx";
 import * as $Profile from "./islands/Profile.tsx";
 import * as $Question from "./islands/Question.tsx";
 import * as $StreakIndicator from "./islands/StreakIndicator.tsx";
@@ -60,12 +63,15 @@ const manifest = {
     "./routes/leaderboard.tsx": $leaderboard,
     "./routes/profile.tsx": $profile,
     "./routes/shop.tsx": $shop,
+    "./routes/shop/[id].tsx": $shop_id_,
     "./routes/user/[user_id].tsx": $user_user_id_,
   },
   islands: {
     "./islands/AdminQuestionGenerator.tsx": $AdminQuestionGenerator,
     "./islands/LoginIsland.tsx": $LoginIsland,
     "./islands/NavAvatar.tsx": $NavAvatar,
+    "./islands/ProductCard.tsx": $ProductCard,
+    "./islands/ProductDetails.tsx": $ProductDetails,
     "./islands/Profile.tsx": $Profile,
     "./islands/Question.tsx": $Question,
     "./islands/StreakIndicator.tsx": $StreakIndicator,
