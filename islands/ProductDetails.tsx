@@ -196,7 +196,8 @@ export default function ProductDetails({ product, variants }: ProductDetailsProp
           <details className="collapse bg-base-200">
             <summary className="collapse-title text-lg font-semibold">Return Policy</summary>
             <div className="collapse-content">
-              <p>Contact me and I'll work with you. The return policy is in development, but I want
+              <p>
+                Contact me and I'll work with you. The return policy is in development, but I want
                 my early adopter customers to be happy. 
               </p>
             </div>

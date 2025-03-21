@@ -166,7 +166,7 @@ export default function Layout(props: AppProps) {
         <a
           href="/shop"
           className={`flex flex-col items-center ${
-            props.route === "/shop" ? "dock-active" : ""
+            props.route.includes("/shop") ? "dock-active" : ""
           }`}
         >
           <ShoppingBag className="size-[1.2em]" />

@@ -1,43 +1,7 @@
-
-
 import { parse } from "@std/csv"
 import Stripe from "npm:stripe";
 import "$std/dotenv/load.ts";
 import { ProductStore } from "../lib/product_store.ts";
-// const stripe = new Stripe(Deno.env.get("STRIPE_API_KEY")!, {
-//   apiVersion: "2022-11-15",
-// });
-
-
-
-// const createProduct = async (variant: ProductVariant) => {
-//   const product = await stripe.products.create({
-//     name: variant.title,
-//     description: variant.description,
-//     images: [variant.thumbnail_url],
-//     metadata: {
-//       variant_id: variant.variant_id,
-//       product_template_id: variant.product_template_id,
-//       external_id: variant.external_id,
-//     },
-//     test_mode: true,
-//   });
-
-//   await stripe.prices.create({
-//     unit_amount: Math.trunc(parseFloat(variant.price) * 100),
-//     currency: "usd",
-//     product: product.id,
-//     metadata: {
-//       variant_id: variant.variant_id,
-//       product_template_id: variant.product_template_id,
-//       external_id: variant.external_id,
-//     },
-//     test_mode: true,
-//   });
-
-//   console.log(`Created product ${variant.title} with id ${product.id}`);
-// };
-
 
 async function getBaseProducts() {
   try {
@@ -128,8 +92,17 @@ const stripeClient = new Stripe(stripeTestKey);
 
     // each variant becomes it's own product with it's own pricing and payment page
     for (const variant of product.variants) {
+      // Find the color object from the product's colors array before creating Stripe product
+      const colorObject = product.colors.find((c: { name: string; hex: string }) => 
+        c.name.toLowerCase() === variant.color.toLowerCase()
+      );
+      if (!colorObject) {
+        console.error(`Could not find color object for variant ${variant.variant_id} with color ${variant.color}`);
+        continue;
+      }
+
       const stripeProduct = await stripeClient.products.create({
-        name: `${product.name} ${variant.color} ${variant.size}`,
+        name: `${product.name} ${colorObject.name} ${variant.size}`,
         images: variant.images.slice(0, 8),
         tax_code: "txcd_30011000"
       })
@@ -161,7 +134,10 @@ const stripeClient = new Stripe(stripeTestKey);
         printful_product_id: product.printful_product_id,
         product_template_id: product.product_template_id,
         price: parseFloat(variant.price),
-        color: variant.color,
+        color: {
+          name: colorObject.name,
+          hex: colorObject.hex
+        },
         size: variant.size,
         images: variant.images,
         stripe_product_id: stripeProduct.id,
