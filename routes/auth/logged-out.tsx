@@ -1,21 +1,16 @@
+import { SessionStore } from "../../lib/session_store.ts";
 import { AppHandlers } from "../_middleware.ts";
+import * as http from "@std/http";
 
 export const handler: AppHandlers = {
-  GET(_req, ctx) {
-    // this has a side effect of unsetting cookies
-    // ctx.state.session = {};
-
-    // todo: rethink this
-    // todo: decouple preferences from session
-    ctx.state.session = {
-      ...ctx.state.session,
-      user_id: undefined,
-      access_token: undefined,
-      name: undefined,
-      picture: undefined,
-      display_name: undefined,
-      streakDays: undefined,
-    };
+  async GET(req, ctx) {
+    const cookies = http.getCookies(req.headers);
+    const session_id = cookies["app_session"];
+    if (session_id) {
+      const sessionStore = await SessionStore.make();
+      await sessionStore.delete(session_id);
+    }
+    delete ctx.state.session;
 
     return ctx.render();
   },

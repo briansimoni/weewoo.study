@@ -61,7 +61,7 @@ export default function Layout(props: AppProps) {
                 <li>
                   <a href="/leaderboard">Leaderboard</a>
                 </li>
-                {state.session.user_id && (
+                {state.session && (
                   <>
                     <li>
                       <a href="/profile">Profile</a>
@@ -71,14 +71,14 @@ export default function Layout(props: AppProps) {
                     </li>
                   </>
                 )}
-                {!state.session.user_id && (
+                {!state.session && (
                   <li>
                     <a href="/auth/login">Login</a>
                   </li>
                 )}
                 <li>
                   <ThemeController
-                    initial_theme={props.state.session.preferences?.theme}
+                    initial_theme={props.state.preferences?.theme}
                   />
                 </li>
               </ul>
@@ -97,7 +97,7 @@ export default function Layout(props: AppProps) {
               <li>
                 <a href="/shop">Shop</a>
               </li>
-              {state.session.user_id && (
+              {state.session && (
                 <>
                   <li>
                     <a href="/profile">Profile</a>
@@ -107,14 +107,14 @@ export default function Layout(props: AppProps) {
                   </li>
                 </>
               )}
-              {!state.session.user_id && (
+              {!state.session && (
                 <li>
                   <a href="/auth/login">Login</a>
                 </li>
               )}
               <li>
                 <ThemeController
-                  initial_theme={props.state.session.preferences?.theme}
+                  initial_theme={props.state.preferences?.theme}
                 />
               </li>
             </ul>
@@ -150,16 +150,16 @@ export default function Layout(props: AppProps) {
         </a>
 
         <a
-          href={state.session.user_id ? "/profile" : "/auth/login"}
+          href={state.session ? "/profile" : "/auth/login"}
           className={`flex flex-col items-center ${
             props.route === "/profile" ? "dock-active" : ""
           }`}
         >
-          {state.session.user_id
+          {state.session
             ? <BarChart className="size-[1.2em]" />
             : <LogIn className="size-[1.2em]" />}
           <span className="dock-label">
-            {state.session.user_id ? "Stats" : "Login"}
+            {state.session ? "Stats" : "Login"}
           </span>
         </a>
 
