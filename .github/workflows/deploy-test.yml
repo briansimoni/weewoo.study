@@ -32,5 +32,3 @@ jobs:
           project: "ems-questions-app-test"
           entrypoint: "main.ts"
           root: "."
-          
-          

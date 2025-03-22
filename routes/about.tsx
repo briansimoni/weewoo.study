@@ -62,8 +62,8 @@ export default function About() {
             🏥 Paramedics wanting a refresher without the snooze factor.
           </li>
           <li className="mb-2">
-            👩‍🏫 Instructors looking for a fun teaching tool (less "Bueller?"
-            and more "ooh!").
+            👩‍🏫 Instructors looking for a fun teaching tool (less "Bueller?" and
+            more "ooh!").
           </li>
         </ul>
 

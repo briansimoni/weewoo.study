@@ -1,7 +1,7 @@
 import { AppProps } from "./_middleware.ts";
 export default function App(props: AppProps) {
   return (
-    <html data-theme={props.state.session.preferences?.theme || "light"}>
+    <html data-theme={props.state.preferences?.theme || "light"}>
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />

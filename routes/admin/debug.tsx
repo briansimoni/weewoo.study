@@ -34,7 +34,7 @@ export const handler: AppHandlers = {
       emt,
       streak,
       products,
-      variants
+      variants,
     });
   },
 
@@ -61,7 +61,10 @@ export const handler: AppHandlers = {
       }
     }
 
-    return new Response(null, { status: 303, headers: { Location: "/admin/debug" } });
+    return new Response(null, {
+      status: 303,
+      headers: { Location: "/admin/debug" },
+    });
   },
 };
 
@@ -79,7 +82,8 @@ interface DebugProps extends AppProps {
 }
 
 export default function Debug(props: DebugProps) {
-  const { leaderboard, users, sessions, emt, streak, products, variants } = props.data;
+  const { leaderboard, users, sessions, emt, streak, products, variants } =
+    props.data;
 
   function renderTable(
     title: string,

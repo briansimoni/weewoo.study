@@ -84,6 +84,7 @@ export const handler: AppHandlers = {
 
     ctx.state.session = {
       ...ctx.state.session,
+      session_id: crypto.randomUUID(),
       access_token,
       user_id: sub,
       streakDays: streak?.days ?? 0,
