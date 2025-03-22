@@ -104,7 +104,8 @@ const stripeClient = new Stripe(stripeTestKey);
       const stripeProduct = await stripeClient.products.create({
         name: `${product.name} ${colorObject.name} ${variant.size}`,
         images: variant.images.slice(0, 8),
-        tax_code: "txcd_30011000"
+        tax_code: "txcd_30011000",
+        shippable: true
       })
       // create the price on the product
       const price = await stripeClient.prices.create({
@@ -127,6 +128,9 @@ const stripeClient = new Stripe(stripeTestKey);
             quantity: 1,
           },
         ],
+        shipping_address_collection: {
+          allowed_countries: ['US'] // Add more countries as needed
+        },
       })
 
       await productStore.addVariant({
