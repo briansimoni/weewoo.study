@@ -1,4 +1,4 @@
-import { items } from "../../lib/shop_items.ts";
+import { ProductStore, ProductVariant } from "../../lib/product_store.ts";
 import { AppHandlers } from "../_middleware.ts";
 import Stripe from "npm:stripe";
 
@@ -50,14 +50,18 @@ export const handler: AppHandlers = {
         console.log(item);
         // that is the thing that they bought
         // item.price?.product
-        const weewooItem = items.find((i) =>
+        // TODO: add a secondary index for stripe product ID
+        const productStore = await ProductStore.make();
+        const product = await productStore.listProducts();
+        const variants = await productStore.listProductVariants(product[0].printful_id);
+        const variant = variants.find((i) =>
           i.stripe_product_id === item.price?.product
         );
-        if (weewooItem === undefined) {
+        if (variant === undefined) {
           throw new Error(`Item ${item.price?.id} not found`);
         }
         await submitOrder(
-          weewooItem,
+          variant,
           session.collected_information?.shipping_details!,
         );
       }
@@ -68,7 +72,7 @@ export const handler: AppHandlers = {
 };
 
 async function submitOrder(
-  weeWooItem: { variant_id: number; product_template_id: number },
+  variant: ProductVariant,
   shippingDetails: Stripe.Checkout.Session.CollectedInformation.ShippingDetails,
   customerEmail?: string,
 ) {
@@ -90,9 +94,9 @@ async function submitOrder(
       },
       "items": [
         {
-          "variant_id": weeWooItem.variant_id,
+          "variant_id": variant.variant_id,
           "quantity": 1,
-          "product_template_id": weeWooItem.product_template_id,
+          "product_template_id": variant.product_template_id,
         },
       ],
     }),
