@@ -40,30 +40,30 @@ const dev_items = [
 
 interface Product {
   /** id of the product in printful */
-  printful_id: number
+  printful_id: number;
   /** the variant id of the product corresponds to the color or whatever */
-  variant_id: number
+  variant_id: number;
   /** this correspoonds to the template you made in printful. I can get it from the url in the dashboard
-  * https://www.printful.com/dashboard/product-templates/85855720 
-  **/
-  product_template_id: number
-  external_id: string,
-  name: string
-  synced: number
-  thumbnail_url: string
-  description: string
-  price: number
+   * https://www.printful.com/dashboard/product-templates/85855720
+   */
+  product_template_id: number;
+  external_id: string;
+  name: string;
+  synced: number;
+  thumbnail_url: string;
+  description: string;
+  price: number;
   variants: [
     {
-      id: number
-      product_template_id: number
-      size: string
-      color: string
+      id: number;
+      product_template_id: number;
+      size: string;
+      color: string;
       hex_color: string;
       name: string;
-      images: string[]
-    }
-  ]
+      images: string[];
+    },
+  ];
 }
 
 const items = Deno.env.get("STAGE") === "TEST" ? dev_items : prod_items;

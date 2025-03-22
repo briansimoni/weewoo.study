@@ -26,6 +26,7 @@ To run the stripe CLI webhook tests
 `stripe trigger checkout.session.completed`
 
 ### Uploading new products
+
 1. Create the product in printful
 2. Download the images and upload them to the cloudfront CDN
 3. Update the google sheet
@@ -34,6 +35,7 @@ To run the stripe CLI webhook tests
 6. Add to the app database
 
 potentially useful for extracting the urls out of s3
+
 ```
 function getImageUris(str) {
     return Array.from(document.getElementsByClassName("name object latest object-name")).map((el) => {

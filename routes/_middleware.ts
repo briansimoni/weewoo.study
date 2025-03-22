@@ -1,4 +1,3 @@
-
 import diff from "https://deno.land/x/microdiff@v1.2.0/index.ts";
 import { log } from "../lib/logger.ts";
 import { Session, SessionStore } from "../lib/session_store.ts";
@@ -37,7 +36,6 @@ export type AppHandler = Handler<any, AppState>;
 export type AppHandlers = Handlers<any, AppState>;
 
 const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
-  
   const excluded = [
     "static",
     "internal",
@@ -53,13 +51,15 @@ const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
     session = await sessionStore.get(cookie_session_id);
   }
 
-
-  ctx.state.session = JSON.parse(JSON.stringify(session))
+  ctx.state.session = JSON.parse(JSON.stringify(session));
 
   const response = await ctx.next();
   // if there was a session and one of the next functions deleted it, unset the cookie
   // or if there was no session but a cookie was set, that means it was probably deleted from the database
-  if ((session && !ctx.state.session) || (cookie_session_id && !session && !ctx.state.session)) {
+  if (
+    (session && !ctx.state.session) ||
+    (cookie_session_id && !session && !ctx.state.session)
+  ) {
     http.setCookie(response.headers, {
       name: "app_session",
       value: "",

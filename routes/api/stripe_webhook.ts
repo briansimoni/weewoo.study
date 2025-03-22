@@ -53,7 +53,9 @@ export const handler: AppHandlers = {
         // TODO: add a secondary index for stripe product ID
         const productStore = await ProductStore.make();
         const product = await productStore.listProducts();
-        const variants = await productStore.listProductVariants(product[0].printful_id);
+        const variants = await productStore.listProductVariants(
+          product[0].printful_id,
+        );
         const variant = variants.find((i) =>
           i.stripe_product_id === item.price?.product
         );

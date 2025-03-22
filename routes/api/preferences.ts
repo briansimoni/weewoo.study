@@ -27,7 +27,7 @@ export const handler: AppHandlers = {
 
     http.setCookie(response.headers, {
       name: "preferences",
-      value: encodeBase64((JSON.stringify(preferences))),
+      value: encodeBase64(JSON.stringify(preferences)),
       path: "/",
       httpOnly: true,
       sameSite: "Lax",

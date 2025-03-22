@@ -38,9 +38,10 @@ export class SessionStore {
   async update(session: Session) {
     let existingSession = null;
     if (session.session_id) {
-      existingSession = (await this.kv.get<Session>(["sessions", session.session_id])).value;
+      existingSession =
+        (await this.kv.get<Session>(["sessions", session.session_id])).value;
     }
-    const update = {  
+    const update = {
       ...existingSession,
       ...session,
     };
