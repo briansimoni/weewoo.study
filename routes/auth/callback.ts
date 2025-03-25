@@ -96,7 +96,7 @@ export const handler: AppHandlers = {
     const response = new Response(null, {
       status: 302,
       headers: {
-        Location: "/",
+        Location: "/profile",
       },
     });
 

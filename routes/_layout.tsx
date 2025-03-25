@@ -26,11 +26,9 @@ export default function Layout(props: AppProps) {
         {/* Right Side: Streak and Menus */}
         <div className="navbar-end flex items-center gap-4">
           {/* Streak - Always Visible */}
-          {
-            /* {state.session && (
+          {state.session && (
             <StreakIndicator initialStreak={state.session.streakDays} />
-          )} */
-          }
+          )}
 
           {/* Hamburger Menu for Mobile */}
           <div className="md:hidden">
