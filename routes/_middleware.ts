@@ -25,15 +25,15 @@ export interface AppProps extends PageProps {
   state: AppState;
 }
 
-interface AppState extends Record<string, unknown> {
+export interface AppState extends Record<string, unknown> {
   session?: SessionData;
   preferences?: {
     theme: "light" | "dark" | undefined;
   };
 }
 
-export type AppHandler = Handler<any, AppState>;
-export type AppHandlers = Handlers<any, AppState>;
+export type AppHandler = Handler<unknown, AppState>;
+export type AppHandlers = Handlers<unknown, AppState>;
 
 const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
   const excluded = [

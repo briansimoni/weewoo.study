@@ -27,7 +27,6 @@ export default function Profile(props: Props) {
       const hours = dayjs(streak?.expires_on).diff(dayjs(), "hours");
       const minutes = dayjs(streak?.expires_on).diff(dayjs(), "minutes") % 60;
       const seconds = dayjs(streak?.expires_on).diff(dayjs(), "seconds") % 60;
-      console.log(hours, minutes, seconds);
       setStreakTimer({ hours, minutes, seconds });
       if (hours > 24) {
         setTimerColor("green");
@@ -62,7 +61,6 @@ export default function Profile(props: Props) {
       });
       const data = await res.json();
       setName(data.display_name);
-      console.log(data);
     }
     updateUser();
     setEditing(false);

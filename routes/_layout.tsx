@@ -7,13 +7,23 @@ import {
 } from "../icons/index.ts";
 import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
-import { AppProps } from "./_middleware.ts";
+import { StreakStore } from "../lib/streak_store.ts";
+import { AppState } from "./_middleware.ts";
+import { defineLayout } from "$fresh/server.ts"
 
 const stage = Deno.env.get("STAGE");
 
-// todo: type state better
-export default function Layout(props: AppProps) {
-  const { state, Component } = props;
+export default defineLayout<AppState>(async (_req, ctx) => {
+
+  const { state, Component } = ctx;
+  const streakStore = await StreakStore.make();
+  let initialStreak: number | undefined = undefined;
+  if (state.session?.user_id) {
+    const streak = await streakStore.get(state.session.user_id);
+    if (streak) {
+      initialStreak = streak.days;
+    }
+  }
   return (
     <>
       <div className="navbar bg-base-100">
@@ -27,7 +37,7 @@ export default function Layout(props: AppProps) {
         <div className="navbar-end flex items-center gap-4">
           {/* Streak - Always Visible */}
           {state.session && (
-            <StreakIndicator initialStreak={state.session.streakDays} />
+            <StreakIndicator initialStreak={initialStreak} />
           )}
 
           {/* Hamburger Menu for Mobile */}
@@ -76,7 +86,7 @@ export default function Layout(props: AppProps) {
                 )}
                 <li>
                   <ThemeController
-                    initial_theme={props.state.preferences?.theme}
+                    initial_theme={state.preferences?.theme}
                   />
                 </li>
               </ul>
@@ -112,7 +122,7 @@ export default function Layout(props: AppProps) {
               )}
               <li>
                 <ThemeController
-                  initial_theme={props.state.preferences?.theme}
+                  initial_theme={state.preferences?.theme}
                 />
               </li>
             </ul>
@@ -130,7 +140,7 @@ export default function Layout(props: AppProps) {
         <a
           href="/leaderboard"
           className={`flex flex-col items-center ${
-            props.route === "/leaderboard" ? "dock-active" : ""
+            ctx.route === "/leaderboard" ? "dock-active" : ""
           }`}
         >
           <Trophy className="size-[1.2em]" />
@@ -140,7 +150,7 @@ export default function Layout(props: AppProps) {
         <a
           href="/emt/practice"
           className={`flex flex-col items-center ${
-            props.route === "/emt/practice" ? "dock-active" : ""
+            ctx.route === "/emt/practice" ? "dock-active" : ""
           }`}
         >
           <Dumbbell className="size-[1.2em]" />
@@ -150,7 +160,7 @@ export default function Layout(props: AppProps) {
         <a
           href={state.session ? "/profile" : "/auth/login"}
           className={`flex flex-col items-center ${
-            props.route === "/profile" ? "dock-active" : ""
+            ctx.route === "/profile" ? "dock-active" : ""
           }`}
         >
           {state.session
@@ -164,7 +174,7 @@ export default function Layout(props: AppProps) {
         <a
           href="/shop"
           className={`flex flex-col items-center ${
-            props.route.includes("/shop") ? "dock-active" : ""
+            ctx.route.includes("/shop") ? "dock-active" : ""
           }`}
         >
           <ShoppingBag className="size-[1.2em]" />
@@ -173,4 +183,5 @@ export default function Layout(props: AppProps) {
       </div>
     </>
   );
-}
+})
+
