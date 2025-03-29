@@ -1,0 +1,31 @@
+{
+  "name": "Deno Fresh Project",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/deno:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "forwardPorts": [8000],
+  "postCreateCommand": "deno cache main.ts",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "denoland.vscode-deno",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "deno.enable": true,
+        "deno.lint": true,
+        "deno.unstable": ["kv"],
+        "editor.defaultFormatter": "denoland.vscode-deno",
+        "editor.formatOnSave": true
+      }
+    }
+  }
+}
