@@ -1,10 +1,12 @@
 {
   "name": "Deno Fresh Project",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
   "forwardPorts": [8000],
-  "postCreateCommand": "deno cache main.ts",
+  "remoteUser": "vscode",
+  "postCreateCommand": "~/.deno/bin/deno cache main.ts",
   "customizations": {
     "vscode": {
       "extensions": [
