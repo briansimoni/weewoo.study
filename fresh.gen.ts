@@ -12,6 +12,7 @@ import * as $admin_debug from "./routes/admin/debug.tsx";
 import * as $admin_question_generator from "./routes/admin/question-generator.tsx";
 import * as $api_admin_middleware from "./routes/api/admin/_middleware.ts";
 import * as $api_admin_question from "./routes/api/admin/question.ts";
+import * as $api_checkout from "./routes/api/checkout.ts";
 import * as $api_preferences from "./routes/api/preferences.ts";
 import * as $api_profile from "./routes/api/profile.ts";
 import * as $api_question from "./routes/api/question.ts";
@@ -20,6 +21,8 @@ import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_logged_out from "./routes/auth/logged-out.tsx";
 import * as $auth_login from "./routes/auth/login.tsx";
 import * as $auth_logout from "./routes/auth/logout.tsx";
+import * as $cart from "./routes/cart.tsx";
+import * as $checkout_success from "./routes/checkout/success.tsx";
 import * as $emt_practice_index from "./routes/emt/practice/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $leaderboard from "./routes/leaderboard.tsx";
@@ -28,6 +31,9 @@ import * as $shop from "./routes/shop.tsx";
 import * as $shop_id_ from "./routes/shop/[id].tsx";
 import * as $user_user_id_ from "./routes/user/[user_id].tsx";
 import * as $AdminQuestionGenerator from "./islands/AdminQuestionGenerator.tsx";
+import * as $CartClearer from "./islands/CartClearer.tsx";
+import * as $CartIcon from "./islands/CartIcon.tsx";
+import * as $CartPageIsland from "./islands/CartPageIsland.tsx";
 import * as $LoginIsland from "./islands/LoginIsland.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
 import * as $ProductCard from "./islands/ProductCard.tsx";
@@ -50,6 +56,7 @@ const manifest = {
     "./routes/admin/question-generator.tsx": $admin_question_generator,
     "./routes/api/admin/_middleware.ts": $api_admin_middleware,
     "./routes/api/admin/question.ts": $api_admin_question,
+    "./routes/api/checkout.ts": $api_checkout,
     "./routes/api/preferences.ts": $api_preferences,
     "./routes/api/profile.ts": $api_profile,
     "./routes/api/question.ts": $api_question,
@@ -58,6 +65,8 @@ const manifest = {
     "./routes/auth/logged-out.tsx": $auth_logged_out,
     "./routes/auth/login.tsx": $auth_login,
     "./routes/auth/logout.tsx": $auth_logout,
+    "./routes/cart.tsx": $cart,
+    "./routes/checkout/success.tsx": $checkout_success,
     "./routes/emt/practice/index.tsx": $emt_practice_index,
     "./routes/index.tsx": $index,
     "./routes/leaderboard.tsx": $leaderboard,
@@ -68,6 +77,9 @@ const manifest = {
   },
   islands: {
     "./islands/AdminQuestionGenerator.tsx": $AdminQuestionGenerator,
+    "./islands/CartClearer.tsx": $CartClearer,
+    "./islands/CartIcon.tsx": $CartIcon,
+    "./islands/CartPageIsland.tsx": $CartPageIsland,
     "./islands/LoginIsland.tsx": $LoginIsland,
     "./islands/NavAvatar.tsx": $NavAvatar,
     "./islands/ProductCard.tsx": $ProductCard,

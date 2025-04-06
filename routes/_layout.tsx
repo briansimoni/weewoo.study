@@ -7,14 +7,14 @@ import {
 } from "../icons/index.ts";
 import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
+import CartIcon from "../islands/CartIcon.tsx";
 import { StreakStore } from "../lib/streak_store.ts";
 import { AppState } from "./_middleware.ts";
-import { defineLayout } from "$fresh/server.ts"
+import { defineLayout } from "$fresh/server.ts";
 
 const stage = Deno.env.get("STAGE");
 
 export default defineLayout<AppState>(async (_req, ctx) => {
-
   const { state, Component } = ctx;
   const streakStore = await StreakStore.make();
   let initialStreak: number | undefined = undefined;
@@ -33,12 +33,13 @@ export default defineLayout<AppState>(async (_req, ctx) => {
           {stage}
         </div>
 
-        {/* Right Side: Streak and Menus */}
+        {/* Right Side: Streak, Cart and Menus */}
         <div className="navbar-end flex items-center gap-4">
+          {/* Cart Icon */}
+          <CartIcon />
+
           {/* Streak - Always Visible */}
-          {state.session && (
-            <StreakIndicator initialStreak={initialStreak} />
-          )}
+          {state.session && <StreakIndicator initialStreak={initialStreak} />}
 
           {/* Hamburger Menu for Mobile */}
           <div className="md:hidden">
@@ -68,6 +69,9 @@ export default defineLayout<AppState>(async (_req, ctx) => {
                 </li>
                 <li>
                   <a href="/leaderboard">Leaderboard</a>
+                </li>
+                <li>
+                  <a href="/cart">Cart</a>
                 </li>
                 {state.session && (
                   <>
@@ -104,6 +108,9 @@ export default defineLayout<AppState>(async (_req, ctx) => {
               </li>
               <li>
                 <a href="/shop">Shop</a>
+              </li>
+              <li>
+                <a href="/cart">Cart</a>
               </li>
               {state.session && (
                 <>
@@ -183,5 +190,4 @@ export default defineLayout<AppState>(async (_req, ctx) => {
       </div>
     </>
   );
-})
-
+});

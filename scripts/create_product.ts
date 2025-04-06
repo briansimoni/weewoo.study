@@ -6,7 +6,7 @@ import { ProductStore } from "../lib/product_store.ts";
 async function getBaseProducts() {
   try {
     const csvContent = await Deno.readTextFile(
-      "./scripts/products/weewoo-products.csv"
+      "./scripts/products/weewoo-products.csv",
     );
     const records = parse(csvContent, {
       skipFirstRow: true,
@@ -31,7 +31,7 @@ async function getBaseProducts() {
 async function getVariants() {
   try {
     const csvContent = await Deno.readTextFile(
-      "./scripts/products/weewoo-variants.csv"
+      "./scripts/products/weewoo-variants.csv",
     );
     const records = parse(csvContent, {
       skipFirstRow: true,
@@ -81,7 +81,7 @@ const main = async () => {
   for (const product of products) {
     // we have the completed product!
     product.variants = variants.filter(
-      (v) => v.printful_product_id === product.printful_product_id
+      (v) => v.printful_product_id === product.printful_product_id,
     );
 
     const productStore = await ProductStore.make();
@@ -100,11 +100,11 @@ const main = async () => {
       // Find the color object from the product's colors array before creating Stripe product
       const colorObject = product.colors.find(
         (c: { name: string; hex: string }) =>
-          c.name.toLowerCase() === variant.color.toLowerCase()
+          c.name.toLowerCase() === variant.color.toLowerCase(),
       );
       if (!colorObject) {
         console.error(
-          `Could not find color object for variant ${variant.variant_id} with color ${variant.color}`
+          `Could not find color object for variant ${variant.variant_id} with color ${variant.color}`,
         );
         continue;
       }

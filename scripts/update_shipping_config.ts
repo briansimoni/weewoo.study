@@ -10,13 +10,16 @@ const main = async () => {
   const stripe = new Stripe(stripeKey);
 
   // List all active payment links
-  const paymentLinks = await stripe.paymentLinks.list({ limit: 100, active: true });
+  const paymentLinks = await stripe.paymentLinks.list({
+    limit: 100,
+    active: true,
+  });
   console.log(`Found ${paymentLinks.data.length} active payment links...`);
 
   // Archive existing payment links and create new ones with shipping
   for (const link of paymentLinks.data) {
     console.log(`Processing payment link: ${link.url}`);
-    
+
     try {
       // Get the line items from the existing link
       // const lineItems = link.line_items;
@@ -40,15 +43,14 @@ const main = async () => {
 
       await stripe.paymentLinks.update(link.id, {
         shipping_address_collection: {
-          allowed_countries: ['US']
+          allowed_countries: ["US"],
         },
         custom_text: {
           shipping_address: {
-            message: 'Please provide your shipping address for delivery'
-          }
-        }
-      })
-
+            message: "Please provide your shipping address for delivery",
+          },
+        },
+      });
     } catch (error) {
       console.error(`× Failed to process payment link ${link.url}:`, error);
     }
