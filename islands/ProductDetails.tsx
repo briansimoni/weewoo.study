@@ -1,5 +1,6 @@
 import { useState } from "preact/hooks";
 import { Product, ProductVariant } from "../lib/product_store.ts";
+import { addToCart } from "../lib/cart_store.ts";
 
 interface ProductDetailsProps {
   product: Product;
@@ -23,13 +24,21 @@ export default function ProductDetails(
   );
   const images = colorVariant?.images || [];
 
-  const handleBuyNow = () => {
+  const handleAddToCart = () => {
     const variant = variants.find((v) =>
       v.color.name.toLowerCase() === selectedColor.name.toLowerCase() &&
       v.size === selectedSize
     );
-    if (variant?.payment_page) {
-      globalThis.location.href = variant.payment_page;
+    if (variant) {
+      addToCart(variant);
+      // Show a toast or notification that item was added
+      const toast = document.getElementById("cart-toast");
+      if (toast) {
+        toast.classList.remove("hidden");
+        setTimeout(() => {
+          toast.classList.add("hidden");
+        }, 3000);
+      }
     }
   };
 
@@ -154,15 +163,30 @@ export default function ProductDetails(
           </div>
         </div>
 
-        {/* Buy button */}
+        {/* Add to Cart button */}
         <div className="flex">
           <button
             type="button"
-            onClick={handleBuyNow}
+            onClick={handleAddToCart}
             className="btn btn-primary w-full"
           >
-            Buy Now
+            Add to Cart
           </button>
+        </div>
+
+        {/* Toast notification */}
+        <div id="cart-toast" className="toast toast-top toast-end hidden">
+          <div className="alert alert-success">
+            <div className="flex flex-col gap-1">
+              <span>Added to cart!</span>
+              <a
+                href="/cart"
+                className="text-sm underline hover:text-white transition-colors"
+              >
+                Go to cart
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Additional information */}
