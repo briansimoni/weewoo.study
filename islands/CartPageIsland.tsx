@@ -199,7 +199,7 @@ export default function CartPageIsland() {
           </div>
           <div className="flex justify-between mb-4">
             <span className="font-semibold">Shipping:</span>
-            <span>Calculated at checkout</span>
+            <span>Free!</span>
           </div>
           <div className="divider my-2"></div>
           <div className="flex justify-between mb-4">
