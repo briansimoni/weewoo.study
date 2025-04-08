@@ -27,6 +27,7 @@ import * as $emt_practice_index from "./routes/emt/practice/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $leaderboard from "./routes/leaderboard.tsx";
 import * as $profile from "./routes/profile.tsx";
+import * as $robots_txt from "./routes/robots.txt.ts";
 import * as $shop from "./routes/shop.tsx";
 import * as $shop_id_ from "./routes/shop/[id].tsx";
 import * as $user_user_id_ from "./routes/user/[user_id].tsx";
@@ -71,6 +72,7 @@ const manifest = {
     "./routes/index.tsx": $index,
     "./routes/leaderboard.tsx": $leaderboard,
     "./routes/profile.tsx": $profile,
+    "./routes/robots.txt.ts": $robots_txt,
     "./routes/shop.tsx": $shop,
     "./routes/shop/[id].tsx": $shop_id_,
     "./routes/user/[user_id].tsx": $user_user_id_,
