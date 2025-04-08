@@ -1,6 +1,8 @@
 import { ProductStore, ProductVariant } from "../../lib/product_store.ts";
 import { AppHandlers } from "../_middleware.ts";
 import Stripe from "npm:stripe";
+import { emailService } from "../../lib/email_service.ts";
+import { log } from "../../lib/logger.ts";
 
 const stripeSigningKey = Deno.env.get("STRIPE_SIGNING_SECRET");
 const stripeAPIKey = Deno.env.get("STRIPE_API_KEY");
@@ -27,7 +29,7 @@ export const handler: AppHandlers = {
       req.headers.get("stripe-signature") ?? "",
       stripeSigningKey,
     );
-    console.log(event);
+    log.info("Received Stripe event:", event.type);
     if (event.type === "checkout.session.completed") {
       const session = await stripeClient.checkout.sessions.retrieve(
         event.data.object.id,
@@ -49,7 +51,7 @@ export const handler: AppHandlers = {
       // Initialize product store once for all items
       const productStore = await ProductStore.make();
 
-      console.log(
+      log.info(
         `Processing ${lineItems.length} items from checkout session ${session.id}`,
       );
 
@@ -58,7 +60,7 @@ export const handler: AppHandlers = {
         [];
 
       for (const item of lineItems) {
-        console.log(`Processing line item: ${JSON.stringify(item)}`);
+        log.debug("Processing line item:", item);
 
         // Find the variant using the stripe_product_id
         let foundVariant: ProductVariant | null = null;
@@ -76,8 +78,9 @@ export const handler: AppHandlers = {
         }
 
         if (!foundVariant) {
-          console.error(
-            `Could not find matching variant for item: ${JSON.stringify(item)}`,
+          log.error(
+            "Could not find matching variant for item:",
+            item,
           );
           continue; // Skip this item but continue processing others
         }
@@ -97,7 +100,7 @@ export const handler: AppHandlers = {
           session.customer_details?.email || undefined,
         );
       } else {
-        console.error("No valid items found in checkout session");
+        log.error("No valid items found in checkout session");
       }
     }
     // all good! tell stripe that we successfully processed the webhook
@@ -117,7 +120,7 @@ async function submitOrder(
     "product_template_id": item.variant.product_template_id,
   }));
 
-  console.log(
+  log.info(
     `Submitting order to Printful with ${printfulItems.length} items`,
   );
 
@@ -131,7 +134,8 @@ async function submitOrder(
       "recipient": {
         "name": shippingDetails.name,
         "address1": shippingDetails.address?.line1,
-        "city": shippingDetails.address?.line2,
+        "address2": shippingDetails.address?.line2,
+        "city": shippingDetails.address?.city,
         "state_code": shippingDetails.address?.state,
         "zip": shippingDetails.address?.postal_code,
         "email": customerEmail,
@@ -142,11 +146,62 @@ async function submitOrder(
   });
 
   const result = await response.json();
-  console.log("Printful order response:", JSON.stringify(result));
+  log.info("Printful order response:", result);
 
   if (!response.ok) {
-    console.error("Error submitting order to Printful:", result);
-    throw new Error(`Printful order failed: ${JSON.stringify(result)}`);
+    log.error("Error submitting order to Printful:", result);
+    throw new Error(
+      `Printful order failed: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  // Send order confirmation email if we have a customer email
+  if (customerEmail) {
+    try {
+      // Get product names and prices for the email
+      const emailItems = orderItems.map((item) => ({
+        name: `${item.variant.color.name} ${item.variant.size}`,
+        quantity: item.quantity,
+        price: item.variant.price || 0,
+      }));
+
+      // Calculate total amount
+      const totalAmount = emailItems.reduce(
+        (sum, item) => sum + (item.price * item.quantity),
+        0,
+      );
+
+      // Format shipping address for email
+      const shippingAddress = {
+        name: shippingDetails.name || "",
+        line1: shippingDetails.address?.line1 || "",
+        line2: shippingDetails.address?.line2 || undefined,
+        city: shippingDetails.address?.city || "",
+        state: shippingDetails.address?.state || "",
+        postal_code: shippingDetails.address?.postal_code || "",
+        country: shippingDetails.address?.country || "",
+      };
+
+      // Send the confirmation email
+      const emailResult = await emailService.sendOrderConfirmation({
+        to: customerEmail,
+        orderReference: result.result.id.toString(),
+        items: emailItems,
+        totalAmount,
+        shippingAddress,
+      });
+
+      if (emailResult) {
+        log.info(`Order confirmation email sent to ${customerEmail}`);
+      } else {
+        log.warn(`Failed to send order confirmation email to ${customerEmail}`);
+      }
+    } catch (error) {
+      // Log the error but don't fail the order process if email sending fails
+      log.error("Error sending order confirmation email:", error);
+    }
+  } else {
+    log.warn("No customer email provided, skipping order confirmation email");
   }
 
   return result;

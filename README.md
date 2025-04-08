@@ -17,7 +17,8 @@ This will watch the project directory and restart as necessary.
 
 ### GitHub Codespaces
 
-This project is configured to work with GitHub Codespaces, allowing you to develop in a consistent environment directly in your browser.
+This project is configured to work with GitHub Codespaces, allowing you to
+develop in a consistent environment directly in your browser.
 
 To use GitHub Codespaces:
 
@@ -27,11 +28,13 @@ To use GitHub Codespaces:
 4. Click "Create codespace on main"
 
 Once the codespace is created, it will automatically:
+
 - Install Deno and other dependencies
 - Set up VS Code with the necessary extensions
 - Forward port 8000 for local development
 
 To start the development server in Codespaces:
+
 ```
 deno task start
 ```

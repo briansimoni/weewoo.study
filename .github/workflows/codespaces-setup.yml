@@ -3,7 +3,7 @@ name: Codespaces Setup Check
 on:
   pull_request:
     paths:
-      - '.devcontainer/**'
+      - ".devcontainer/**"
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Validate devcontainer.json
         run: |
           if ! jq empty .devcontainer/devcontainer.json; then
