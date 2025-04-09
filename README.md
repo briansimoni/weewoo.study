@@ -73,3 +73,5 @@ function getImageUris(str) {
 products spreadsheet
 
 https://docs.google.com/spreadsheets/d/1Tzcpc9YNc6sHVZK_6PAjQCBgEfKiQr9mZAZdaG4Nb6I/edit?gid=0#gid=0
+
+.
