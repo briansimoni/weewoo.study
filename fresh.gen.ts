@@ -9,8 +9,13 @@ import * as $_middleware from "./routes/_middleware.ts";
 import * as $about from "./routes/about.tsx";
 import * as $admin_middleware from "./routes/admin/_middleware.ts";
 import * as $admin_debug from "./routes/admin/debug.tsx";
+import * as $admin_product_manager from "./routes/admin/product-manager.tsx";
+import * as $admin_product_manager_product_id_ from "./routes/admin/product-manager/product/[id].tsx";
 import * as $admin_question_generator from "./routes/admin/question-generator.tsx";
 import * as $api_admin_middleware from "./routes/api/admin/_middleware.ts";
+import * as $api_admin_product from "./routes/api/admin/product.ts";
+import * as $api_admin_product_id_index from "./routes/api/admin/product/[id]/index.ts";
+import * as $api_admin_product_id_toggle_active from "./routes/api/admin/product/[id]/toggle-active.ts";
 import * as $api_admin_question from "./routes/api/admin/question.ts";
 import * as $api_checkout from "./routes/api/checkout.ts";
 import * as $api_preferences from "./routes/api/preferences.ts";
@@ -43,6 +48,7 @@ import * as $Profile from "./islands/Profile.tsx";
 import * as $Question from "./islands/Question.tsx";
 import * as $StreakIndicator from "./islands/StreakIndicator.tsx";
 import * as $ThemeController from "./islands/ThemeController.tsx";
+import * as $admin_ProductDetail from "./islands/admin/ProductDetail.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -54,8 +60,15 @@ const manifest = {
     "./routes/about.tsx": $about,
     "./routes/admin/_middleware.ts": $admin_middleware,
     "./routes/admin/debug.tsx": $admin_debug,
+    "./routes/admin/product-manager.tsx": $admin_product_manager,
+    "./routes/admin/product-manager/product/[id].tsx":
+      $admin_product_manager_product_id_,
     "./routes/admin/question-generator.tsx": $admin_question_generator,
     "./routes/api/admin/_middleware.ts": $api_admin_middleware,
+    "./routes/api/admin/product.ts": $api_admin_product,
+    "./routes/api/admin/product/[id]/index.ts": $api_admin_product_id_index,
+    "./routes/api/admin/product/[id]/toggle-active.ts":
+      $api_admin_product_id_toggle_active,
     "./routes/api/admin/question.ts": $api_admin_question,
     "./routes/api/checkout.ts": $api_checkout,
     "./routes/api/preferences.ts": $api_preferences,
@@ -90,6 +103,7 @@ const manifest = {
     "./islands/Question.tsx": $Question,
     "./islands/StreakIndicator.tsx": $StreakIndicator,
     "./islands/ThemeController.tsx": $ThemeController,
+    "./islands/admin/ProductDetail.tsx": $admin_ProductDetail,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

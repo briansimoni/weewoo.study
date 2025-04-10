@@ -11,7 +11,8 @@ export interface Product {
   thumbnail_url: string;
   description: string;
   price: number;
-  colors: {
+  active: boolean;
+  colors?: {
     name: string;
     hex: string;
     thumbnail_url: string;
@@ -29,7 +30,7 @@ export interface ProductVariant {
   };
   size: string;
   images: string[];
-  stripe_product_id: string; // Required field
+  stripe_product_id: string;
   payment_page: string;
 }
 
@@ -50,6 +51,15 @@ export class ProductStore {
   async getProduct(printful_id: string): Promise<Product | null> {
     const product = await this.kv.get<Product>(["products", printful_id]);
     return product.value;
+  }
+
+  async updateProduct(product: Partial<Product> & { printful_id: string }) {
+    const existingProduct = await this.getProduct(product.printful_id);
+    if (!existingProduct) {
+      throw new Error("Product not found");
+    }
+    await this.kv.set(["products", product.printful_id], { ...existingProduct, ...product });
+    return { ...existingProduct, ...product };
   }
 
   async addVariant(variant: ProductVariant) {
@@ -125,6 +135,24 @@ export class ProductStore {
       variants.push(entry.value);
     }
     return variants;
+  }
+
+  /**
+   * This will delete a product and all of it's associated variants
+   */
+  async deleteProduct(printful_id: string) {
+    const tx = this.kv.atomic();
+    tx.delete(["products", printful_id]);
+    const variants = await this.listProductVariants(printful_id);
+    for (const variant of variants) {
+      tx.delete(["variants", variant.printful_product_id, variant.variant_id]);
+      tx.delete([
+        "stripe_variants",
+        variant.stripe_product_id,
+        variant.variant_id,
+      ]);
+    }
+    await tx.commit();
   }
 
   /**
