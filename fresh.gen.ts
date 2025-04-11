@@ -16,6 +16,7 @@ import * as $api_admin_middleware from "./routes/api/admin/_middleware.ts";
 import * as $api_admin_product from "./routes/api/admin/product.ts";
 import * as $api_admin_product_id_index from "./routes/api/admin/product/[id]/index.ts";
 import * as $api_admin_product_id_toggle_active from "./routes/api/admin/product/[id]/toggle-active.ts";
+import * as $api_admin_product_id_variant_variant_id_ from "./routes/api/admin/product/[id]/variant/[variant_id].ts";
 import * as $api_admin_question from "./routes/api/admin/question.ts";
 import * as $api_checkout from "./routes/api/checkout.ts";
 import * as $api_preferences from "./routes/api/preferences.ts";
@@ -69,6 +70,8 @@ const manifest = {
     "./routes/api/admin/product/[id]/index.ts": $api_admin_product_id_index,
     "./routes/api/admin/product/[id]/toggle-active.ts":
       $api_admin_product_id_toggle_active,
+    "./routes/api/admin/product/[id]/variant/[variant_id].ts":
+      $api_admin_product_id_variant_variant_id_,
     "./routes/api/admin/question.ts": $api_admin_question,
     "./routes/api/checkout.ts": $api_checkout,
     "./routes/api/preferences.ts": $api_preferences,
