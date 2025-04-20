@@ -15,13 +15,13 @@ export const handler: Handlers = {
           {
             status: 400,
             headers: { "Content-Type": "application/json" },
-          }
+          },
         );
       }
 
       // Parse the request body
       const data = await req.json();
-      
+
       // Get the product store
       const productStore = await ProductStore.make();
 
@@ -48,7 +48,7 @@ export const handler: Handlers = {
         {
           status: 200,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
     } catch (error) {
       console.error("Error updating product:", error);
@@ -59,7 +59,7 @@ export const handler: Handlers = {
         {
           status: 500,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
     }
   },

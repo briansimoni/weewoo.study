@@ -23,6 +23,9 @@ jobs:
         with:
           deno-version: v2.x
 
+      - name: Run tests
+        run: deno test "./**/*.test.ts"
+
       - name: Build step
         run: "deno task build"
 

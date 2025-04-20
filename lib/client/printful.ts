@@ -20,7 +20,12 @@ export interface PrintfulProductVariant {
   retail_price: string;
   sku: string;
   currency: string;
-  product: PrintfulProduct;
+  product: {
+    variant_id: number;
+    product_id: number;
+    image: string;
+    name: string;
+  };
   files: PrintfulFile[];
   options: PrintfulOption[];
   is_ignored: boolean;

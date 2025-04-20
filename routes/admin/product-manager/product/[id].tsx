@@ -35,10 +35,18 @@ export const handler: Handlers<ProductDetailData> = {
       // Get product details from Printful
       const printfulClient = new PrintfulApiClient();
       const response = await printfulClient.listProductVariants(productId);
+      const productDetails = {
+        sync_product: response.result.sync_product,
+        // the first id isn't the one that you actually use for creating orders which is annoying
+        sync_variants: response.result.sync_variants.map((variant) => ({
+          ...variant,
+          id: variant.product.variant_id,
+        })),
+      };
 
       return ctx.render({
         productId,
-        productDetails: response.result,
+        productDetails,
         storedProduct,
         error: null,
       });

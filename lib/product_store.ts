@@ -30,8 +30,7 @@ export interface ProductVariant {
   };
   size: string;
   images: string[];
-  stripe_product_id: string;
-  payment_page: string;
+  stripe_product_id?: string;
 }
 
 export class ProductStore {
@@ -58,7 +57,10 @@ export class ProductStore {
     if (!existingProduct) {
       throw new Error("Product not found");
     }
-    await this.kv.set(["products", product.printful_id], { ...existingProduct, ...product });
+    await this.kv.set(["products", product.printful_id], {
+      ...existingProduct,
+      ...product,
+    });
     return { ...existingProduct, ...product };
   }
 
@@ -72,11 +74,13 @@ export class ProductStore {
     ], variant);
 
     // secondary index by stripe_product_id
-    tx.set([
-      "stripe_variants",
-      variant.stripe_product_id,
-      variant.variant_id,
-    ], variant);
+    if (variant.stripe_product_id) {
+      tx.set([
+        "stripe_variants",
+        variant.stripe_product_id,
+        variant.variant_id,
+      ], variant);
+    }
 
     await tx.commit();
   }
@@ -102,16 +106,20 @@ export class ProductStore {
       throw new Error("Variant not found");
     }
     const tx = this.kv.atomic();
+
     tx.set([
       "variants",
       variant.printful_product_id,
       variant.variant_id,
     ], { ...existingVariant, ...variant });
-    tx.set([
-      "stripe_variants",
-      variant.stripe_product_id,
-      variant.variant_id,
-    ], { ...existingVariant, ...variant });
+
+    if (variant.stripe_product_id) {
+      tx.set([
+        "stripe_variants",
+        variant.stripe_product_id,
+        variant.variant_id,
+      ], { ...existingVariant, ...variant });
+    }
     await tx.commit();
   }
 
@@ -122,6 +130,20 @@ export class ProductStore {
       products.push(entry.value);
     }
     return products;
+  }
+
+  async deleteVariant(
+    printful_product_id: string,
+    variant_id: string,
+    stripe_product_id?: string,
+  ) {
+    const tx = this.kv.atomic();
+    tx.delete(["variants", printful_product_id, variant_id]);
+    if (stripe_product_id) {
+      tx.delete(["stripe_variants", stripe_product_id, variant_id]);
+    }
+    const x = await tx.commit();
+    console.log(x);
   }
 
   async listProductVariants(
@@ -146,11 +168,13 @@ export class ProductStore {
     const variants = await this.listProductVariants(printful_id);
     for (const variant of variants) {
       tx.delete(["variants", variant.printful_product_id, variant.variant_id]);
-      tx.delete([
-        "stripe_variants",
-        variant.stripe_product_id,
-        variant.variant_id,
-      ]);
+      if (variant.stripe_product_id) {
+        tx.delete([
+          "stripe_variants",
+          variant.stripe_product_id,
+          variant.variant_id,
+        ]);
+      }
     }
     await tx.commit();
   }

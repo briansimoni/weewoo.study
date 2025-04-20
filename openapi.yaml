@@ -1,0 +1,486 @@
+openapi: 3.0.3
+info:
+  title: EMS Questions API
+  version: 1.0.0
+  description: |
+    API for product, question, checkout, and user management for the EMS Questions App.
+servers:
+  - url: /api
+paths:
+  /admin/product:
+    post:
+      summary: Import a product from Printful
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [printful_id]
+              properties:
+                printful_id:
+                  type: string
+      responses:
+        "200":
+          description: Product imported
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "400":
+          description: Missing printful_id
+        "404":
+          description: Product not found in Printful
+  /admin/product/{id}:
+    put:
+      summary: Update a product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductUpdate"
+      responses:
+        "200":
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "404":
+          description: Product not found
+    delete:
+      summary: Delete a product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product deleted
+        "404":
+          description: Product not found
+  /admin/product/{id}/toggle-active:
+    post:
+      summary: Toggle product active status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product status toggled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "404":
+          description: Product not found
+  /admin/product/{id}/variants:
+    get:
+      summary: List variants for a product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of variants
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  variants:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProductVariant"
+  /admin/product/{id}/variant/{variant_id}:
+    put:
+      summary: Update or create a product variant
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: variant_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductVariantUpdate"
+      responses:
+        "200":
+          description: Variant updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  variant:
+                    $ref: "#/components/schemas/ProductVariant"
+        "404":
+          description: Product or variant not found
+    delete:
+      summary: Delete a product variant (deactivates all Stripe prices, deletes Stripe product, and removes from database)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: variant_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Variant deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        "400":
+          description: Bad request (missing IDs or stripe_product_id)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Variant not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal error (Stripe or DB failure)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: string
+
+      summary: Update or create a product variant
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: variant_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductVariantUpdate"
+      responses:
+        "200":
+          description: Variant updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  variant:
+                    $ref: "#/components/schemas/ProductVariant"
+        "404":
+          description: Product or variant not found
+  /admin/question:
+    get:
+      summary: Generate a new question from OpenAI
+      parameters:
+        - name: prompt
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Generated question
+    post:
+      summary: Create a new question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionCreate"
+      responses:
+        "200":
+          description: Question created
+  /checkout:
+    post:
+      summary: Create Stripe checkout session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckoutRequest"
+      responses:
+        "200":
+          description: Stripe checkout session created
+        "400":
+          description: Invalid request body
+  /preferences:
+    post:
+      summary: Update user theme preference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                theme:
+                  type: string
+                  enum: [light, dark]
+      responses:
+        "200":
+          description: Preferences updated
+  /profile:
+    patch:
+      summary: Update user profile display name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                display_name:
+                  type: string
+      responses:
+        "200":
+          description: User updated
+  /question:
+    get:
+      summary: Get a random question
+      responses:
+        "200":
+          description: Random question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+    post:
+      summary: Submit an answer to a question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [questionId, answer]
+              properties:
+                questionId:
+                  type: string
+                answer:
+                  type: string
+      responses:
+        "200":
+          description: Answer result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  question:
+                    $ref: "#/components/schemas/Question"
+                  correct:
+                    type: boolean
+                  selectedAnswer:
+                    type: string
+                  streak:
+                    $ref: "#/components/schemas/Streak"
+  /stripe_webhook:
+    post:
+      summary: Stripe webhook for payment events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Webhook received
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        printful_id:
+          type: string
+        product_template_id:
+          type: string
+        name:
+          type: string
+        thumbnail_url:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        active:
+          type: boolean
+        colors:
+          type: array
+          items:
+            type: string
+    ProductUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        active:
+          type: boolean
+        colors:
+          type: array
+          items:
+            type: string
+    ProductVariant:
+      type: object
+      properties:
+        variant_id:
+          type: string
+        color:
+          type: string
+        size:
+          type: string
+        price:
+          type: number
+        images:
+          type: array
+          items:
+            type: string
+    ProductVariantUpdate:
+      type: object
+      properties:
+        color:
+          type: string
+        size:
+          type: string
+        price:
+          type: number
+        images:
+          type: array
+          items:
+            type: string
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        question:
+          type: string
+        choices:
+          type: array
+          items:
+            type: string
+        correct_answer:
+          type: string
+        explanation:
+          type: string
+        category:
+          type: string
+    QuestionCreate:
+      type: object
+      required:
+        - question
+        - choices
+        - correct_answer
+        - explanation
+        - category
+      properties:
+        question:
+          type: string
+        choices:
+          type: array
+          items:
+            type: string
+        correct_answer:
+          type: string
+        explanation:
+          type: string
+        category:
+          type: string
+    CheckoutRequest:
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            type: object
+            properties:
+              variant:
+                $ref: "#/components/schemas/ProductVariant"
+              quantity:
+                type: integer
+    Streak:
+      type: object
+      properties:
+        days:
+          type: integer

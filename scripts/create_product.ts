@@ -93,6 +93,7 @@ const main = async () => {
       description: product.description,
       price: parseFloat(product.price),
       colors: product.colors,
+      active: false,
     });
 
     // each variant becomes it's own product with it's own pricing and payment page
@@ -153,7 +154,7 @@ const main = async () => {
         size: variant.size,
         images: variant.images,
         stripe_product_id: stripeProduct.id,
-        payment_page: paymentLink.url,
+
       });
     }
   }

@@ -18,11 +18,17 @@ export default function ProductDetails(
   const sizes = Array.from(new Set(variants.map((v) => v.size)));
   const colors = Array.from(new Set(variants.map((v) => v.color.name)));
 
-  // Get variant images for the selected color
+  // Get variant images and details for the selected color and size
   const colorVariant = variants.find((v) =>
     v.color.name.toLowerCase() === selectedColor.name.toLowerCase()
   );
   const images = colorVariant?.images || [];
+
+  // Get the selected variant based on color and size
+  const selectedVariant = variants.find((v) =>
+    v.color.name.toLowerCase() === selectedColor.name.toLowerCase() &&
+    v.size === selectedSize
+  );
 
   const handleAddToCart = () => {
     const variant = variants.find((v) =>
@@ -105,7 +111,11 @@ export default function ProductDetails(
       {/* Right side - Product details and options */}
       <div className="lg:w-1/3">
         <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-        <p className="text-xl mb-6">${product.price.toFixed(2)}</p>
+        <p className="text-xl mb-6">
+          ${selectedVariant
+            ? selectedVariant.price.toFixed(2)
+            : product.price.toFixed(2)}
+        </p>
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">Description</h3>

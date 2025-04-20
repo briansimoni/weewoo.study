@@ -2,7 +2,7 @@ import { defineRoute } from "$fresh/server.ts";
 import { ProductStore } from "../lib/product_store.ts";
 import ProductCard from "../islands/ProductCard.tsx";
 
-export default defineRoute(async (req, ctx) => {
+export default defineRoute(async () => {
   const productStore = await ProductStore.make();
   const products = (await productStore.listProducts()).filter((p) => p.active);
   return (

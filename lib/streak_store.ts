@@ -33,7 +33,7 @@ export class StreakStore {
 
   // handles basically all of the logic for updating the streak
   // creates the object if it isn't there and increments the streak if updated
-  // during a certain time frame. Otherwise it will be a noop and return current streak
+  // during a certain time frame.
   async update(user_id: string) {
     const streak = await this.get(user_id);
     // create if it doesn't exist
@@ -72,8 +72,17 @@ export class StreakStore {
       return updatedStreak;
     }
 
-    // no-op. return current streak
-    return streak;
+    // just update last activity
+    const updatedStreak: Streak = {
+      ...streak,
+      last_activity: now.toISOString(),
+    };
+
+    const result = await this.kv.set(["streaks", user_id], updatedStreak);
+    if (!result.ok) {
+      throw new Error("Failed to update streak");
+    }
+    return updatedStreak;
   }
 
   async delete(user_id: string) {
