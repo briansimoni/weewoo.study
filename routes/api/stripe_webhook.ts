@@ -23,8 +23,6 @@ export const handler: AppHandlers = {
     if (req.body === null) {
       throw new Error("Request body is null");
     }
-    log.info("STRIPE_API_KEY", stripeAPIKey);
-    log.info("STRIPE_SIGNING_SECRET", stripeSigningKey);
     const body = await req.text();
     const event = await stripeClient.webhooks.constructEventAsync(
       body,
