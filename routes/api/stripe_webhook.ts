@@ -4,9 +4,9 @@ import Stripe from "npm:stripe";
 import { emailService } from "../../lib/email_service.ts";
 import { log } from "../../lib/logger.ts";
 
-const stripeSigningKey = Deno.env.get("STRIPE_SIGNING_SECRET");
-const stripeAPIKey = Deno.env.get("STRIPE_API_KEY");
-const printfulSecret = Deno.env.get("PRINTFUL_SECRET");
+const stripeSigningKey = Deno.env.get("STRIPE_SIGNING_SECRET")?.trim();
+const stripeAPIKey = Deno.env.get("STRIPE_API_KEY")?.trim();
+const printfulSecret = Deno.env.get("PRINTFUL_SECRET")?.trim();
 
 export const handler: AppHandlers = {
   POST: async (req) => {
