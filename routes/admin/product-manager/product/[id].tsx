@@ -145,7 +145,7 @@ export default function ProductDetailPage(
         </a>
       </div>
       {storedProduct && (
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+        <div className="bg-surface p-6 rounded-lg shadow-md mb-6">
           <h2 className="text-2xl font-semibold mb-4">
             Stored Product Information
           </h2>
@@ -155,35 +155,23 @@ export default function ProductDetailPage(
                 <span className="font-medium">Name:</span> {storedProduct.name}
               </p>
               <p>
-                <span className="font-medium">ID:</span>{" "}
-                {storedProduct.printful_id}
+                <span className="font-medium">ID:</span> {storedProduct.printful_id}
               </p>
               <p>
-                <span className="font-medium">Template ID:</span>{" "}
-                {storedProduct.product_template_id || "N/A"}
+                <span className="font-medium">Template ID:</span> {storedProduct.product_template_id || "N/A"}
               </p>
               <p>
-                <span className="font-medium">Price:</span>{" "}
-                ${storedProduct.price.toFixed(2)}
+                <span className="font-medium">Price:</span> ${storedProduct.price.toFixed(2)}
               </p>
               <p>
-                <span className="font-medium">Status:</span>{" "}
-                <span
-                  className={`px-2 py-1 text-xs rounded-full ${
-                    storedProduct.active
-                      ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  {storedProduct.active ? "Active" : "Inactive"}
-                </span>
+                <span className="font-medium">Status:</span> <span className={`px-2 py-1 text-xs rounded-full ${storedProduct.active ? "bg-success/20 text-success" : "bg-warning/20 text-warning"}`}>{storedProduct.active ? "Active" : "Inactive"}</span>
               </p>
             </div>
             <div>
               <p>
                 <span className="font-medium">Description:</span>
               </p>
-              <p className="text-gray-700 mb-4">
+              <p className="text-secondary mb-4">
                 {storedProduct.description || "No description available."}
               </p>
               {storedProduct.colors && storedProduct.colors.length > 0
@@ -196,7 +184,7 @@ export default function ProductDetailPage(
                       {storedProduct.colors.map((color) => (
                         <div
                           key={color.name}
-                          className="w-6 h-6 rounded-full border border-gray-300"
+                          className="w-6 h-6 rounded-full border border-outline"
                           style={{ backgroundColor: color.hex }}
                           title={color.name}
                         />
@@ -206,8 +194,7 @@ export default function ProductDetailPage(
                 )
                 : (
                   <p>
-                    <span className="font-medium">Colors:</span>{" "}
-                    No color options available
+                    <span className="font-medium">Colors:</span> No color options available
                   </p>
                 )}
             </div>

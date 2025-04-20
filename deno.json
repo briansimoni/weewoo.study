@@ -1,5 +1,4 @@
 {
-  "lock": false,
   "unstable": ["kv"],
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
@@ -36,7 +35,7 @@
     "tailwindcss": "npm:tailwindcss@4.0.9",
     "tailwindcss/": "npm:/tailwindcss@4.0.9/",
     "tailwindcss/plugin": "npm:/tailwindcss@4.0.9/plugin",
-    "daisyui": "npm:daisyui@5.0.0",
+    "daisyui": "npm:daisyui@5.0.27",
     "zod": "npm:zod@^3.24.2"
   },
   "compilerOptions": {

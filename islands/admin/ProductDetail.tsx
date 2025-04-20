@@ -242,27 +242,27 @@ export default function ProductDetail(
               <button
                 type="button"
                 onClick={openJsonEditor}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 Edit Product
               </button>
             </div>
 
             {/* Product Description Display */}
-            <div className="mt-4 bg-gray-50 p-4 rounded-md">
+            <div className="mt-4 bg-surface p-4 rounded-md">
               <h2 className="text-lg font-medium mb-2">Description</h2>
-              <p className="text-gray-700">
+              <p className="text-content">
                 {storedProduct.description || "No description available."}
               </p>
             </div>
 
             {/* JSON Editor Dialog */}
             {isEditing && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-                  <div className="p-4 border-b">
+              <div className="fixed inset-0 bg-overlay flex items-center justify-center p-4 z-50">
+                <div className="bg-card rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+                  <div className="p-4 border-b border-border">
                     <h2 className="text-xl font-semibold">Edit Product</h2>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-muted mt-1">
                       Edit the JSON below to update the product. Fields like
                       printful_id and product_template_id are not editable.
                     </p>
@@ -273,20 +273,20 @@ export default function ProductDetail(
                       value={productJson}
                       onChange={handleJsonChange}
                       className={`w-full h-96 font-mono text-sm p-3 border rounded-md ${
-                        jsonError ? "border-red-500" : "border-gray-300"
+                        jsonError ? "border-error" : "border-border"
                       }`}
                       spellcheck={false}
                     />
                     {jsonError && (
-                      <p className="text-red-500 text-sm mt-2">{jsonError}</p>
+                      <p className="text-error text-sm mt-2">{jsonError}</p>
                     )}
                   </div>
 
-                  <div className="p-4 border-t flex justify-end space-x-2">
+                  <div className="p-4 border-t border-border flex justify-end space-x-2">
                     <button
                       type="button"
                       onClick={() => setIsEditing(false)}
-                      className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                      className="px-4 py-2 bg-secondary text-secondary-content rounded-md hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2"
                     >
                       Cancel
                     </button>
@@ -294,7 +294,7 @@ export default function ProductDetail(
                       type="button"
                       onClick={handleSaveJson}
                       disabled={isSaving || !!jsonError}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                      className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
                     >
                       {isSaving ? "Saving..." : "Save Changes"}
                     </button>
@@ -308,7 +308,7 @@ export default function ProductDetail(
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         {/* Product Image */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="bg-card p-4 rounded-lg shadow-md">
           <div className="h-80 flex items-center justify-center overflow-hidden">
             <img
               src={selectedVariant?.files.find((file) =>
@@ -321,7 +321,7 @@ export default function ProductDetail(
         </div>
 
         {/* Product Info */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-card p-6 rounded-lg shadow-md">
           <div className="mb-4">
             <h2 className="text-xl font-semibold mb-2">Product Information</h2>
             <p>
@@ -374,7 +374,7 @@ export default function ProductDetail(
               ? (
                 <button
                   type="button"
-                  className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors"
+                  className="w-full bg-success hover:bg-success-dark text-white py-2 px-4 rounded-md transition-colors"
                   onClick={async () => {
                     try {
                       const response = await fetch(`/api/admin/product`, {
@@ -421,8 +421,8 @@ export default function ProductDetail(
                     type="button"
                     className={`w-full ${
                       storedProduct.active
-                        ? "bg-yellow-500 hover:bg-yellow-600"
-                        : "bg-green-500 hover:bg-green-600"
+                        ? "bg-warning hover:bg-warning-dark"
+                        : "bg-success hover:bg-success-dark"
                     } text-white py-2 px-4 rounded-md transition-colors`}
                     onClick={async () => {
                       if (
@@ -479,7 +479,7 @@ export default function ProductDetail(
 
                   <button
                     type="button"
-                    className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-colors"
+                    className="w-full bg-error hover:bg-error-dark text-white py-2 px-4 rounded-md transition-colors"
                     onClick={async () => {
                       if (
                         !confirm(
@@ -532,13 +532,13 @@ export default function ProductDetail(
 
       {/* Color Management Section */}
       {storedProduct && (
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+        <div className="bg-card p-6 rounded-lg shadow-md mb-8">
           <div className="mb-4">
             <h2 className="text-xl font-semibold">Color Definitions</h2>
           </div>
 
           <div className="mb-4">
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-sm text-muted mb-2">
               Define colors with name, hex value, and thumbnail URL to make
               products available for purchase. Colors must be defined before a
               product can be activated.
@@ -547,32 +547,32 @@ export default function ProductDetail(
 
           {/* Color Definitions Table */}
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 mb-4">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-outline">
+              <thead className="bg-surface-variant">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                     Color Name
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                     Preview
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                     Hex Value
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                     Thumbnail
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-card divide-y divide-outline">
                 {storedProduct.colors && storedProduct.colors.length > 0
                   ? (
                     storedProduct.colors.map((color, index) => (
                       <tr key={index}>
-                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-4 py-2 whitespace-nowrap text-sm text-content">
                           {color.name}
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap">
@@ -593,12 +593,12 @@ export default function ProductDetail(
                               <a
                                 href={color.thumbnail_url}
                                 target="_blank"
-                                className="text-blue-500 hover:underline"
+                                className="text-primary hover:underline"
                               >
                                 View
                               </a>
                             )
-                            : <span className="text-red-500">Missing</span>}
+                            : <span className="text-error">Missing</span>}
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap text-sm">
                           <button
@@ -608,7 +608,7 @@ export default function ProductDetail(
                               setColorIndex(index);
                               setIsColorDialogOpen(true);
                             }}
-                            className="text-blue-500 hover:text-blue-700 mr-2"
+                            className="text-primary hover:text-primary-dark mr-2"
                           >
                             Edit
                           </button>
@@ -620,7 +620,7 @@ export default function ProductDetail(
                     <tr>
                       <td
                         colSpan={5}
-                        className="px-4 py-4 text-center text-sm text-gray-500"
+                        className="px-4 py-4 text-center text-sm text-muted"
                       >
                         No color definitions yet. Add some to make this product
                         available.
@@ -654,7 +654,7 @@ export default function ProductDetail(
                 return (
                   <div
                     key={colorName}
-                    className="p-2 border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50"
+                    className="p-2 border rounded-md flex items-center gap-2"
                   >
                     <div
                       className="w-6 h-6 rounded-full cursor-pointer"
@@ -699,7 +699,7 @@ export default function ProductDetail(
                     c.name.toLowerCase() === colorName.toLowerCase()
                   );
                 }).length === 0 && (
-              <p className="text-sm text-green-600">
+              <p className="text-sm text-success">
                 All Printful colors have been defined!
               </p>
             )}
@@ -708,18 +708,18 @@ export default function ProductDetail(
       )}
 
       {/* Variant Details Table */}
-      <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+      <div className="bg-card p-6 rounded-lg shadow-md overflow-x-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">All Variants</h2>
         </div>
 
         {storedProduct &&
           (!storedProduct.colors || storedProduct.colors.length === 0) && (
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+          <div className="bg-warning-light border-l-4 border-warning p-4 mb-4">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg
-                  className="h-5 w-5 text-yellow-400"
+                  className="h-5 w-5 text-warning"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -732,7 +732,7 @@ export default function ProductDetail(
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-yellow-700">
+                <p className="text-sm text-warning-dark">
                   You need to define colors before you can assign them to
                   variants.
                 </p>
@@ -741,40 +741,40 @@ export default function ProductDetail(
           </div>
         )}
 
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-outline">
+          <thead className="bg-surface-variant">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 ID
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Size
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Assigned Color
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Price
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Images
               </th>
 
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Stripe Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-surface-variant divide-y divide-outline">
             {sync_variants.map((variant) => {
               // Find if there's a matching color in the defined colors
               const matchingDefinedColor = storedProduct?.colors?.find((c) =>
@@ -784,8 +784,8 @@ export default function ProductDetail(
               return (
                 <tr
                   key={variant.id}
-                  className={`hover:bg-gray-50 ${
-                    selectedVariant?.id === variant.id ? "bg-blue-50" : ""
+                  className={`hover:bg-surface ${
+                    selectedVariant?.id === variant.id ? "bg-primary-light" : ""
                   }`}
                   onClick={(e) => {
                     // Don't trigger row click when clicking on the select dropdown
@@ -797,7 +797,7 @@ export default function ProductDetail(
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {variant.id}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-content">
                     {variant.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -811,7 +811,7 @@ export default function ProductDetail(
                         storedProduct.colors.length > 0
                       ? (
                         <select
-                          className="border border-gray-300 rounded-md text-sm p-1 w-full max-w-[150px]"
+                          className="border border-border rounded-md text-sm p-1 w-full max-w-[150px]"
                           value={variantColorAssignments[variant.id] ||
                             (matchingDefinedColor
                               ? matchingDefinedColor.name
@@ -833,7 +833,7 @@ export default function ProductDetail(
                         </select>
                       )
                       : (
-                        <span className="text-red-500 text-xs">
+                        <span className="text-error text-xs">
                           No defined colors
                         </span>
                       )}
@@ -846,7 +846,7 @@ export default function ProductDetail(
                       ? (
                         <input
                           type="text"
-                          className="border border-gray-300 rounded-md text-sm p-1 w-full max-w-[100px]"
+                          className="border border-border rounded-md text-sm p-1 w-full max-w-[100px]"
                           value={variantPrices[variant.id.toString()] ||
                             (getStoredVariantPrice(variant.id.toString())
                               ?.toString() || variant.retail_price)}
@@ -876,7 +876,7 @@ export default function ProductDetail(
                     {editingVariants[variant.id.toString()]
                       ? (
                         <textarea
-                          className="border border-gray-300 rounded-md text-sm p-1 w-full max-w-[200px] h-20"
+                          className="border border-border rounded-md text-sm p-1 w-full max-w-[200px] h-20"
                           value={variantImages[variant.id.toString()] || ""}
                           placeholder="One image URL per line"
                           onChange={(e) => {
@@ -898,7 +898,7 @@ export default function ProductDetail(
                               </span>
                             )
                             : (
-                              <span className="text-red-500 text-xs">
+                              <span className="text-error text-xs">
                                 No images
                               </span>
                             )}
@@ -910,8 +910,8 @@ export default function ProductDetail(
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         variant.availability_status === "available"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
+                          ? "bg-success-light text-success-dark"
+                          : "bg-warning-light text-warning-dark"
                       }`}
                     >
                       {variant.availability_status}
@@ -934,19 +934,19 @@ export default function ProductDetail(
 
                       if (!storedVariant) {
                         return (
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-surface text-muted">
                             Not Saved
                           </span>
                         );
                       } else if (!storedVariant.stripe_product_id) {
                         return (
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning-light text-warning-dark">
                             Needs Creation
                           </span>
                         );
                       } else {
                         return (
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-light text-success-dark">
                             Created
                           </span>
                         );
@@ -962,7 +962,7 @@ export default function ProductDetail(
                         <div className="flex space-x-2">
                           <button
                             type="button"
-                            className="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 focus:outline-none"
+                            className="px-2 py-1 bg-success text-white text-xs rounded hover:bg-success-dark focus:outline-none"
                             onClick={async () => {
                               if (!storedProduct) return;
 
@@ -1134,7 +1134,7 @@ export default function ProductDetail(
                           </button>
                           <button
                             type="button"
-                            className="px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400 focus:outline-none"
+                            className="px-2 py-1 bg-secondary text-secondary-content text-xs rounded hover:bg-secondary-dark focus:outline-none"
                             onClick={() => {
                               const newEditingState = { ...editingVariants };
                               newEditingState[variant.id.toString()] = false;
@@ -1150,7 +1150,7 @@ export default function ProductDetail(
                         <div className="flex space-x-2">
                           <button
                             type="button"
-                            className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 focus:outline-none"
+                            className="px-2 py-1 bg-primary text-white text-xs rounded hover:bg-primary-dark focus:outline-none"
                             onClick={() => {
                               // Convert variant.id to string to use as object key
                               const variantIdStr = variant.id.toString();
@@ -1178,38 +1178,56 @@ export default function ProductDetail(
                           >
                             Edit
                           </button>
-                          
+
                           {/* Delete Variant button - only shown for stored variants */}
-                          {storedVariants.find(v => v.variant_id === variant.id.toString()) && (
+                          {storedVariants.find((v) =>
+                            v.variant_id === variant.id.toString()
+                          ) && (
                             <button
                               type="button"
-                              className="px-2 py-1 ml-2 bg-red-500 text-white text-xs rounded hover:bg-red-600 focus:outline-none"
+                              className="px-2 py-1 ml-2 bg-error text-white text-xs rounded hover:bg-error-dark focus:outline-none"
                               onClick={async () => {
                                 if (!storedProduct) return;
-                                if (!confirm("Are you sure you want to delete this variant? This will deactivate Stripe prices, delete the Stripe product, and remove it from the database.")) {
+                                if (
+                                  !confirm(
+                                    "Are you sure you want to delete this variant? This will deactivate Stripe prices, delete the Stripe product, and remove it from the database.",
+                                  )
+                                ) {
                                   return;
                                 }
-                                
+
                                 try {
                                   const response = await fetch(
                                     `/api/admin/product/${storedProduct.printful_id}/variant/${variant.id}`,
                                     {
                                       method: "DELETE",
-                                    }
+                                    },
                                   );
-                                  
+
                                   const result = await response.json();
-                                  
+
                                   if (response.ok) {
                                     alert("Variant deleted successfully!");
                                     // Reload the variants list
                                     loadStoredVariants();
                                   } else {
-                                    alert(`Error: ${result.error || "Failed to delete variant"}`);
+                                    alert(
+                                      `Error: ${
+                                        result.error ||
+                                        "Failed to delete variant"
+                                      }`,
+                                    );
                                   }
                                 } catch (error) {
-                                  console.error("Error deleting variant:", error);
-                                  alert(`Error: ${error instanceof Error ? error.message : "Unknown error"}`);
+                                  console.error(
+                                    "Error deleting variant:",
+                                    error,
+                                  );
+                                  alert(`Error: ${
+                                    error instanceof Error
+                                      ? error.message
+                                      : "Unknown error"
+                                  }`);
                                 }
                               }}
                             >
@@ -1227,7 +1245,7 @@ export default function ProductDetail(
                               storedProduct && (
                               <button
                                 type="button"
-                                className="px-2 py-1 bg-purple-500 text-white text-xs rounded hover:bg-purple-600 focus:outline-none"
+                                className="px-2 py-1 bg-accent text-white text-xs rounded hover:bg-accent-dark focus:outline-none"
                                 onClick={async () => {
                                   const variantIdStr = variant.id.toString();
 
@@ -1307,13 +1325,13 @@ export default function ProductDetail(
 
       {/* Color Definition Dialog */}
       {isColorDialogOpen && editingColor && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
-            <div className="p-4 border-b">
-              <h2 className="text-xl font-semibold">
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+          <div className="bg-base-100 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col border ">
+            <div className="p-4 border-b border-border">
+              <h2 className="text-xl">
                 {colorIndex === -1 ? "Add New Color" : "Edit Color"}
               </h2>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted mt-1">
                 Define color properties to match the Product interface
                 requirements.
               </p>
@@ -1324,7 +1342,7 @@ export default function ProductDetail(
                 <div>
                   <label
                     htmlFor="colorName"
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-content mb-1"
                   >
                     Color Name
                   </label>
@@ -1337,7 +1355,7 @@ export default function ProductDetail(
                         ...editingColor,
                         name: e.currentTarget.value,
                       })}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-2 border rounded-md focus:ring-primary focus:border-primary bg-base-100 "
                     placeholder="e.g., Black, White, Red"
                   />
                 </div>
@@ -1345,7 +1363,7 @@ export default function ProductDetail(
                 <div>
                   <label
                     htmlFor="colorHex"
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-content mb-1"
                   >
                     Hex Color Value
                   </label>
@@ -1359,11 +1377,11 @@ export default function ProductDetail(
                           ...editingColor,
                           hex: e.currentTarget.value,
                         })}
-                      className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      className="flex-1 p-2 border rounded-md focus:ring-primary focus:border-primary bg-base-100 "
                       placeholder="e.g., #000000"
                     />
                     <div
-                      className="w-10 h-10 rounded-md border border-gray-300"
+                      className="w-10 h-10 rounded-md border border-border"
                       style={{ backgroundColor: editingColor.hex || "#FFFFFF" }}
                     />
                   </div>
@@ -1372,7 +1390,7 @@ export default function ProductDetail(
                 <div>
                   <label
                     htmlFor="thumbnailUrl"
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-content mb-1"
                   >
                     Thumbnail URL
                   </label>
@@ -1385,17 +1403,17 @@ export default function ProductDetail(
                         ...editingColor,
                         thumbnail_url: e.currentTarget.value,
                       })}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-2 border rounded-md focus:ring-primary focus:border-primary bg-base-100 "
                     placeholder="https://example.com/thumbnail.jpg"
                   />
                 </div>
 
                 {editingColor.thumbnail_url && (
                   <div className="mt-2">
-                    <p className="text-sm font-medium text-gray-700 mb-1">
+                    <p className="text-sm font-medium text-content mb-1">
                       Thumbnail Preview:
                     </p>
-                    <div className="border border-gray-300 rounded-md p-2 flex justify-center">
+                    <div className="border border-border rounded-md p-2 flex justify-center">
                       <img
                         src={editingColor.thumbnail_url}
                         alt="Thumbnail preview"
@@ -1412,11 +1430,11 @@ export default function ProductDetail(
               </form>
             </div>
 
-            <div className="p-4 border-t flex justify-end space-x-2">
+            <div className="p-4 border-t border-border flex justify-end space-x-2">
               <button
                 type="button"
                 onClick={() => setIsColorDialogOpen(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="px-4 py-2 bg-secondary text-secondary-content rounded-md hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2"
               >
                 Cancel
               </button>
@@ -1456,7 +1474,7 @@ export default function ProductDetail(
                   }
                 }}
                 disabled={!editingColor.name || !editingColor.hex}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
               >
                 Save Color
               </button>
