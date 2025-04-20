@@ -115,9 +115,9 @@ async function submitOrder(
 ) {
   // Map the order items to the format expected by Printful
   const printfulItems = orderItems.map((item) => ({
-    "variant_id": item.variant.variant_id,
+    "variant_id": parseInt(item.variant.variant_id),
     "quantity": item.quantity,
-    "product_template_id": item.variant.product_template_id,
+    "product_template_id": parseInt(item.variant.product_template_id),
   }));
 
   log.info(

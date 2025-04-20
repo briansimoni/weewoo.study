@@ -43,7 +43,7 @@ export const handler: Handlers = {
       const { sync_product } = productDetails;
       const product = {
         printful_id: sync_product.id.toString(),
-        product_template_id: sync_product.external_id || "",
+        product_template_id: "", // Empty string by default, editable in ProductDetail
         name: sync_product.name,
         thumbnail_url: sync_product.thumbnail_url,
         description: "", // This would need to be provided separately

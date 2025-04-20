@@ -148,6 +148,7 @@ export default function ProductDetail(
       description: storedProduct.description || "",
       price: storedProduct.price,
       active: storedProduct.active,
+      product_template_id: storedProduct.product_template_id || "",
       colors: storedProduct.colors || [],
     };
 
@@ -248,6 +249,38 @@ export default function ProductDetail(
               </button>
             </div>
 
+            {/* Warning for empty product_template_id */}
+            {!storedProduct.product_template_id && (
+              <div className="mb-4 p-3 bg-warning/10 border-l-4 border-warning rounded-r-md">
+                <div className="flex items-start">
+                  <svg
+                    className="h-5 w-5 text-warning flex-shrink-0 mr-2"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <div>
+                    <p className="text-warning-content font-medium">Product Template ID is missing</p>
+                    <p className="text-warning-content/80 text-sm mt-1">
+                      Please update this product to include a Product Template ID. Without it, orders may not process correctly.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={openJsonEditor}
+                      className="mt-2 text-sm font-medium text-warning-content hover:text-warning-content/90 underline"
+                    >
+                      Edit Product Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Product Description Display */}
             <div className="mt-4 bg-surface p-4 rounded-md">
               <h2 className="text-lg font-medium mb-2">Description</h2>
@@ -263,8 +296,8 @@ export default function ProductDetail(
                   <div className="p-4 border-b border-border">
                     <h2 className="text-xl font-semibold">Edit Product</h2>
                     <p className="text-sm text-muted mt-1">
-                      Edit the JSON below to update the product. Fields like
-                      printful_id and product_template_id are not editable.
+                      Edit the JSON below to update the product. Only the printful_id
+                      field is not editable. You can modify product_template_id and all other fields.
                     </p>
                   </div>
 
