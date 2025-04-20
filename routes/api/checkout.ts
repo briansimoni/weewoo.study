@@ -19,7 +19,6 @@ const ProductVariantSchema = z.object({
   size: z.string(),
   images: z.array(z.string()),
   stripe_product_id: z.string(),
-  payment_page: z.string(),
 });
 
 const CartItemSchema = z.object({
