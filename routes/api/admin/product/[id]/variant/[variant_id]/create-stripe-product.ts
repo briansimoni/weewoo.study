@@ -95,24 +95,10 @@ export const handler: Handlers = {
         default_price: price.id,
       });
 
-      // Create payment link
-      const paymentLink = await stripe.paymentLinks.create({
-        line_items: [
-          {
-            price: price.id,
-            quantity: 1,
-          },
-        ],
-        shipping_address_collection: {
-          allowed_countries: ["US"], // Add more countries as needed
-        },
-      });
-
-      // Update the variant with the new Stripe product ID and payment page
+      // Update the variant with the new Stripe product ID
       const updatedVariant = {
         ...variant,
         stripe_product_id: stripeProduct.id,
-        payment_page: paymentLink.url,
       };
 
       await productStore.updateVariant(updatedVariant);

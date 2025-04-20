@@ -259,7 +259,7 @@ export default function ProductDetail(
             {/* JSON Editor Dialog */}
             {isEditing && (
               <div className="fixed inset-0 bg-overlay flex items-center justify-center p-4 z-50">
-                <div className="bg-card rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+                <div className="bg-base-100 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
                   <div className="p-4 border-b border-border">
                     <h2 className="text-xl font-semibold">Edit Product</h2>
                     <p className="text-sm text-muted mt-1">
@@ -1271,9 +1271,7 @@ export default function ProductDetail(
                                     const result = await response.json();
 
                                     if (result.success) {
-                                      alert(
-                                        `Stripe product created successfully! Payment page: ${result.variant.payment_page}`,
-                                      );
+                                      alert("Stripe product created successfully!");
                                       // Reload the page to show the updated information
                                       globalThis.location.reload();
                                     } else {
