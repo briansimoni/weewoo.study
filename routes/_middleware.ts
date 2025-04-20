@@ -89,6 +89,7 @@ const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
         path: "/",
         httpOnly: true,
         sameSite: "Lax",
+        maxAge: 60 * 60 * 24 * 30, // 30 days
       });
     }
   }
