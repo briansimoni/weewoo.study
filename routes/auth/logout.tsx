@@ -3,11 +3,11 @@ import { AppHandlers } from "../_middleware.ts";
 const client_id = Deno.env.get("CLIENT_ID");
 
 export const handler: AppHandlers = {
-  async GET(req, ctx) {
+  async GET(req, _ctx) {
     if (!client_id) {
       throw new Error("Missing environment variables");
     }
-    const issuer = new URL("https://dev-1m7qee3nty5n5ck1.us.auth0.com");
+    const issuer = new URL("https://auth.weewoo.study");
     const response = await oauth.discoveryRequest(issuer);
     const as = await oauth.processDiscoveryResponse(issuer, response);
 

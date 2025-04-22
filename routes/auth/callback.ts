@@ -15,8 +15,7 @@ export const handler: AppHandlers = {
       throw new Error("Missing environment variables");
     }
 
-    // https://dev-1m7qee3nty5n5ck1.us.auth0.com/.well-known/openid-configuration
-    const issuer = new URL("https://dev-1m7qee3nty5n5ck1.us.auth0.com");
+    const issuer = new URL("https://auth.weewoo.study");
     const discoverResponse = await oauth.discoveryRequest(issuer);
     const as = await oauth.processDiscoveryResponse(issuer, discoverResponse);
 

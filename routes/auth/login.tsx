@@ -10,7 +10,7 @@ export const handler: AppHandlers = {
     if (!client_id || !client_secret) {
       throw new Error("Missing environment variables");
     }
-    const issuer = new URL("https://dev-1m7qee3nty5n5ck1.us.auth0.com");
+    const issuer = new URL("https://auth.weewoo.study");
     const discoveryResponse = await oauth.discoveryRequest(issuer);
     const as = await oauth.processDiscoveryResponse(issuer, discoveryResponse);
     const code_verifier = oauth.generateRandomCodeVerifier();
