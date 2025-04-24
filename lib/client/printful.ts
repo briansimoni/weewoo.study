@@ -83,6 +83,14 @@ export interface PrintfulResponse<T> {
   };
 }
 
+export interface PrintfulWebhook {
+  id: number;
+  url: string;
+  types: string[];
+  created: string;
+  updated: string;
+}
+
 export class PrintfulApiClient {
   baseURL: string;
   printfulToken: string;
@@ -132,6 +140,55 @@ export class PrintfulApiClient {
         },
       },
     );
+    return await response.json();
+  }
+  
+  /**
+   * Create a new webhook subscription
+   * @param url The URL where Printful will send webhook events
+   * @param types Array of event types to subscribe to (e.g., ["package_shipped", "order_created"])
+   */
+  async createWebhook(
+    url: string,
+    types: string[],
+  ): Promise<PrintfulResponse<PrintfulWebhook>> {
+    const response = await this.fetch(`${this.baseURL}/webhooks`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.printfulToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url,
+        types,
+      }),
+    });
+    return await response.json();
+  }
+
+  /**
+   * List all active webhook subscriptions
+   */
+  async listWebhooks(): Promise<PrintfulResponse<PrintfulWebhook[]>> {
+    const response = await this.fetch(`${this.baseURL}/webhooks`, {
+      headers: {
+        Authorization: `Bearer ${this.printfulToken}`,
+      },
+    });
+    return await response.json();
+  }
+
+  /**
+   * Delete a webhook subscription by ID
+   * @param webhookId The ID of the webhook to delete
+   */
+  async deleteWebhook(webhookId: number): Promise<PrintfulResponse<null>> {
+    const response = await this.fetch(`${this.baseURL}/webhooks/${webhookId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${this.printfulToken}`,
+      },
+    });
     return await response.json();
   }
 }

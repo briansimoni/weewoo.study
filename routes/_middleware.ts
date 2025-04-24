@@ -98,7 +98,7 @@ const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
 
 const logMiddleware: AppHandler = async function (req, ctx) {
   const start = Date.now();
-  log.debug("request started", req.url);
+  // log.debug("request started", req.url);
   const res = await ctx.next();
   const end = Date.now();
   log.info(req.method, req.url, {
@@ -106,6 +106,7 @@ const logMiddleware: AppHandler = async function (req, ctx) {
     name: ctx.state.session?.name,
     status: res.status,
     responseTime: end - start,
+    body: await res.text(),
   });
   return res;
 };

@@ -282,6 +282,97 @@ export class EmailService {
       textBody,
     });
   }
+
+  /**
+   * Send an order shipped notification email
+   * @param options Order shipping notification email options
+   * @returns Promise that resolves when the email is sent
+   */
+  sendOrderShippedNotification({
+    to,
+    orderReference,
+    trackingNumber,
+    trackingUrl,
+    carrier,
+    estimatedDelivery,
+  }: {
+    to: string;
+    orderReference: string;
+    trackingNumber: string;
+    trackingUrl: string | null;
+    carrier: string;
+    estimatedDelivery: string | null;
+  }): Promise<boolean> {
+    // Create HTML email body
+    const htmlBody = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Your Order Has Shipped</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #f8f9fa; padding: 20px; text-align: center; }
+            .content { padding: 20px; }
+            .footer { background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; }
+            .tracking-info { margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #5cb85c; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Your Order Has Shipped!</h1>
+            </div>
+            <div class="content">
+              <p>Hello,</p>
+              <p>Great news! Your order (Reference: ${orderReference}) has been shipped and is on its way to you.</p>
+              
+              <div class="tracking-info">
+                <h2>Tracking Information</h2>
+                <p><strong>Carrier:</strong> ${carrier}</p>
+                <p><strong>Tracking Number:</strong> ${trackingNumber}</p>
+                ${trackingUrl ? `<p><strong>Track Your Package:</strong> <a href="${trackingUrl}">${trackingUrl}</a></p>` : ''}
+                ${estimatedDelivery ? `<p><strong>Estimated Delivery:</strong> ${estimatedDelivery}</p>` : ''}
+              </div>
+              
+              <p>If you have any questions about your order, please don't hesitate to contact our customer service team.</p>
+              <p>Thank you for your business!</p>
+            </div>
+            <div class="footer">
+              <p>&copy; ${new Date().getFullYear()} weewoo.study</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    // Create plain text version
+    const textBody = `
+      YOUR ORDER HAS SHIPPED
+      
+      Hello,
+      
+      Great news! Your order (Reference: ${orderReference}) has been shipped and is on its way to you.
+      
+      TRACKING INFORMATION:
+      Carrier: ${carrier}
+      Tracking Number: ${trackingNumber}
+      ${trackingUrl ? `Track Your Package: ${trackingUrl}` : ''}
+      ${estimatedDelivery ? `Estimated Delivery: ${estimatedDelivery}` : ''}
+      
+      If you have any questions about your order, please don't hesitate to contact our customer service team.
+      
+      Thank you for your business!
+    `;
+
+    return this.sendEmail({
+      to,
+      subject: "Your Order Has Shipped",
+      htmlBody,
+      textBody,
+    });
+  }
 }
 
 // Create and export a default instance
