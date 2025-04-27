@@ -4,7 +4,7 @@
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
     "manifest": "deno task cli manifest $(pwd)",
-    "start": "deno task tailwind & deno run -A --watch=static/,routes/ --unstable-kv dev.ts",
+    "start": "deno task tailwind & deno run -A --inspect --watch=static/,routes/ --unstable-kv dev.ts",
     "build": "deno task build:css && deno run -A --unstable-kv dev.ts build",
     "preview": "deno run -A main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",

@@ -1,8 +1,15 @@
 {
   "version": "0.2.0",
+
   "configurations": [
     {
-      "name": "Debug Deno Server",
+      "name": "Attach to Deno",
+      "type": "node",
+      "request": "attach",
+      "port": 9229
+    },
+    {
+      "name": "Start And Debug Deno Server",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/dev.ts",
