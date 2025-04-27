@@ -12,28 +12,47 @@ const createQuestionSchema = Zod.object({
   explanation: Zod.string().min(1),
   category: Zod.string(
     Zod.enum([
-      "Airway management",
-      "Oxygenation",
-      "Ventilation",
-      "Respiratory emergencies",
-      "Basic cardiac life support (BLS)",
-      "Automated External Defibrillator (AED) use",
-      "Cardiac emergencies",
-      "Bleeding control",
-      "Shock management",
-      "Soft tissue injuries",
-      "Musculoskeletal injuries",
-      "Head, neck, and spinal injuries",
-      "Neurological emergencies (e.g., strokes, seizures)",
-      "Endocrine disorders (e.g., diabetes emergencies)",
-      "Toxicology (e.g., overdoses, poisoning)",
-      "Abdominal and gastrointestinal emergencies",
-      "Allergic reactions and anaphylaxis",
-      "Obstetrics and childbirth emergencies",
-      "Scene safety and management",
-      "Mass casualty incidents (MCI) and triage",
-      "Ambulance operations",
-      "Hazardous materials (HAZMAT) awareness",
+      "EMS Systems",
+      "Workforce Safety and Wellness",
+      "Medical, Legal, and Ethical Issues",
+      "Communications and Documentation",
+      "Medical Terminology",
+      "The Human Body",
+      "Life Span Development",
+      "Lifting and Moving Patients",
+      "The Team Approach to Health Care",
+      "Patient Assessment",
+      "Airway Management",
+      "Principles of Pharmacology",
+      "Shock",
+      "BLS Resuscitation",
+      "Medical Overview",
+      "Respiratory Emergencies",
+      "Cardiovascular Emergencies",
+      "Neurologic Emergencies",
+      "Gastrointestinal and Urologic Emergencies",
+      "Endocrine and Hematologic Emergencies",
+      "Allergy and Anaphylaxis",
+      "Toxicology",
+      "Behavioral Health Emergencies",
+      "Gynecologic Emergencies",
+      "Trauma Overview",
+      "Bleeding",
+      "Soft-Tissue Injuries",
+      "Face and Neck Injuries",
+      "Head and Spine Injuries",
+      "Chest Injuries",
+      "Abdominal and Genitourinary Injuries",
+      "Orthopaedic Injuries",
+      "Environmental Emergencies",
+      "Obstetrics and Neonatal Care",
+      "Pediatric Emergencies",
+      "Geriatric Emergencies",
+      "Patients With Special Challenges",
+      "Transport Operations",
+      "Vehicle Extrication and Special Rescue",
+      "Incident Management",
+      "Terrorism Response and Disaster Management",
     ]),
   ).min(1),
 });
@@ -42,14 +61,40 @@ export type AdminCreateQuestionResponse = typeof createQuestionSchema._type;
 
 export const handler: AppHandlers = {
   async GET(req, _ctx) {
-    const prompt = new URL(req.url).searchParams.get("prompt");
+    const url = new URL(req.url);
+    const prompt = url.searchParams.get("prompt");
+    const chapterId = url.searchParams.get("chapterId");
+    
     if (!prompt) {
       throw new Error("Missing prompt parameter.");
     }
     if (!CHAT_GPT_KEY) {
       throw new Error("Missing CHAT_GPT_KEY environment variable.");
     }
-    const question = await generateQuestion(prompt);
+    
+    let chapterContent = "";
+    if (chapterId) {
+      try {
+        // Find the chapter file that starts with the provided chapterId
+        const chaptersDir = await Deno.readDir("./book_chapters");
+        let chapterFilename = "";
+        
+        for await (const entry of chaptersDir) {
+          if (entry.isFile && entry.name.startsWith(`${chapterId.padStart(2, '0')} -`)) {
+            chapterFilename = entry.name;
+            break;
+          }
+        }
+        
+        if (chapterFilename) {
+          chapterContent = await Deno.readTextFile(`./book_chapters/${chapterFilename}`);
+        }
+      } catch (error) {
+        console.error("Error reading chapter content:", error);
+      }
+    }
+    
+    const question = await generateQuestion(prompt, chapterContent);
     return new Response(JSON.stringify(question), { status: 200 });
   },
 
@@ -63,7 +108,37 @@ export const handler: AppHandlers = {
 };
 
 // Generate EMT exam questions
-async function generateQuestion(prompt: string) {
+async function generateQuestion(prompt: string, chapterContent = "") {
+  // Build messages array
+  const messages = [];
+  
+  if (chapterContent) {
+    // If chapter content is provided, use it as a reference
+    // First message is the user's original prompt which contains their specific instructions
+    messages.push({
+      role: "system",
+      content: prompt
+    });
+    
+    // Add a second system message that instructs to use the chapter content
+    messages.push({
+      role: "system",
+      content: "Use ONLY the provided reference material to create questions. Do not include any information that is not in the reference material."
+    });
+    
+    // Add chapter content as reference material
+    messages.push({
+      role: "user",
+      content: `Reference material:\n\n${chapterContent}\n\nBased on my previous instructions and ONLY using this reference material, generate a multiple choice question.`
+    });
+  } else {
+    // Use the standard prompt without chapter reference
+    messages.push({
+      role: "system",
+      content: prompt,
+    });
+  }
+  
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -73,12 +148,7 @@ async function generateQuestion(prompt: string) {
     body: JSON.stringify({
       model: "gpt-4o-mini",
       store: true,
-      messages: [
-        {
-          role: "system",
-          content: prompt,
-        },
-      ],
+      messages: messages,
       max_tokens: 2000,
     }),
   });

@@ -13,6 +13,9 @@ import * as $admin_product_manager from "./routes/admin/product-manager.tsx";
 import * as $admin_product_manager_product_id_ from "./routes/admin/product-manager/product/[id].tsx";
 import * as $admin_question_generator from "./routes/admin/question-generator.tsx";
 import * as $api_admin_middleware from "./routes/api/admin/_middleware.ts";
+import * as $api_admin_book_content from "./routes/api/admin/book-content.ts";
+import * as $api_admin_chapter_content from "./routes/api/admin/chapter-content.ts";
+import * as $api_admin_chapters from "./routes/api/admin/chapters.ts";
 import * as $api_admin_product from "./routes/api/admin/product.ts";
 import * as $api_admin_product_id_index from "./routes/api/admin/product/[id]/index.ts";
 import * as $api_admin_product_id_toggle_active from "./routes/api/admin/product/[id]/toggle-active.ts";
@@ -69,6 +72,9 @@ const manifest = {
       $admin_product_manager_product_id_,
     "./routes/admin/question-generator.tsx": $admin_question_generator,
     "./routes/api/admin/_middleware.ts": $api_admin_middleware,
+    "./routes/api/admin/book-content.ts": $api_admin_book_content,
+    "./routes/api/admin/chapter-content.ts": $api_admin_chapter_content,
+    "./routes/api/admin/chapters.ts": $api_admin_chapters,
     "./routes/api/admin/product.ts": $api_admin_product,
     "./routes/api/admin/product/[id]/index.ts": $api_admin_product_id_index,
     "./routes/api/admin/product/[id]/toggle-active.ts":
