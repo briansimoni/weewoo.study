@@ -106,6 +106,19 @@ export default function About() {
         <div className="divider"></div>
 
         <h2 className="text-2xl font-semibold mb-4">
+          Need Help or Have Feedback? 🤔
+        </h2>
+        <p className="mb-6">
+          Found an issue, have a suggestion, or just want to say hi? Visit our support page to send me a message directly.
+        </p>
+
+        <a href="/support" className="btn btn-secondary mb-8">
+          Contact Support 📧
+        </a>
+
+        <div className="divider"></div>
+
+        <h2 className="text-2xl font-semibold mb-4">
           Ready to Have Some Fun While You Study?
         </h2>
         <p className="mb-6">

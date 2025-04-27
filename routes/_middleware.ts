@@ -101,7 +101,15 @@ const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
 };
 
 const logMiddleware: AppHandler = async function (req, ctx) {
+  const excluded = [
+    "static",
+    "internal",
+  ];
+  if (excluded.includes(ctx.destination)) {
+    return ctx.next();
+  }
   const start = Date.now();
+  const request_body = (await req.clone().text()) || undefined;
   // log.debug("request started", req.url);
   const res = await ctx.next();
   const end = Date.now();
@@ -109,7 +117,7 @@ const logMiddleware: AppHandler = async function (req, ctx) {
     user_id: ctx.state.session?.user_id,
     status: res.status,
     responseTime: end - start,
-    request_body: await req.clone().text(),
+    request_body,
   });
   return res;
 };

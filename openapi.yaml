@@ -363,6 +363,24 @@ paths:
       responses:
         "200":
           description: Webhook received
+  /support:
+    post:
+      summary: Submit a support or feedback request
+      description: Allows users to contact the site admin with questions, feedback, or issue reports
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/SupportRequest"
+      responses:
+        "302":
+          description: Redirect to support page with success or error message
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URL to redirect to
 components:
   schemas:
     Product:
@@ -484,3 +502,24 @@ components:
       properties:
         days:
           type: integer
+    SupportRequest:
+      type: object
+      required:
+        - name
+        - email
+        - subject
+        - message
+      properties:
+        name:
+          type: string
+          description: The name of the person submitting the support request
+        email:
+          type: string
+          format: email
+          description: The email address for contact/reply
+        subject:
+          type: string
+          description: The subject of the support request
+        message:
+          type: string
+          description: The detailed message content explaining the issue or feedback

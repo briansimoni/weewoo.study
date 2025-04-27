@@ -39,9 +39,45 @@ To start the development server in Codespaces:
 deno task start
 ```
 
-### notes
+### Environment Variables
 
-cool sounds here:
+This application uses various environment variables for configuration. Create a `.env` file in the root directory with the following variables:
+
+#### Database Configuration
+- `DENO_KV_ACCESS_TOKEN`: Access token for Deno KV database.
+- `DB_URL`: URL for connecting to the Deno KV database (different URLs for test and production).
+
+#### Authentication
+- `CLIENT_ID`: Auth0 client ID for authentication.
+- `CLIENT_SECRET`: Auth0 client secret for authentication.
+- `COOKIE_SECRET`: Secret key used to sign cookies for session management.
+
+#### AWS Configuration
+- `AWS_ACCESS_KEY_ID`: AWS access key for various AWS services.
+- `AWS_SECRET_ACCESS_KEY`: AWS secret access key paired with the access key ID.
+- `AWS_REGION`: AWS region for services (defaults to "us-east-1" if not specified).
+- `SES_FROM_EMAIL`: Email address used as the sender for AWS SES emails.
+- `ADMIN_EMAIL`: Email address where support form submissions are sent.
+
+#### S3 Storage
+- `S3_BUCKET_NAME`: S3 bucket name for storing static assets (defaults to "ems-questions-static-assets").
+- `S3_PREFIX_KEY`: Key prefix for S3 assets (defaults to "emt-book/").
+
+#### Payment Processing
+- `STRIPE_API_KEY`: API key for Stripe payment processing (different keys for test/prod).
+- `STRIPE_SIGNING_SECRET`: Secret used to verify Stripe webhook signatures.
+- `STRIPE_WEBHOOK_TEMP`: Temporary Stripe webhook key for testing.
+
+#### External Services
+- `PRINTFUL_SECRET`: API key for Printful service (print-on-demand provider).
+- `CHAT_GPT_KEY`: OpenAI API key used for question generation.
+
+#### Application Settings
+- `STAGE`: Environment identifier (TEST, PROD) - determines various behaviors across the app.
+
+### Notes
+
+Cool sounds here:
 https://freesound.org/search/?q=correct&f=grouping_pack%3A%2230761_feedback-correct%22
 
 To run the stripe CLI webhook tests

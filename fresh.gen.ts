@@ -30,6 +30,7 @@ import * as $api_printful_webhook from "./routes/api/printful_webhook.ts";
 import * as $api_profile from "./routes/api/profile.ts";
 import * as $api_question from "./routes/api/question.ts";
 import * as $api_stripe_webhook from "./routes/api/stripe_webhook.ts";
+import * as $api_support from "./routes/api/support.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_logged_out from "./routes/auth/logged-out.tsx";
 import * as $auth_login from "./routes/auth/login.tsx";
@@ -43,6 +44,7 @@ import * as $profile from "./routes/profile.tsx";
 import * as $robots_txt from "./routes/robots.txt.ts";
 import * as $shop from "./routes/shop.tsx";
 import * as $shop_id_ from "./routes/shop/[id].tsx";
+import * as $support from "./routes/support.tsx";
 import * as $user_user_id_ from "./routes/user/[user_id].tsx";
 import * as $AdminQuestionGenerator from "./islands/AdminQuestionGenerator.tsx";
 import * as $CartClearer from "./islands/CartClearer.tsx";
@@ -94,6 +96,7 @@ const manifest = {
     "./routes/api/profile.ts": $api_profile,
     "./routes/api/question.ts": $api_question,
     "./routes/api/stripe_webhook.ts": $api_stripe_webhook,
+    "./routes/api/support.ts": $api_support,
     "./routes/auth/callback.ts": $auth_callback,
     "./routes/auth/logged-out.tsx": $auth_logged_out,
     "./routes/auth/login.tsx": $auth_login,
@@ -107,6 +110,7 @@ const manifest = {
     "./routes/robots.txt.ts": $robots_txt,
     "./routes/shop.tsx": $shop,
     "./routes/shop/[id].tsx": $shop_id_,
+    "./routes/support.tsx": $support,
     "./routes/user/[user_id].tsx": $user_user_id_,
   },
   islands: {
