@@ -6,12 +6,13 @@ data "aws_iam_user" "svc_weewoo" {
 }
 
 resource "aws_iam_policy" "ses_email_sending" {
-  name        = "SESEmailSendingPolicy"
-  description = "Allows sending emails via Amazon SES"
+  name        = "ServicePolicy-weewoo"
+  description = "Policy for weewoo.study app service permissions (SES and S3)"
   
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
+      # SES Email Sending permissions
       {
         Effect = "Allow",
         Action = [
@@ -28,21 +29,35 @@ resource "aws_iam_policy" "ses_email_sending" {
           "ses:GetSendStatistics"
         ],
         Resource = "*"
+      },
+      # S3 Read permissions
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:ListBucket",
+          "s3:GetBucketLocation"
+        ],
+        Resource = [
+          "arn:aws:s3:::ems-questions-static-assets",
+          "arn:aws:s3:::ems-questions-static-assets/*"
+        ]
       }
     ]
   })
 }
 
-# Attach the SES policy to the existing IAM user
-resource "aws_iam_user_policy_attachment" "ses_user_attachment" {
+# Attach the service policy to the existing IAM user
+resource "aws_iam_user_policy_attachment" "service_policy_attachment" {
   user       = data.aws_iam_user.svc_weewoo.user_name
   policy_arn = aws_iam_policy.ses_email_sending.arn
 }
 
 # Output the ARN of the policy for reference
-output "ses_email_sending_policy_arn" {
+output "service_policy_arn" {
   value       = aws_iam_policy.ses_email_sending.arn
-  description = "The ARN of the SES email sending policy"
+  description = "The ARN of the service policy for weewoo.study"
 }
 
 # Output the IAM user ARN for reference

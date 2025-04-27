@@ -1,9 +1,21 @@
 import Zod from "zod";
 import { AppHandler, AppHandlers } from "../../_middleware.ts";
 import { QuestionStore } from "../../../lib/question_store.ts";
+import { S3Client, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 const API_URL = "https://api.openai.com/v1/chat/completions";
 const CHAT_GPT_KEY = Deno.env.get("CHAT_GPT_KEY");
+
+// S3 configuration
+const S3_BUCKET_NAME = Deno.env.get("S3_BUCKET_NAME") || "ems-questions-static-assets";
+const S3_PREFIX_KEY = Deno.env.get("S3_PREFIX_KEY") || "emt-book/";
+const s3Client = new S3Client({
+  region: Deno.env.get("AWS_REGION") || "us-east-1",
+  credentials: {
+    accessKeyId: Deno.env.get("AWS_ACCESS_KEY_ID") || "",
+    secretAccessKey: Deno.env.get("AWS_SECRET_ACCESS_KEY") || "",
+  }
+});
 
 const createQuestionSchema = Zod.object({
   question: Zod.string().min(1),
@@ -64,36 +76,63 @@ export const handler: AppHandlers = {
     const url = new URL(req.url);
     const prompt = url.searchParams.get("prompt");
     const chapterId = url.searchParams.get("chapterId");
-    
+
     if (!prompt) {
       throw new Error("Missing prompt parameter.");
     }
     if (!CHAT_GPT_KEY) {
       throw new Error("Missing CHAT_GPT_KEY environment variable.");
     }
-    
+
     let chapterContent = "";
     if (chapterId) {
       try {
-        // Find the chapter file that starts with the provided chapterId
-        const chaptersDir = await Deno.readDir("./book_chapters");
-        let chapterFilename = "";
+        // List objects in the S3 bucket to find the chapter
+        const listCommand = new ListObjectsV2Command({
+          Bucket: S3_BUCKET_NAME,
+          Prefix: S3_PREFIX_KEY,
+        });
         
-        for await (const entry of chaptersDir) {
-          if (entry.isFile && entry.name.startsWith(`${chapterId.padStart(2, '0')} -`)) {
-            chapterFilename = entry.name;
-            break;
+        const listResponse = await s3Client.send(listCommand);
+        let chapterKey = "";
+        
+        if (listResponse.Contents) {
+          // Find the chapter file that starts with the provided chapterId
+          for (const object of listResponse.Contents) {
+            if (object.Key && object.Key.includes(`${chapterId.padStart(2, "0")} -`)) {
+              chapterKey = object.Key;
+              break;
+            }
           }
-        }
-        
-        if (chapterFilename) {
-          chapterContent = await Deno.readTextFile(`./book_chapters/${chapterFilename}`);
+          
+          // Get the chapter content if we found the chapter
+          if (chapterKey) {
+            const getCommand = new GetObjectCommand({
+              Bucket: S3_BUCKET_NAME,
+              Key: chapterKey,
+            });
+            
+            const getResponse = await s3Client.send(getCommand);
+            
+            if (getResponse.Body) {
+              // AWS SDK v3 returns a readable stream that we need to convert to string
+              // We can use the transformToString utility for this
+              try {
+                // Convert response body to a byte array
+                const bodyContents = await getResponse.Body.transformToByteArray();
+                // Convert byte array to string
+                chapterContent = new TextDecoder().decode(bodyContents);
+              } catch (err) {
+                console.error("Error converting S3 response body:", err);
+              }
+            }
+          }
         }
       } catch (error) {
         console.error("Error reading chapter content:", error);
       }
     }
-    
+
     const question = await generateQuestion(prompt, chapterContent);
     return new Response(JSON.stringify(question), { status: 200 });
   },
@@ -111,25 +150,27 @@ export const handler: AppHandlers = {
 async function generateQuestion(prompt: string, chapterContent = "") {
   // Build messages array
   const messages = [];
-  
+
   if (chapterContent) {
     // If chapter content is provided, use it as a reference
     // First message is the user's original prompt which contains their specific instructions
     messages.push({
       role: "system",
-      content: prompt
+      content: prompt,
     });
-    
+
     // Add a second system message that instructs to use the chapter content
     messages.push({
       role: "system",
-      content: "Use ONLY the provided reference material to create questions. Do not include any information that is not in the reference material."
+      content:
+        "Use ONLY the provided reference material to create questions. Do not include any information that is not in the reference material.",
     });
-    
+
     // Add chapter content as reference material
     messages.push({
       role: "user",
-      content: `Reference material:\n\n${chapterContent}\n\nBased on my previous instructions and ONLY using this reference material, generate a multiple choice question.`
+      content:
+        `Reference material:\n\n${chapterContent}\n\nBased on my previous instructions and ONLY using this reference material, generate a multiple choice question.`,
     });
   } else {
     // Use the standard prompt without chapter reference
@@ -138,7 +179,7 @@ async function generateQuestion(prompt: string, chapterContent = "") {
       content: prompt,
     });
   }
-  
+
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
