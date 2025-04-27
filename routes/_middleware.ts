@@ -2,7 +2,11 @@ import diff from "https://deno.land/x/microdiff@v1.2.0/index.ts";
 import { log } from "../lib/logger.ts";
 import { Session, SessionStore } from "../lib/session_store.ts";
 import { decodeBase64 } from "jsr:@std/encoding@^1.0.7/base64";
-import type { Handler, Handlers, PageProps } from "$fresh/server.ts";
+import type {
+  Handler,
+  Handlers,
+  PageProps,
+} from "https://deno.land/x/fresh@1.7.3/server.ts";
 import * as http from "@std/http";
 
 export interface SessionData {
@@ -103,9 +107,9 @@ const logMiddleware: AppHandler = async function (req, ctx) {
   const end = Date.now();
   log.info(req.method, req.url, {
     user_id: ctx.state.session?.user_id,
-    name: ctx.state.session?.name,
     status: res.status,
     responseTime: end - start,
+    request_body: await req.clone().text(),
   });
   return res;
 };
