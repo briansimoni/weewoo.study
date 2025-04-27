@@ -106,7 +106,6 @@ const logMiddleware: AppHandler = async function (req, ctx) {
     name: ctx.state.session?.name,
     status: res.status,
     responseTime: end - start,
-    body: await res.text(),
   });
   return res;
 };

@@ -69,32 +69,6 @@ export default function About() {
 
         <div className="divider"></div>
 
-        <h2 className="text-2xl font-semibold mb-4">
-          How It Works (It's So Easy!)
-        </h2>
-        <div className="grid grid-cols-1 gap-4 mb-6">
-          <div className="card bg-primary shadow-md p-4">
-            <h3 className="font-bold text-xl">1. Start a Practice Session</h3>
-            <p>Pick a question and get ready to show off your EMS smarts.</p>
-          </div>
-          <div className="card bg-primary shadow-md p-4">
-            <h3 className="font-bold text-xl">2. Answer Questions</h3>
-            <p>
-              Make your choice and find out if you nailed it—or need a bit more
-              caffeine.
-            </p>
-          </div>
-          <div className="card bg-primary shadow-md p-4">
-            <h3 className="font-bold text-xl">3. Learn & Improve</h3>
-            <p>
-              Read the explanation and impress your friends with your EMS
-              wisdom.
-            </p>
-          </div>
-        </div>
-
-        <div className="divider"></div>
-
         <h2 className="text-2xl font-semibold mb-4">Meet the Creator 👋</h2>
         <div className="flex flex-col items-center mb-6">
           <img
@@ -121,6 +95,13 @@ export default function About() {
             className="w-48 h-48"
           />
         </div>
+
+        <div className="divider"></div>
+
+        <h2 className="text-2xl font-semibold mb-4">Email Communications 📧</h2>
+        <p className="mb-4">
+          We value your privacy. We only send emails concerning your order status, such as payment confirmation and shipping confirmation. We will never spam you or share your email address.
+        </p>
 
         <div className="divider"></div>
 

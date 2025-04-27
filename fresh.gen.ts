@@ -23,6 +23,7 @@ import * as $api_admin_product_id_variants from "./routes/api/admin/product/[id]
 import * as $api_admin_question from "./routes/api/admin/question.ts";
 import * as $api_checkout from "./routes/api/checkout.ts";
 import * as $api_preferences from "./routes/api/preferences.ts";
+import * as $api_printful_webhook from "./routes/api/printful_webhook.ts";
 import * as $api_profile from "./routes/api/profile.ts";
 import * as $api_question from "./routes/api/question.ts";
 import * as $api_stripe_webhook from "./routes/api/stripe_webhook.ts";
@@ -83,6 +84,7 @@ const manifest = {
     "./routes/api/admin/question.ts": $api_admin_question,
     "./routes/api/checkout.ts": $api_checkout,
     "./routes/api/preferences.ts": $api_preferences,
+    "./routes/api/printful_webhook.ts": $api_printful_webhook,
     "./routes/api/profile.ts": $api_profile,
     "./routes/api/question.ts": $api_question,
     "./routes/api/stripe_webhook.ts": $api_stripe_webhook,
