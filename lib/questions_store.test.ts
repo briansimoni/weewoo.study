@@ -101,3 +101,65 @@ Deno.test("Get random question throws error if none exist", async () => {
   );
   teardown();
 });
+
+Deno.test("Update a question", async () => {
+  await setup();
+
+  // Add a question first
+  const q = await questionStore.addQuestion(sampleQuestion);
+  const originalHash = q.hash;
+  const originalCreatedAt = q.created_at;
+  
+  // Create updated version of the question
+  const updatedQuestion: Question = {
+    ...q,
+    question: "What is the updated question?",
+    choices: ["Option A", "Option B", "Option C", "Option D"],
+    correct_answer: "Option B",
+    explanation: "This is an updated explanation.",
+    category: "Respiratory Emergencies"
+  };
+
+  // Update the question
+  await questionStore.updateQuestion(updatedQuestion);
+  
+  // Retrieve the question to verify the update
+  const retrievedQuestion = await questionStore.getQuestion(q.id);
+  
+  // Verify basic fields were updated
+  assertEquals(retrievedQuestion.question, "What is the updated question?");
+  assertEquals(retrievedQuestion.correct_answer, "Option B");
+  assertEquals(retrievedQuestion.explanation, "This is an updated explanation.");
+  assertEquals(retrievedQuestion.category, "Respiratory Emergencies");
+  
+  // Verify that critical fields were preserved
+  assertEquals(retrievedQuestion.hash, originalHash);
+  assertEquals(retrievedQuestion.created_at, originalCreatedAt);
+  assertEquals(retrievedQuestion.id, q.id);
+  
+  teardown();
+});
+
+Deno.test("Update a non-existent question throws error", async () => {
+  await setup();
+
+  const nonExistentQuestion: Question = {
+    id: "999",
+    hash: "fake-hash",
+    created_at: new Date().toISOString(),
+    question: "Does this question exist?",
+    choices: ["Yes", "No"],
+    correct_answer: "No",
+    explanation: "This question does not exist in the database."
+  };
+
+  await assertRejects(
+    async () => {
+      await questionStore.updateQuestion(nonExistentQuestion);
+    },
+    Error,
+    "No question found"
+  );
+  
+  teardown();
+});

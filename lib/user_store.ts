@@ -1,8 +1,10 @@
 import { getKv } from "./kv.ts";
+import { Category, CategoryStats } from "./categories.ts";
 
 export interface UserStats {
   questions_answered: number;
   questions_correct: number;
+  categories?: Partial<Record<Category, CategoryStats>>;
 }
 
 export interface User {
@@ -47,12 +49,63 @@ export class UserStore {
     return user;
   }
 
-  async updateUser(user: Partial<User> & { user_id: string }) {
+  async updateUser(user: Partial<User> & { user_id: string }, categoryId?: string, isCorrect?: boolean) {
     const initialUser = await this.getUser(user.user_id);
     if (!initialUser) {
       throw new Error("User not found");
     }
-    const proposedUpdate = { ...initialUser, ...user };
+    
+    // Make a deep copy of initialUser to avoid reference issues with nested objects
+    const proposedUpdate = JSON.parse(JSON.stringify(initialUser));
+    
+    // Update top-level properties from the user parameter
+    for (const [key, value] of Object.entries(user)) {
+      if (key !== 'stats' && key !== 'categories') {
+        proposedUpdate[key] = value;
+      }
+    }
+    
+    // Handle stats updates separately to properly merge category stats
+    if (user.stats) {
+      // Update top-level stats
+      proposedUpdate.stats.questions_answered = user.stats.questions_answered ?? proposedUpdate.stats.questions_answered;
+      proposedUpdate.stats.questions_correct = user.stats.questions_correct ?? proposedUpdate.stats.questions_correct;
+      
+      // If user.stats contains categories, merge them
+      if (user.stats.categories) {
+        proposedUpdate.stats.categories = proposedUpdate.stats.categories || {};
+        for (const [catId, catStats] of Object.entries(user.stats.categories)) {
+          proposedUpdate.stats.categories[catId] = {
+            ...proposedUpdate.stats.categories[catId] || { questions_answered: 0, questions_correct: 0 },
+            ...catStats
+          };
+        }
+      }
+    }
+    
+    // If categoryId is provided, update the specific category stats
+    if (categoryId) {
+      // Initialize categories if not exists
+      if (!proposedUpdate.stats.categories) {
+        proposedUpdate.stats.categories = {};
+      }
+      
+      // Initialize category if not exists
+      if (!proposedUpdate.stats.categories[categoryId]) {
+        proposedUpdate.stats.categories[categoryId] = {
+          questions_answered: 0,
+          questions_correct: 0
+        };
+      }
+      
+      // Increment questions answered for this category
+      proposedUpdate.stats.categories[categoryId].questions_answered++;
+      
+      // If the answer was correct, increment correct count
+      if (isCorrect) {
+        proposedUpdate.stats.categories[categoryId].questions_correct++;
+      }
+    }
 
     const oldCorrect = initialUser?.stats?.questions_correct ?? 0;
     const newCorrect = proposedUpdate.stats?.questions_correct ?? 0;

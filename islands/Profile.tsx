@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { User } from "../lib/user_store.ts";
 import { SessionData } from "../routes/_middleware.ts";
 import { Streak } from "../lib/streak_store.ts";
+import { CATEGORIES } from "../lib/categories.ts";
 import dayjs from "npm:dayjs";
 
 interface Props {
@@ -73,9 +74,39 @@ export default function Profile(props: Props) {
   accuracy = Math.round(accuracy * 100);
   const streakDays = streak?.days ?? 0;
 
+  // Calculate category stats for display, including all available categories
+  const categoriesWithStats = CATEGORIES.map(category => {
+    // Get existing stats for this category if available
+    const existingStats = user.stats.categories?.[category];
+    
+    return {
+      category,
+      stats: existingStats || { questions_answered: 0, questions_correct: 0 },
+      accuracy: existingStats 
+        ? Math.round((existingStats.questions_correct / existingStats.questions_answered) * 100) || 0
+        : 0,
+      hasData: !!existingStats && existingStats.questions_answered > 0
+    };
+  });
+  
+  // Sort: first categories with data (by number of questions), then alphabetically
+  categoriesWithStats.sort((a, b) => {
+    // First sort by whether they have data
+    if (a.hasData && !b.hasData) return -1;
+    if (!a.hasData && b.hasData) return 1;
+    
+    // If both have data, sort by questions answered
+    if (a.hasData && b.hasData) {
+      return b.stats.questions_answered - a.stats.questions_answered;
+    }
+    
+    // If neither has data, sort alphabetically
+    return a.category.localeCompare(b.category);
+  });
+
   return (
-    <div class="flex items-start justify-center">
-      <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6">
+    <div class="flex flex-col items-center justify-center">
+      <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6 bg-base-100 mb-6">
         <div class="flex flex-col md:flex-row items-center gap-6">
           <div class="flex flex-col items-center">
             {session && (
@@ -141,27 +172,27 @@ export default function Profile(props: Props) {
               )
               : <h2 class="text-2xl font-bold mb-4">{name}</h2>}
             <div class="grid grid-cols-2 gap-4">
-              <div class="stat bg-blue-100 p-4 rounded-lg">
-                <div class="stat-title text-gray-600">Questions Answered</div>
-                <div class="stat-value text-blue-700">
+              <div class="stat bg-base-200 p-4 rounded-lg">
+                <div class="stat-title">Questions Answered</div>
+                <div class="stat-value text-primary">
                   {user.stats.questions_answered} 📖
                 </div>
               </div>
-              <div class="stat bg-green-100 p-4 rounded-lg">
-                <div class="stat-title text-gray-600">Correct Answers</div>
-                <div class="stat-value text-green-700">
+              <div class="stat bg-base-200 p-4 rounded-lg">
+                <div class="stat-title">Correct Answers</div>
+                <div class="stat-value text-success">
                   {user.stats.questions_correct} ✅
                 </div>
               </div>
-              <div class="stat bg-yellow-100 p-4 rounded-lg">
-                <div class="stat-title text-gray-600">Accuracy</div>
-                <div class="stat-value text-yellow-700">
+              <div class="stat bg-base-200 p-4 rounded-lg">
+                <div class="stat-title">Accuracy</div>
+                <div class="stat-value text-accent">
                   {accuracy}% 🎯
                 </div>
               </div>
-              <div class="stat bg-purple-100 p-4 rounded-lg">
-                <div class="stat-title text-gray-600">Streak</div>
-                <div class="stat-value text-purple-700">
+              <div class="stat bg-base-200 p-4 rounded-lg">
+                <div class="stat-title">Streak</div>
+                <div class="stat-value text-secondary">
                   {streakDays}
                   {streakDays > 1 && " Days 🔥"}
                   {streakDays <= 1 && " Day 🔥"}
@@ -204,6 +235,41 @@ export default function Profile(props: Props) {
           </div>
         </div>
       </div>
+
+      {/* Category Stats Section */}
+      {categoriesWithStats.length > 0 && (
+        <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6 bg-base-100">
+          <h3 class="text-xl font-semibold mb-4">Performance by Category</h3>
+          <div class="overflow-x-auto">
+            <table class="table table-compact w-full">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Questions</th>
+                  <th>Correct</th>
+                  <th>Accuracy</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categoriesWithStats.map(({ category, stats, accuracy, hasData }) => (
+                  <tr key={category} class={hasData ? "" : "opacity-60"}>
+                    <td class="font-medium">{category}</td>
+                    <td>{stats.questions_answered}</td>
+                    <td>{stats.questions_correct}</td>
+                    <td class={!hasData ? "text-base-content" : 
+                        accuracy >= 70 ? "text-success" : 
+                        accuracy >= 50 ? "text-warning" : 
+                        "text-error"
+                    }>
+                      {accuracy}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

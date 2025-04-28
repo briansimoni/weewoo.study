@@ -8,6 +8,7 @@ export interface Question {
   choices: string[];
   correct_answer: string;
   explanation: string;
+  category?: string;
 }
 
 export class QuestionStore {
@@ -99,6 +100,33 @@ export class QuestionStore {
       questions.push(entry.value);
     }
     return questions;
+  }
+
+  /**
+   * Updates an existing question in the store.
+   * Preserves the ID, hash, and created_at timestamp.
+   */
+  async updateQuestion(question: Question): Promise<Question> {
+    // Verify the question exists
+    const existingQuestion = await this.getQuestion(question.id);
+    if (!existingQuestion) {
+      throw new Error(`Question with ID ${question.id} not found`);
+    }
+
+    // Preserve critical fields
+    question.created_at = existingQuestion.created_at;
+    question.hash = existingQuestion.hash;
+    
+    // Update the question in the store
+    const result = await this.kv.atomic()
+      .set(["emt", "questions", question.id], question)
+      .commit();
+      
+    if (!result.ok) {
+      throw new Error(`Failed to update question with ID ${question.id}`);
+    }
+    
+    return question;
   }
 
   closeConnection() {

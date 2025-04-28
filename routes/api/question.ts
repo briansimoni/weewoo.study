@@ -57,14 +57,20 @@ export const handler: AppHandlers = {
         ctx.state.session!.streakDays = streak.days;
       }
 
-      await userStore.updateUser({
-        ...user,
-        stats: {
-          ...user.stats,
-          questions_answered: user.stats.questions_answered + 1,
-          questions_correct: user.stats.questions_correct + (isCorrect ? 1 : 0),
+      // Update both overall stats and category-specific stats
+      await userStore.updateUser(
+        {
+          ...user,
+          stats: {
+            ...user.stats,
+            questions_answered: user.stats.questions_answered + 1,
+            questions_correct: user.stats.questions_correct +
+              (isCorrect ? 1 : 0),
+          },
         },
-      });
+        question?.category,
+        isCorrect,
+      );
     }
 
     return new Response(
