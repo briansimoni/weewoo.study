@@ -57,28 +57,31 @@ export class ProductStore {
     if (!existingProduct) {
       throw new Error("Product not found");
     }
-    
+
     // Update the product
     const updatedProduct = {
       ...existingProduct,
       ...product,
     };
     await this.kv.set(["products", product.printful_id], updatedProduct);
-    
+
     // If product_template_id has changed, update all associated variants
-    if (product.product_template_id && product.product_template_id !== existingProduct.product_template_id) {
+    if (
+      product.product_template_id &&
+      product.product_template_id !== existingProduct.product_template_id
+    ) {
       // Get all variants for this product
       const variants = await this.listProductVariants(product.printful_id);
-      
+
       // Update each variant with the new product_template_id
       for (const variant of variants) {
         await this.updateVariant({
           ...variant,
-          product_template_id: product.product_template_id
+          product_template_id: product.product_template_id,
         });
       }
     }
-    
+
     return updatedProduct;
   }
 
@@ -160,8 +163,7 @@ export class ProductStore {
     if (stripe_product_id) {
       tx.delete(["stripe_variants", stripe_product_id, variant_id]);
     }
-    const x = await tx.commit();
-    console.log(x);
+    await tx.commit();
   }
 
   async listProductVariants(

@@ -31,7 +31,6 @@ export default function ProductCard({ product }: { product: Product }) {
                 style={{ backgroundColor: color.hex }}
                 onMouseEnter={() => {
                   setCurrentThumbnail(color.thumbnail_url);
-                  console.log(color);
                 }}
                 onMouseLeave={() => setCurrentThumbnail(defaultThumbnail)}
               >

@@ -265,9 +265,12 @@ export default function ProductDetail(
                     />
                   </svg>
                   <div>
-                    <p className="text-warning-content font-medium">Product Template ID is missing</p>
+                    <p className="text-warning-content font-medium">
+                      Product Template ID is missing
+                    </p>
                     <p className="text-warning-content/80 text-sm mt-1">
-                      Please update this product to include a Product Template ID. Without it, orders may not process correctly.
+                      Please update this product to include a Product Template
+                      ID. Without it, orders may not process correctly.
                     </p>
                     <button
                       type="button"
@@ -296,8 +299,9 @@ export default function ProductDetail(
                   <div className="p-4 border-b border-border">
                     <h2 className="text-xl font-semibold">Edit Product</h2>
                     <p className="text-sm text-muted mt-1">
-                      Edit the JSON below to update the product. Only the printful_id
-                      field is not editable. You can modify product_template_id and all other fields.
+                      Edit the JSON below to update the product. Only the
+                      printful_id field is not editable. You can modify
+                      product_template_id and all other fields.
                     </p>
                   </div>
 
@@ -955,11 +959,6 @@ export default function ProductDetail(
                       // Find the stored variant to check its stripe_product_id
                       const storedVariant = storedVariants.find(
                         (storedVariant) => {
-                          storedVariant.variant_id;
-                          console.log(
-                            typeof storedVariant.variant_id,
-                            typeof variant.id.toString(),
-                          );
                           return storedVariant.variant_id ===
                             variant.id.toString();
                         },
@@ -1304,7 +1303,9 @@ export default function ProductDetail(
                                     const result = await response.json();
 
                                     if (result.success) {
-                                      alert("Stripe product created successfully!");
+                                      alert(
+                                        "Stripe product created successfully!",
+                                      );
                                       // Reload the page to show the updated information
                                       globalThis.location.reload();
                                     } else {

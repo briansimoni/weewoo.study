@@ -10,7 +10,6 @@ export default function CartClearer() {
     clearCart();
     // Set state to indicate cart was cleared
     setCartCleared(true);
-    console.log("Cart has been cleared after successful checkout");
   }, []);
 
   return null;

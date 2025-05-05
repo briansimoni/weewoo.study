@@ -19,7 +19,6 @@ export default function CartIcon() {
     if (typeof window !== "undefined") {
       // Only run on client-side
       updateCount();
-      console.log("Initial cart count:", getCartItemCount());
     }
 
     // Clean up subscription

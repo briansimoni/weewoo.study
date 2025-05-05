@@ -51,6 +51,7 @@ import * as $CartClearer from "./islands/CartClearer.tsx";
 import * as $CartIcon from "./islands/CartIcon.tsx";
 import * as $CartPageIsland from "./islands/CartPageIsland.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
+import * as $PWAInstallPrompt from "./islands/PWAInstallPrompt.tsx";
 import * as $ProductCard from "./islands/ProductCard.tsx";
 import * as $ProductDetails from "./islands/ProductDetails.tsx";
 import * as $Profile from "./islands/Profile.tsx";
@@ -119,6 +120,7 @@ const manifest = {
     "./islands/CartIcon.tsx": $CartIcon,
     "./islands/CartPageIsland.tsx": $CartPageIsland,
     "./islands/NavAvatar.tsx": $NavAvatar,
+    "./islands/PWAInstallPrompt.tsx": $PWAInstallPrompt,
     "./islands/ProductCard.tsx": $ProductCard,
     "./islands/ProductDetails.tsx": $ProductDetails,
     "./islands/Profile.tsx": $Profile,
