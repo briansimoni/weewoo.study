@@ -15,8 +15,6 @@ export default function PWAInstallPrompt() {
     BeforeInstallPromptEvent | null
   >(null);
 
-  sessionStorage.setItem("pwa-prompt-dismissed", "false");
-
   useEffect(() => {
     // Only run on client-side
     if (typeof globalThis === "undefined") return;
