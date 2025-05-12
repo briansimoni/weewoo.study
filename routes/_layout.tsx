@@ -170,12 +170,8 @@ export default defineLayout<AppState>(async (_req, ctx) => {
             ctx.route === "/profile" ? "dock-active" : ""
           }`}
         >
-          {state.session
-            ? <BarChart className="size-[1.2em]" />
-            : <LogIn className="size-[1.2em]" />}
-          <span className="dock-label">
-            {state.session ? "Stats" : "Login"}
-          </span>
+          <BarChart className="size-[1.2em]" />
+          <span className="dock-label">Stats</span>
         </a>
 
         <a
