@@ -18,11 +18,11 @@ export default function StreakDisplay(props: { initialStreak?: number }) {
   }, [props.initialStreak]);
 
   return (
-    <div className="btn btn-ghost btn-circle relative">
+    <a href="/profile" className="btn btn-ghost btn-circle relative">
       <span className="text-lg">🔥</span>
       <div className="absolute -top-1 -right-1 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
         {streakDays.value > 99 ? "99+" : streakDays.value}
       </div>
-    </div>
+    </a>
   );
 }
