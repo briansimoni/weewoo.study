@@ -50,11 +50,9 @@ interface PrintfulPackageShippedWebhook extends PrintfulWebhookBase {
   };
 }
 
-// Create a singleton instance of the Printful API client
-const printfulClient = new PrintfulApiClient();
-
 export const handler: AppHandlers = {
   POST: async (req) => {
+    const printfulClient = new PrintfulApiClient();
     // Parse the webhook payload
     if (!req.body) {
       log.error("Request body is null");
