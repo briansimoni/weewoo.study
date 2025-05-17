@@ -17,6 +17,15 @@ export interface Product {
     hex: string;
     thumbnail_url: string;
   }[];
+  size_guide?: {
+    sizes: {
+      name: string; // S, M, L, XL, etc
+      dimensions: {
+        name: string; // e.g waist, chest
+        value: string; // e.g 24, 32
+      }[];
+    }[];
+  };
 }
 
 export interface ProductVariant {
@@ -57,28 +66,31 @@ export class ProductStore {
     if (!existingProduct) {
       throw new Error("Product not found");
     }
-    
+
     // Update the product
     const updatedProduct = {
       ...existingProduct,
       ...product,
     };
     await this.kv.set(["products", product.printful_id], updatedProduct);
-    
+
     // If product_template_id has changed, update all associated variants
-    if (product.product_template_id && product.product_template_id !== existingProduct.product_template_id) {
+    if (
+      product.product_template_id &&
+      product.product_template_id !== existingProduct.product_template_id
+    ) {
       // Get all variants for this product
       const variants = await this.listProductVariants(product.printful_id);
-      
+
       // Update each variant with the new product_template_id
       for (const variant of variants) {
         await this.updateVariant({
           ...variant,
-          product_template_id: product.product_template_id
+          product_template_id: product.product_template_id,
         });
       }
     }
-    
+
     return updatedProduct;
   }
 

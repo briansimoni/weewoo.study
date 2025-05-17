@@ -210,44 +210,35 @@ export default function ProductDetails(
             </div>
           </details>
 
-          <details className="collapse bg-base-200">
-            <summary className="collapse-title text-lg font-semibold">
-              Size Guide
-            </summary>
-            <div className="collapse-content">
-              <table className="table table-sm">
-                <thead>
-                  <tr>
-                    <th>Size</th>
-                    <th>Chest (inches)</th>
-                    <th>Length (inches)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>S</td>
-                    <td>36-38</td>
-                    <td>27</td>
-                  </tr>
-                  <tr>
-                    <td>M</td>
-                    <td>39-41</td>
-                    <td>28</td>
-                  </tr>
-                  <tr>
-                    <td>L</td>
-                    <td>42-44</td>
-                    <td>29</td>
-                  </tr>
-                  <tr>
-                    <td>XL</td>
-                    <td>45-47</td>
-                    <td>30</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </details>
+          {product.size_guide && (
+            <details className="collapse bg-base-200">
+              <summary className="collapse-title text-lg font-semibold">
+                Size Guide
+              </summary>
+              <div className="collapse-content">
+                <table className="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Size</th>
+                      {product.size_guide.sizes[0]?.dimensions.map((dim) => (
+                        <th key={dim.name}>{dim.name}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.size_guide.sizes.map((size) => (
+                      <tr key={size.name}>
+                        <td>{size.name}</td>
+                        {size.dimensions.map((dim) => (
+                          <td key={dim.name}>{dim.value}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          )}
 
           <details className="collapse bg-base-200">
             <summary className="collapse-title text-lg font-semibold">
