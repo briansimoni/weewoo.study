@@ -30,7 +30,7 @@ resource "aws_iam_policy" "ses_email_sending" {
         ],
         Resource = "*"
       },
-      # S3 Read permissions
+      # S3 Read permissions for static assets
       {
         Effect = "Allow",
         Action = [
@@ -42,6 +42,23 @@ resource "aws_iam_policy" "ses_email_sending" {
         Resource = [
           "arn:aws:s3:::ems-questions-static-assets",
           "arn:aws:s3:::ems-questions-static-assets/*"
+        ]
+      },
+      # S3 Read/Write permissions for Deno KV backups
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:DeleteObject",
+          "s3:ListBucket",
+          "s3:GetBucketLocation"
+        ],
+        Resource = [
+          "arn:aws:s3:::ems-questions-deno-kv-backups",
+          "arn:aws:s3:::ems-questions-deno-kv-backups/*"
         ]
       }
     ]
