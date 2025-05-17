@@ -17,6 +17,15 @@ export interface Product {
     hex: string;
     thumbnail_url: string;
   }[];
+  size_guide?: {
+    sizes: {
+      name: string; // S, M, L, XL, etc
+      dimensions: {
+        name: string; // e.g waist, chest
+        value: string; // e.g 24, 32
+      }[];
+    }[];
+  };
 }
 
 export interface ProductVariant {

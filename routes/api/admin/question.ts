@@ -1,20 +1,25 @@
 import Zod from "zod";
 import { AppHandler, AppHandlers } from "../../_middleware.ts";
 import { QuestionStore } from "../../../lib/question_store.ts";
-import { S3Client, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  ListObjectsV2Command,
+  S3Client,
+} from "@aws-sdk/client-s3";
 
 const API_URL = "https://api.openai.com/v1/chat/completions";
 const CHAT_GPT_KEY = Deno.env.get("CHAT_GPT_KEY");
 
 // S3 configuration
-const S3_BUCKET_NAME = Deno.env.get("S3_BUCKET_NAME") || "ems-questions-static-assets";
+const S3_BUCKET_NAME = Deno.env.get("S3_BUCKET_NAME") ||
+  "ems-questions-static-assets";
 const S3_PREFIX_KEY = Deno.env.get("S3_PREFIX_KEY") || "emt-book/";
 const s3Client = new S3Client({
   region: Deno.env.get("AWS_REGION") || "us-east-1",
   credentials: {
     accessKeyId: Deno.env.get("AWS_ACCESS_KEY_ID") || "",
     secretAccessKey: Deno.env.get("AWS_SECRET_ACCESS_KEY") || "",
-  }
+  },
 });
 
 const createQuestionSchema = Zod.object({
@@ -92,34 +97,38 @@ export const handler: AppHandlers = {
           Bucket: S3_BUCKET_NAME,
           Prefix: S3_PREFIX_KEY,
         });
-        
+
         const listResponse = await s3Client.send(listCommand);
         let chapterKey = "";
-        
+
         if (listResponse.Contents) {
           // Find the chapter file that starts with the provided chapterId
           for (const object of listResponse.Contents) {
-            if (object.Key && object.Key.includes(`${chapterId.padStart(2, "0")} -`)) {
+            if (
+              object.Key &&
+              object.Key.includes(`${chapterId.padStart(2, "0")} -`)
+            ) {
               chapterKey = object.Key;
               break;
             }
           }
-          
+
           // Get the chapter content if we found the chapter
           if (chapterKey) {
             const getCommand = new GetObjectCommand({
               Bucket: S3_BUCKET_NAME,
               Key: chapterKey,
             });
-            
+
             const getResponse = await s3Client.send(getCommand);
-            
+
             if (getResponse.Body) {
               // AWS SDK v3 returns a readable stream that we need to convert to string
               // We can use the transformToString utility for this
               try {
                 // Convert response body to a byte array
-                const bodyContents = await getResponse.Body.transformToByteArray();
+                const bodyContents = await getResponse.Body
+                  .transformToByteArray();
                 // Convert byte array to string
                 chapterContent = new TextDecoder().decode(bodyContents);
               } catch (err) {
@@ -140,6 +149,12 @@ export const handler: AppHandlers = {
   async POST(req, _ctx) {
     const body = await req.json();
     const question = createQuestionSchema.parse(body);
+    if (!question.choices.includes(question.correct_answer)) {
+      return new Response(
+        JSON.stringify({ error: "Correct answer is not in the choices" }),
+        { status: 400 },
+      );
+    }
     const questionStore = await QuestionStore.make();
     await questionStore.addQuestion(question);
     return new Response(JSON.stringify(question), { status: 200 });
@@ -205,7 +220,6 @@ async function generateQuestion(prompt: string, chapterContent = "") {
   const content = result.choices[0].message.content;
 
   try {
-    console.log(content);
     const questions = JSON.parse(content);
     return questions;
   } catch (error) {

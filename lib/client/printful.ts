@@ -91,6 +91,141 @@ export interface PrintfulWebhook {
   updated: string;
 }
 
+export interface PrintfulRecipient {
+  name: string;
+  company: string;
+  address1: string;
+  address2: string;
+  city: string;
+  state_code: string;
+  state_name: string;
+  country_code: string;
+  country_name: string;
+  zip: string;
+  phone: string;
+  email: string;
+  tax_number?: string;
+}
+
+export interface PrintfulOrderItem {
+  id: number;
+  external_id: string;
+  variant_id: number;
+  sync_variant_id: number;
+  external_variant_id: string;
+  warehouse_product_variant_id: number | null;
+  product_template_id: number | null;
+  quantity: number;
+  price: string;
+  retail_price: string;
+  name: string;
+  product: {
+    variant_id: number;
+    product_id: number;
+    image: string;
+    name: string;
+  };
+  files: PrintfulFile[];
+  options: PrintfulOption[];
+  sku: string | null;
+  discontinued: boolean;
+  out_of_stock: boolean;
+}
+
+export interface PrintfulIncompleteItem {
+  name: string;
+  quantity: number;
+  sync_variant_id: number;
+  external_variant_id: string;
+  external_line_item_id: string;
+}
+
+export interface PrintfulCosts {
+  currency: string;
+  subtotal: string;
+  discount: string;
+  shipping: string;
+  digitization: string;
+  additional_fee: string;
+  fulfillment_fee: string;
+  retail_delivery_fee: string;
+  tax: string;
+  vat: string;
+  total: string;
+}
+
+export interface PrintfulRetailCosts {
+  currency: string;
+  subtotal: string;
+  discount: string;
+  shipping: string;
+  tax: string;
+  vat: string;
+  total: string;
+}
+
+export interface PrintfulPricingBreakdown {
+  customer_pays: string;
+  printful_price: string;
+  profit: string;
+  currency_symbol: string;
+}
+
+export interface PrintfulShipmentItem {
+  item_id: number;
+  quantity: number;
+  picked: number;
+  printed: number;
+}
+
+export interface PrintfulShipment {
+  id: number;
+  carrier: string;
+  service: string;
+  tracking_number: number;
+  tracking_url: string;
+  created: number;
+  ship_date: string;
+  shipped_at: number;
+  reshipment: boolean;
+  items: PrintfulShipmentItem[];
+}
+
+export interface PrintfulGift {
+  subject: string;
+  message: string;
+}
+
+export interface PrintfulPackingSlip {
+  email: string;
+  phone: string;
+  message: string;
+  logo_url: string;
+  store_name: string;
+  custom_order_id: string;
+}
+
+export interface PrintfulOrder {
+  id: number;
+  external_id: string;
+  store: number;
+  status: string;
+  shipping: string;
+  shipping_service_name: string;
+  created: number;
+  updated: number;
+  recipient: PrintfulRecipient;
+  items: PrintfulOrderItem[];
+  branding_items?: PrintfulOrderItem[];
+  incomplete_items?: PrintfulIncompleteItem[];
+  costs: PrintfulCosts;
+  retail_costs: PrintfulRetailCosts;
+  pricing_breakdown: PrintfulPricingBreakdown[];
+  shipments: PrintfulShipment[];
+  gift?: PrintfulGift;
+  packing_slip?: PrintfulPackingSlip;
+}
+
 export class PrintfulApiClient {
   baseURL: string;
   printfulToken: string;
@@ -185,6 +320,15 @@ export class PrintfulApiClient {
   async deleteWebhook(webhookId: number): Promise<PrintfulResponse<null>> {
     const response = await this.fetch(`${this.baseURL}/webhooks/${webhookId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${this.printfulToken}`,
+      },
+    });
+    return await response.json();
+  }
+
+  async getOrder(orderId: number): Promise<PrintfulResponse<PrintfulOrder>> {
+    const response = await this.fetch(`${this.baseURL}/orders/${orderId}`, {
       headers: {
         Authorization: `Bearer ${this.printfulToken}`,
       },

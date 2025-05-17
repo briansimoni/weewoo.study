@@ -150,6 +150,52 @@ export default function ProductDetail(
       active: storedProduct.active,
       product_template_id: storedProduct.product_template_id || "",
       colors: storedProduct.colors || [],
+      size_guide: storedProduct.size_guide || {
+        sizes: [
+          {
+            name: "S",
+            dimensions: [
+              { name: "Chest", value: "18" },
+              { name: "Length", value: "28" },
+            ],
+          },
+          {
+            name: "M",
+            dimensions: [
+              { name: "Chest", value: "20" },
+              { name: "Length", value: "29" },
+            ],
+          },
+          {
+            name: "L",
+            dimensions: [
+              { name: "Chest", value: "22" },
+              { name: "Length", value: "30" },
+            ],
+          },
+          {
+            name: "XL",
+            dimensions: [
+              { name: "Chest", value: "24" },
+              { name: "Length", value: "31" },
+            ],
+          },
+          {
+            name: "2XL",
+            dimensions: [
+              { name: "Chest", value: "26" },
+              { name: "Length", value: "32" },
+            ],
+          },
+          {
+            name: "3XL",
+            dimensions: [
+              { name: "Chest", value: "28" },
+              { name: "Length", value: "33" },
+            ],
+          },
+        ],
+      },
     };
 
     setProductJson(JSON.stringify(editableProduct, null, 2));

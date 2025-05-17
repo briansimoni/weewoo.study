@@ -1,6 +1,7 @@
 import { AppHandlers } from "../_middleware.ts";
 import { log } from "../../lib/logger.ts";
 import { emailService } from "../../lib/email_service.ts";
+import { PrintfulApiClient } from "../../lib/client/printful.ts";
 
 // Printful webhook payload interfaces
 interface PrintfulWebhookBase {
@@ -49,6 +50,9 @@ interface PrintfulPackageShippedWebhook extends PrintfulWebhookBase {
   };
 }
 
+// Create a singleton instance of the Printful API client
+const printfulClient = new PrintfulApiClient();
+
 export const handler: AppHandlers = {
   POST: async (req) => {
     // Parse the webhook payload
@@ -66,38 +70,51 @@ export const handler: AppHandlers = {
         const typedPayload = payload as PrintfulPackageShippedWebhook;
         const { order, shipment } = typedPayload.data;
         log.info(`Order ${order.id} has been shipped!`);
-        
-        // Extract relevant shipping information
-        const trackingNumber = shipment.tracking_number;
-        const trackingUrl = shipment.tracking_url;
-        const carrier = shipment.carrier;
-        
-        // Send notification email to customer if we have their email
-        if (order.recipient && order.recipient.email) {
-          try {
-            await emailService.sendOrderShippedNotification({
-              to: order.recipient.email,
-              orderReference: order.id.toString(),
-              trackingNumber: trackingNumber || "Not available",
-              trackingUrl: trackingUrl || null,
-              carrier: carrier || "Shipping carrier",
-              estimatedDelivery: shipment.estimated_delivery_date || null,
-            });
-            
-            log.info(`Sent shipping notification email to ${order.recipient.email}`);
-          } catch (emailError) {
-            // Log the error but don't fail the webhook processing
-            log.error("Error sending shipping notification email:", emailError);
+
+        // Verify order by fetching from Printful API
+        try {
+          log.info(`Verifying order ${order.id} with Printful API`);
+          const response = await printfulClient.getOrder(order.id);
+
+          if (response.code !== 200) {
+            log.error(
+              `Failed to verify order ${order.id}: API returned code ${response.code}`,
+            );
+            return new Response("Invalid order ID", { status: 400 });
           }
+
+          // Extract relevant shipping information
+          const trackingNumber = shipment.tracking_number;
+          const trackingUrl = shipment.tracking_url;
+          const carrier = shipment.carrier;
+
+          // Send notification email to customer if we have their email
+          if (order.recipient && order.recipient.email) {
+            try {
+              await emailService.sendOrderShippedNotification({
+                to: order.recipient.email,
+                orderReference: order.id.toString(),
+                trackingNumber: trackingNumber || "Not available",
+                trackingUrl: trackingUrl || null,
+                carrier: carrier || "Shipping carrier",
+                estimatedDelivery: shipment.estimated_delivery_date || null,
+              });
+
+              log.info(
+                `Sent shipping notification email to ${order.recipient.email}`,
+              );
+            } catch (emailError) {
+              // Log the error but don't fail the webhook processing
+              log.error(
+                "Error sending shipping notification email:",
+                emailError,
+              );
+            }
+          }
+        } catch (apiError) {
+          log.error(`Error verifying order with Printful API:`, apiError);
+          return new Response("Error verifying order", { status: 500 });
         }
-        
-        // You could also update your database to mark the order as shipped
-        // For example: await database.updateOrderStatus(order.id, "shipped");
-        
-        // Here you can add additional business logic for shipped orders:
-        // - Update order status in your database
-        // - Send notifications through other channels
-        // - Update inventory counts
       }
 
       // Return a success response to Printful
