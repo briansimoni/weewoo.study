@@ -23,13 +23,10 @@ export default function PWAInstallPrompt() {
     // Check if already dismissed in this session
     if (sessionStorage.getItem("pwa-prompt-dismissed") === "true") return;
 
-    // Only show on mobile devices
-    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
-      .test(
-        navigator.userAgent,
-      );
-      
-    // Check specifically for iOS
+    // Check specifically for Android (we only want to show on Android)
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    
+    // We're not supporting iOS for the prompt, but keep the state for reference
     const isIOSDevice = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     setIsIOS(isIOSDevice);
 
@@ -38,8 +35,8 @@ export default function PWAInstallPrompt() {
       globalThis.matchMedia("(display-mode: standalone)").matches ||
       (navigator as { standalone?: boolean }).standalone === true;
 
-    // Only show prompt for mobile devices not in standalone mode
-    if (isMobile && !isStandalone) {
+    // Only show prompt for Android devices that are not in standalone mode
+    if (isAndroid && !isStandalone) {
       setShowPrompt(true);
     }
 
