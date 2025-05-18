@@ -5,7 +5,7 @@ export default function Home(props: AppProps) {
     <div className="flex flex-col items-center justify-center h-full">
       <div className="flex flex-col items-center gap-6">
         <div className="avatar">
-          <div className="w-32 rounded-full">
+          <div className="w-32">
             <img src="ambulance.svg" alt="EMS Logo" />
           </div>
         </div>
