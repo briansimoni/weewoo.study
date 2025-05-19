@@ -11,7 +11,7 @@ export default function ProductDetails(
   { product, variants }: ProductDetailsProps,
 ) {
   const [selectedColor, setSelectedColor] = useState(variants[0].color);
-  const [selectedSize, setSelectedSize] = useState("M");
+  const [selectedSize, setSelectedSize] = useState(variants[0].size);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Get unique sizes from variants
