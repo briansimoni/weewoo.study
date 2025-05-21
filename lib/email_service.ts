@@ -234,7 +234,7 @@ export class EmailService {
               </div>
               
               <p>We'll send you another email when your order ships.</p>
-              <p>If you have any questions, please contact our customer service.</p>
+              <p>If you have any questions, please contact <a href="https://weewoo.study/support">support</a>.</p>
             </div>
             <div class="footer">
               <p>&copy; ${new Date().getFullYear()} weewoo.study</p>
@@ -272,7 +272,7 @@ export class EmailService {
       
       We'll send you another email when your order ships.
       
-      If you have any questions, please contact our customer service.
+      If you have any questions, please contact our customer service at https://weewoo.study/support.
     `;
 
     return this.sendEmail({
@@ -332,11 +332,19 @@ export class EmailService {
                 <h2>Tracking Information</h2>
                 <p><strong>Carrier:</strong> ${carrier}</p>
                 <p><strong>Tracking Number:</strong> ${trackingNumber}</p>
-                ${trackingUrl ? `<p><strong>Track Your Package:</strong> <a href="${trackingUrl}">${trackingUrl}</a></p>` : ''}
-                ${estimatedDelivery ? `<p><strong>Estimated Delivery:</strong> ${estimatedDelivery}</p>` : ''}
+                ${
+      trackingUrl
+        ? `<p><strong>Track Your Package:</strong> <a href="${trackingUrl}">${trackingUrl}</a></p>`
+        : ""
+    }
+                ${
+      estimatedDelivery
+        ? `<p><strong>Estimated Delivery:</strong> ${estimatedDelivery}</p>`
+        : ""
+    }
               </div>
               
-              <p>If you have any questions about your order, please don't hesitate to contact our customer service team.</p>
+              <p>If you have any questions about your order, please don't hesitate to contact <a href="https://weewoo.study/support">support</a>.</p>
               <p>Thank you for your business!</p>
             </div>
             <div class="footer">
@@ -358,10 +366,10 @@ export class EmailService {
       TRACKING INFORMATION:
       Carrier: ${carrier}
       Tracking Number: ${trackingNumber}
-      ${trackingUrl ? `Track Your Package: ${trackingUrl}` : ''}
-      ${estimatedDelivery ? `Estimated Delivery: ${estimatedDelivery}` : ''}
+      ${trackingUrl ? `Track Your Package: ${trackingUrl}` : ""}
+      ${estimatedDelivery ? `Estimated Delivery: ${estimatedDelivery}` : ""}
       
-      If you have any questions about your order, please don't hesitate to contact our customer service team.
+      If you have any questions about your order, please don't hesitate to contact support.
       
       Thank you for your business!
     `;
