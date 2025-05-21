@@ -16,7 +16,7 @@ export interface QuestionReport {
   thumbs: "up" | "down";
   reason: string;
   reported_at: string;
-  user_id?: string; // Optional user ID if they were logged in when reporting
+  user_id?: string;
 }
 
 export class QuestionStore {
@@ -130,8 +130,6 @@ export class QuestionStore {
       user_id,
     });
   }
-  
-
 
   /**
    * Retrieves all question reports.
@@ -140,16 +138,17 @@ export class QuestionStore {
   async getQuestionReports(): Promise<QuestionReport[]> {
     const reports: QuestionReport[] = [];
     const iter = this.kv.list({ prefix: ["emt", "questions", "reports"] });
-    
+
     for await (const entry of iter) {
       // Cast the value to QuestionReport type
       const report = entry.value as QuestionReport;
       reports.push(report);
     }
-    
+
     // Sort reports by reported_at, most recent first
     return reports.sort((a, b) => {
-      return new Date(b.reported_at).getTime() - new Date(a.reported_at).getTime();
+      return new Date(b.reported_at).getTime() -
+        new Date(a.reported_at).getTime();
     });
   }
 

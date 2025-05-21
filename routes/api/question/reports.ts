@@ -13,15 +13,15 @@ export const handler: AppHandlers = {
     });
     const submission = schema.parse(body);
     const { questionId, thumbs, reason } = submission;
-    
+
     // Extract the user_id from the session if available
     const user_id = ctx.state.session?.user_id;
-    
+
     await questionStore.reportQuestion({
       question_id: questionId,
       thumbs,
       reason,
-      user_id, // Include user_id if available (undefined otherwise)
+      user_id,
     });
     return new Response(null, {
       status: 200,
