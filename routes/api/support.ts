@@ -1,8 +1,7 @@
-// routes/api/support.ts
-import { Handlers } from "$fresh/server.ts";
 import { emailService } from "../../lib/email_service.ts";
 import { log } from "../../lib/logger.ts";
 import { z } from "npm:zod";
+import { AppHandlers } from "../_middleware.ts";
 
 // Zod schema for form data validation
 const SupportFormSchema = z.object({
@@ -15,8 +14,8 @@ const SupportFormSchema = z.object({
   ),
 });
 
-export const handler: Handlers = {
-  async POST(req) {
+export const handler: AppHandlers = {
+  async POST(req, ctx) {
     try {
       // Parse form data
       const formData = await req.formData();
@@ -96,6 +95,7 @@ export const handler: Handlers = {
         
         From: ${name} (${email})
         Subject: ${subject}
+        User ID: ${ctx.state.session?.user_id}
         
         Message:
         ${message}
