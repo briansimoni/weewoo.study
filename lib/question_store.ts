@@ -11,6 +11,14 @@ export interface Question {
   category?: string;
 }
 
+export interface QuestionReport {
+  question_id: string;
+  thumbs: "up" | "down";
+  reason: string;
+  reported_at: string;
+  user_id?: string; // Optional user ID if they were logged in when reporting
+}
+
 export class QuestionStore {
   private constructor(private kv: Deno.Kv) {}
 
@@ -106,8 +114,9 @@ export class QuestionStore {
     question_id: string;
     thumbs: "up" | "down";
     reason: string;
+    user_id?: string;
   }) {
-    const { question_id, thumbs, reason } = params;
+    const { question_id, thumbs, reason, user_id } = params;
 
     // Check if the question exists first
     await this.getQuestion(question_id);
@@ -118,6 +127,29 @@ export class QuestionStore {
       thumbs,
       reason,
       reported_at: new Date().toISOString(),
+      user_id,
+    });
+  }
+  
+
+
+  /**
+   * Retrieves all question reports.
+   * Each report includes the question_id, thumbs (up/down), reason, and timestamp.
+   */
+  async getQuestionReports(): Promise<QuestionReport[]> {
+    const reports: QuestionReport[] = [];
+    const iter = this.kv.list({ prefix: ["emt", "questions", "reports"] });
+    
+    for await (const entry of iter) {
+      // Cast the value to QuestionReport type
+      const report = entry.value as QuestionReport;
+      reports.push(report);
+    }
+    
+    // Sort reports by reported_at, most recent first
+    return reports.sort((a, b) => {
+      return new Date(b.reported_at).getTime() - new Date(a.reported_at).getTime();
     });
   }
 
