@@ -110,6 +110,7 @@ export default function QuestionPage() {
 
         {answered && (
           <Feedback
+            questionId={question.id}
             correct={correct}
             explanation={question.explanation}
             nextQuestion={nextQuestion}
@@ -169,13 +170,61 @@ function QuestionForm(
 }
 
 function Feedback(
-  { correct, explanation, nextQuestion }: {
+  { questionId, correct, explanation, nextQuestion }: {
+    questionId: string;
     correct: boolean;
     explanation: string;
     nextQuestion: () => void;
   },
 ) {
   const color = correct ? "text-green-600" : "text-red-600";
+  const [feedbackGiven, setFeedbackGiven] = useState(false);
+  const [showReasonModal, setShowReasonModal] = useState(false);
+  const [feedbackType, setFeedbackType] = useState<"up" | "down" | null>(null);
+  const [feedbackReason, setFeedbackReason] = useState("");
+
+  const handleFeedback = (type: "up" | "down") => {
+    setFeedbackType(type);
+    setFeedbackReason(""); // Reset reason when opening modal
+    setShowReasonModal(true);
+  };
+
+  const closeModal = () => {
+    setShowReasonModal(false);
+  };
+
+  const submitFeedback = async () => {
+    // Don't submit if we don't have a feedback type or if the reason is empty
+    if (!feedbackType || !feedbackReason.trim()) {
+      alert("Please provide a reason for your feedback");
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/question/reports`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionId: questionId,
+          thumbs: feedbackType,
+          reason: feedbackReason.trim(),
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      
+      // Feedback submitted successfully
+      setFeedbackGiven(true);
+      setShowReasonModal(false);
+    } catch (error) {
+      console.error("Failed to submit feedback:", error);
+      alert("Failed to submit feedback. Please try again later.");
+    }
+  };
 
   return (
     <div class="mt-6">
@@ -186,6 +235,103 @@ function Feedback(
         <p class="text-lg mb-4">
           <strong>Explanation:</strong> {explanation}
         </p>
+
+        {/* Question Rating */}
+        <div class="flex items-center gap-4 my-4">
+          <div class="flex gap-3">
+            <button
+              type="button"
+              onClick={() => handleFeedback("up")}
+              disabled={feedbackGiven}
+              class={`btn btn-circle btn-sm ${
+                feedbackGiven ? "btn-disabled" : ""
+              }`}
+              aria-label="Thumbs up"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleFeedback("down")}
+              disabled={feedbackGiven}
+              class={`btn btn-circle btn-sm ${
+                feedbackGiven ? "btn-disabled" : ""
+              }`}
+              aria-label="Thumbs down"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"
+                />
+              </svg>
+            </button>
+          </div>
+          {feedbackGiven && (
+            <span class="text-sm text-green-600">
+              Thanks for your feedback!
+            </span>
+          )}
+        </div>
+
+        {/* Feedback Modal using DaisyUI */}
+        <dialog id="question_feedback_modal" class={`modal ${showReasonModal ? 'modal-open' : ''}`}>
+          <div class="modal-box">
+            <h3 class="font-bold text-lg">
+              {feedbackType === "up"
+                ? "What did you like about this question?"
+                : "What issues did you find with this question?"}
+            </h3>
+            <textarea
+              id="feedback_reason"
+              class="textarea textarea-bordered w-full h-32 my-4"
+              placeholder="Please provide details..."
+              value={feedbackReason}
+              onChange={(e) => setFeedbackReason((e.target as HTMLTextAreaElement).value)}
+            ></textarea>
+            <div class="modal-action">
+              <button
+                type="button"
+                class="btn btn-outline"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                onClick={submitFeedback}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+          <form method="dialog" class="modal-backdrop">
+            <button type="button" onClick={closeModal}>Close</button>
+          </form>
+        </dialog>
+
         <button
           type="button"
           onClick={nextQuestion}

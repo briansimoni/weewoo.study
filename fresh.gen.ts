@@ -29,6 +29,7 @@ import * as $api_preferences from "./routes/api/preferences.ts";
 import * as $api_printful_webhook from "./routes/api/printful_webhook.ts";
 import * as $api_profile from "./routes/api/profile.ts";
 import * as $api_question from "./routes/api/question.ts";
+import * as $api_question_reports from "./routes/api/question/reports.ts";
 import * as $api_stripe_webhook from "./routes/api/stripe_webhook.ts";
 import * as $api_support from "./routes/api/support.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
@@ -96,6 +97,7 @@ const manifest = {
     "./routes/api/printful_webhook.ts": $api_printful_webhook,
     "./routes/api/profile.ts": $api_profile,
     "./routes/api/question.ts": $api_question,
+    "./routes/api/question/reports.ts": $api_question_reports,
     "./routes/api/stripe_webhook.ts": $api_stripe_webhook,
     "./routes/api/support.ts": $api_support,
     "./routes/auth/callback.ts": $auth_callback,

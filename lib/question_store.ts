@@ -102,6 +102,25 @@ export class QuestionStore {
     return questions;
   }
 
+  async reportQuestion(params: {
+    question_id: string;
+    thumbs: "up" | "down";
+    reason: string;
+  }) {
+    const { question_id, thumbs, reason } = params;
+
+    // Check if the question exists first
+    await this.getQuestion(question_id);
+
+    // Save the report
+    await this.kv.set(["emt", "questions", "reports", question_id], {
+      question_id,
+      thumbs,
+      reason,
+      reported_at: new Date().toISOString(),
+    });
+  }
+
   /**
    * Updates an existing question in the store.
    * Preserves the ID, hash, and created_at timestamp.
@@ -116,16 +135,16 @@ export class QuestionStore {
     // Preserve critical fields
     question.created_at = existingQuestion.created_at;
     question.hash = existingQuestion.hash;
-    
+
     // Update the question in the store
     const result = await this.kv.atomic()
       .set(["emt", "questions", question.id], question)
       .commit();
-      
+
     if (!result.ok) {
       throw new Error(`Failed to update question with ID ${question.id}`);
     }
-    
+
     return question;
   }
 
