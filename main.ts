@@ -13,9 +13,10 @@ import config from "./fresh.config.ts";
 
 // Set up a cron job that runs every 30 seconds
 import { CronTime } from "npm:cron-time-generator";
+import { sendReport } from "./lib/cron_tasks.ts";
 
 Deno.cron("Weekly Question Report", CronTime.everyMinute(), () => {
-  console.log(`Cron job executed at: ${new Date().toISOString()}`);
+  sendReport();
 });
 
 await start(manifest, config);

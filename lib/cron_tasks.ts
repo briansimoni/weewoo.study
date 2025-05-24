@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { QuestionStore } from "./question_store.ts";
 import { EmailService } from "./email_service.ts";
-import { Logger } from "@deno-library/logger";
 import { log } from "./logger.ts";
 
 export async function sendReport() {
