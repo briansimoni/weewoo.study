@@ -1,12 +1,12 @@
 {
-  "unstable": ["kv"],
+  "unstable": ["kv", "cron"],
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
-    "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
+    "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable-* -A -",
     "manifest": "deno task cli manifest $(pwd)",
-    "start": "deno task tailwind & deno run -A --inspect --watch=static/,routes/ --unstable-kv dev.ts",
+    "start": "deno task tailwind & deno run -A --inspect --watch=static/,routes/ --unstable-kv --unstable-cron dev.ts",
     "build": "deno task build:css && deno run -A --unstable-kv dev.ts build",
-    "preview": "deno run -A main.ts",
+    "preview": "deno run -A --unstable-cron main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
     "tailwind": "deno run -A npm:@tailwindcss/cli --input ./static/styles.css --output ./static/dist.css --watch",
     "build:css": "deno run -A npm:@tailwindcss/cli --input ./static/styles.css --output ./static/dist.css --minify"
@@ -25,6 +25,7 @@
     "@std/http": "jsr:@std/http@^1.0.13",
     "@std/testing": "jsr:@std/testing@^1.0.9",
     "@tailwindcss/cli": "npm:@tailwindcss/cli@^4.0.9",
+    "cron-time-generator": "npm:cron-time-generator@^2.0.3",
     "dayjs": "npm:dayjs@^1.11.13",
     "dayjs-plugin-utc": "npm:dayjs-plugin-utc@^0.1.2",
     "preact": "npm:preact@10.26.4",
