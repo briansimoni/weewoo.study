@@ -16,7 +16,7 @@ import { CronTime } from "npm:cron-time-generator";
 import { sendReport } from "./lib/cron_tasks.ts";
 
 Deno.cron("Weekly Question Report", CronTime.everyMinute(), () => {
-  // sendReport();
+  sendReport();
   console.log("Weekly Question Report sent");
 });
 
