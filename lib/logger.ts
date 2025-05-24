@@ -6,14 +6,6 @@ function isRunningInDenoDeploy(): boolean {
   return !!Deno.env.get("DENO_DEPLOYMENT_ID");
 }
 
-function getHostname(): string {
-  try {
-    return Deno.hostname();
-  } catch {
-    return "unknown-host";
-  }
-}
-
 /**
  * Get the correct CloudWatch log group based on environment
  */
@@ -48,7 +40,7 @@ const consoleFormat = winston.format.combine(
 // Create base logger with console transport
 const logger = winston.createLogger({
   level: Deno.env.get("LOG_LEVEL") || "debug",
-  format: isRunningInDenoDeploy() ? jsonFormat : consoleFormat,
+  format: consoleFormat,
   transports: [
     new winston.transports.Console({}),
   ],
@@ -59,7 +51,7 @@ if (isRunningInDenoDeploy()) {
   try {
     const cloudWatchConfig = {
       logGroupName: getLogGroupName(),
-      logStreamName: `${getHostname()}-${
+      logStreamName: `${crypto.randomUUID()}-${
         new Date().toISOString().split("T")[0]
       }`,
       awsRegion: Deno.env.get("AWS_REGION") || "us-east-1",
@@ -85,8 +77,14 @@ if (isRunningInDenoDeploy()) {
       },
     };
 
+    // Create CloudWatch transport with JSON format
+    const cloudWatchTransport = new WinstonCloudWatch(cloudWatchConfig);
+
+    // Override the format for the CloudWatch transport only
+    cloudWatchTransport.format = jsonFormat;
+
     // Add CloudWatch transport to the logger
-    logger.add(new WinstonCloudWatch(cloudWatchConfig));
+    logger.add(cloudWatchTransport);
     logger.info("CloudWatch logging initialized");
   } catch (err) {
     console.error("Failed to initialize CloudWatch logging:", err);
