@@ -18,7 +18,7 @@ export interface SessionData {
   picture?: string;
   display_name?: string;
   streakDays?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -113,7 +113,9 @@ const logMiddleware: AppHandler = async function (req, ctx) {
   // log.debug("request started", req.url);
   const res = await ctx.next();
   const end = Date.now();
-  log.info(req.method, req.url, {
+  log.info("request log", {
+    method: req.method,
+    url: req.url,
     user_id: ctx.state.session?.user_id,
     status: res.status,
     responseTime: end - start,

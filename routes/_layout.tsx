@@ -1,10 +1,4 @@
-import {
-  BarChart,
-  Dumbbell,
-  LogIn,
-  ShoppingBag,
-  Trophy,
-} from "../icons/index.ts";
+import { BarChart, Dumbbell, ShoppingBag, Trophy } from "../icons/index.ts";
 import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
 import CartIcon from "../islands/CartIcon.tsx";
@@ -31,7 +25,9 @@ export default defineLayout<AppState>(async (_req, ctx) => {
         {/* Logo */}
         <div className="navbar-start">
           <a href="/" className="btn btn-ghost text-xl">WeeWoo🚑</a>
-          {stage}
+          {stage !== "PROD" && (
+            <span className="badge badge-warning">{stage}</span>
+          )}
         </div>
 
         {/* Right Side: Streak, Cart and Menus */}

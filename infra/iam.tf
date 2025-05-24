@@ -7,7 +7,7 @@ data "aws_iam_user" "svc_weewoo" {
 
 resource "aws_iam_policy" "ses_email_sending" {
   name        = "ServicePolicy-weewoo"
-  description = "Policy for weewoo.study app service permissions (SES and S3)"
+  description = "Policy for weewoo.study app service permissions (SES, S3, and CloudWatch Logs)"
   
   policy = jsonencode({
     Version = "2012-10-17",
@@ -59,6 +59,22 @@ resource "aws_iam_policy" "ses_email_sending" {
         Resource = [
           "arn:aws:s3:::ems-questions-deno-kv-backups",
           "arn:aws:s3:::ems-questions-deno-kv-backups/*"
+        ]
+      },
+      # CloudWatch Logs permissions
+      {
+        Effect = "Allow",
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams"
+        ],
+        Resource = [
+          aws_cloudwatch_log_group.production.arn,
+          "${aws_cloudwatch_log_group.production.arn}:*",
+          aws_cloudwatch_log_group.test.arn,
+          "${aws_cloudwatch_log_group.test.arn}:*"
         ]
       }
     ]
