@@ -199,7 +199,7 @@ function Feedback(
       alert("Please provide a reason for your feedback");
       return;
     }
-    
+
     try {
       const response = await fetch(`/api/question/reports`, {
         method: "POST",
@@ -212,11 +212,11 @@ function Feedback(
           reason: feedbackReason.trim(),
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-      
+
       // Feedback submitted successfully
       setFeedbackGiven(true);
       setShowReasonModal(false);
@@ -229,7 +229,7 @@ function Feedback(
   return (
     <div class="mt-6">
       <p class={`font-bold text-xl ${color}`}>
-        {correct ? "🎉 Correct! Great job!" : "👎 Keep practicing!"}
+        {correct ? "🎉 Correct! Great job!" : "🙃 Keep practicing!"}
       </p>
       <div class="mt-4">
         <p class="text-lg mb-4">
@@ -296,7 +296,10 @@ function Feedback(
         </div>
 
         {/* Feedback Modal using DaisyUI */}
-        <dialog id="question_feedback_modal" class={`modal ${showReasonModal ? 'modal-open' : ''}`}>
+        <dialog
+          id="question_feedback_modal"
+          class={`modal ${showReasonModal ? "modal-open" : ""}`}
+        >
           <div class="modal-box">
             <h3 class="font-bold text-lg">
               {feedbackType === "up"
@@ -308,8 +311,10 @@ function Feedback(
               class="textarea textarea-bordered w-full h-32 my-4"
               placeholder="Please provide details..."
               value={feedbackReason}
-              onChange={(e) => setFeedbackReason((e.target as HTMLTextAreaElement).value)}
-            ></textarea>
+              onChange={(e) =>
+                setFeedbackReason((e.target as HTMLTextAreaElement).value)}
+            >
+            </textarea>
             <div class="modal-action">
               <button
                 type="button"
