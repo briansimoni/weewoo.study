@@ -40,7 +40,7 @@ const consoleFormat = winston.format.combine(
 // Create base logger with console transport
 const logger = winston.createLogger({
   level: Deno.env.get("LOG_LEVEL") || "debug",
-  format: consoleFormat,
+  format: isRunningInDenoDeploy() ? jsonFormat : consoleFormat,
   transports: [
     new winston.transports.Console({}),
   ],
@@ -77,14 +77,8 @@ if (isRunningInDenoDeploy()) {
       },
     };
 
-    // Create CloudWatch transport with JSON format
-    const cloudWatchTransport = new WinstonCloudWatch(cloudWatchConfig);
-
-    // Override the format for the CloudWatch transport only
-    cloudWatchTransport.format = jsonFormat;
-
     // Add CloudWatch transport to the logger
-    logger.add(cloudWatchTransport);
+    logger.add(new WinstonCloudWatch(cloudWatchConfig));
     logger.info("CloudWatch logging initialized");
   } catch (err) {
     console.error("Failed to initialize CloudWatch logging:", err);
