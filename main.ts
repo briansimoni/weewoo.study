@@ -15,9 +15,8 @@ import config from "./fresh.config.ts";
 import { CronTime } from "npm:cron-time-generator";
 import { sendReport } from "./lib/cron_tasks.ts";
 
-Deno.cron("Weekly Question Report", CronTime.everyWeekendAt(9, 0), () => {
+Deno.cron("Weekly Question Report", CronTime.everySaturdayAt(9), () => {
   sendReport();
-  console.log("Weekly Question Report sent");
 });
 
 await start(manifest, config);
