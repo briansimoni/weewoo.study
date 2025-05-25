@@ -29,7 +29,7 @@ export const handler: AppHandlers = {
       req.headers.get("stripe-signature") ?? "",
       stripeSigningKey,
     );
-    log.info("Received Stripe event:", event.type);
+    log.info("Received Stripe event:", { event });
     if (event.type === "checkout.session.completed") {
       const session = await stripeClient.checkout.sessions.retrieve(
         event.data.object.id,
@@ -60,7 +60,7 @@ export const handler: AppHandlers = {
         [];
 
       for (const item of lineItems) {
-        log.debug("Processing line item:", item);
+        log.debug("Processing line item:", { item });
 
         // Find the variant using the stripe_product_id
         let foundVariant: ProductVariant | null = null;
@@ -80,7 +80,7 @@ export const handler: AppHandlers = {
         if (!foundVariant) {
           log.error(
             "Could not find matching variant for item:",
-            item,
+            { item },
           );
           continue; // Skip this item but continue processing others
         }
@@ -118,6 +118,7 @@ async function submitOrder(
     "variant_id": parseInt(item.variant.variant_id),
     "quantity": item.quantity,
     "product_template_id": parseInt(item.variant.product_template_id),
+    "retail_price": String(item.variant.price),
   }));
 
   log.info(
@@ -198,7 +199,7 @@ async function submitOrder(
       }
     } catch (error) {
       // Log the error but don't fail the order process if email sending fails
-      log.error("Error sending order confirmation email:", error);
+      log.error("Error sending order confirmation email:", { error });
     }
   } else {
     log.warn("No customer email provided, skipping order confirmation email");

@@ -108,8 +108,15 @@ const logMiddleware: AppHandler = async function (req, ctx) {
   if (excluded.includes(ctx.destination)) {
     return ctx.next();
   }
+  const requestId = crypto.randomUUID();
   const start = Date.now();
-  const request_body = (await req.clone().text()) || undefined;
+  const clonedBody = await req.clone().text();
+  let request_body: string | undefined;
+  try {
+    request_body = JSON.parse(clonedBody);
+  } catch (_error) {
+    // nothing
+  }
   // log.debug("request started", req.url);
   const res = await ctx.next();
   const end = Date.now();
@@ -120,6 +127,7 @@ const logMiddleware: AppHandler = async function (req, ctx) {
     status: res.status,
     responseTime: end - start,
     request_body,
+    requestId,
   });
   return res;
 };

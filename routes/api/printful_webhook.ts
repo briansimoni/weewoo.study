@@ -61,7 +61,7 @@ export const handler: AppHandlers = {
 
     try {
       const payload = await req.json() as PrintfulWebhookBase;
-      log.info("Received Printful webhook type:", payload.type);
+      log.info("Received Printful webhook", { payload });
 
       // Handle package_shipped event
       if (payload.type === "package_shipped") {
@@ -105,12 +105,12 @@ export const handler: AppHandlers = {
               // Log the error but don't fail the webhook processing
               log.error(
                 "Error sending shipping notification email:",
-                emailError,
+                { emailError },
               );
             }
           }
         } catch (apiError) {
-          log.error(`Error verifying order with Printful API:`, apiError);
+          log.error(`Error verifying order with Printful API:`, { apiError });
           return new Response("Error verifying order", { status: 500 });
         }
       }
@@ -118,7 +118,7 @@ export const handler: AppHandlers = {
       // Return a success response to Printful
       return new Response("Webhook processed successfully", { status: 200 });
     } catch (error) {
-      log.error("Error processing Printful webhook:", error);
+      log.error("Error processing Printful webhook:", { error });
       return new Response("Error processing webhook", { status: 500 });
     }
   },
