@@ -119,7 +119,21 @@ const logMiddleware: AppHandler = function (req, ctx) {
     } catch (_error) {
       // I just want to log things nicely without double JSON stringifying stuff
     }
-    const res = await ctx.next();
+    let res: Response;
+    try {
+      res = await ctx.next();
+    } catch (error: unknown) {
+      log.error("request log", {
+        method: req.method,
+        url: req.url,
+        user_id: ctx.state.session?.user_id,
+        status: 500,
+        responseTime: Date.now() - start,
+        request_body,
+        error,
+      });
+      throw error;
+    }
     const end = Date.now();
     log.info("request log", {
       method: req.method,
