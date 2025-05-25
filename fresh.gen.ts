@@ -23,7 +23,7 @@ import * as $api_admin_product_id_index from "./routes/api/admin/product/[id]/in
 import * as $api_admin_product_id_toggle_active from "./routes/api/admin/product/[id]/toggle-active.ts";
 import * as $api_admin_product_id_variant_variant_id_ from "./routes/api/admin/product/[id]/variant/[variant_id].ts";
 import * as $api_admin_product_id_variant_variant_id_create_stripe_product from "./routes/api/admin/product/[id]/variant/[variant_id]/create-stripe-product.ts";
-import * as $api_admin_product_id_variant_variant_id_update_stripe_price from "./routes/api/admin/product/[id]/variant/[variant_id]/update-stripe-price.ts";
+import * as $api_admin_product_id_variant_variant_id_update_price from "./routes/api/admin/product/[id]/variant/[variant_id]/update-price.ts";
 import * as $api_admin_product_id_variants from "./routes/api/admin/product/[id]/variants.ts";
 import * as $api_admin_question from "./routes/api/admin/question.ts";
 import * as $api_checkout from "./routes/api/checkout.ts";
@@ -91,8 +91,8 @@ const manifest = {
       $api_admin_product_id_variant_variant_id_,
     "./routes/api/admin/product/[id]/variant/[variant_id]/create-stripe-product.ts":
       $api_admin_product_id_variant_variant_id_create_stripe_product,
-    "./routes/api/admin/product/[id]/variant/[variant_id]/update-stripe-price.ts":
-      $api_admin_product_id_variant_variant_id_update_stripe_price,
+    "./routes/api/admin/product/[id]/variant/[variant_id]/update-price.ts":
+      $api_admin_product_id_variant_variant_id_update_price,
     "./routes/api/admin/product/[id]/variants.ts":
       $api_admin_product_id_variants,
     "./routes/api/admin/question.ts": $api_admin_question,

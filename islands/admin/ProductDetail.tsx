@@ -1087,7 +1087,7 @@ export default function ProductDetail(
                                   if (hasStripeProduct && priceChanged) {
                                     try {
                                       const stripeResponse = await fetch(
-                                        `/api/admin/product/${storedProduct.printful_id}/variant/${variant.id}/update-stripe-price`,
+                                        `/api/admin/product/${storedProduct.printful_id}/variant/${variant.id}/update-price`,
                                         {
                                           method: "POST",
                                           headers: {

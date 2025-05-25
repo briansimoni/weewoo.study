@@ -1,3 +1,5 @@
+import { log } from "../logger.ts";
+
 export interface PrintfulProduct {
   id: number;
   external_id: string;
@@ -277,7 +279,42 @@ export class PrintfulApiClient {
     );
     return await response.json();
   }
-  
+
+  /**
+   * Update a sync variant
+   * @param variant The variant data to update. Must include id property.
+   * @returns Updated product variant information
+   */
+  async updateProductVariant(
+    variant: Partial<PrintfulProductVariant>,
+  ): Promise<PrintfulResponse<PrintfulProductVariant>> {
+    if (!variant.id) {
+      throw new Error("Variant ID is required for updating a product variant");
+    }
+
+    const response = await this.fetch(
+      `${this.baseURL}/store/variants/${variant.id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${this.printfulToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(variant),
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      log.error("failed to update product variant", errorData);
+      throw new Error(
+        `Failed to update product variant: ${response.status}`,
+      );
+    }
+
+    return await response.json();
+  }
+
   /**
    * Create a new webhook subscription
    * @param url The URL where Printful will send webhook events

@@ -2,6 +2,8 @@ import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../../../lib/product_store.ts";
 import Stripe from "npm:stripe";
 import "$std/dotenv/load.ts";
+import { PrintfulApiClient } from "../../../../../../../lib/client/printful.ts";
+import { z } from "npm:zod";
 
 export const handler: Handlers = {
   /**
@@ -9,31 +11,49 @@ export const handler: Handlers = {
    */
   async POST(req, ctx) {
     try {
-      const productId = ctx.params.id;
-      const variantId = ctx.params.variant_id;
+      // Validate URL parameters
+      const paramsSchema = z.object({
+        id: z.string().nonempty("Product ID is required"),
+        variant_id: z.string().nonempty("Variant ID is required"),
+      });
 
-      if (!productId || !variantId) {
-        return new Response(
-          JSON.stringify({ error: "Product ID and Variant ID are required" }),
-          {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
-        );
-      }
+      // Validate request body
+      const bodySchema = z.object({
+        price: z.string()
+          .nonempty("Price is required")
+          .or(z.number().positive("Price must be a positive number"))
+          .transform((val) => typeof val === "string" ? Number(val) : val)
+          .refine((val) => !isNaN(val), "Price must be a valid number"),
+      });
 
-      // Parse the request body to get the new price
-      const data = await req.json();
-      const newPrice = data.price;
+      let productId: string;
+      let variantId: string;
+      let newPrice: number;
 
-      if (!newPrice || isNaN(Number(newPrice))) {
-        return new Response(
-          JSON.stringify({ error: "Valid price is required" }),
-          {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
-        );
+      try {
+        // Validate parameters
+        const params = paramsSchema.parse(ctx.params);
+        productId = params.id;
+        variantId = params.variant_id;
+
+        // Parse and validate request body
+        const requestData = await req.json();
+        const body = bodySchema.parse(requestData);
+        newPrice = body.price;
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return new Response(
+            JSON.stringify({
+              error: "Validation error",
+              details: error.errors.map((e) => e.message),
+            }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        }
+        throw error;
       }
 
       // Get the product store
@@ -99,11 +119,21 @@ export const handler: Handlers = {
 
       await productStore.updateVariant(variant);
 
+      // TODO: sometime in the future I would like to also update the price in Printful
+      // the printful API is stupid and variants have both an id and a variant_id. Pointless...
+      // However, the update API is expecting you to provide the id and not the variant_id
+      // I am not saving the id, only the variant_id so there's a backfilling problem to solve first
+      // const printful = new PrintfulApiClient();
+      // await printful.updateProductVariant({
+      //   id: parseInt(variant.variant_id),
+      //   retail_price: newPrice.toFixed(2),
+      // });
+
       return new Response(
         JSON.stringify({
           success: true,
           variant,
-          message: "Stripe price updated successfully",
+          message: "Price updated successfully",
         }),
         {
           status: 200,

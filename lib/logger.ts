@@ -1,5 +1,8 @@
 import winston from "winston";
 import WinstonCloudWatch from "winston-cloudwatch";
+import { AsyncLocalStorage } from "node:async_hooks";
+
+export const asyncLocalStorage = new AsyncLocalStorage();
 
 function isRunningInDenoDeploy(): boolean {
   // Deno Deploy sets this environment variable
@@ -95,10 +98,22 @@ export interface Logger {
 
 // Export the logger with type safety
 export const log: Logger = {
-  debug: (message, meta = {}) => logger.debug(message, meta),
-  info: (message, meta = {}) => logger.info(message, meta),
-  warn: (message, meta = {}) => logger.warn(message, meta),
-  error: (message, meta = {}) => logger.error(message, meta),
+  debug: (message, meta = {}) => {
+    const requestId = asyncLocalStorage.getStore();
+    logger.debug(message, { ...meta, requestId });
+  },
+  info: (message, meta = {}) => {
+    const requestId = asyncLocalStorage.getStore();
+    logger.info(message, { ...meta, requestId });
+  },
+  warn: (message, meta = {}) => {
+    const requestId = asyncLocalStorage.getStore();
+    logger.warn(message, { ...meta, requestId });
+  },
+  error: (message, meta = {}) => {
+    const requestId = asyncLocalStorage.getStore();
+    logger.error(message, { ...meta, requestId });
+  },
 };
 
 // Log startup information with deployment context

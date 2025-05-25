@@ -100,7 +100,9 @@ export default function About() {
 
         <h2 className="text-2xl font-semibold mb-4">Email Communications 📧</h2>
         <p className="mb-4">
-          We value your privacy. We only send emails concerning your order status, such as payment confirmation and shipping confirmation. We will never spam you or share your email address.
+          We value your privacy. We only send emails concerning your order
+          status, such as payment confirmation and shipping confirmation. We
+          will never spam you or share your email address.
         </p>
 
         <div className="divider"></div>
@@ -109,7 +111,8 @@ export default function About() {
           Need Help or Have Feedback? 🤔
         </h2>
         <p className="mb-6">
-          Found an issue, have a suggestion, or just want to say hi? Visit our support page to send me a message directly.
+          Found an issue, have a suggestion, or just want to say hi? Visit our
+          support page to send me a message directly.
         </p>
 
         <a href="/support" className="btn btn-secondary mb-8">

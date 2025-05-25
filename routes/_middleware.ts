@@ -1,5 +1,5 @@
 import diff from "https://deno.land/x/microdiff@v1.2.0/index.ts";
-import { log } from "../lib/logger.ts";
+import { asyncLocalStorage, log } from "../lib/logger.ts";
 import { Session, SessionStore } from "../lib/session_store.ts";
 import { decodeBase64 } from "jsr:@std/encoding@^1.0.7/base64";
 import type {
@@ -100,7 +100,7 @@ const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
   return response;
 };
 
-const logMiddleware: AppHandler = async function (req, ctx) {
+const logMiddleware: AppHandler = function (req, ctx) {
   const excluded = [
     "static",
     "internal",
@@ -109,27 +109,28 @@ const logMiddleware: AppHandler = async function (req, ctx) {
     return ctx.next();
   }
   const requestId = crypto.randomUUID();
-  const start = Date.now();
-  const clonedBody = await req.clone().text();
-  let request_body: string | undefined;
-  try {
-    request_body = JSON.parse(clonedBody);
-  } catch (_error) {
-    // nothing
-  }
-  // log.debug("request started", req.url);
-  const res = await ctx.next();
-  const end = Date.now();
-  log.info("request log", {
-    method: req.method,
-    url: req.url,
-    user_id: ctx.state.session?.user_id,
-    status: res.status,
-    responseTime: end - start,
-    request_body,
-    requestId,
+  // log a request id with every log statement
+  return asyncLocalStorage.run(requestId, async () => {
+    const start = Date.now();
+    const clonedBody = await req.clone().text();
+    let request_body: string | undefined;
+    try {
+      request_body = JSON.parse(clonedBody);
+    } catch (_error) {
+      // I just want to log things nicely without double JSON stringifying stuff
+    }
+    const res = await ctx.next();
+    const end = Date.now();
+    log.info("request log", {
+      method: req.method,
+      url: req.url,
+      user_id: ctx.state.session?.user_id,
+      status: res.status,
+      responseTime: end - start,
+      request_body,
+    });
+    return res;
   });
-  return res;
 };
 
 const preferencesMiddleware: AppHandler = async function (req, ctx) {
