@@ -60,7 +60,7 @@ export class EmailService {
       // If fromEmail is not set or we're in a non-production environment without forcing
       if (!this.fromEmail) {
         log.warn("Cannot send email: From email address is not configured");
-        log.info("Email would have been sent with:", options);
+        log.info("Email would have been sent with:", { options });
         return false;
       }
 
@@ -117,7 +117,7 @@ export class EmailService {
       log.info(`Email sent successfully. MessageId: ${response.MessageId}`);
       return true;
     } catch (error) {
-      log.error("Failed to send email:", error);
+      log.error("Failed to send email:", { error });
       return false;
     }
   }

@@ -129,7 +129,7 @@ export const handler: AppHandlers = {
         });
       }
     } catch (error) {
-      log.error("Error in support form submission:", error);
+      log.error("Error in support form submission:", { error });
       return new Response(null, {
         status: 302,
         headers: {

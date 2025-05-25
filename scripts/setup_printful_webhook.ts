@@ -50,12 +50,12 @@ async function setupPrintfulWebhook() {
     ]);
 
     if (result.code !== 200) {
-      log.error("Failed to set up Printful webhook:", result);
-      console.error("Failed to set up Printful webhook:", result);
+      log.error("Failed to set up Printful webhook:", { result });
+      console.error("Failed to set up Printful webhook:", { result });
       Deno.exit(1);
     }
 
-    log.info("Successfully set up Printful webhook:", result);
+    log.info("Successfully set up Printful webhook:", { result });
     console.log("✅ Successfully set up Printful webhook");
     console.log("URL:", WEBHOOK_URL);
     console.log("Event type:", EVENT_TYPE);
@@ -64,8 +64,8 @@ async function setupPrintfulWebhook() {
     // Return the result
     return result;
   } catch (error) {
-    log.error("Error setting up Printful webhook:", error);
-    console.error("Error setting up Printful webhook:", error);
+    log.error("Error setting up Printful webhook:", { error });
+    console.error("Error setting up Printful webhook:", { error });
     Deno.exit(1);
   }
 }

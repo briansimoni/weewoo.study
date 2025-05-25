@@ -70,7 +70,7 @@ export const handler: Handlers = {
           }
         }
       } catch (err) {
-        log.error("Failed to deactivate Stripe prices:", err);
+        log.error("Failed to deactivate Stripe prices:", { err });
         // Continue even if we can't deactivate prices
       }
 
@@ -81,7 +81,7 @@ export const handler: Handlers = {
           active: false,
         });
       } catch (err) {
-        log.error("Failed to archive Stripe product:", err);
+        log.error("Failed to archive Stripe product:", { err });
         // Continue even if we can't archive the product
       }
     }
@@ -238,7 +238,7 @@ export const handler: Handlers = {
         },
       );
     } catch (error) {
-      log.error("Error updating variant:", error);
+      log.error("Error updating variant:", { error });
       return new Response(
         JSON.stringify({
           success: false,
