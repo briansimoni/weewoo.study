@@ -4,7 +4,7 @@ import { log } from "../lib/logger.ts";
 import "$std/dotenv/load.ts";
 
 // URL where Printful will send webhook events
-const WEBHOOK_URL = "https://weewoo.study.com";
+const WEBHOOK_URL = "https://weewoo.study";
 // Event type to subscribe to
 const EVENT_TYPE = "package_shipped";
 
