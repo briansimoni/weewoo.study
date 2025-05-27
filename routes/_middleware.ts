@@ -108,6 +108,9 @@ const logMiddleware: AppHandler = function (req, ctx) {
   if (excluded.includes(ctx.destination)) {
     return ctx.next();
   }
+
+  const user_agent = req.headers.get("user-agent");
+  const ip = ctx.remoteAddr;
   const requestId = crypto.randomUUID();
   // log a request id with every log statement
   return asyncLocalStorage.run(requestId, async () => {
@@ -130,6 +133,8 @@ const logMiddleware: AppHandler = function (req, ctx) {
         status: 500,
         responseTime: Date.now() - start,
         request_body,
+        user_agent,
+        ip,
         error,
       });
       throw error;
@@ -142,6 +147,8 @@ const logMiddleware: AppHandler = function (req, ctx) {
       status: res.status,
       responseTime: end - start,
       request_body,
+      user_agent,
+      ip,
     });
     return res;
   });
