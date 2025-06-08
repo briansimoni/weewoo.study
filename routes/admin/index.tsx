@@ -27,6 +27,12 @@ export default function AdminIndex(_props: PageProps) {
       icon: Icons.FileQuestion,
     },
     {
+      title: "Question Library",
+      description: "View and manage all questions in the database",
+      url: "/admin/questions",
+      icon: Icons.Library,
+    },
+    {
       title: "Debug Tools",
       description: "Debug tools and system diagnostics",
       url: "/admin/debug",

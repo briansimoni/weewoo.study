@@ -9,6 +9,7 @@ import {
   Home as HomeIcon,
   Info as InfoIcon,
   LayoutDashboard as LayoutDashboardIcon,
+  Library as LibraryIcon,
   LogIn as LoginIcon,
   LogOut as LogOutIcon,
   Menu as MenuIcon,
@@ -61,3 +62,4 @@ export const PanelRight = PanelRightIcon as ComponentType<
   { className?: string }
 >;
 export const FileText = FileTextIcon as ComponentType<{ className?: string }>;
+export const Library = LibraryIcon as ComponentType<{ className?: string }>;

@@ -1,10 +1,6 @@
 import { PageProps } from "$fresh/server.ts";
 import { Handlers } from "$fresh/server.ts";
-import {
-  Question,
-  QuestionReport,
-  QuestionStore,
-} from "../../lib/question_store.ts";
+import { Question, QuestionReport } from "../../lib/question_store.ts";
 import {
   Edit,
   FileText,
@@ -13,6 +9,7 @@ import {
   ThumbsDown,
   ThumbsUp,
 } from "../../icons/index.ts";
+import { QuestionStore2 } from "../../lib/question_store2.ts";
 
 interface PageData {
   reports: (QuestionReport & { question?: Question })[];
@@ -20,14 +17,14 @@ interface PageData {
 
 export const handler: Handlers = {
   async GET(_req, ctx) {
-    const store = await QuestionStore.make();
+    const store = await QuestionStore2.make();
     const reports = await store.getQuestionReports();
 
     // Fetch the question details for each report
     const reportsWithQuestions = await Promise.all(
       reports.map(async (report: QuestionReport) => {
         try {
-          const question = await store.getQuestion(report.question_id);
+          const question = await store.getQuestionById(report.question_id);
           return { ...report, question };
         } catch (error) {
           console.error(
@@ -157,7 +154,10 @@ export default function QuestionReports({ data }: PageProps<PageData>) {
                           {new Date(report.reported_at).toLocaleString()}
                           {report.user_id && (
                             <span class="ml-2">
-                              by User: <span class="font-mono text-secondary">{report.user_id}</span>
+                              by User:{" "}
+                              <span class="font-mono text-secondary">
+                                {report.user_id}
+                              </span>
                             </span>
                           )}
                         </div>
