@@ -8,7 +8,7 @@ export default function QuestionPage() {
   const [question, setQuestion] = useState<Question | undefined>();
   const [correct, setCorrect] = useState<boolean | undefined>();
   const [submitted, setSubmitted] = useState<boolean | undefined>();
-  const [selectedAnswer, setSelectedAnswer] = useState<string | undefined>();
+  const [selectedAnswer, setSelectedAnswer] = useState<number | undefined>();
   const answered = typeof correct === "boolean";
   const correctAudio = (IS_BROWSER &&
     new Audio("/correct.wav")) as HTMLAudioElement;
@@ -32,7 +32,9 @@ export default function QuestionPage() {
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
     const answer = formData.get("answer") as string;
-    setSelectedAnswer(answer);
+    // Convert string to number for API consumption
+    const answerIndex = parseInt(answer, 10);
+    setSelectedAnswer(answerIndex);
     setSubmitted(true);
   }
 
@@ -124,7 +126,7 @@ export default function QuestionPage() {
 function QuestionForm(
   { question, selectedAnswer, answered, submit, submitted }: {
     question: Question;
-    selectedAnswer?: string;
+    selectedAnswer?: number;
     answered: boolean;
     submit: (e: SubmitEvent) => void;
     submitted?: boolean;
@@ -135,8 +137,8 @@ function QuestionForm(
       <input type="hidden" name="questionId" value={question.id} />
       <div class="text-lg mb-4">{question.question}</div>
       <div class="flex flex-col gap-2 w-full">
-        {question.choices.map((choice, i) => {
-          const isSelected = selectedAnswer === choice;
+        {question.choices.map((choice: string, i: number) => {
+          const isSelected = selectedAnswer === i;
           const isDisabled = answered;
 
           return (
@@ -145,7 +147,7 @@ function QuestionForm(
                 <input
                   type="radio"
                   class="radio mt-1"
-                  value={choice}
+                  value={i}
                   name="answer"
                   required
                   checked={isSelected}

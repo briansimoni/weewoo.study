@@ -1,9 +1,9 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Question2, QuestionStore2 } from "../../lib/question_store2.ts";
+import { Question, QuestionStore } from "../../lib/question_store.ts";
 import * as Icons from "../../icons/index.ts";
 
 interface Data {
-  questions: Question2[];
+  questions: Question[];
   scope: string;
   error?: string;
 }
@@ -22,9 +22,9 @@ export const handler: Handlers<Data> = {
         throw new Error("Invalid scope");
       }
 
-      const store = await QuestionStore2.make(undefined, scope);
+      const store = await QuestionStore.make(undefined, scope);
 
-      let questions: Question2[] = [];
+      let questions: Question[] = [];
 
       // Get optional category filter
       const category = url.searchParams.get("category");

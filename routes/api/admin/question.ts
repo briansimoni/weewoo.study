@@ -1,5 +1,5 @@
 import Zod from "zod";
-import { AppHandler, AppHandlers } from "../../_middleware.ts";
+import { AppHandlers } from "../../_middleware.ts";
 import { QuestionStore } from "../../../lib/question_store.ts";
 import {
   GetObjectCommand,
@@ -25,7 +25,7 @@ const s3Client = new S3Client({
 const createQuestionSchema = Zod.object({
   question: Zod.string().min(1),
   choices: Zod.array(Zod.string().min(1)),
-  correct_answer: Zod.string().min(1),
+  correct_answer: Zod.number().min(0).max(3),
   explanation: Zod.string().min(1),
   category: Zod.string(
     Zod.enum([
@@ -149,14 +149,19 @@ export const handler: AppHandlers = {
   async POST(req, _ctx) {
     const body = await req.json();
     const question = createQuestionSchema.parse(body);
-    if (!question.choices.includes(question.correct_answer)) {
+    if (
+      question.correct_answer < 0 ||
+      question.correct_answer >= question.choices.length
+    ) {
       return new Response(
-        JSON.stringify({ error: "Correct answer is not in the choices" }),
+        JSON.stringify({ error: "Correct answer index is out of bounds" }),
         { status: 400 },
       );
     }
-    const questionStore = await QuestionStore.make();
-    await questionStore.addQuestion(question);
+    // Default scope to "emt", this could be made configurable
+    const scope = "emt";
+    const questionStore = await QuestionStore.make(undefined, scope);
+    await questionStore.add(question);
     return new Response(JSON.stringify(question), { status: 200 });
   },
 };

@@ -5,7 +5,7 @@ import {
   assertRejects,
   assertStrictEquals,
 } from "jsr:@std/assert";
-import { QuestionStore2 } from "./question_store2.ts";
+import { QuestionStore } from "./question_store.ts";
 
 type QuestionInput = {
   question: string;
@@ -17,7 +17,7 @@ type QuestionInput = {
 
 Deno.test("can add question and retreive that same question", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv);
+  const store = await QuestionStore.make(kv);
 
   await store.add({
     question: "What is the capital of Spain?",
@@ -44,7 +44,7 @@ Deno.test("can add question and retreive that same question", async () => {
 
 Deno.test("adding a duplicate question fails", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv);
+  const store = await QuestionStore.make(kv);
 
   const question = {
     question: "What is the capital of Spain?",
@@ -68,7 +68,7 @@ Deno.test("adding a duplicate question fails", async () => {
 
 Deno.test("concurrent writes will succeed", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv);
+  const store = await QuestionStore.make(kv);
 
   const questions: QuestionInput[] = [];
   for (let i = 0; i < 30; i++) {
@@ -92,7 +92,7 @@ Deno.test("concurrent writes will succeed", async () => {
 
 Deno.test("adding two different questions to two different categories result in the correct count", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv);
+  const store = await QuestionStore.make(kv);
 
   await store.add({
     question: "Question One",
@@ -123,7 +123,7 @@ Deno.test("adding two different questions to two different categories result in 
 
 Deno.test("adding two questions and then deleting one of them works", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv);
+  const store = await QuestionStore.make(kv);
 
   await store.add({
     question: "Question One",
@@ -171,7 +171,7 @@ Deno.test("adding two questions and then deleting one of them works", async () =
 
 Deno.test("adding three questions and then deleting the second question works", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv);
+  const store = await QuestionStore.make(kv);
 
   await store.add({
     question: "Question One",
@@ -208,7 +208,7 @@ Deno.test("adding three questions and then deleting the second question works", 
 
 Deno.test("listing questions with and without category filter works", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv);
+  const store = await QuestionStore.make(kv);
 
   // Create questions in different categories
   const questions = [
@@ -284,7 +284,7 @@ Deno.test("listing questions with and without category filter works", async () =
 
 Deno.test("getQuestionById retrieves the correct question", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv);
+  const store = await QuestionStore.make(kv);
 
   // Create and add a test question
   const testQuestion = {
@@ -326,7 +326,7 @@ Deno.test("getQuestionById retrieves the correct question", async () => {
 
 Deno.test("can report issues with questions", async () => {
   const kv = await Deno.openKv(":memory:");
-  const store = await QuestionStore2.make(kv, "emt");
+  const store = await QuestionStore.make(kv, "emt");
 
   // Add a test question
   const q = await store.add({
@@ -373,7 +373,7 @@ Deno.test("can report issues with questions", async () => {
 Deno.test("can retrieve question reports", async () => {
   const kv = await Deno.openKv(":memory:");
   // Use a different scope to ensure isolation
-  const store = await QuestionStore2.make(kv, "medic");
+  const store = await QuestionStore.make(kv, "medic");
 
   // Add two questions
   const q1 = await store.add({

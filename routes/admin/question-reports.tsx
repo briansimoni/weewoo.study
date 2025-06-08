@@ -1,6 +1,5 @@
 import { PageProps } from "$fresh/server.ts";
 import { Handlers } from "$fresh/server.ts";
-import { Question, QuestionReport } from "../../lib/question_store.ts";
 import {
   Edit,
   FileText,
@@ -9,7 +8,8 @@ import {
   ThumbsDown,
   ThumbsUp,
 } from "../../icons/index.ts";
-import { QuestionStore2 } from "../../lib/question_store2.ts";
+import { QuestionReport, QuestionStore } from "../../lib/question_store.ts";
+import { Question } from "../../lib/question_store.ts";
 
 interface PageData {
   reports: (QuestionReport & { question?: Question })[];
@@ -17,7 +17,7 @@ interface PageData {
 
 export const handler: Handlers = {
   async GET(_req, ctx) {
-    const store = await QuestionStore2.make();
+    const store = await QuestionStore.make();
     const reports = await store.getQuestionReports();
 
     // Fetch the question details for each report
