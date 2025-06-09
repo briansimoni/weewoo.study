@@ -14,6 +14,7 @@ export interface Question {
 
 export interface QuestionReport {
   question_id: string;
+  report_id: string;
   thumbs: "up" | "down";
   reason: string;
   reported_at: string;
@@ -263,10 +264,114 @@ export class QuestionStore {
   }
 
   /**
-   * not implemented. It's hard to save the id correctly
+   * Updates an existing question. If the question text changes significantly enough to
+   * generate a new hash/ID, this method will handle removing the old question and adding
+   * the new one with all references updated properly.
+   *
+   * @param question The question to update with all fields including ID
+   * @returns The updated question, which may have a new ID if content changed significantly
    */
-  updateQuestion(_question: Question): Promise<Question> {
-    return Promise.reject(new Error("Not implemented"));
+  async updateQuestion(question: Question): Promise<Question> {
+    // First, verify the question exists
+    const oldQuestion = await this.getQuestionById(question.id);
+
+    const oldCategory = oldQuestion.category;
+    const newCategory = question.category;
+
+    // Calculate what the ID should be based on the new question text
+    const calculatedId = await this.hashQuestion(question.question);
+
+    // If the question text hasn't changed enough to affect the ID, we can do a simple update
+    if (calculatedId === question.id && oldCategory === newCategory) {
+      // The ID is the same, so we just need to update the content
+      const updatedQuestion = {
+        ...question,
+        updated_at: new Date().toISOString(),
+      };
+
+      for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+        const transaction = this.kv.atomic()
+          .set([this.scope, "question_content", question.id], updatedQuestion)
+          .set([
+            this.scope,
+            "category_question_content",
+            newCategory,
+            question.id,
+          ], updatedQuestion);
+
+        if ((await transaction.commit()).ok) {
+          return updatedQuestion;
+        }
+        await this.backoff(attempt);
+      }
+      throw new Error("Update failed after max retries");
+    }
+
+    // The hash/ID has changed or the category changed, so we need to do a more complex update
+    // This requires deleting the old question and adding a new one
+    const newQuestion = {
+      ...question,
+      id: calculatedId, // Use the new calculated ID
+      updated_at: new Date().toISOString(),
+    };
+
+    // Start a transaction for the complex case
+    for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+      try {
+        const questionReports = await this.getQuestionReports(question.id);
+
+        // Delete the old question
+        await this.delete(question.id);
+
+        // Now add the new question with the new ID/hash
+        // We have to modify this to work with our add method which expects certain fields to be omitted
+        const {
+          id: _id,
+          created_at: _created_at,
+          updated_at: _updated_at,
+          scope: _scope,
+          ...addableQuestion
+        } = newQuestion;
+        const addedQuestion = await this.add(addableQuestion);
+
+        // Update all reports to reference the new question ID
+        if (questionReports.length > 0) {
+          // Process each report entry
+
+          for (const report of questionReports) {
+            await this.kv.delete([
+              this.scope,
+              "question_reports",
+              question.id,
+              report.report_id,
+            ]);
+
+            // Create a new report with the updated question_id but preserving all other data
+            await this.kv.set(
+              [
+                this.scope,
+                "question_reports",
+                addedQuestion.id,
+                report.report_id,
+              ],
+              { ...report, question_id: addedQuestion.id },
+            );
+          }
+        }
+
+        return addedQuestion;
+      } catch (error: unknown) {
+        if (attempt >= this.maxRetries) {
+          const errorMessage = error instanceof Error
+            ? error.message
+            : String(error);
+          throw new Error(`Complex update failed: ${errorMessage}`);
+        }
+        await this.backoff(attempt);
+      }
+    }
+
+    throw new Error("Update failed after max retries");
   }
 
   async getQuestionById(questionId: string): Promise<Question> {
@@ -402,16 +507,18 @@ export class QuestionStore {
     await this.getQuestionById(question_id);
 
     const reportedAt = new Date().toISOString();
+    const reportId = crypto.randomUUID();
 
     // Save the report
     await this.kv.set(
-      [this.scope, "question_reports", question_id, reportedAt],
+      [this.scope, "question_reports", question_id, reportId],
       {
         question_id,
         thumbs,
         reason,
         reported_at: reportedAt,
         user_id,
+        report_id: reportId,
       },
     );
   }
@@ -420,13 +527,16 @@ export class QuestionStore {
    * Retrieves all question reports.
    * Each report includes the question_id, thumbs (up/down), reason, and timestamp.
    */
-  async getQuestionReports(): Promise<QuestionReport[]> {
+  async getQuestionReports(question_id?: string): Promise<QuestionReport[]> {
     const reports: QuestionReport[] = [];
-    const iter = this.kv.list({ prefix: [this.scope, "question_reports"] });
+    const key = [this.scope, "question_reports"];
+    if (question_id) {
+      key.push(question_id);
+    }
+    const iter = this.kv.list<QuestionReport>({ prefix: key });
 
     for await (const entry of iter) {
-      // Cast the value to QuestionReport type
-      const report = entry.value as QuestionReport;
+      const report = entry.value;
       reports.push(report);
     }
 

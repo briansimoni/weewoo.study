@@ -202,12 +202,13 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
                       </td>
                       <td>
                         <div class="flex gap-2">
-                          <button
+                          <a
+                            href={`/admin/questions/${question.id}`}
                             class="btn btn-square btn-ghost btn-xs"
                             title="View Details"
                           >
                             <Icons.Info className="w-4 h-4" />
-                          </button>
+                          </a>
                           <button
                             class="btn btn-square btn-ghost btn-xs"
                             title="Edit Question"

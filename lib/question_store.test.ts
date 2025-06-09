@@ -436,3 +436,192 @@ Deno.test("can retrieve question reports", async () => {
 
   kv.close();
 });
+
+Deno.test("simple question updates work", async () => {
+  const kv = await Deno.openKv(":memory:");
+  const store = await QuestionStore.make(kv);
+
+  // Add a test question
+  const addedQuestion = await store.add({
+    question: "What is the capital of Spain?",
+    choices: ["Barcelona", "Valencia", "Madrid", "Seville"],
+    correct_answer: 2,
+    explanation: "Madrid is the capital of Spain",
+    category: "Geography",
+  });
+
+  // Verify initial state
+  const originalQuestion = await store.getQuestionById(addedQuestion.id);
+  assertEquals(originalQuestion.explanation, "Madrid is the capital of Spain");
+  assertEquals(originalQuestion.category, "Geography");
+
+  // Make simple updates that shouldn't change the ID
+  // - Change explanation (doesn't affect ID)
+  // - Change correct_answer (doesn't affect ID)
+  const updatedQuestion = await store.updateQuestion({
+    ...originalQuestion,
+    explanation: "Madrid is the capital and largest city of Spain",
+    correct_answer: 2, // Same answer, just to show multiple fields can be updated
+  });
+
+  // Verify question was updated without changing the ID
+  assertEquals(
+    updatedQuestion.id,
+    originalQuestion.id,
+    "ID should not change for simple updates",
+  );
+  assertEquals(
+    updatedQuestion.explanation,
+    "Madrid is the capital and largest city of Spain",
+  );
+  assertEquals(
+    updatedQuestion.question,
+    originalQuestion.question,
+    "Question text should be unchanged",
+  );
+
+  // Verify we can retrieve the updated question
+  const retrievedQuestion = await store.getQuestionById(updatedQuestion.id);
+  assertEquals(
+    retrievedQuestion.explanation,
+    "Madrid is the capital and largest city of Spain",
+  );
+  assertEquals(retrievedQuestion.question, "What is the capital of Spain?");
+
+  kv.close();
+});
+
+Deno.test("complex question updates work", async () => {
+  const kv = await Deno.openKv(":memory:");
+  const store = await QuestionStore.make(kv);
+
+  // Add a test question
+  const addedQuestion = await store.add({
+    question: "What is the capital of Spain?",
+    choices: ["Barcelona", "Valencia", "Madrid", "Seville"],
+    correct_answer: 2,
+    explanation: "Madrid is the capital of Spain",
+    category: "Geography",
+  });
+
+  const originalId = addedQuestion.id;
+
+  // Make complex updates that will change the ID
+  // - Change the question text (affects ID)
+  // - Change category (requires reference updates)
+  const updatedQuestion = await store.updateQuestion({
+    ...addedQuestion,
+    question: "What city serves as the capital of Spain?", // Significant change to text
+    category: "World Geography", // Category change
+  });
+
+  // Verify the ID has changed due to question text changes
+  assert(
+    updatedQuestion.id !== originalId,
+    "ID should change when question text changes significantly",
+  );
+  assertEquals(
+    updatedQuestion.question,
+    "What city serves as the capital of Spain?",
+  );
+  assertEquals(updatedQuestion.category, "World Geography");
+
+  // Verify the old question is gone
+  await assertRejects(
+    () => store.getQuestionById(originalId),
+    Error,
+    "Question not found",
+    "Old question should be deleted",
+  );
+
+  // Verify we can retrieve the question by its new ID
+  const retrievedQuestion = await store.getQuestionById(updatedQuestion.id);
+  assertEquals(
+    retrievedQuestion.question,
+    "What city serves as the capital of Spain?",
+  );
+  assertEquals(retrievedQuestion.category, "World Geography");
+
+  // Verify indexes are updated by checking getRandom() works
+  const count = await store.size();
+  assertEquals(count, 1, "Should still have exactly one question");
+
+  const randomQuestion = await store.getRandom();
+  assertEquals(
+    randomQuestion.id,
+    updatedQuestion.id,
+    "Random question should return updated question",
+  );
+
+  kv.close();
+});
+
+Deno.test("when the question id changes the report ids also change", async () => {
+  const kv = await Deno.openKv(":memory:");
+  const store = await QuestionStore.make(kv);
+
+  // Add a test question
+  const question = await store.add({
+    question: "What is the capital of Spain?",
+    choices: ["Barcelona", "Valencia", "Madrid", "Seville"],
+    correct_answer: 2,
+    explanation: "Madrid is the capital of Spain",
+    category: "Geography",
+  });
+
+  const originalId = question.id;
+
+  // Add reports for the question
+  await store.reportQuestion({
+    question_id: originalId,
+    thumbs: "down",
+    reason: "The question is too easy",
+    user_id: "user123",
+  });
+
+  await store.reportQuestion({
+    question_id: originalId,
+    thumbs: "up",
+    reason: "Great question!",
+    user_id: "user456",
+  });
+
+  // Confirm reports exist for the original question ID
+  let reports = await store.getQuestionReports();
+  const oldQuestionReports = reports.filter((r) =>
+    r.question_id === originalId
+  );
+  assertEquals(oldQuestionReports.length, 2, "Should have 2 reports initially");
+
+  // Update the question with a significant change to cause ID change
+  const updatedQuestion = await store.updateQuestion({
+    ...question,
+    question: "Which city is Spain's capital?", // Different phrasing triggers new hash
+  });
+
+  // Verify question ID has changed
+  const newId = updatedQuestion.id;
+  assert(newId !== originalId, "Question ID should change");
+
+  // Verify no reports exist for the old ID
+  reports = await store.getQuestionReports(originalId);
+  assertEquals(reports.length, 0, "No reports should be linked to old ID");
+
+  // Verify all reports were migrated to the new ID
+  const newReports = await store.getQuestionReports(newId);
+  assertEquals(newReports.length, 2, "Both reports should be linked to new ID");
+
+  // Verify the content of migrated reports matches the original reports
+  const downReport = newReports.find((r) => r.thumbs === "down");
+  const upReport = newReports.find((r) => r.thumbs === "up");
+
+  assert(downReport, "Down report should exist");
+  assert(upReport, "Up report should exist");
+
+  assertEquals(downReport.reason, "The question is too easy");
+  assertEquals(upReport.reason, "Great question!");
+  assertEquals(downReport.user_id, "user123");
+  assertEquals(upReport.user_id, "user456");
+
+  kv.close();
+});

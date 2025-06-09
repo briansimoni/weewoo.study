@@ -7,6 +7,124 @@ info:
 servers:
   - url: /api
 paths:
+  /admin/questions/{id}:
+    get:
+      summary: Get a question by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Question found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Missing question ID
+        "404":
+          description: Question not found
+    put:
+      summary: Update a question
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionUpdate"
+      responses:
+        "200":
+          description: Question updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Invalid question data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Question not found
+    delete:
+      summary: Delete a question
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Question deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "400":
+          description: Missing question ID
+        "404":
+          description: Question not found
+        "500":
+          description: Server error
+  /admin/question:
+    get:
+      summary: Generate a question (based on prompt and optional chapter)
+      parameters:
+        - in: query
+          name: prompt
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: chapterId
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Generated question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Missing parameters or error generating question
+    post:
+      summary: Create a new question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionCreate"
+      responses:
+        "200":
+          description: Question created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Invalid question data
   /admin/product:
     post:
       summary: Import a product from Printful
@@ -383,6 +501,68 @@ paths:
               description: URL to redirect to
 components:
   schemas:
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        question:
+          type: string
+        choices:
+          type: array
+          items:
+            type: string
+        correct_answer:
+          type: number
+        explanation:
+          type: string
+        category:
+          type: string
+        scope:
+          type: string
+          enum: [emt, advanced, medic]
+    QuestionCreate:
+      type: object
+      required:
+        - question
+        - choices
+        - correct_answer
+        - explanation
+        - category
+      properties:
+        question:
+          type: string
+        choices:
+          type: array
+          items:
+            type: string
+        correct_answer:
+          type: number
+        explanation:
+          type: string
+        category:
+          type: string
+    QuestionUpdate:
+      type: object
+      properties:
+        question:
+          type: string
+        choices:
+          type: array
+          items:
+            type: string
+        correct_answer:
+          type: number
+        explanation:
+          type: string
+        category:
+          type: string
     Product:
       type: object
       properties:

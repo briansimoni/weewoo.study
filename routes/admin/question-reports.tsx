@@ -190,11 +190,11 @@ export default function QuestionReports({ data }: PageProps<PageData>) {
 
                         <div class="card-actions justify-end mt-2">
                           <a
-                            href={`/admin/question-generator?edit=${report.question_id}`}
+                            href={`/admin/questions/${report.question_id}`}
                             class="btn btn-primary btn-sm"
                           >
-                            <Edit className="w-4 h-4 mr-1" />
-                            Edit Question
+                            <FileText className="w-4 h-4 mr-1" />
+                            View Details
                           </a>
                         </div>
                       </>

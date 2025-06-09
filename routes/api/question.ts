@@ -14,10 +14,10 @@ export interface QuestionPostResponse {
 export const handler: AppHandlers = {
   // get a question
   async GET() {
-    // Default scope to "emt", this could be made configurable
-    const scope = "emt";
-    const questionStore = await QuestionStore.make(undefined, scope);
-    const question = await questionStore.getRandom();
+    const questionStore = await QuestionStore.make();
+    // remove the correct_answer field from the question so you can't just right-click and inspect to find the answer
+    const { correct_answer: _correct_answer, ...question } = await questionStore
+      .getRandom();
     return new Response(
       JSON.stringify(question),
       {

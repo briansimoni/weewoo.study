@@ -1,6 +1,9 @@
 import {
+  AlertCircle as AlertCircleIcon,
+  ArrowLeft as ArrowLeftIcon,
   BarChart as BarChartIcon,
   Bug as BugIcon,
+  CheckCircle as CheckCircleIcon,
   Dumbbell as DumbbellIcon,
   Edit as EditIcon,
   FileQuestion as FileQuestionIcon,
@@ -63,3 +66,10 @@ export const PanelRight = PanelRightIcon as ComponentType<
 >;
 export const FileText = FileTextIcon as ComponentType<{ className?: string }>;
 export const Library = LibraryIcon as ComponentType<{ className?: string }>;
+export const ArrowLeft = ArrowLeftIcon as ComponentType<{ className?: string }>;
+export const AlertCircle = AlertCircleIcon as ComponentType<
+  { className?: string }
+>;
+export const CheckCircle = CheckCircleIcon as ComponentType<
+  { className?: string }
+>;
