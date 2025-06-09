@@ -5,6 +5,7 @@ import {
   QuestionStore,
 } from "../../../lib/question_store.ts";
 import * as Icons from "../../../icons/index.ts";
+import QuestionEditor from "../../../islands/QuestionEditor.tsx";
 
 interface Data {
   question: Question | null;
@@ -12,7 +13,7 @@ interface Data {
   error?: string;
 }
 
-export const handler: Handlers<Data> = {
+export const handler: Handlers = {
   async GET(_req, ctx) {
     try {
       const questionId = ctx.params.id;
@@ -120,6 +121,23 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                         {new Date(question.created_at).toLocaleString()}
                       </p>
                     </div>
+                  </div>
+
+                  {/* Raw JSON View */}
+                  <div>
+                    <details class="collapse collapse-arrow bg-base-100">
+                      <summary class="collapse-title font-medium">
+                        <div class="flex items-center gap-2">
+                          <Icons.FileText className="w-4 h-4" />
+                          Raw JSON Data
+                        </div>
+                      </summary>
+                      <div class="collapse-content">
+                        <pre class="bg-base-300 p-4 rounded-lg overflow-x-auto text-xs">
+                          {JSON.stringify(question, null, 2)}
+                        </pre>
+                      </div>
+                    </details>
                   </div>
 
                   <div class="divider"></div>
@@ -241,7 +259,11 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                     >
                       Back to List
                     </a>
-                    <button type="button" class="btn btn-primary">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      id="openEditModalBtn"
+                    >
                       <Icons.Edit className="w-4 h-4 mr-2" />
                       Edit Question
                     </button>
@@ -259,6 +281,9 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
             </div>
           )}
       </div>
+
+      {/* Question Editor island */}
+      {question && <QuestionEditor question={question} />}
     </div>
   );
 }

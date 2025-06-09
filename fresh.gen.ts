@@ -28,6 +28,7 @@ import * as $api_admin_product_id_variant_variant_id_create_stripe_product from 
 import * as $api_admin_product_id_variant_variant_id_update_price from "./routes/api/admin/product/[id]/variant/[variant_id]/update-price.ts";
 import * as $api_admin_product_id_variants from "./routes/api/admin/product/[id]/variants.ts";
 import * as $api_admin_question from "./routes/api/admin/question.ts";
+import * as $api_admin_questions_id_ from "./routes/api/admin/questions/[id].ts";
 import * as $api_checkout from "./routes/api/checkout.ts";
 import * as $api_preferences from "./routes/api/preferences.ts";
 import * as $api_printful_webhook from "./routes/api/printful_webhook.ts";
@@ -61,6 +62,7 @@ import * as $ProductCard from "./islands/ProductCard.tsx";
 import * as $ProductDetails from "./islands/ProductDetails.tsx";
 import * as $Profile from "./islands/Profile.tsx";
 import * as $Question from "./islands/Question.tsx";
+import * as $QuestionEditor from "./islands/QuestionEditor.tsx";
 import * as $StreakIndicator from "./islands/StreakIndicator.tsx";
 import * as $ThemeController from "./islands/ThemeController.tsx";
 import * as $admin_ProductDetail from "./islands/admin/ProductDetail.tsx";
@@ -100,6 +102,7 @@ const manifest = {
     "./routes/api/admin/product/[id]/variants.ts":
       $api_admin_product_id_variants,
     "./routes/api/admin/question.ts": $api_admin_question,
+    "./routes/api/admin/questions/[id].ts": $api_admin_questions_id_,
     "./routes/api/checkout.ts": $api_checkout,
     "./routes/api/preferences.ts": $api_preferences,
     "./routes/api/printful_webhook.ts": $api_printful_webhook,
@@ -135,6 +138,7 @@ const manifest = {
     "./islands/ProductDetails.tsx": $ProductDetails,
     "./islands/Profile.tsx": $Profile,
     "./islands/Question.tsx": $Question,
+    "./islands/QuestionEditor.tsx": $QuestionEditor,
     "./islands/StreakIndicator.tsx": $StreakIndicator,
     "./islands/ThemeController.tsx": $ThemeController,
     "./islands/admin/ProductDetail.tsx": $admin_ProductDetail,
