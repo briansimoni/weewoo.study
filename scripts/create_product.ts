@@ -2,6 +2,7 @@ import { parse } from "@std/csv";
 import Stripe from "npm:stripe";
 import "$std/dotenv/load.ts";
 import { ProductStore } from "../lib/product_store.ts";
+import { dollarsToCents } from "../lib/util.ts";
 
 async function getBaseProducts() {
   try {
@@ -119,7 +120,7 @@ const main = async () => {
       // create the price on the product
       const price = await stripeClient.prices.create({
         product: stripeProduct.id,
-        unit_amount: Math.trunc(parseFloat(variant.price) * 100),
+        unit_amount: dollarsToCents(variant.price),
         currency: "usd",
         billing_scheme: "per_unit",
       });

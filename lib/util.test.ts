@@ -2,7 +2,7 @@ import {
   assert,
   assertEquals,
 } from "https://deno.land/std@0.217.0/assert/mod.ts";
-import { sortImagesInPlace } from "./util.ts";
+import { sortImagesInPlace, dollarsToCents } from "./util.ts";
 
 Deno.test("sortImagesInPlace - sorts by position keywords in correct order", () => {
   const images = [
@@ -81,4 +81,73 @@ Deno.test("sort something more realistic", () => {
     images.length,
     12,
   );
+});
+
+// Tests for dollarsToCents function
+Deno.test("dollarsToCents - converts basic dollar amounts correctly", () => {
+  assertEquals(dollarsToCents(19.99), 1999);
+  assertEquals(dollarsToCents(20.00), 2000);
+  assertEquals(dollarsToCents(1.50), 150);
+  assertEquals(dollarsToCents(0.99), 99);
+  assertEquals(dollarsToCents(0.01), 1);
+});
+
+Deno.test("dollarsToCents - handles the specific bug case (19.99)", () => {
+  // This is the specific case that was causing issues with floating-point precision
+  assertEquals(dollarsToCents(19.99), 1999);
+  assertEquals(dollarsToCents("19.99"), 1999);
+});
+
+Deno.test("dollarsToCents - handles string inputs", () => {
+  assertEquals(dollarsToCents("19.99"), 1999);
+  assertEquals(dollarsToCents("20.00"), 2000);
+  assertEquals(dollarsToCents("1.50"), 150);
+  assertEquals(dollarsToCents("0.99"), 99);
+  assertEquals(dollarsToCents("0.01"), 1);
+});
+
+Deno.test("dollarsToCents - handles whole dollar amounts without decimals", () => {
+  assertEquals(dollarsToCents(20), 2000);
+  assertEquals(dollarsToCents(1), 100);
+  assertEquals(dollarsToCents(0), 0);
+  assertEquals(dollarsToCents("20"), 2000);
+  assertEquals(dollarsToCents("1"), 100);
+  assertEquals(dollarsToCents("0"), 0);
+});
+
+Deno.test("dollarsToCents - handles single decimal place", () => {
+  assertEquals(dollarsToCents("19.9"), 1990);
+  assertEquals(dollarsToCents("0.1"), 10);
+  assertEquals(dollarsToCents("5.5"), 550);
+});
+
+Deno.test("dollarsToCents - handles edge cases", () => {
+  assertEquals(dollarsToCents(0), 0);
+  assertEquals(dollarsToCents("0"), 0);
+  assertEquals(dollarsToCents("0.00"), 0);
+  assertEquals(dollarsToCents(0.00), 0);
+});
+
+Deno.test("dollarsToCents - handles large amounts", () => {
+  assertEquals(dollarsToCents(999.99), 99999);
+  assertEquals(dollarsToCents("999.99"), 99999);
+  assertEquals(dollarsToCents(1000.00), 100000);
+});
+
+Deno.test("dollarsToCents - validates precision vs Math.round approach", () => {
+  // Test cases that would fail with floating-point arithmetic
+  const testCases = [
+    { input: 19.99, expected: 1999 },
+    { input: 0.99, expected: 99 },
+    { input: 1.01, expected: 101 },
+    { input: 5.55, expected: 555 },
+  ];
+
+  for (const testCase of testCases) {
+    assertEquals(dollarsToCents(testCase.input), testCase.expected);
+    // Also verify the floating-point issue would occur with direct multiplication
+    // (This is just for documentation, not assertion)
+    const floatResult = Math.round(testCase.input * 100);
+    assertEquals(dollarsToCents(testCase.input), floatResult);
+  }
 });

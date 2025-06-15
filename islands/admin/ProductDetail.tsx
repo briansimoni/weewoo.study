@@ -357,9 +357,7 @@ export default function ProductDetail(
                   </button>
                   <ZipImageUploader
                     productId={storedProduct.printful_id}
-                    onImagesExtracted={(images) => {
-                      // Handle extracted images here
-                      console.log("Extracted images:", images);
+                    onImagesExtracted={() => {
                       setIsZipUploaderOpen(false);
                     }}
                   />

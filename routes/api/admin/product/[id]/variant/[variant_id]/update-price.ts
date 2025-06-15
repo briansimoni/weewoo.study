@@ -2,8 +2,8 @@ import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../../../lib/product_store.ts";
 import Stripe from "npm:stripe";
 import "$std/dotenv/load.ts";
-import { PrintfulApiClient } from "../../../../../../../lib/client/printful.ts";
 import { z } from "npm:zod";
+import { dollarsToCents } from "../../../../../../../lib/util.ts";
 
 export const handler: Handlers = {
   /**
@@ -107,7 +107,7 @@ export const handler: Handlers = {
       // Create a new price for the product
       const price = await stripe.prices.create({
         product: variant.stripe_product_id,
-        unit_amount: Math.trunc(Number(newPrice) * 100), // Convert to cents
+        unit_amount: dollarsToCents(newPrice),
         currency: "usd",
         billing_scheme: "per_unit",
       });

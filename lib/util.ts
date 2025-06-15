@@ -30,3 +30,30 @@ export function sortImagesInPlace(images: string[]) {
     ...otherImages,
   );
 }
+
+/**
+ * Converts a dollar amount to cents with precise arithmetic
+ * Avoids floating-point precision issues by using string manipulation
+ * @param dollars - Dollar amount as number or string (e.g., 19.99)
+ * @returns Integer cents amount (e.g., 1999)
+ */
+export function dollarsToCents(dollars: number | string): number {
+  const dollarString = dollars.toString();
+  
+  // Handle cases where there's no decimal point
+  if (!dollarString.includes('.')) {
+    return parseInt(dollarString) * 100;
+  }
+  
+  // Split on decimal point
+  const [wholePart, decimalPart] = dollarString.split('.');
+  
+  // Ensure we have exactly 2 decimal places
+  const normalizedDecimalPart = (decimalPart + '00').substring(0, 2);
+  
+  // Convert to integer cents
+  const wholePartCents = parseInt(wholePart || '0') * 100;
+  const decimalPartCents = parseInt(normalizedDecimalPart);
+  
+  return wholePartCents + decimalPartCents;
+}
