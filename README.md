@@ -130,3 +130,7 @@ https://docs.google.com/spreadsheets/d/1Tzcpc9YNc6sHVZK_6PAjQCBgEfKiQr9mZAZdaG4N
 Remeber to rotate!
 
 expires May 16, 2027
+
+### NREMT information about the real exam
+
+https://www.nremt.org/Pages/Examinations/EMR-and-EMT-Certification-Examinations

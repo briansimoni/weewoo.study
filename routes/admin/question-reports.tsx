@@ -1,11 +1,6 @@
 import { PageProps } from "$fresh/server.ts";
 import { Handlers } from "$fresh/server.ts";
 import {
-  Question,
-  QuestionReport,
-  QuestionStore,
-} from "../../lib/question_store.ts";
-import {
   Edit,
   FileText,
   Info,
@@ -13,6 +8,8 @@ import {
   ThumbsDown,
   ThumbsUp,
 } from "../../icons/index.ts";
+import { QuestionReport, QuestionStore } from "../../lib/question_store.ts";
+import { Question } from "../../lib/question_store.ts";
 
 interface PageData {
   reports: (QuestionReport & { question?: Question })[];
@@ -27,7 +24,7 @@ export const handler: Handlers = {
     const reportsWithQuestions = await Promise.all(
       reports.map(async (report: QuestionReport) => {
         try {
-          const question = await store.getQuestion(report.question_id);
+          const question = await store.getQuestionById(report.question_id);
           return { ...report, question };
         } catch (error) {
           console.error(
@@ -157,7 +154,10 @@ export default function QuestionReports({ data }: PageProps<PageData>) {
                           {new Date(report.reported_at).toLocaleString()}
                           {report.user_id && (
                             <span class="ml-2">
-                              by User: <span class="font-mono text-secondary">{report.user_id}</span>
+                              by User:{" "}
+                              <span class="font-mono text-secondary">
+                                {report.user_id}
+                              </span>
                             </span>
                           )}
                         </div>
@@ -190,11 +190,11 @@ export default function QuestionReports({ data }: PageProps<PageData>) {
 
                         <div class="card-actions justify-end mt-2">
                           <a
-                            href={`/admin/question-generator?edit=${report.question_id}`}
+                            href={`/admin/questions/${report.question_id}`}
                             class="btn btn-primary btn-sm"
                           >
-                            <Edit className="w-4 h-4 mr-1" />
-                            Edit Question
+                            <FileText className="w-4 h-4 mr-1" />
+                            View Details
                           </a>
                         </div>
                       </>

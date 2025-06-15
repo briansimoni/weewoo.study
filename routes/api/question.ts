@@ -7,7 +7,7 @@ import { z } from "npm:zod";
 export interface QuestionPostResponse {
   question: Question;
   correct: boolean;
-  selectedAnswer: string;
+  selectedAnswer: number;
   streak?: Streak;
 }
 
@@ -15,7 +15,9 @@ export const handler: AppHandlers = {
   // get a question
   async GET() {
     const questionStore = await QuestionStore.make();
-    const question = await questionStore.getRandomQuestion();
+    // remove the correct_answer field from the question so you can't just right-click and inspect to find the answer
+    const { correct_answer: _correct_answer, ...question } = await questionStore
+      .getRandom();
     return new Response(
       JSON.stringify(question),
       {
@@ -33,12 +35,14 @@ export const handler: AppHandlers = {
     const body = await req.json();
     const schema = z.object({
       questionId: z.string(),
-      answer: z.string(),
+      answer: z.number(),
     });
     const submission = schema.parse(body);
     const { questionId, answer } = submission;
-    const question = await questionStore.getQuestion(questionId);
-    const isCorrect = question?.correct_answer === answer;
+    const question = await questionStore.getQuestionById(questionId);
+    // In QuestionStore2, correct_answer is a number index
+    const selectedAnswerIndex = answer;
+    const isCorrect = question.correct_answer === selectedAnswerIndex;
 
     let streak: Streak | undefined;
 
