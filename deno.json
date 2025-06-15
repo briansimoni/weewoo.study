@@ -30,6 +30,7 @@
     "cron-time-generator": "npm:cron-time-generator@^2.0.3",
     "dayjs": "npm:dayjs@^1.11.13",
     "dayjs-plugin-utc": "npm:dayjs-plugin-utc@^0.1.2",
+    "jszip": "npm:jszip@^3.10.1",
     "preact": "npm:preact@10.26.4",
     "preact/signals": "npm:@preact/signals@2.0.1",
     "lucide-preact": "npm:lucide-preact@^0.477.0",

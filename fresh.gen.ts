@@ -21,6 +21,7 @@ import * as $api_admin_book_content from "./routes/api/admin/book-content.ts";
 import * as $api_admin_chapter_content from "./routes/api/admin/chapter-content.ts";
 import * as $api_admin_chapters from "./routes/api/admin/chapters.ts";
 import * as $api_admin_product from "./routes/api/admin/product.ts";
+import * as $api_admin_product_id_images from "./routes/api/admin/product/[id]/images.ts";
 import * as $api_admin_product_id_index from "./routes/api/admin/product/[id]/index.ts";
 import * as $api_admin_product_id_toggle_active from "./routes/api/admin/product/[id]/toggle-active.ts";
 import * as $api_admin_product_id_variant_variant_id_ from "./routes/api/admin/product/[id]/variant/[variant_id].ts";
@@ -66,6 +67,7 @@ import * as $QuestionEditor from "./islands/QuestionEditor.tsx";
 import * as $StreakIndicator from "./islands/StreakIndicator.tsx";
 import * as $ThemeController from "./islands/ThemeController.tsx";
 import * as $admin_ProductDetail from "./islands/admin/ProductDetail.tsx";
+import * as $admin_ZipImageUploader from "./islands/admin/ZipImageUploader.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -90,6 +92,7 @@ const manifest = {
     "./routes/api/admin/chapter-content.ts": $api_admin_chapter_content,
     "./routes/api/admin/chapters.ts": $api_admin_chapters,
     "./routes/api/admin/product.ts": $api_admin_product,
+    "./routes/api/admin/product/[id]/images.ts": $api_admin_product_id_images,
     "./routes/api/admin/product/[id]/index.ts": $api_admin_product_id_index,
     "./routes/api/admin/product/[id]/toggle-active.ts":
       $api_admin_product_id_toggle_active,
@@ -142,6 +145,7 @@ const manifest = {
     "./islands/StreakIndicator.tsx": $StreakIndicator,
     "./islands/ThemeController.tsx": $ThemeController,
     "./islands/admin/ProductDetail.tsx": $admin_ProductDetail,
+    "./islands/admin/ZipImageUploader.tsx": $admin_ZipImageUploader,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

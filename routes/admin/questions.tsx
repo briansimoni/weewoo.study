@@ -9,7 +9,7 @@ interface Data {
 }
 
 const allowedScopes = ["emt", "advanced", "medic"] as const;
-type Scope = typeof allowedScopes[number];
+type Scope = (typeof allowedScopes)[number];
 
 export const handler: Handlers<Data> = {
   async GET(req, ctx) {
@@ -17,12 +17,12 @@ export const handler: Handlers<Data> = {
       const url = new URL(req.url);
 
       // Get scope from query param, defaulting to "emt"
-      const scope = url.searchParams.get("scope") as Scope || "emt";
+      const scope = (url.searchParams.get("scope") as Scope) || "emt";
       if (!allowedScopes.includes(scope)) {
         throw new Error("Invalid scope");
       }
 
-      const store = await QuestionStore.make(undefined, scope);
+      const store = await QuestionStore.make();
 
       let questions: Question[] = [];
 
@@ -35,15 +35,15 @@ export const handler: Handlers<Data> = {
       }
 
       // Sort questions by creation date (newest first)
-      questions.sort((a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      questions.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
 
       return ctx.render({ questions, scope });
     } catch (error) {
-      const errorMessage = error instanceof Error
-        ? error.message
-        : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       return ctx.render({ questions: [], scope: "emt", error: errorMessage });
     }
   },
@@ -134,9 +134,9 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
                   {categories.map((cat) => (
                     <li>
                       <a
-                        href={`/admin/questions?scope=${scope}&category=${
-                          encodeURIComponent(cat)
-                        }`}
+                        href={`/admin/questions?scope=${scope}&category=${encodeURIComponent(
+                          cat
+                        )}`}
                       >
                         {cat}
                       </a>
@@ -152,77 +152,73 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
           </div>
         </div>
 
-        {questions.length === 0
-          ? (
-            <div class="text-center p-12">
-              <p class="text-xl text-base-content/60">No questions found</p>
-            </div>
-          )
-          : (
-            <div class="overflow-x-auto">
-              <table class="table table-zebra w-full">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Question</th>
-                    <th>Category</th>
-                    <th>Created</th>
-                    <th>Actions</th>
+        {questions.length === 0 ? (
+          <div class="text-center p-12">
+            <p class="text-xl text-base-content/60">No questions found</p>
+          </div>
+        ) : (
+          <div class="overflow-x-auto">
+            <table class="table table-zebra w-full">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Question</th>
+                  <th>Category</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {questions.map((question) => (
+                  <tr key={question.id}>
+                    <td class="font-mono text-sm">
+                      {question.id.substring(0, 8)}...
+                    </td>
+                    <td class="max-w-md">
+                      <div class="font-medium">{question.question}</div>
+                      <div class="text-sm text-base-content/70">
+                        {question.choices.map((choice, i) => (
+                          <span
+                            class={`mr-2 ${
+                              i === question.correct_answer
+                                ? "font-bold text-success"
+                                : ""
+                            }`}
+                          >
+                            {String.fromCharCode(65 + i)}: {choice}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge badge-ghost">{question.category}</span>
+                    </td>
+                    <td class="text-sm">
+                      {new Date(question.created_at).toLocaleDateString()}
+                    </td>
+                    <td>
+                      <div class="flex gap-2">
+                        <a
+                          href={`/admin/questions/${question.id}`}
+                          class="btn btn-square btn-ghost btn-xs"
+                          title="View Details"
+                        >
+                          <Icons.Info className="w-4 h-4" />
+                        </a>
+                        <button
+                          class="btn btn-square btn-ghost btn-xs"
+                          title="Edit Question"
+                        >
+                          <Icons.Edit className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {questions.map((question) => (
-                    <tr key={question.id}>
-                      <td class="font-mono text-sm">
-                        {question.id.substring(0, 8)}...
-                      </td>
-                      <td class="max-w-md">
-                        <div class="font-medium">{question.question}</div>
-                        <div class="text-sm text-base-content/70">
-                          {question.choices.map((choice, i) => (
-                            <span
-                              class={`mr-2 ${
-                                i === question.correct_answer
-                                  ? "font-bold text-success"
-                                  : ""
-                              }`}
-                            >
-                              {String.fromCharCode(65 + i)}: {choice}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td>
-                        <span class="badge badge-ghost">
-                          {question.category}
-                        </span>
-                      </td>
-                      <td class="text-sm">
-                        {new Date(question.created_at).toLocaleDateString()}
-                      </td>
-                      <td>
-                        <div class="flex gap-2">
-                          <a
-                            href={`/admin/questions/${question.id}`}
-                            class="btn btn-square btn-ghost btn-xs"
-                            title="View Details"
-                          >
-                            <Icons.Info className="w-4 h-4" />
-                          </a>
-                          <button
-                            class="btn btn-square btn-ghost btn-xs"
-                            title="Edit Question"
-                          >
-                            <Icons.Edit className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
