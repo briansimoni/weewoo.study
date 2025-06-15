@@ -22,7 +22,7 @@ export const handler: Handlers<Data> = {
         throw new Error("Invalid scope");
       }
 
-      const store = await QuestionStore.make(undefined, scope);
+      const store = await QuestionStore.make();
 
       let questions: Question[] = [];
 

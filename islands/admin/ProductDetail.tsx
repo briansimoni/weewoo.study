@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { PrintfulProductVariant } from "../../lib/client/printful.ts";
 import { Product, ProductVariant } from "../../lib/product_store.ts";
 import { JSX } from "preact";
+import ZipImageUploader from "./ZipImageUploader.tsx";
 
 interface ProductDetailProps {
   productDetails: {
@@ -32,6 +33,7 @@ export default function ProductDetail(
   const [productJson, setProductJson] = useState("");
   const [jsonError, setJsonError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isZipUploaderOpen, setIsZipUploaderOpen] = useState(false);
 
   // Color management states
   const [isColorDialogOpen, setIsColorDialogOpen] = useState(false);
@@ -340,6 +342,30 @@ export default function ProductDetail(
                 </div>
               </div>
             )}
+
+            {/* Zip Image Uploader */}
+            {isZipUploaderOpen && (
+              <dialog id="zip-uploader-modal" className="modal modal-open">
+                <div className="modal-box">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setIsZipUploaderOpen(false)}
+                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  >
+                    ✕
+                  </button>
+                  <ZipImageUploader
+                    productId={storedProduct.printful_id}
+                    onImagesExtracted={(images) => {
+                      // Handle extracted images here
+                      console.log("Extracted images:", images);
+                      setIsZipUploaderOpen(false);
+                    }}
+                  />
+                </div>
+              </dialog>
+            )}
           </div>
         )
         : <h1 className="text-3xl font-bold mb-6">{sync_product.name}</h1>}
@@ -561,6 +587,15 @@ export default function ProductDetail(
                     }}
                   >
                     Delete Product
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full bg-accent text-white py-2 px-4 rounded-md cursor-pointer"
+                    onClick={() => {
+                      setIsZipUploaderOpen(true);
+                    }}
+                  >
+                    Upload Images
                   </button>
                 </>
               )}

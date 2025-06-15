@@ -80,9 +80,10 @@ resource "aws_cloudfront_origin_access_control" "static_assets" {
 # CloudFront distribution
 resource "aws_cloudfront_distribution" "s3_distribution" {
   enabled             = true
-  is_ipv6_enabled    = true
+  is_ipv6_enabled     = true
   default_root_object = "index.html"
   price_class         = "PriceClass_100"
+  comment             = "weewoo static assets distribution"
 
   origin {
     domain_name              = aws_s3_bucket.static_assets.bucket_regional_domain_name
