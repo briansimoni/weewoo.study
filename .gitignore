@@ -27,3 +27,7 @@ book.txt
 book_chapters/
 
 coverage
+
+scripts/question_generation_workflow/output
+scripts/question_generation_workflow/config
+scripts/question_generation_workflow/.env

@@ -4,8 +4,10 @@
     "jsr:@deno-library/logger@*": "1.2.0",
     "jsr:@deno-library/logger@^1.1.9": "1.2.0",
     "jsr:@luca/esbuild-deno-loader@0.11.0": "0.11.0",
+    "jsr:@openai/openai@*": "4.102.0",
+    "jsr:@openai/openai@^4.102.0": "4.102.0",
     "jsr:@std/assert@*": "1.0.13",
-    "jsr:@std/assert@^1.0.12": "1.0.12",
+    "jsr:@std/assert@^1.0.12": "1.0.13",
     "jsr:@std/assert@^1.0.13": "1.0.13",
     "jsr:@std/async@^1.0.12": "1.0.12",
     "jsr:@std/bytes@^1.0.2": "1.0.5",
@@ -60,6 +62,7 @@
     "npm:winston-cloudwatch@^6.2.0": "6.3.0_@aws-sdk+client-cloudwatch-logs@3.525.0__@aws-sdk+credential-provider-node@3.525.0_winston@3.17.0",
     "npm:winston@^3.12.0": "3.17.0",
     "npm:zod@*": "3.24.3",
+    "npm:zod@3": "3.24.3",
     "npm:zod@^3.24.2": "3.24.3"
   },
   "jsr": {
@@ -76,6 +79,12 @@
         "jsr:@std/bytes@^1.0.2",
         "jsr:@std/encoding@^1.0.5",
         "jsr:@std/path@^1.0.6"
+      ]
+    },
+    "@openai/openai@4.102.0": {
+      "integrity": "ea5201bc5c8a696d3a5139a9cd2252e3ab9b2b880769a9cd7f05602ea1a02acf",
+      "dependencies": [
+        "npm:zod@3"
       ]
     },
     "@std/assert@1.0.12": {
@@ -4106,6 +4115,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@deno-library/logger@^1.1.9",
+      "jsr:@openai/openai@^4.102.0",
       "jsr:@std/assert@^1.0.13",
       "jsr:@std/csv@^1.0.5",
       "jsr:@std/http@^1.0.13",

@@ -1,0 +1,62 @@
+[
+  {
+    "category": "Patient Assessment",
+    "question": "During your primary assessment of a 45-year-old male patient who fell from a ladder, you note that he is conscious but appears confused. His airway is clear, breathing is adequate, and you find a weak radial pulse. What should be your next priority?",
+    "choices": [
+      "Perform a detailed secondary assessment",
+      "Begin spinal immobilization procedures",
+      "Administer supplemental oxygen",
+      "Check for additional injuries"
+    ],
+    "correct_answer": 1,
+    "explanation": "Spinal immobilization should be a priority for any patient with a mechanism of injury suggesting possible spinal trauma, especially when the patient shows signs of altered mental status."
+  },
+  {
+    "category": "Airway Management",
+    "question": "You respond to a call for an unconscious 25-year-old female. Upon arrival, you find the patient supine and unresponsive. Her breathing is shallow at 8 breaths per minute. What is your immediate priority?",
+    "choices": [
+      "Check the patient's pulse",
+      "Open the airway using head-tilt, chin-lift",
+      "Begin bag-mask ventilations",
+      "Place the patient in the recovery position"
+    ],
+    "correct_answer": 1,
+    "explanation": "Opening the airway is the first priority in an unconscious patient. The head-tilt, chin-lift maneuver is appropriate when no spinal injury is suspected."
+  },
+  {
+    "category": "Cardiovascular Emergencies",
+    "question": "A 62-year-old male complains of crushing chest pain that radiates to his left arm. He is diaphoretic and appears anxious. His vital signs are: BP 140/90, pulse 110 and irregular, respirations 20. What should you suspect?",
+    "choices": [
+      "Angina pectoris",
+      "Acute myocardial infarction",
+      "Aortic dissection",
+      "Pulmonary embolism"
+    ],
+    "correct_answer": 1,
+    "explanation": "The presentation of crushing chest pain radiating to the left arm, diaphoresis, and anxiety in a middle-aged male strongly suggests acute myocardial infarction."
+  },
+  {
+    "category": "Respiratory Emergencies",
+    "question": "You are treating a 28-year-old female with a history of asthma who is experiencing severe respiratory distress. She can only speak in one-word answers and has audible wheezing. What medication should you consider administering?",
+    "choices": [
+      "Epinephrine auto-injector",
+      "Nitroglycerin",
+      "Albuterol inhaler",
+      "Activated charcoal"
+    ],
+    "correct_answer": 2,
+    "explanation": "Albuterol is a bronchodilator that can help relieve bronchospasm in asthma patients. However, EMTs should follow local protocols for medication administration."
+  },
+  {
+    "category": "Trauma Overview",
+    "question": "At the scene of a motor vehicle collision, you find a patient who was unrestrained and hit the steering wheel. The patient complains of chest pain and difficulty breathing. You notice paradoxical chest wall movement. What injury should you suspect?",
+    "choices": [
+      "Pneumothorax",
+      "Hemothorax",
+      "Flail chest",
+      "Cardiac tamponade"
+    ],
+    "correct_answer": 2,
+    "explanation": "Paradoxical chest wall movement (inward movement during inspiration) is a classic sign of flail chest, which occurs when multiple adjacent ribs are fractured in multiple places."
+  }
+]
