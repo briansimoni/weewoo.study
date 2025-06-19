@@ -224,7 +224,13 @@ async function runStep(step: string) {
 async function runFullWorkflow() {
   console.log("🚀 Starting full question generation workflow...");
 
-  const steps = ["generate", "optimize", "similarity", "difficulty", "format", "upload"];
+  const steps = [
+    "generate",
+    /*"optimize",*/ "similarity",
+    "difficulty",
+    "format",
+    "upload",
+  ];
 
   for (const step of steps) {
     await runStep(step);

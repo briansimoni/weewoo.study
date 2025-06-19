@@ -1,4 +1,4 @@
-import { useState, useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { AdminCreateQuestionResponse } from "../routes/api/admin/question.ts";
 
 interface Chapter {
@@ -12,7 +12,7 @@ const defaultPrompt =
 Zod.object({
   question: Zod.string().min(1),
   choices: Zod.array(Zod.string().min(1)),
-  correct_answer: Zod.string().min(1),
+  correct_answer: Zod.number().min(),
   explanation: Zod.string().min(1),
   category: Zod.string(
     Zod.enum([
@@ -84,7 +84,7 @@ export default function AdminQuestionGenerator() {
     setError(null);
 
     try {
-      const response = await fetch('/api/admin/chapters');
+      const response = await fetch("/api/admin/chapters");
       if (!response.ok) throw new Error("Failed to load chapters");
       const data = await response.json();
       setChapters(data);
@@ -103,12 +103,12 @@ export default function AdminQuestionGenerator() {
     try {
       // Build URL with parameters
       const params = new URLSearchParams();
-      params.append('prompt', prompt);
-      
+      params.append("prompt", prompt);
+
       if (selectedChapter) {
-        params.append('chapterId', selectedChapter);
+        params.append("chapterId", selectedChapter);
       }
-      
+
       const response = await fetch(
         `/api/admin/question?${params.toString()}`,
         {
@@ -157,16 +157,21 @@ export default function AdminQuestionGenerator() {
         {/* Chapter Selection */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-xl font-semibold">Select Chapter Reference</span>
+            <span className="label-text text-xl font-semibold">
+              Select Chapter Reference
+            </span>
           </label>
           <div className="flex items-center gap-4">
-            <select 
+            <select
               className="select select-bordered w-full rounded-lg shadow-md"
               value={selectedChapter}
-              onChange={(e) => setSelectedChapter((e.target as HTMLSelectElement).value)}
+              onChange={(e) =>
+                setSelectedChapter((e.target as HTMLSelectElement).value)}
               disabled={loadingChapters}
             >
-              <option value="">No chapter reference (use general knowledge)</option>
+              <option value="">
+                No chapter reference (use general knowledge)
+              </option>
               {chapters.map((chapter) => (
                 <option key={chapter.id} value={chapter.id}>
                   Chapter {chapter.id}: {chapter.title}
@@ -178,11 +183,19 @@ export default function AdminQuestionGenerator() {
             )}
           </div>
           <div className="mt-2 text-sm">
-            {selectedChapter ? (
-              <span className="text-success">Questions will be generated using content from Chapter {selectedChapter}</span>
-            ) : (
-              <span className="text-info">No specific chapter selected. Questions will be based on general knowledge.</span>
-            )}
+            {selectedChapter
+              ? (
+                <span className="text-success">
+                  Questions will be generated using content from Chapter{" "}
+                  {selectedChapter}
+                </span>
+              )
+              : (
+                <span className="text-info">
+                  No specific chapter selected. Questions will be based on
+                  general knowledge.
+                </span>
+              )}
           </div>
         </div>
         {/* Prompt Input */}
