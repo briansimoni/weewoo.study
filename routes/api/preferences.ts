@@ -31,6 +31,7 @@ export const handler: AppHandlers = {
       path: "/",
       httpOnly: true,
       sameSite: "Lax",
+      maxAge: 60 * 60 * 24 * 365 * 1, // a year
     });
     return response;
   },
