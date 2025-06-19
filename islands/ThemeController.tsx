@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { Moon, Sun } from "../icons/index.ts";
+import { Moon, Sun } from "lucide-preact";
 
 export default function ThemeController(
   { initial_theme }: { initial_theme?: string },

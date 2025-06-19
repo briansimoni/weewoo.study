@@ -1,14 +1,13 @@
 import { AppProps } from "./_middleware.ts";
 import {
   BarChart,
-  Dumbbell,
-  Home as _Home,
-  Library,
-  MessageCircle,
-  PanelRight,
-  ShoppingBag as _ShoppingBag,
+  Gift,
+  Shield,
+  ShoppingBag,
   Trophy,
-} from "../icons/index.ts";
+  TrendingUp,
+  Library,
+} from "lucide-preact";
 
 export default function HomeClause(props: AppProps) {
   return (
@@ -48,7 +47,7 @@ export default function HomeClause(props: AppProps) {
           <div className="stats stats-vertical lg:stats-horizontal shadow w-full">
             <div className="stat">
               <div className="stat-figure text-primary">
-                <Dumbbell className="inline-block w-8 h-8 stroke-current" />
+                <ShoppingBag className="inline-block w-8 h-8 stroke-current" />
               </div>
               <div className="stat-title">Practice Questions</div>
               <div className="stat-value text-primary">420+</div>
@@ -97,13 +96,13 @@ export default function HomeClause(props: AppProps) {
               <div className="card-body text-center">
                 <div className="avatar mb-4">
                   <div className="rounded-full bg-primary/10 p-4 mx-auto flex items-center justify-center">
-                    <Dumbbell className="stroke-current text-primary w-6 h-6" />
+                    <Gift className="stroke-current text-primary w-6 h-6" />
                   </div>
                 </div>
-                <h3 className="card-title justify-center">Adaptive Learning</h3>
+                <h3 className="card-title justify-center">Always Free</h3>
                 <p className="text-base-content/70">
-                  Smart algorithms adjust question difficulty based on your
-                  performance, focusing on areas that need improvement.
+                  WeeWoo Study is 100% free to use. No hidden fees or
+                  subscriptions.
                 </p>
               </div>
             </div>
@@ -113,15 +112,14 @@ export default function HomeClause(props: AppProps) {
               <div className="card-body text-center">
                 <div className="avatar mb-4">
                   <div className="rounded-full bg-secondary/10 p-4 mx-auto flex items-center justify-center">
-                    <BarChart className="stroke-current text-secondary w-6 h-6" />
+                    <Shield className="stroke-current text-secondary w-6 h-6" />
                   </div>
                 </div>
                 <h3 className="card-title justify-center">
-                  Real-Time Feedback
+                  No Ads
                 </h3>
                 <p className="text-base-content/70">
-                  Instant explanations for every answer help you understand
-                  concepts, not just memorize questions.
+                  No ads, no distractions, just focused learning.
                 </p>
               </div>
             </div>
@@ -131,7 +129,7 @@ export default function HomeClause(props: AppProps) {
               <div className="card-body text-center">
                 <div className="avatar mb-4">
                   <div className="rounded-full bg-accent/10 p-4 mx-auto flex items-center justify-center">
-                    <Trophy className="stroke-current text-accent w-6 h-6" />
+                    <TrendingUp className="stroke-current text-accent w-6 h-6" />
                   </div>
                 </div>
                 <h3 className="card-title justify-center">Progress Tracking</h3>
@@ -165,7 +163,7 @@ export default function HomeClause(props: AppProps) {
               <div className="card-body text-center">
                 <div className="avatar mb-4">
                   <div className="rounded-full bg-success/10 p-4 mx-auto flex items-center justify-center">
-                    <MessageCircle className="stroke-current text-success w-6 h-6" />
+                    <ShoppingBag className="stroke-current text-success w-6 h-6" />
                   </div>
                 </div>
                 <h3 className="card-title justify-center">
@@ -182,13 +180,12 @@ export default function HomeClause(props: AppProps) {
               <div className="card-body text-center">
                 <div className="avatar mb-4">
                   <div className="rounded-full bg-warning/10 p-4 mx-auto flex items-center justify-center">
-                    <PanelRight className="stroke-current text-warning w-6 h-6" />
+                    <Trophy className="stroke-current text-warning w-6 h-6" />
                   </div>
                 </div>
-                <h3 className="card-title justify-center">Mobile Friendly</h3>
+                <h3 className="card-title justify-center">Compete</h3>
                 <p className="text-base-content/70">
-                  Study anywhere, anytime with our responsive design and offline
-                  capabilities.
+                  Compete with your peers and reach the top of the leaderboard
                 </p>
               </div>
             </div>

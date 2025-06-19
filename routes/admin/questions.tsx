@@ -1,6 +1,12 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
+import {
+  Edit,
+  FileText,
+  Info,
+  LayoutDashboard,
+  PanelRight,
+} from "lucide-preact";
 import { Question, QuestionStore } from "../../lib/question_store.ts";
-import * as Icons from "../../icons/index.ts";
 
 interface Data {
   questions: Question[];
@@ -37,13 +43,14 @@ export const handler: Handlers<Data> = {
       // Sort questions by creation date (newest first)
       questions.sort(
         (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
       );
 
       return ctx.render({ questions, scope });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error
+        ? error.message
+        : String(error);
       return ctx.render({ questions: [], scope: "emt", error: errorMessage });
     }
   },
@@ -61,12 +68,12 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
         <div class="container mx-auto px-4">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2">
-              <Icons.FileText className="w-6 h-6" />
+              <FileText className="w-6 h-6" />
               <h1 class="text-xl font-bold">Question Library</h1>
             </div>
             <div class="flex gap-4">
               <a href="/admin" class="btn btn-ghost btn-sm">
-                <Icons.LayoutDashboard className="w-4 h-4 mr-1" />
+                <LayoutDashboard className="w-4 h-4 mr-1" />
                 Dashboard
               </a>
             </div>
@@ -84,7 +91,7 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
 
         {error && (
           <div class="alert alert-error mb-6">
-            <Icons.Info className="w-5 h-5" />
+            <Info className="w-5 h-5" />
             <span>{error}</span>
           </div>
         )}
@@ -120,7 +127,7 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
               <div class="dropdown dropdown-bottom">
                 <div tabIndex={0} role="button" class="btn">
                   Filter by Category
-                  <Icons.PanelRight className="w-4 h-4" />
+                  <PanelRight className="w-4 h-4" />
                 </div>
                 <ul
                   tabIndex={0}
@@ -134,9 +141,11 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
                   {categories.map((cat) => (
                     <li>
                       <a
-                        href={`/admin/questions?scope=${scope}&category=${encodeURIComponent(
-                          cat
-                        )}`}
+                        href={`/admin/questions?scope=${scope}&category=${
+                          encodeURIComponent(
+                            cat,
+                          )
+                        }`}
                       >
                         {cat}
                       </a>
@@ -152,73 +161,77 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
           </div>
         </div>
 
-        {questions.length === 0 ? (
-          <div class="text-center p-12">
-            <p class="text-xl text-base-content/60">No questions found</p>
-          </div>
-        ) : (
-          <div class="overflow-x-auto">
-            <table class="table table-zebra w-full">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Question</th>
-                  <th>Category</th>
-                  <th>Created</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {questions.map((question) => (
-                  <tr key={question.id}>
-                    <td class="font-mono text-sm">
-                      {question.id.substring(0, 8)}...
-                    </td>
-                    <td class="max-w-md">
-                      <div class="font-medium">{question.question}</div>
-                      <div class="text-sm text-base-content/70">
-                        {question.choices.map((choice, i) => (
-                          <span
-                            class={`mr-2 ${
-                              i === question.correct_answer
-                                ? "font-bold text-success"
-                                : ""
-                            }`}
-                          >
-                            {String.fromCharCode(65 + i)}: {choice}
-                          </span>
-                        ))}
-                      </div>
-                    </td>
-                    <td>
-                      <span class="badge badge-ghost">{question.category}</span>
-                    </td>
-                    <td class="text-sm">
-                      {new Date(question.created_at).toLocaleDateString()}
-                    </td>
-                    <td>
-                      <div class="flex gap-2">
-                        <a
-                          href={`/admin/questions/${question.id}`}
-                          class="btn btn-square btn-ghost btn-xs"
-                          title="View Details"
-                        >
-                          <Icons.Info className="w-4 h-4" />
-                        </a>
-                        <button
-                          class="btn btn-square btn-ghost btn-xs"
-                          title="Edit Question"
-                        >
-                          <Icons.Edit className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+        {questions.length === 0
+          ? (
+            <div class="text-center p-12">
+              <p class="text-xl text-base-content/60">No questions found</p>
+            </div>
+          )
+          : (
+            <div class="overflow-x-auto">
+              <table class="table table-zebra w-full">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Question</th>
+                    <th>Category</th>
+                    <th>Created</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </thead>
+                <tbody>
+                  {questions.map((question) => (
+                    <tr key={question.id}>
+                      <td class="font-mono text-sm">
+                        {question.id.substring(0, 8)}...
+                      </td>
+                      <td class="max-w-md">
+                        <div class="font-medium">{question.question}</div>
+                        <div class="text-sm text-base-content/70">
+                          {question.choices.map((choice, i) => (
+                            <span
+                              class={`mr-2 ${
+                                i === question.correct_answer
+                                  ? "font-bold text-success"
+                                  : ""
+                              }`}
+                            >
+                              {String.fromCharCode(65 + i)}: {choice}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                      <td>
+                        <span class="badge badge-ghost">
+                          {question.category}
+                        </span>
+                      </td>
+                      <td class="text-sm">
+                        {new Date(question.created_at).toLocaleDateString()}
+                      </td>
+                      <td>
+                        <div class="flex gap-2">
+                          <a
+                            href={`/admin/questions/${question.id}`}
+                            class="btn btn-square btn-ghost btn-xs"
+                            title="View Details"
+                          >
+                            <Info className="w-4 h-4" />
+                          </a>
+                          <button
+                            class="btn btn-square btn-ghost btn-xs"
+                            title="Edit Question"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
       </div>
     </div>
   );

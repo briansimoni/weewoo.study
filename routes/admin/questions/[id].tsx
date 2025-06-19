@@ -4,8 +4,16 @@ import {
   QuestionReport,
   QuestionStore,
 } from "../../../lib/question_store.ts";
-import * as Icons from "../../../icons/index.ts";
 import QuestionEditor from "../../../islands/QuestionEditor.tsx";
+import {
+  Edit,
+  FileText,
+  Info,
+  LayoutDashboard,
+  LogOut,
+  ThumbsDown,
+  ThumbsUp,
+} from "lucide-preact";
 
 interface Data {
   question: Question | null;
@@ -46,16 +54,16 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
         <div class="container mx-auto px-4">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2">
-              <Icons.FileText className="w-6 h-6" />
+              <FileText className="w-6 h-6" />
               <h1 class="text-xl font-bold">Question Details</h1>
             </div>
             <div class="flex gap-4">
               <a href="/admin" class="btn btn-ghost btn-sm">
-                <Icons.LayoutDashboard className="w-4 h-4 mr-1" />
+                <LayoutDashboard className="w-4 h-4 mr-1" />
                 Dashboard
               </a>
               <a href="/admin/questions" class="btn btn-ghost btn-sm">
-                <Icons.LogOut className="w-4 h-4 mr-1" />
+                <LogOut className="w-4 h-4 mr-1" />
                 Back to Questions
               </a>
             </div>
@@ -73,7 +81,7 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
 
         {error && (
           <div class="alert alert-error mb-6">
-            <Icons.Info className="w-5 h-5" />
+            <Info className="w-5 h-5" />
             <span>{error}</span>
           </div>
         )}
@@ -128,7 +136,7 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                     <details class="collapse collapse-arrow bg-base-100">
                       <summary class="collapse-title font-medium">
                         <div class="flex items-center gap-2">
-                          <Icons.FileText className="w-4 h-4" />
+                          <FileText className="w-4 h-4" />
                           Raw JSON Data
                         </div>
                       </summary>
@@ -182,7 +190,7 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                             </p>
                             {index === question.correct_answer && (
                               <div class="flex items-center gap-1 text-success mt-1">
-                                <Icons.ThumbsUp className="w-4 h-4" />
+                                <ThumbsUp className="w-4 h-4" />
                                 <span class="text-sm font-medium">
                                   Correct Answer
                                 </span>
@@ -224,12 +232,8 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                           >
                             <div class="flex items-center gap-2 mb-2">
                               {report.thumbs === "up"
-                                ? (
-                                  <Icons.ThumbsUp className="w-4 h-4 text-success" />
-                                )
-                                : (
-                                  <Icons.ThumbsDown className="w-4 h-4 text-error" />
-                                )}
+                                ? <ThumbsUp className="w-4 h-4 text-success" />
+                                : <ThumbsDown className="w-4 h-4 text-error" />}
                               <span class="font-medium">
                                 {report.thumbs === "up"
                                   ? "Positive"
@@ -264,7 +268,7 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                       class="btn btn-primary"
                       id="openEditModalBtn"
                     >
-                      <Icons.Edit className="w-4 h-4 mr-2" />
+                      <Edit className="w-4 h-4 mr-2" />
                       Edit Question
                     </button>
                   </div>

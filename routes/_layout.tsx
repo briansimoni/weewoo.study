@@ -1,4 +1,3 @@
-import { BarChart, Dumbbell, ShoppingBag, Trophy } from "../icons/index.ts";
 import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
 import CartIcon from "../islands/CartIcon.tsx";
@@ -6,6 +5,7 @@ import PWAInstallPrompt from "../islands/PWAInstallPrompt.tsx";
 import { StreakStore } from "../lib/streak_store.ts";
 import { AppState } from "./_middleware.ts";
 import { defineLayout } from "$fresh/server.ts";
+import { BarChart, Dumbbell, ShoppingBag, Trophy } from "lucide-preact";
 
 const stage = Deno.env.get("STAGE");
 

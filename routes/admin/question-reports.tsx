@@ -1,13 +1,12 @@
 import { PageProps } from "$fresh/server.ts";
 import { Handlers } from "$fresh/server.ts";
 import {
-  Edit,
   FileText,
   Info,
   LayoutDashboard,
   ThumbsDown,
   ThumbsUp,
-} from "../../icons/index.ts";
+} from "lucide-preact";
 import { QuestionReport, QuestionStore } from "../../lib/question_store.ts";
 import { Question } from "../../lib/question_store.ts";
 

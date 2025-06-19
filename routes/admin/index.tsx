@@ -1,12 +1,22 @@
 import { PageProps } from "$fresh/server.ts";
-import { ComponentType } from "preact";
-import * as Icons from "../../icons/index.ts";
+import {
+  Bug,
+  FileQuestion,
+  Home,
+  LayoutDashboard,
+  Library,
+  LogOut,
+  LucideIcon,
+  MessageCircle,
+  ShoppingBag,
+  ThumbsUp,
+} from "lucide-preact";
 
 interface AdminToolCard {
   title: string;
   description: string;
   url: string;
-  icon: ComponentType<{ className?: string }>;
+  icon: LucideIcon;
 }
 
 // The admin middleware will automatically handle authentication
@@ -18,25 +28,25 @@ export default function AdminIndex(_props: PageProps) {
       title: "Product Manager",
       description: "Create, edit, and manage products in the store",
       url: "/admin/product-manager",
-      icon: Icons.ShoppingBag,
+      icon: ShoppingBag,
     },
     {
       title: "Question Generator",
       description: "Create and manage quiz questions",
       url: "/admin/question-generator",
-      icon: Icons.FileQuestion,
+      icon: FileQuestion,
     },
     {
       title: "Question Library",
       description: "View and manage all questions in the database",
       url: "/admin/questions",
-      icon: Icons.Library,
+      icon: Library,
     },
     {
       title: "Debug Tools",
       description: "Debug tools and system diagnostics",
       url: "/admin/debug",
-      icon: Icons.Bug,
+      icon: Bug,
     },
   ];
 
@@ -46,16 +56,16 @@ export default function AdminIndex(_props: PageProps) {
         <div class="container mx-auto px-4">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2">
-              <Icons.LayoutDashboard className="w-6 h-6" />
+              <LayoutDashboard className="w-6 h-6" />
               <h1 class="text-xl font-bold">Admin Portal</h1>
             </div>
             <div class="flex gap-4">
               <a href="/" class="btn btn-ghost btn-sm">
-                <Icons.Home className="w-4 h-4 mr-1" />
+                <Home className="w-4 h-4 mr-1" />
                 Website
               </a>
               <a href="/logout" class="btn btn-ghost btn-sm">
-                <Icons.LogOut className="w-4 h-4 mr-1" />
+                <LogOut className="w-4 h-4 mr-1" />
                 Logout
               </a>
             </div>
@@ -96,7 +106,7 @@ export default function AdminIndex(_props: PageProps) {
           <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
             <div class="card-body">
               <h2 class="card-title flex items-center gap-2">
-                <Icons.ThumbsUp className="w-5 h-5 text-primary" />
+                <ThumbsUp className="w-5 h-5 text-primary" />
                 Question Reports
               </h2>
               <p class="text-base-content/70">
@@ -113,7 +123,7 @@ export default function AdminIndex(_props: PageProps) {
           <div class="card bg-base-200 shadow-lg">
             <div class="card-body">
               <h2 class="card-title flex items-center gap-2">
-                <Icons.MessageCircle className="w-5 h-5 text-primary" />
+                <MessageCircle className="w-5 h-5 text-primary" />
                 Support Tickets
               </h2>
               <p class="text-base-content/70">
