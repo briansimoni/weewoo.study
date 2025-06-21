@@ -4,7 +4,11 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { setDisplayedStreak } from "./StreakIndicator.tsx";
 import { QuestionPostResponse } from "../routes/api/question.ts";
 
-export default function QuestionPage() {
+interface QuestionPageProps {
+  onQuestionCompleted?: () => unknown;
+}
+
+export default function QuestionPage(props: QuestionPageProps) {
   const [question, setQuestion] = useState<Question | undefined>();
   const [correct, setCorrect] = useState<boolean | undefined>();
   const [submitted, setSubmitted] = useState<boolean | undefined>();
@@ -36,6 +40,7 @@ export default function QuestionPage() {
     const answerIndex = parseInt(answer, 10);
     setSelectedAnswer(answerIndex);
     setSubmitted(true);
+    props.onQuestionCompleted?.();
   }
 
   useEffect(() => {
@@ -94,7 +99,7 @@ export default function QuestionPage() {
   return (
     <div>
       <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg font-sans">
-        <h1 class="text-center text-blue-500 text-2xl font-bold mb-4">
+        <h1 class="text-blue-500 text-2xl font-bold mb-4">
           {correct === undefined
             ? "Practice Question"
             : correct

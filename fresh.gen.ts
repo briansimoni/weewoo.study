@@ -44,6 +44,7 @@ import * as $auth_login from "./routes/auth/login.tsx";
 import * as $auth_logout from "./routes/auth/logout.tsx";
 import * as $cart from "./routes/cart.tsx";
 import * as $checkout_success from "./routes/checkout/success.tsx";
+import * as $emt_middleware from "./routes/emt/_middleware.ts";
 import * as $emt_practice_index from "./routes/emt/practice/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $leaderboard from "./routes/leaderboard.tsx";
@@ -66,6 +67,7 @@ import * as $Question from "./islands/Question.tsx";
 import * as $QuestionEditor from "./islands/QuestionEditor.tsx";
 import * as $StreakIndicator from "./islands/StreakIndicator.tsx";
 import * as $ThemeController from "./islands/ThemeController.tsx";
+import * as $TrialQuestions from "./islands/TrialQuestions.tsx";
 import * as $admin_ProductDetail from "./islands/admin/ProductDetail.tsx";
 import * as $admin_ZipImageUploader from "./islands/admin/ZipImageUploader.tsx";
 import type { Manifest } from "$fresh/server.ts";
@@ -120,6 +122,7 @@ const manifest = {
     "./routes/auth/logout.tsx": $auth_logout,
     "./routes/cart.tsx": $cart,
     "./routes/checkout/success.tsx": $checkout_success,
+    "./routes/emt/_middleware.ts": $emt_middleware,
     "./routes/emt/practice/index.tsx": $emt_practice_index,
     "./routes/index.tsx": $index,
     "./routes/leaderboard.tsx": $leaderboard,
@@ -144,6 +147,7 @@ const manifest = {
     "./islands/QuestionEditor.tsx": $QuestionEditor,
     "./islands/StreakIndicator.tsx": $StreakIndicator,
     "./islands/ThemeController.tsx": $ThemeController,
+    "./islands/TrialQuestions.tsx": $TrialQuestions,
     "./islands/admin/ProductDetail.tsx": $admin_ProductDetail,
     "./islands/admin/ZipImageUploader.tsx": $admin_ZipImageUploader,
   },

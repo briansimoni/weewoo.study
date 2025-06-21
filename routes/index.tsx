@@ -1,19 +1,20 @@
+import TrialQuestions from "../islands/TrialQuestions.tsx";
 import { AppProps } from "./_middleware.ts";
 import {
   BarChart,
   Gift,
+  Library,
   Shield,
   ShoppingBag,
-  Trophy,
   TrendingUp,
-  Library,
+  Trophy,
 } from "lucide-preact";
 
-export default function HomeClause(props: AppProps) {
+export default function Home(props: AppProps) {
   return (
-    <div className="min-h-screen">
+    <div className="h-[70vh]">
       {/* Hero Section */}
-      <div className="hero min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+      <div className="h-[70vh] hero bg-gradient-to-br from-primary/10 to-secondary/10">
         <div className="hero-content text-center">
           <div className="max-w-md">
             <div className="avatar mb-8">
@@ -22,15 +23,20 @@ export default function HomeClause(props: AppProps) {
               </div>
             </div>
             <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Master Your EMS Certification
+              WeeWoo Study
             </h1>
             <p className="py-6 text-lg text-base-content/80">
-              Join thousands of EMTs and Paramedics who've passed their exams
-              with confidence. Interactive practice questions, real-time
-              feedback, and proven study methods.
+              Join thousands of EMTs who've passed their exams with confidence.
+              Interactive practice questions, real-time feedback, and proven
+              study methods.
             </p>
             <div className="flex gap-4 justify-center">
-              <a href="/emt/practice" className="btn btn-primary btn-lg">
+              <a
+                href={props.state.session
+                  ? "/emt/practice"
+                  : "#trial-questions"}
+                className="btn btn-primary btn-lg"
+              >
                 Start Free Practice
               </a>
               <a href="/shop" className="btn btn-outline btn-lg">
@@ -286,9 +292,10 @@ export default function HomeClause(props: AppProps) {
                   </div>
                 </div>
                 <p className="text-base-content/80">
-                  "WeeWoo Study was a game-changer for my NREMT exam. The
-                  practice questions were spot-on and the explanations helped me
-                  understand concepts I struggled with."
+                  "WeeWoo Study was a game-changer for my NREMT exam. I failed
+                  the exam 10 times, but after WeeWoo.study I passed and now my
+                  volunteer rescue squad let me loose in the streets to take
+                  care of patients!"
                 </p>
                 <div className="rating rating-sm mt-4">
                   <input
@@ -339,9 +346,8 @@ export default function HomeClause(props: AppProps) {
                   </div>
                 </div>
                 <p className="text-base-content/80">
-                  "As a working EMT studying for my Paramedic certification, the
-                  mobile app was perfect. I could study during downtime at the
-                  station."
+                  "I was flipping burgers at McDonalds until weewoo.study. Now
+                  I'm taking care of the people who I used to flip burgers for!"
                 </p>
                 <div className="rating rating-sm mt-4">
                   <input
@@ -389,13 +395,14 @@ export default function HomeClause(props: AppProps) {
                       Seymour Butz
                     </h4>
                     <p className="text-sm text-base-content/70">
-                      EMT-A, New York
+                      MD, PHD, New York
                     </p>
                   </div>
                 </div>
                 <p className="text-base-content/80">
-                  "The progress tracking feature kept me motivated. Seeing my
-                  improvement over time gave me confidence going into the exam."
+                  "After I discovered weewoo.study, I was able to better
+                  understand first responders. The only downside is that
+                  whenever I wear the swag, women will NOT leave me alone."
                 </p>
                 <div className="rating rating-sm mt-4">
                   <input
@@ -433,27 +440,26 @@ export default function HomeClause(props: AppProps) {
 
       {/* CTA Section */}
       <div className="py-16">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-6">
-              Ready to Pass Your EMS Exam?
-            </h2>
-            <p className="text-xl text-base-content/70 mb-8">
-              Join thousands of successful EMTs and Paramedics who trusted
-              WeeWoo Study to help them achieve their certification goals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a href="/emt/practice" className="btn btn-primary btn-lg">
-                Start Free Practice Now
-              </a>
-              <a href="/shop" className="btn btn-outline btn-lg">
-                View All Courses
+        <div
+          id="trial-questions"
+          className="container mx-auto px-4"
+        >
+          {!props.state.session && (
+            <TrialQuestions
+              trial_questions_completed={props.state.preferences
+                ?.trial_questions_completed || false}
+            />
+          )}
+          {props.state.session && (
+            <div className="text-center">
+              <a
+                href="/emt/practice"
+                className="btn btn-primary btn-lg"
+              >
+                Start Practicing
               </a>
             </div>
-            <p className="text-sm text-base-content/60 mt-4">
-              No credit card required • Free practice questions • Instant access
-            </p>
-          </div>
+          )}
         </div>
       </div>
 

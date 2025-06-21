@@ -119,7 +119,8 @@ export default function About() {
           Contact Support 📧
         </a>
 
-        <div className="divider"></div>
+        {
+          /* <div className="divider"></div>
 
         <h2 className="text-2xl font-semibold mb-4">
           Ready to Have Some Fun While You Study?
@@ -130,7 +131,8 @@ export default function About() {
 
         <a href="/emt/practice" className="btn btn-primary btn-lg">
           Start Practicing 🚑
-        </a>
+        </a> */
+        }
       </div>
     </div>
   );

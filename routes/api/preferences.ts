@@ -7,7 +7,8 @@ export const handler: AppHandlers = {
   async POST(req, ctx) {
     const body = await req.json();
     const schema = z.object({
-      theme: z.enum(["light", "dark"]),
+      theme: z.enum(["light", "dark"]).optional(),
+      trial_questions_completed: z.boolean().optional(),
     });
     const prefs = schema.parse(body);
     const preferences = {

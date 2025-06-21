@@ -32,7 +32,8 @@ export interface AppProps extends PageProps {
 export interface AppState extends Record<string, unknown> {
   session?: SessionData;
   preferences?: {
-    theme: "light" | "dark" | undefined;
+    theme?: "light" | "dark";
+    trial_questions_completed?: boolean;
   };
 }
 
