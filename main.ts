@@ -32,6 +32,7 @@ if (Deno.env.get("STAGE") === "PROD") {
     "Poll WeeWoo Ops SQS Messages",
     CronTime.every(5).minutes(),
     () => {
+      log.info("Polling WeeWoo Ops SQS Messages");
       addRequestId(pollWeeWooOpsSQSMessages);
     },
   );
