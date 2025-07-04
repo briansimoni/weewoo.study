@@ -77,6 +77,16 @@ resource "aws_iam_policy" "ses_email_sending" {
           aws_cloudwatch_log_group.test.arn,
           "${aws_cloudwatch_log_group.test.arn}:*"
         ]
+      },
+      # SQS permissions
+      {
+        Effect = "Allow",
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ],
+        Resource = aws_sqs_queue.weewoo_ops_listener.arn
       }
     ]
   })

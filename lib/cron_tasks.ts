@@ -2,6 +2,28 @@ import dayjs from "dayjs";
 import { QuestionStore } from "./question_store.ts";
 import { EmailService } from "./email_service.ts";
 import { log } from "./logger.ts";
+import {
+  DeleteMessageCommand,
+  ReceiveMessageCommand,
+  SQSClient,
+} from "@aws-sdk/client-sqs";
+
+// Initialize SQS client
+const sqsClient = new SQSClient({
+  region: Deno.env.get("AWS_REGION") || "us-east-1",
+  credentials: {
+    accessKeyId: Deno.env.get("AWS_ACCESS_KEY_ID") || "",
+    secretAccessKey: Deno.env.get("AWS_SECRET_ACCESS_KEY") || "",
+  },
+});
+
+const QUEUE_URL = Deno.env.get("WEEWOO_OPS_QUEUE_URL");
+
+if (!QUEUE_URL) {
+  log.warn(
+    "WEEWOO_OPS_QUEUE_URL environment variable is not set. SQS polling will not work.",
+  );
+}
 
 export async function sendReport() {
   log.info("starting weekly question report cron: ");
@@ -84,4 +106,61 @@ export async function sendReport() {
     subject: "Question Reports",
     htmlBody: htmlBody,
   });
+}
+
+export async function pollWeeWooOpsSQSMessages(): Promise<void> {
+  if (!QUEUE_URL) {
+    log.error("SQS Queue URL is not configured");
+    return;
+  }
+
+  // Receive messages from the queue
+  const receiveCommand = new ReceiveMessageCommand({
+    QueueUrl: QUEUE_URL,
+    MaxNumberOfMessages: 10, // Process up to 10 messages at a time
+    WaitTimeSeconds: 5, // Use long polling
+    VisibilityTimeout: 30, // Hide message for 30 seconds while processing
+  });
+
+  const response = await sqsClient.send(receiveCommand);
+  const messages = response.Messages || [];
+
+  if (messages.length === 0) {
+    log.debug("No messages in the queue");
+    return;
+  }
+
+  log.info(`Processing ${messages.length} messages from SQS queue`);
+
+  // Process each message
+  for (const message of messages) {
+    try {
+      log.info("logging the message", {
+        message,
+      });
+
+      // Delete the message from the queue after successful processing
+      if (message.ReceiptHandle) {
+        const deleteCommand = new DeleteMessageCommand({
+          QueueUrl: QUEUE_URL,
+          ReceiptHandle: message.ReceiptHandle,
+        });
+
+        await sqsClient.send(deleteCommand);
+      } else {
+        log.warn("Message has no receipt handle, cannot delete", {
+          messageId: message.MessageId,
+        });
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error
+        ? error.message
+        : String(error);
+      log.error("Error processing message:", {
+        error: errorMessage,
+        messageId: message.MessageId,
+      });
+      // Don't delete the message so it can be processed again
+    }
+  }
 }

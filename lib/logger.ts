@@ -82,7 +82,6 @@ if (isRunningInDenoDeploy()) {
 
     // Add CloudWatch transport to the logger
     logger.add(new WinstonCloudWatch(cloudWatchConfig));
-    logger.info("CloudWatch logging initialized");
   } catch (err) {
     console.error("Failed to initialize CloudWatch logging:", err);
   }
@@ -117,7 +116,7 @@ export const log: Logger = {
 };
 
 // Log startup information with deployment context
-log.info(`Logger initialized for weewoo.study`, {
-  deploymentId: Deno.env.get("DENO_DEPLOYMENT_ID") || "local",
-  cloudWatchEnabled: isRunningInDenoDeploy(),
-});
+// log.debug(`Logger initialized for weewoo.study`, {
+//   deploymentId: Deno.env.get("DENO_DEPLOYMENT_ID") || "local",
+//   cloudWatchEnabled: isRunningInDenoDeploy(),
+// });
