@@ -12,6 +12,7 @@ const SupportFormSchema = z.object({
     5000,
     "Message is too long",
   ),
+  "recaptcha-token": z.string().min(1, "reCAPTCHA token is required"),
 });
 
 export const handler: AppHandlers = {
@@ -24,6 +25,7 @@ export const handler: AppHandlers = {
         email: formData.get("email")?.toString() || "",
         subject: formData.get("subject")?.toString() || "",
         message: formData.get("message")?.toString() || "",
+        "recaptcha-token": formData.get("recaptcha-token")?.toString() || "",
       };
 
       // Validate form data with Zod
@@ -43,6 +45,45 @@ export const handler: AppHandlers = {
 
       // Validated data
       const { name, email, subject, message } = result.data;
+
+      // Verify reCAPTCHA token
+      const recaptchaSecret = Deno.env.get("RECAPTCHA_SECRET_KEY");
+      if (!recaptchaSecret) {
+        log.error("RECAPTCHA_SECRET_KEY is not set");
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location:
+              "/support?error=An unexpected error occurred. Please try again.",
+          },
+        });
+      }
+
+      const recaptchaResponse = await fetch(
+        "https://www.google.com/recaptcha/api/siteverify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `secret=${recaptchaSecret}&response=${
+            result.data["recaptcha-token"]
+          }`,
+        },
+      );
+
+      const recaptchaData = await recaptchaResponse.json();
+      log.info("reCAPTCHA verification result", { recaptchaData });
+
+      if (!recaptchaData.success || recaptchaData.score < 0.5) {
+        log.warn("reCAPTCHA verification failed", { recaptchaData });
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location: "/support?error=reCAPTCHA verification failed.",
+          },
+        });
+      }
 
       // Get admin email from environment variable or use a default
       const adminEmail = Deno.env.get("ADMIN_EMAIL") || "brsimoni@gmail.com";

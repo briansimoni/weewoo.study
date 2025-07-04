@@ -67,6 +67,7 @@ import * as $Profile from "./islands/Profile.tsx";
 import * as $Question from "./islands/Question.tsx";
 import * as $QuestionEditor from "./islands/QuestionEditor.tsx";
 import * as $StreakIndicator from "./islands/StreakIndicator.tsx";
+import * as $SupportForm from "./islands/SupportForm.tsx";
 import * as $ThemeController from "./islands/ThemeController.tsx";
 import * as $TrialQuestions from "./islands/TrialQuestions.tsx";
 import * as $admin_ProductDetail from "./islands/admin/ProductDetail.tsx";
@@ -148,6 +149,7 @@ const manifest = {
     "./islands/Question.tsx": $Question,
     "./islands/QuestionEditor.tsx": $QuestionEditor,
     "./islands/StreakIndicator.tsx": $StreakIndicator,
+    "./islands/SupportForm.tsx": $SupportForm,
     "./islands/ThemeController.tsx": $ThemeController,
     "./islands/TrialQuestions.tsx": $TrialQuestions,
     "./islands/admin/ProductDetail.tsx": $admin_ProductDetail,

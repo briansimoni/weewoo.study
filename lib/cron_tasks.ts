@@ -1,4 +1,49 @@
 import dayjs from "dayjs";
+
+export interface SesNotification {
+  notificationType: "Delivery" | "Bounce" | "Complaint";
+  mail: {
+    timestamp: string;
+    source: string;
+    sourceArn: string;
+    sourceIp: string;
+    callerIdentity: string;
+    sendingAccountId: string;
+    messageId: string;
+    destination: string[];
+  };
+  delivery?: {
+    timestamp: string;
+    processingTimeMillis: number;
+    recipients: string[];
+    smtpResponse: string;
+    remoteMtaIp: string;
+    reportingMTA: string;
+  };
+  bounce?: {
+    bounceType: string;
+    bounceSubType: string;
+    bouncedRecipients: {
+      emailAddress: string;
+      action: string;
+      status: string;
+      diagnosticCode: string;
+    }[];
+    timestamp: string;
+    feedbackId: string;
+    remoteMtaIp: string;
+    reportingMTA: string;
+  };
+  complaint?: {
+    complainedRecipients: {
+      emailAddress: string;
+    }[];
+    timestamp: string;
+    feedbackId: string;
+    complaintFeedbackType: string;
+    userAgent: string;
+  };
+}
 import { QuestionStore } from "./question_store.ts";
 import { EmailService } from "./email_service.ts";
 import { log } from "./logger.ts";
@@ -138,6 +183,28 @@ export async function pollWeeWooOpsSQSMessages(): Promise<void> {
       log.info("logging the message", {
         message: JSON.stringify(message),
       });
+
+      const body = JSON.parse(message.Body || "{}");
+      const sesNotification = JSON.parse(
+        body.Message || "{}",
+      ) as SesNotification;
+
+      const adminEmail = Deno.env.get("ADMIN_EMAIL");
+
+      if (sesNotification.mail.destination[0] !== adminEmail) {
+        const emailService = new EmailService();
+        await emailService.sendEmail({
+          to: adminEmail || "",
+          subject: `Email status for ${
+            sesNotification.mail.destination[0]
+          } - ${sesNotification.notificationType}`,
+          htmlBody: `<p>Email to ${
+            sesNotification.mail.destination[0]
+          } resulted in a ${sesNotification.notificationType} event.</p><p>Message: <pre>${
+            JSON.stringify(sesNotification, null, 2)
+          }</pre></p>`,
+        });
+      }
 
       // Delete the message from the queue after successful processing
       if (message.ReceiptHandle) {
