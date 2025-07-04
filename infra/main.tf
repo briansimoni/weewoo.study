@@ -6,14 +6,14 @@ terraform {
     }
   }
 
-  cloud { 
-    
-    organization = "simoni-enterprises" 
+  cloud {
 
-    workspaces { 
-      name = "weewoo-study" 
-    } 
-  } 
+    organization = "simoni-enterprises"
+
+    workspaces {
+      name = "weewoo-study"
+    }
+  }
 }
 
 provider "aws" {
@@ -50,8 +50,8 @@ resource "aws_s3_bucket_policy" "static_assets" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "AllowCloudFrontServicePrincipal"
-        Effect    = "Allow"
+        Sid    = "AllowCloudFrontServicePrincipal"
+        Effect = "Allow"
         Principal = {
           Service = "cloudfront.amazonaws.com"
         }
@@ -94,9 +94,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id      = "S3Origin"
+    target_origin_id       = "S3Origin"
     viewer_protocol_policy = "redirect-to-https"
-    compress              = true
+    compress               = true
 
     forwarded_values {
       query_string = false
@@ -105,9 +105,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       }
     }
 
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
+    min_ttl     = 0
+    default_ttl = 3600
+    max_ttl     = 86400
   }
 
   restrictions {

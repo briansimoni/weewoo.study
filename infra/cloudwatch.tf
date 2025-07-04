@@ -9,7 +9,7 @@ resource "aws_cloudwatch_log_group" "production" {
 # Test Log Group
 resource "aws_cloudwatch_log_group" "test" {
   name              = "/weewoo-study/test"
-  retention_in_days = 7   # Lower retention for test environment to save costs
+  retention_in_days = 7 # Lower retention for test environment to save costs
 }
 
 # CloudWatch Log Metric Filter for Error Logs (production)

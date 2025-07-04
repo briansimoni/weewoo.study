@@ -8,7 +8,7 @@ data "aws_iam_user" "svc_weewoo" {
 resource "aws_iam_policy" "ses_email_sending" {
   name        = "ServicePolicy-weewoo"
   description = "Policy for weewoo.study app service permissions (SES, S3, and CloudWatch Logs)"
-  
+
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -20,7 +20,7 @@ resource "aws_iam_policy" "ses_email_sending" {
           "ses:SendRawEmail",
           "ses:SendTemplatedEmail"
         ],
-        Resource = "*"  # You can restrict this to specific SES resources if needed
+        Resource = "*" # You can restrict this to specific SES resources if needed
       },
       {
         Effect = "Allow",

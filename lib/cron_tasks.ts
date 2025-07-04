@@ -136,7 +136,7 @@ export async function pollWeeWooOpsSQSMessages(): Promise<void> {
   for (const message of messages) {
     try {
       log.info("logging the message", {
-        message,
+        message: JSON.stringify(message),
       });
 
       // Delete the message from the queue after successful processing
