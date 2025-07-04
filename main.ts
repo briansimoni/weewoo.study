@@ -18,6 +18,10 @@ import { asyncLocalStorage, log } from "./lib/logger.ts";
 
 function addRequestId<T extends () => Promise<void>>(fn: T) {
   return asyncLocalStorage.run(crypto.randomUUID(), async () => {
+    if (Deno.env.get("STAGE") !== "PROD") {
+      log.info("skipping cron because env is not prod");
+      return;
+    }
     const start = Date.now();
     log.info("cron job started");
     await fn();
@@ -27,19 +31,17 @@ function addRequestId<T extends () => Promise<void>>(fn: T) {
   });
 }
 
-if (Deno.env.get("STAGE") === "PROD") {
-  Deno.cron(
-    "Poll WeeWoo Ops SQS Messages",
-    CronTime.every(5).minutes(),
-    () => {
-      log.info("Polling WeeWoo Ops SQS Messages");
-      addRequestId(pollWeeWooOpsSQSMessages);
-    },
-  );
+Deno.cron(
+  "Poll WeeWoo Ops SQS Messages",
+  CronTime.every(5).minutes(),
+  () => {
+    log.info("Polling WeeWoo Ops SQS Messages");
+    addRequestId(pollWeeWooOpsSQSMessages);
+  },
+);
 
-  Deno.cron("Weekly Question Report", CronTime.everySaturdayAt(9), () => {
-    addRequestId(sendReport);
-  });
-}
+Deno.cron("Weekly Question Report", CronTime.everySaturdayAt(9), () => {
+  addRequestId(sendReport);
+});
 
 await start(manifest, config);
