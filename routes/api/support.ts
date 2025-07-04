@@ -76,7 +76,14 @@ export const handler: AppHandlers = {
       log.info("reCAPTCHA verification result", { recaptchaData });
 
       if (!recaptchaData.success || recaptchaData.score < 0.5) {
-        log.warn("reCAPTCHA verification failed", { recaptchaData });
+        log.warn("reCAPTCHA verification failed", {
+          recaptchaData,
+          name,
+          email,
+          subject,
+          message,
+          userAgent: req.headers.get("user-agent"),
+        });
         return new Response(null, {
           status: 302,
           headers: {
