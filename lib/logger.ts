@@ -53,6 +53,7 @@ const logger = winston.createLogger({
 if (isRunningInDenoDeploy()) {
   try {
     const cloudWatchConfig = {
+      level: Deno.env.get("LOG_LEVEL") || "debug",
       logGroupName: getLogGroupName(),
       logStreamName: `${crypto.randomUUID()}-${
         new Date().toISOString().split("T")[0]

@@ -126,7 +126,7 @@ export async function pollWeeWooOpsSQSMessages(): Promise<void> {
   const messages = response.Messages || [];
 
   if (messages.length === 0) {
-    log.debug("No messages in the queue");
+    log.info("No messages in the queue");
     return;
   }
 
