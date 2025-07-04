@@ -246,7 +246,10 @@ export default function ProductDetails(
             </summary>
             <div className="collapse-content">
               <p>
-                Contact <a href="https://weewoo.study/support">support</a>{" "}
+                Contact{" "}
+                <a className="link" href="https://weewoo.study/support">
+                  support
+                </a>{" "}
                 and I'll work with you. The return policy is in development, but
                 I want my early adopter customers to be happy.
               </p>

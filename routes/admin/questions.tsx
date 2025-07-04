@@ -218,12 +218,6 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
                           >
                             <Info className="w-4 h-4" />
                           </a>
-                          <button
-                            class="btn btn-square btn-ghost btn-xs"
-                            title="Edit Question"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </button>
                         </div>
                       </td>
                     </tr>
