@@ -15,32 +15,36 @@ import { CronTime } from "npm:cron-time-generator";
 import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
 import { asyncLocalStorage, log } from "./lib/logger.ts";
 
-function addRequestId<T extends () => Promise<void>>(fn: T) {
-  return asyncLocalStorage.run(crypto.randomUUID(), async () => {
-    if (Deno.env.get("STAGE") !== "PROD") {
-      log.info("skipping cron because env is not prod");
-      return;
-    }
-    const start = Date.now();
-    log.info("cron job started");
-    await fn();
-    log.info("cron job finished", {
-      duration: Date.now() - start,
+/**
+ * Wrap a cron job in a request ID and logging context
+ */
+function prepare<T extends () => Promise<void>>(fn: T) {
+  return () => {
+    return asyncLocalStorage.run(crypto.randomUUID(), async () => {
+      if (Deno.env.get("STAGE") !== "PROD") {
+        log.info("skipping cron because env is not prod");
+        return;
+      }
+      const start = Date.now();
+      log.info("cron job started");
+      await fn();
+      log.info("cron job finished", {
+        duration: Date.now() - start,
+      });
     });
-  });
+  };
 }
 
 Deno.cron(
   "Poll WeeWoo Ops SQS Messages",
   CronTime.every(5).minutes(),
-  () => {
-    log.info("Polling WeeWoo Ops SQS Messages");
-    addRequestId(pollWeeWooOpsSQSMessages);
-  },
+  prepare(pollWeeWooOpsSQSMessages),
 );
 
-Deno.cron("Weekly Question Report", CronTime.everySaturdayAt(9), () => {
-  addRequestId(sendReport);
-});
+Deno.cron(
+  "Weekly Question Report",
+  CronTime.everySaturdayAt(9),
+  prepare(sendReport),
+);
 
 await start(manifest, config);

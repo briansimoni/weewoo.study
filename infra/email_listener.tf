@@ -1,7 +1,15 @@
 # an SQS queue that subscribes to an SNS topic for SES event
 
+resource "aws_sqs_queue" "weewoo_ops_listener_dlq" {
+  name = "weewoo_ops_listener_dlq"
+}
+
 resource "aws_sqs_queue" "weewoo_ops_listener" {
   name = "weewoo_ops_listener"
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.weewoo_ops_listener_dlq.arn
+    maxReceiveCount     = 3
+  })
 }
 
 resource "aws_sqs_queue_policy" "allow_sns" {
