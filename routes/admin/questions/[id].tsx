@@ -5,6 +5,7 @@ import {
   QuestionStore,
 } from "../../../lib/question_store.ts";
 import QuestionEditor from "../../../islands/QuestionEditor.tsx";
+import DeleteQuestionButton from "../../../islands/DeleteQuestionButton.tsx";
 import {
   Edit,
   FileText,
@@ -271,6 +272,9 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                       <Edit className="w-4 h-4 mr-2" />
                       Edit Question
                     </button>
+                    {question && (
+                      <DeleteQuestionButton questionId={question.id} />
+                    )}
                   </div>
                 </div>
               </div>

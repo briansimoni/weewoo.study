@@ -136,6 +136,7 @@ export class QuestionStore {
    * and then swapping it with the question at the last index. Then we update the map
    * by deleting the question that we wanted to delete, and then updating the index
    * of the question that we swapped with. The total question count is then decremented.
+   * It does not delete the related question reports.
    */
   async delete(questionId: string): Promise<void> {
     const questionResult = await this.kv.get<Question>([
@@ -545,6 +546,18 @@ export class QuestionStore {
       return new Date(b.reported_at).getTime() -
         new Date(a.reported_at).getTime();
     });
+  }
+
+  async deleteQuestionReports(question_id: string): Promise<void> {
+    const reports = await this.getQuestionReports(question_id);
+    for (const report of reports) {
+      await this.kv.delete([
+        this.scope,
+        "question_reports",
+        question_id,
+        report.report_id,
+      ]);
+    }
   }
 
   // this is a weak attempt at making sure we don't add duplicate questions

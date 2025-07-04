@@ -104,9 +104,9 @@ export const handler: AppHandlers = {
 
       // Verify the question exists before attempting to delete it
       await questionStore.getQuestionById(questionId);
-
       // Delete the question
       await questionStore.delete(questionId);
+      await questionStore.deleteQuestionReports(questionId);
 
       return new Response(
         JSON.stringify({

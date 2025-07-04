@@ -4,11 +4,18 @@ import { EmailService } from "./email_service.ts";
 import { log } from "./logger.ts";
 
 export async function sendReport() {
+  log.info("starting weekly question report cron: ");
   const questionStore = await QuestionStore.make();
   const questions = await questionStore.getQuestionReports();
+  log.info("total reported questions: ", {
+    count: questions.length,
+  });
   const questionsReportedThisWeek = questions.filter((report) => {
     const oneWeekAgo = dayjs().subtract(7, "days");
     return dayjs(report.reported_at).isAfter(oneWeekAgo);
+  });
+  log.info("questions reported this week", {
+    questionsReportedThisWeek,
   });
   // Create a nicely formatted HTML email
   const htmlBody = `
