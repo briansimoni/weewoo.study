@@ -117,7 +117,7 @@ export const log: Logger = {
 };
 
 // Log startup information with deployment context
-log.debug(`Logger initialized for weewoo.study`, {
-  deploymentId: Deno.env.get("DENO_DEPLOYMENT_ID") || "local",
-  cloudWatchEnabled: isRunningInDenoDeploy(),
-});
+// log.debug(`Logger initialized for weewoo.study`, {
+//   deploymentId: Deno.env.get("DENO_DEPLOYMENT_ID") || "local",
+//   cloudWatchEnabled: isRunningInDenoDeploy(),
+// });

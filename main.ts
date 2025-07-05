@@ -37,7 +37,7 @@ function prepare<T extends () => Promise<void>>(fn: T) {
 
 Deno.cron(
   "Poll WeeWoo Ops SQS Messages",
-  CronTime.every(5).minutes(),
+  CronTime.every(15).minutes(),
   prepare(pollWeeWooOpsSQSMessages),
 );
 
