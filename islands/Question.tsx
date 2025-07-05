@@ -236,7 +236,7 @@ function Feedback(
   return (
     <div class="mt-6">
       <p class={`font-bold text-xl ${color}`}>
-        {correct ? "🎉 Correct! Great job!" : "🙃 Keep practicing!"}
+        {correct ? "🎉 Correct! Great job!" : "💩 Keep practicing!"}
       </p>
       <div class="mt-4">
         <p class="text-lg mb-4">
