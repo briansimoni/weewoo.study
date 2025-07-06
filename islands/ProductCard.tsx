@@ -20,7 +20,12 @@ export default function ProductCard({ product }: { product: Product }) {
         </figure>
       </a>
       <div className="card-body">
-        <h2 className="card-title">{product.name}</h2>
+        <div className="flex justify-between items-start">
+          <h2 className="card-title">{product.name}</h2>
+          <div className="text-xl font-bold text-green-500">
+            ${product.price}
+          </div>
+        </div>
         <p>{product.description}</p>
         {product.colors && product.colors.length > 0 && (
           <div className="flex gap-2 my-2">

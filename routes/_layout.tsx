@@ -69,6 +69,9 @@ export default defineLayout<AppState>(async (_req, ctx) => {
                 <li>
                   <a href="/cart">Cart</a>
                 </li>
+                <li>
+                  <a href="/shop">Shop</a>
+                </li>
                 {state.session && (
                   <>
                     <li>
@@ -180,7 +183,6 @@ export default defineLayout<AppState>(async (_req, ctx) => {
           <span className="dock-label">Shop</span>
         </a>
       </div>
-
     </>
   );
 });
