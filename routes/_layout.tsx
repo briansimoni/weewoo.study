@@ -1,7 +1,6 @@
 import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
 import CartIcon from "../islands/CartIcon.tsx";
-import PWAInstallPrompt from "../islands/PWAInstallPrompt.tsx";
 import { StreakStore } from "../lib/streak_store.ts";
 import { AppState } from "./_middleware.ts";
 import { defineLayout } from "$fresh/server.ts";
@@ -182,8 +181,6 @@ export default defineLayout<AppState>(async (_req, ctx) => {
         </a>
       </div>
 
-      {/* PWA Install Prompt - Only shows on mobile devices when not using installed PWA */}
-      <PWAInstallPrompt />
     </>
   );
 });

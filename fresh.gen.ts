@@ -60,7 +60,6 @@ import * as $CartIcon from "./islands/CartIcon.tsx";
 import * as $CartPageIsland from "./islands/CartPageIsland.tsx";
 import * as $DeleteQuestionButton from "./islands/DeleteQuestionButton.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
-import * as $PWAInstallPrompt from "./islands/PWAInstallPrompt.tsx";
 import * as $ProductCard from "./islands/ProductCard.tsx";
 import * as $ProductDetails from "./islands/ProductDetails.tsx";
 import * as $Profile from "./islands/Profile.tsx";
@@ -142,7 +141,6 @@ const manifest = {
     "./islands/CartPageIsland.tsx": $CartPageIsland,
     "./islands/DeleteQuestionButton.tsx": $DeleteQuestionButton,
     "./islands/NavAvatar.tsx": $NavAvatar,
-    "./islands/PWAInstallPrompt.tsx": $PWAInstallPrompt,
     "./islands/ProductCard.tsx": $ProductCard,
     "./islands/ProductDetails.tsx": $ProductDetails,
     "./islands/Profile.tsx": $Profile,
