@@ -17,7 +17,9 @@ interface PageData {
 export const handler: Handlers = {
   async GET(_req, ctx) {
     const store = await QuestionStore.make();
-    const reports = await store.getQuestionReports();
+    const reports = (await store.getQuestionReports()).filter((report) =>
+      !report.resolved_at
+    );
 
     // Fetch the question details for each report
     const reportsWithQuestions = await Promise.all(

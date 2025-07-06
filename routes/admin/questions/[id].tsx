@@ -15,6 +15,7 @@ import {
   ThumbsDown,
   ThumbsUp,
 } from "lucide-preact";
+import ReportCard from "../../../islands/admin/ReportCard.tsx";
 
 interface Data {
   question: Question | null;
@@ -35,6 +36,17 @@ export const handler: Handlers = {
       const questionReports = allReports.filter((report) =>
         report.question_id === questionId
       );
+      // sort questionReports by resolved_at
+      // this basically puts all of the resolved questions at the bottom
+      questionReports.sort((a, b) => {
+        const aTime = b.resolved_at
+          ? new Date(b.resolved_at).getTime()
+          : -Infinity;
+        const bTime = b.resolved_at
+          ? new Date(b.resolved_at).getTime()
+          : -Infinity;
+        return aTime - bTime;
+      });
 
       return ctx.render({ question, reports: questionReports });
     } catch (error) {
@@ -227,30 +239,7 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                       </h2>
                       <div class="space-y-4">
                         {reports.map((report, index) => (
-                          <div
-                            key={index}
-                            class="bg-base-100 p-4 rounded-lg border"
-                          >
-                            <div class="flex items-center gap-2 mb-2">
-                              {report.thumbs === "up"
-                                ? <ThumbsUp className="w-4 h-4 text-success" />
-                                : <ThumbsDown className="w-4 h-4 text-error" />}
-                              <span class="font-medium">
-                                {report.thumbs === "up"
-                                  ? "Positive"
-                                  : "Negative"} Report
-                              </span>
-                              <div class="flex-1 text-right text-xs text-base-content/60">
-                                {new Date(report.reported_at).toLocaleString()}
-                              </div>
-                            </div>
-                            <p class="text-sm">{report.reason}</p>
-                            {report.user_id && (
-                              <div class="text-xs mt-2 text-base-content/60">
-                                Reported by: {report.user_id}
-                              </div>
-                            )}
-                          </div>
+                          <ReportCard key={index} report={report} />
                         ))}
                       </div>
                     </div>

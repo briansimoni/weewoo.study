@@ -30,6 +30,7 @@ import * as $api_admin_product_id_variant_variant_id_update_price from "./routes
 import * as $api_admin_product_id_variants from "./routes/api/admin/product/[id]/variants.ts";
 import * as $api_admin_question from "./routes/api/admin/question.ts";
 import * as $api_admin_questions_id_ from "./routes/api/admin/questions/[id].ts";
+import * as $api_admin_questions_report_resolve from "./routes/api/admin/questions/report/resolve.ts";
 import * as $api_checkout from "./routes/api/checkout.ts";
 import * as $api_preferences from "./routes/api/preferences.ts";
 import * as $api_printful_webhook from "./routes/api/printful_webhook.ts";
@@ -70,6 +71,7 @@ import * as $SupportForm from "./islands/SupportForm.tsx";
 import * as $ThemeController from "./islands/ThemeController.tsx";
 import * as $TrialQuestions from "./islands/TrialQuestions.tsx";
 import * as $admin_ProductDetail from "./islands/admin/ProductDetail.tsx";
+import * as $admin_ReportCard from "./islands/admin/ReportCard.tsx";
 import * as $admin_ZipImageUploader from "./islands/admin/ZipImageUploader.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
@@ -109,6 +111,8 @@ const manifest = {
       $api_admin_product_id_variants,
     "./routes/api/admin/question.ts": $api_admin_question,
     "./routes/api/admin/questions/[id].ts": $api_admin_questions_id_,
+    "./routes/api/admin/questions/report/resolve.ts":
+      $api_admin_questions_report_resolve,
     "./routes/api/checkout.ts": $api_checkout,
     "./routes/api/preferences.ts": $api_preferences,
     "./routes/api/printful_webhook.ts": $api_printful_webhook,
@@ -151,6 +155,7 @@ const manifest = {
     "./islands/ThemeController.tsx": $ThemeController,
     "./islands/TrialQuestions.tsx": $TrialQuestions,
     "./islands/admin/ProductDetail.tsx": $admin_ProductDetail,
+    "./islands/admin/ReportCard.tsx": $admin_ReportCard,
     "./islands/admin/ZipImageUploader.tsx": $admin_ZipImageUploader,
   },
   baseUrl: import.meta.url,

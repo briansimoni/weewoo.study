@@ -196,6 +196,31 @@ paths:
           description: Product deleted
         "404":
           description: Product not found
+  /admin/questions/report/resolve:
+    post:
+      summary: Resolve a question report
+      description: Marks a question report as resolved by setting the resolved_at timestamp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResolveReportRequest"
+      responses:
+        "200":
+          description: Report successfully resolved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        "400":
+          description: Invalid request format
+        "500":
+          description: Internal server error
   /admin/product/{id}/toggle-active:
     post:
       summary: Toggle product active status
@@ -682,6 +707,18 @@ components:
       properties:
         days:
           type: integer
+    ResolveReportRequest:
+      type: object
+      required:
+        - questionId
+        - reportId
+      properties:
+        questionId:
+          type: string
+          description: ID of the question that was reported
+        reportId:
+          type: string
+          description: ID of the report to resolve
     SupportRequest:
       type: object
       required:

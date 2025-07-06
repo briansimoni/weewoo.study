@@ -19,6 +19,7 @@ export interface QuestionReport {
   reason: string;
   reported_at: string;
   user_id?: string;
+  resolved_at?: string;
 }
 
 /**
@@ -522,6 +523,44 @@ export class QuestionStore {
         report_id: reportId,
       },
     );
+  }
+
+  async getReportById({
+    questionId,
+    reportId,
+  }: {
+    questionId: string;
+    reportId: string;
+  }): Promise<QuestionReport> {
+    const report = await this.kv.get<QuestionReport>([
+      this.scope,
+      "question_reports",
+      questionId,
+      reportId,
+    ]);
+    if (!report.value) {
+      throw new Error("Report not found");
+    }
+    return report.value;
+  }
+
+  async resolveReport({
+    questionId,
+    reportId,
+  }: {
+    questionId: string;
+    reportId: string;
+  }) {
+    const report = await this.getReportById({ questionId, reportId });
+    await this.kv.set([
+      this.scope,
+      "question_reports",
+      questionId,
+      reportId,
+    ], {
+      ...report,
+      resolved_at: new Date().toISOString(),
+    });
   }
 
   /**
