@@ -21,7 +21,7 @@ jobs:
       - name: Install Deno
         uses: denoland/setup-deno@v2
         with:
-          deno-version: v2.x
+          deno-version: v2.3.7
 
       - name: Run tests
         run: deno test "./**/*.test.ts"
