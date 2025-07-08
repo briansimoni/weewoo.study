@@ -265,6 +265,68 @@ export default function Home(props: AppProps) {
         </div>
       </div>
 
+      {/* Featured Audio Testimonials */}
+      <div className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Celebrity Endorsements</h2>
+            <p className="text-lg text-base-content/70">
+              Listen to what famous people say about WeeWoo Study
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Trump Testimonial */}
+            <div className="card bg-base-100 shadow-xl">
+              <figure className="px-10 pt-10">
+                <img
+                  src="/trump.webp"
+                  alt="Donald Trump Testimonial"
+                  className="rounded-xl h-64 object-cover"
+                />
+              </figure>
+              <div className="card-body text-center">
+                <h3 className="card-title justify-center">Donald Trump</h3>
+                <p className="text-base-content/70">
+                  "WeeWoo Study is tremendous, believe me. The best EMS training
+                  program ever. It's huge!"
+                </p>
+                <div className="card-actions justify-center mt-4">
+                  <audio controls className="w-full max-w-sm">
+                    <source src="/trump.mp3" type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
+              </div>
+            </div>
+
+            {/* Snoop Dogg Testimonial */}
+            <div className="card bg-base-100 shadow-xl">
+              <figure className="px-10 pt-10">
+                <img
+                  src="/Snoop-Dogg.webp"
+                  alt="Snoop Dogg Testimonial"
+                  className="rounded-xl h-64 object-cover"
+                />
+              </figure>
+              <div className="card-body text-center">
+                <h3 className="card-title justify-center">Snoop Dogg</h3>
+                <p className="text-base-content/70">
+                  "Fo' shizzle, WeeWoo Study got me through my EMT training like
+                  a breeze. Now I'm savin' lives and droppin' rhymes!"
+                </p>
+                <div className="card-actions justify-center mt-4">
+                  <audio controls className="w-full max-w-sm">
+                    <source src="/snoop.mp3" type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Testimonials Section */}
       <div className="bg-base-200 py-16">
         <div className="container mx-auto px-4">
