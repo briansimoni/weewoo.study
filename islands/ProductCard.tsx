@@ -23,7 +23,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="flex justify-between items-start">
           <h2 className="card-title">{product.name}</h2>
           <div className="text-xl font-bold text-green-500">
-            ${product.price}
+            ${product.price.toFixed(2)}
           </div>
         </div>
         <p>{product.description}</p>
