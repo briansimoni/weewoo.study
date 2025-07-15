@@ -49,58 +49,65 @@ export class UserStore {
     return user;
   }
 
-  async updateUser(user: Partial<User> & { user_id: string }, categoryId?: string, isCorrect?: boolean) {
+  async updateUser(
+    user: Partial<User> & { user_id: string },
+    categoryId?: string,
+    isCorrect?: boolean,
+  ) {
     const initialUser = await this.getUser(user.user_id);
     if (!initialUser) {
       throw new Error("User not found");
     }
-    
+
     // Make a deep copy of initialUser to avoid reference issues with nested objects
     const proposedUpdate = JSON.parse(JSON.stringify(initialUser));
-    
+
     // Update top-level properties from the user parameter
     for (const [key, value] of Object.entries(user)) {
-      if (key !== 'stats' && key !== 'categories') {
+      if (key !== "stats" && key !== "categories") {
         proposedUpdate[key] = value;
       }
     }
-    
+
     // Handle stats updates separately to properly merge category stats
     if (user.stats) {
       // Update top-level stats
-      proposedUpdate.stats.questions_answered = user.stats.questions_answered ?? proposedUpdate.stats.questions_answered;
-      proposedUpdate.stats.questions_correct = user.stats.questions_correct ?? proposedUpdate.stats.questions_correct;
-      
+      proposedUpdate.stats.questions_answered = user.stats.questions_answered ??
+        proposedUpdate.stats.questions_answered;
+      proposedUpdate.stats.questions_correct = user.stats.questions_correct ??
+        proposedUpdate.stats.questions_correct;
+
       // If user.stats contains categories, merge them
       if (user.stats.categories) {
         proposedUpdate.stats.categories = proposedUpdate.stats.categories || {};
         for (const [catId, catStats] of Object.entries(user.stats.categories)) {
           proposedUpdate.stats.categories[catId] = {
-            ...proposedUpdate.stats.categories[catId] || { questions_answered: 0, questions_correct: 0 },
-            ...catStats
+            ...proposedUpdate.stats.categories[catId] ||
+              { questions_answered: 0, questions_correct: 0 },
+            ...catStats,
           };
         }
       }
     }
-    
+
     // If categoryId is provided, update the specific category stats
     if (categoryId) {
       // Initialize categories if not exists
       if (!proposedUpdate.stats.categories) {
         proposedUpdate.stats.categories = {};
       }
-      
+
       // Initialize category if not exists
       if (!proposedUpdate.stats.categories[categoryId]) {
         proposedUpdate.stats.categories[categoryId] = {
           questions_answered: 0,
-          questions_correct: 0
+          questions_correct: 0,
         };
       }
-      
+
       // Increment questions answered for this category
       proposedUpdate.stats.categories[categoryId].questions_answered++;
-      
+
       // If the answer was correct, increment correct count
       if (isCorrect) {
         proposedUpdate.stats.categories[categoryId].questions_correct++;
@@ -156,7 +163,7 @@ export class UserStore {
           prefix: ["leaderboard", "questions_correct"],
         }, {
           reverse: true,
-          limit: 10,
+          limit: 100,
         })
       ) {
         entries.push(entry);

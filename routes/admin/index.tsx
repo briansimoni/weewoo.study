@@ -10,6 +10,7 @@ import {
   MessageCircle,
   ShoppingBag,
   ThumbsUp,
+  Users,
 } from "lucide-preact";
 
 interface AdminToolCard {
@@ -47,6 +48,12 @@ export default function AdminIndex(_props: PageProps) {
       description: "Debug tools and system diagnostics",
       url: "/admin/debug",
       icon: Bug,
+    },
+    {
+      title: "User Management",
+      description: "View and manage user accounts and statistics",
+      url: "/admin/users",
+      icon: Users,
     },
   ];
 
