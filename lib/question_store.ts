@@ -433,7 +433,11 @@ export class QuestionStore {
     ]);
     if (!count) throw new Error("No questions");
 
-    const randomIndex = Math.floor(Math.random() * count);
+    const randomArray = new Uint32Array(1);
+    crypto.getRandomValues(randomArray);
+    // Converts to 0-1 range: Divides by the maximum 32-bit unsigned integer value + 1 to get a float between 0 and 1
+    const randomFloat = randomArray[0] / (0xFFFFFFFF + 1); // Convert to 0-1 range
+    const randomIndex = Math.floor(randomFloat * count);
     const questionIdResult = await this.kv.get<string>([
       this.scope,
       "global_question_index",
