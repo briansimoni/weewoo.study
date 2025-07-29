@@ -27,11 +27,20 @@ export default function ProductDetails(
   );
 
   // Get the selected variant based on size and color/name
-  const selectedVariant = variants.find((v) =>
-    (v.color?.name.toLowerCase() === selectedColor?.name.toLowerCase() &&
-      v.size === selectedSize) ||
-    (v.size === selectedSize && v.name === selectedName)
-  );
+  // Prioritize name-based selection for products that have custom names
+  const selectedVariant = variants.find((v) => {
+    // For products with custom names (like scented candles)
+    if (names.length > 0 && v.name) {
+      return v.size === selectedSize && v.name === selectedName;
+    } // For products with colors (like t-shirts)
+    else if (colors.length > 0 && v.color && selectedColor) {
+      return v.color.name.toLowerCase() === selectedColor.name.toLowerCase() &&
+        v.size === selectedSize;
+    } // Fallback to size-only matching if neither colors nor names are available
+    else {
+      return v.size === selectedSize;
+    }
+  });
 
   const images = selectedVariant?.images ?? [];
 
@@ -180,7 +189,7 @@ export default function ProductDetails(
         {names.length > 0 &&
           (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Size</h3>
+              <h3 className="text-lg font-semibold mb-2">Variant</h3>
               <div className="flex flex-wrap gap-2">
                 {names.map((name) => (
                   <button

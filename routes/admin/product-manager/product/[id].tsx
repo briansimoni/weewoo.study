@@ -5,7 +5,6 @@ import {
 } from "../../../../lib/client/printful.ts";
 import { Product, ProductStore } from "../../../../lib/product_store.ts";
 import ProductDetail from "../../../../islands/admin/ProductDetail.tsx";
-import ProductDetail2 from "../../../../islands/admin/ProductDetail2.tsx";
 
 interface ProductDetailData {
   productId: string;

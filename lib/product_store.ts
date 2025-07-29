@@ -26,7 +26,6 @@ export interface Product {
       }[];
     }[];
   };
-  type: "apparel" | "item";
 }
 
 export interface ProductVariant {

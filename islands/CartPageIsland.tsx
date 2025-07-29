@@ -10,6 +10,7 @@ import { useEffect, useState } from "preact/hooks";
 export default function CartPageIsland() {
   const cart = useSignal(cartItems.value);
   const total = useSignal(getCartTotal());
+  console.log(cart);
 
   // Update local state when cart changes
   useEffect(() => {
@@ -90,7 +91,7 @@ export default function CartPageIsland() {
           <thead>
             <tr>
               <th>Product</th>
-              <th>Color/Size</th>
+              <th>Name/Size</th>
               <th>Price</th>
               <th>Quantity</th>
               <th>Total</th>
@@ -121,13 +122,14 @@ export default function CartPageIsland() {
                 </td>
                 <td>
                   <div className="flex items-center gap-2">
-                    {
-                      /* <div
-                      className="w-4 h-4 rounded-full border"
-                      style={{ backgroundColor: item.variant.color?.hex }}
-                    >
-                    </div> */
-                    }
+                    {item.variant.color && (
+                      <div
+                        className="w-4 h-4 rounded-full border"
+                        style={{ backgroundColor: item.variant.color?.hex }}
+                      >
+                      </div>
+                    )}
+
                     <span>
                       {item.variant.color?.name.replace(/_/g, " ") ??
                         item.variant.name}

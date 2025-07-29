@@ -76,8 +76,13 @@ export const handler: Handlers = {
       const stripe = new Stripe(stripeAPIKey);
 
       // Create a Stripe product
+      // Handle variants with colors vs custom names
+      const variantIdentifier = variant.color?.name || variant.name;
+      if (!variantIdentifier) {
+        throw new Error("variantIdentifier required");
+      }
       const stripeProduct = await stripe.products.create({
-        name: `${product.name} ${variant.color.name} ${variant.size}`,
+        name: `${product.name} ${variantIdentifier} ${variant.size}`,
         images: variant.images.slice(0, 8), // Stripe allows up to 8 images
         tax_code: "txcd_30011000", // Standard physical goods
         shippable: true,
