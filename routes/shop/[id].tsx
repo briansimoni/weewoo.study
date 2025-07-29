@@ -1,5 +1,5 @@
 import { defineRoute } from "$fresh/server.ts";
-import { ProductStore } from "../../lib/product_store.ts";
+import { Product, ProductStore } from "../../lib/product_store.ts";
 import ProductDetails from "../../islands/ProductDetails.tsx";
 
 const productStore = await ProductStore.make();

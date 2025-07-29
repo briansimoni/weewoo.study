@@ -16,7 +16,8 @@ const ProductVariantSchema = z.object({
   color: z.object({
     name: z.string(),
     hex: z.string(),
-  }),
+  }).optional(),
+  name: z.string().optional(),
   size: z.string(),
   images: z.array(z.string()),
   stripe_product_id: z.string().optional(),
@@ -183,10 +184,11 @@ export const handler: Handlers = {
         isNewVariant = true;
 
         // Validate required fields for new variants
-        if (!data.color || !data.size) {
+        if (!data.size && !(data.color || data.name)) {
           return new Response(
             JSON.stringify({
-              error: "Color and size are required for new variants",
+              error:
+                "size and either color or name is required for new variants",
             }),
             {
               status: 400,
@@ -202,6 +204,7 @@ export const handler: Handlers = {
           product_template_id: product.product_template_id,
           price: data.price || 0,
           color: data.color,
+          name: data.name,
           size: data.size,
           images: data.images || [],
           stripe_product_id: data.stripe_product_id,

@@ -1,5 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
-import { ProductStore } from "../../../lib/product_store.ts";
+import { Product, ProductStore } from "../../../lib/product_store.ts";
 import { PrintfulApiClient } from "../../../lib/client/printful.ts";
 
 export const handler: Handlers = {
@@ -41,7 +41,7 @@ export const handler: Handlers = {
 
       // Create product object
       const { sync_product } = productDetails;
-      const product = {
+      const product: Product = {
         printful_id: sync_product.id.toString(),
         product_template_id: "", // Empty string by default, editable in ProductDetail
         name: sync_product.name,
@@ -49,7 +49,7 @@ export const handler: Handlers = {
         description: "", // This would need to be provided separately
         price: 0, // This would need to be set later
         active: false, // Set to false as requested
-        colors: [], // This would need to be populated from variants
+        colors: [],
       };
 
       // Store the product

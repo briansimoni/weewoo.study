@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { PrintfulProductVariant } from "../../lib/client/printful.ts";
 import { Product, ProductVariant } from "../../lib/product_store.ts";
 import { JSX } from "preact";
+import { AlertTriangle } from "lucide-preact";
 import ZipImageUploader from "./ZipImageUploader.tsx";
 
 interface ProductDetailProps {
@@ -64,6 +65,9 @@ export default function ProductDetail(
     Record<string, boolean>
   >({});
   const [storedVariants, setStoredVariants] = useState<ProductVariant[]>([]);
+  const [variantCustomNames, setVariantCustomNames] = useState<
+    Record<string, string>
+  >({});
 
   // Helper function to get variant images (since PrintfulProductVariant doesn't have an images property)
   const getVariantImages = (variantId: string): string[] => {
@@ -126,12 +130,17 @@ export default function ProductDetail(
 
         // Initialize variantImages with existing images from stored variants
         const initialImages: Record<string, string> = {};
+        const initialCustomNames: Record<string, string> = {};
         variants.forEach((variant: ProductVariant) => {
           if (variant.images && variant.images.length > 0) {
             initialImages[variant.variant_id] = variant.images.join("\n");
           }
+          if (variant.name) {
+            initialCustomNames[variant.variant_id] = variant.name;
+          }
         });
         setVariantImages(initialImages);
+        setVariantCustomNames(initialCustomNames);
       } else {
         console.error("Failed to load variants");
       }
@@ -789,23 +798,42 @@ export default function ProductDetail(
           <div className="bg-warning-light border-l-4 border-warning p-4 mb-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-warning"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <AlertTriangle className="h-5 w-5 text-warning" />
               </div>
               <div className="ml-3">
                 <p className="text-sm text-warning-dark">
                   You need to define colors before you can assign them to
                   variants.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Additional warning about product configuration */}
+        {storedProduct && (
+          <div className="bg-info-light border-l-4 border-info p-4 mb-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <AlertTriangle className="h-5 w-5 text-info" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-info-dark">
+                  <strong>Product Configuration Tip:</strong>{" "}
+                  Products should generally have either <strong>colors</strong>
+                  {" "}
+                  (for items like t-shirts with different colors) or use{" "}
+                  <strong>custom variant names</strong>{" "}
+                  (for items like scented candles with different scents), but
+                  typically not both.
+                </p>
+                <p className="text-sm text-info-dark mt-1">
+                  • <strong>Color-based products:</strong>{" "}
+                  Define colors above, variants will show color selection
+                </p>
+                <p className="text-sm text-info-dark">
+                  • <strong>Name-based products:</strong>{" "}
+                  Leave colors empty, use custom variant names instead
                 </p>
               </div>
             </div>
@@ -819,7 +847,10 @@ export default function ProductDetail(
                 ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
-                Name
+                Printful Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
+                Custom Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-on-surface uppercase tracking-wider">
                 Size
@@ -870,6 +901,41 @@ export default function ProductDetail(
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-content">
                     {variant.name}
+                  </td>
+                  <td
+                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {editingVariants[variant.id.toString()]
+                      ? (
+                        <input
+                          type="text"
+                          className="border border-border rounded-md text-sm p-1 w-full max-w-[200px]"
+                          value={variantCustomNames[variant.id.toString()] ||
+                            (storedVariants.find((v) =>
+                              v.variant_id === variant.id.toString()
+                            )?.name || "")}
+                          placeholder="Enter custom name"
+                          onChange={(e) => {
+                            const newNames = { ...variantCustomNames };
+                            newNames[variant.id.toString()] =
+                              e.currentTarget.value;
+                            setVariantCustomNames(newNames);
+                          }}
+                        />
+                      )
+                      : (
+                        <span>
+                          {storedVariants.find((v) =>
+                            v.variant_id === variant.id.toString()
+                          )?.name ||
+                            (
+                              <span className="text-muted italic">
+                                No custom name
+                              </span>
+                            )}
+                        </span>
+                      )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {variant.size}
@@ -1038,24 +1104,30 @@ export default function ProductDetail(
                               setSavingVariants(newSavingState);
 
                               try {
-                                // Prepare the variant data
-                                const selectedColorName =
-                                  variantColorAssignments[
-                                    variant.id.toString()
-                                  ] ||
-                                  (storedProduct.colors?.find((c) =>
-                                    c.name.toLowerCase() ===
-                                      variant.color.toLowerCase()
-                                  )?.name || "");
+                                // Prepare the variant data - colors are now completely optional
+                                const hasColorsDefinition =
+                                  storedProduct.colors &&
+                                  storedProduct.colors.length > 0;
 
-                                const selectedColor = storedProduct.colors
-                                  ?.find((c) => c.name === selectedColorName);
+                                let selectedColor = null;
+                                if (hasColorsDefinition) {
+                                  const selectedColorName =
+                                    variantColorAssignments[
+                                      variant.id.toString()
+                                    ] ||
+                                    (storedProduct.colors?.find((c) =>
+                                      c.name.toLowerCase() ===
+                                        variant.color.toLowerCase()
+                                    )?.name || "");
 
-                                if (!selectedColor) {
-                                  alert(
-                                    "Please select a color for this variant.",
-                                  );
-                                  return;
+                                  // Only set selectedColor if a color name is provided
+                                  if (selectedColorName) {
+                                    selectedColor = storedProduct.colors
+                                      ?.find((c) =>
+                                        c.name === selectedColorName
+                                      );
+                                  }
+                                  // Colors are optional - no validation error if no color is selected
                                 }
 
                                 // Parse price
@@ -1082,6 +1154,11 @@ export default function ProductDetail(
                                 const priceChanged = existingVariant &&
                                   existingVariant.price !== price;
 
+                                // Get custom name
+                                const customName =
+                                  variantCustomNames[variant.id.toString()] ||
+                                  (existingVariant?.name || "");
+
                                 // Create variant data
                                 const variantData = {
                                   variant_id: String(variant.id),
@@ -1090,15 +1167,19 @@ export default function ProductDetail(
                                   product_template_id:
                                     storedProduct.product_template_id,
                                   price,
-                                  color: {
-                                    name: selectedColor.name,
-                                    hex: selectedColor.hex,
-                                  },
                                   size: variant.size,
+                                  name: customName,
                                   images,
                                   // Preserve existing stripe_product_id if it exists
                                   stripe_product_id: existingVariant
                                     ?.stripe_product_id,
+                                  // Include color information only if colors are defined
+                                  ...(selectedColor && {
+                                    color: {
+                                      name: selectedColor.name,
+                                      hex: selectedColor.hex,
+                                    },
+                                  }),
                                 };
 
                                 // Call the API to update the variant

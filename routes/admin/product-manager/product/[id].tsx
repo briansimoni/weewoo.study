@@ -155,16 +155,28 @@ export default function ProductDetailPage(
                 <span className="font-medium">Name:</span> {storedProduct.name}
               </p>
               <p>
-                <span className="font-medium">ID:</span> {storedProduct.printful_id}
+                <span className="font-medium">ID:</span>{" "}
+                {storedProduct.printful_id}
               </p>
               <p>
-                <span className="font-medium">Template ID:</span> {storedProduct.product_template_id || "N/A"}
+                <span className="font-medium">Template ID:</span>{" "}
+                {storedProduct.product_template_id || "N/A"}
               </p>
               <p>
-                <span className="font-medium">Price:</span> ${storedProduct.price.toFixed(2)}
+                <span className="font-medium">Price:</span>{" "}
+                ${storedProduct.price.toFixed(2)}
               </p>
               <p>
-                <span className="font-medium">Status:</span> <span className={`px-2 py-1 text-xs rounded-full ${storedProduct.active ? "bg-success/20 text-success" : "bg-warning/20 text-warning"}`}>{storedProduct.active ? "Active" : "Inactive"}</span>
+                <span className="font-medium">Status:</span>{" "}
+                <span
+                  className={`px-2 py-1 text-xs rounded-full ${
+                    storedProduct.active
+                      ? "bg-success/20 text-success"
+                      : "bg-warning/20 text-warning"
+                  }`}
+                >
+                  {storedProduct.active ? "Active" : "Inactive"}
+                </span>
               </p>
             </div>
             <div>
@@ -194,7 +206,8 @@ export default function ProductDetailPage(
                 )
                 : (
                   <p>
-                    <span className="font-medium">Colors:</span> No color options available
+                    <span className="font-medium">Colors:</span>{" "}
+                    No color options available
                   </p>
                 )}
             </div>
