@@ -26,6 +26,7 @@ export interface Product {
       }[];
     }[];
   };
+  type: "apparel" | "item";
 }
 
 export interface ProductVariant {
@@ -33,11 +34,13 @@ export interface ProductVariant {
   printful_product_id: string;
   product_template_id: string;
   price: number;
-  color: {
+  color?: {
     name: string;
     hex: string;
   };
-  size: string;
+  size?: string;
+  name?: string;
+  description?: string;
   images: string[];
   stripe_product_id?: string;
 }

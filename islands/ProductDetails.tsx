@@ -12,31 +12,32 @@ export default function ProductDetails(
 ) {
   const [selectedColor, setSelectedColor] = useState(variants[0].color);
   const [selectedSize, setSelectedSize] = useState(variants[0].size);
+  const [selectedName, setSelectedName] = useState(variants[0].name);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Get unique sizes from variants
-  const sizes = Array.from(new Set(variants.map((v) => v.size)));
-  const colors = Array.from(new Set(variants.map((v) => v.color.name)));
-
-  // Get variant images and details for the selected color and size
-  const colorVariant = variants.find((v) =>
-    v.color.name.toLowerCase() === selectedColor.name.toLowerCase()
+  const sizes = Array.from(new Set(variants.map((v) => v.size))).filter(
+    Boolean,
   );
-  const images = colorVariant?.images || [];
+  const colors = Array.from(new Set(variants.map((v) => v.color?.name))).filter(
+    Boolean,
+  );
+  const names = Array.from(new Set(variants.map((v) => v.name))).filter(
+    Boolean,
+  );
 
-  // Get the selected variant based on color and size
+  // Get the selected variant based on size and color/name
   const selectedVariant = variants.find((v) =>
-    v.color.name.toLowerCase() === selectedColor.name.toLowerCase() &&
-    v.size === selectedSize
+    (v.color?.name.toLowerCase() === selectedColor?.name.toLowerCase() &&
+      v.size === selectedSize) ||
+    (v.size === selectedSize && v.name === selectedName)
   );
+
+  const images = selectedVariant?.images ?? [];
 
   const handleAddToCart = () => {
-    const variant = variants.find((v) =>
-      v.color.name.toLowerCase() === selectedColor.name.toLowerCase() &&
-      v.size === selectedSize
-    );
-    if (variant) {
-      addToCart(variant);
+    if (selectedVariant) {
+      addToCart(selectedVariant);
       // Show a toast or notification that item was added
       const toast = document.getElementById("cart-toast");
       if (toast) {
@@ -55,7 +56,7 @@ export default function ProductDetails(
         <div className="relative aspect-square mb-4">
           <img
             src={images[currentImageIndex] || product.thumbnail_url}
-            alt={`${product.name} in ${selectedColor.name}`}
+            alt={`${selectedName || selectedColor?.name} ${product.name}`}
             className="w-full h-full object-cover rounded-lg"
           />
           {images.length > 1 && (
@@ -123,36 +124,38 @@ export default function ProductDetails(
         </div>
 
         {/* Color selection */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">
-            Color: {selectedColor.name.replace(/_/g, " ")}
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {colors.map((colorName) => {
-              const variantColor = variants.find((v) =>
-                v.color.name === colorName
-              )?.color;
-              if (!variantColor) return null;
-              return (
-                <button
-                  key={colorName}
-                  type="button"
-                  onClick={() => {
-                    setSelectedColor(variantColor);
-                    setCurrentImageIndex(0);
-                  }}
-                  className={`w-10 h-10 rounded-full border-2 ${
-                    selectedColor.name === colorName
-                      ? "border-primary ring-2 ring-primary ring-offset-2"
-                      : "border-gray-300 hover:border-gray-400"
-                  }`}
-                  style={{ backgroundColor: variantColor.hex }}
-                  title={colorName.replace(/_/g, " ")}
-                />
-              );
-            })}
+        {colors.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-2">
+              Color: {selectedColor?.name.replace(/_/g, " ")}
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {colors.map((colorName) => {
+                const variantColor = variants.find((v) =>
+                  v.color?.name === colorName
+                )?.color;
+                if (!variantColor) return null;
+                return (
+                  <button
+                    key={colorName}
+                    type="button"
+                    onClick={() => {
+                      setSelectedColor(variantColor);
+                      setCurrentImageIndex(0);
+                    }}
+                    className={`w-10 h-10 rounded-full border-2 ${
+                      selectedColor?.name === colorName
+                        ? "border-primary ring-2 ring-primary ring-offset-2"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                    style={{ backgroundColor: variantColor.hex }}
+                    title={colorName?.replace(/_/g, " ")}
+                  />
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Size selection */}
         <div className="mb-6">
@@ -172,6 +175,28 @@ export default function ProductDetails(
             ))}
           </div>
         </div>
+
+        {/* name selection (think scented candle names - they don't have colors) */}
+        {names.length > 0 &&
+          (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Size</h3>
+              <div className="flex flex-wrap gap-2">
+                {names.map((name) => (
+                  <button
+                    key={name}
+                    type="button"
+                    onClick={() => setSelectedName(name)}
+                    className={`btn ${
+                      selectedName === name ? "btn-primary" : "btn-outline"
+                    }`}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
         {/* Add to Cart button */}
         <div className="flex">

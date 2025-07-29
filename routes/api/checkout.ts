@@ -15,7 +15,8 @@ const ProductVariantSchema = z.object({
   color: z.object({
     name: z.string(),
     hex: z.string(),
-  }),
+  }).optional(),
+  name: z.string().optional(),
   size: z.string(),
   images: z.array(z.string()),
   stripe_product_id: z.string(),
@@ -39,6 +40,20 @@ export const handler: Handlers = {
       // Parse and validate the request body
       const body = await req.json();
       const result = CheckoutRequestSchema.safeParse(body);
+      result.data?.cartItems.forEach((item) => {
+        if (!item.variant.name && !item.variant.color) {
+          return new Response(
+            JSON.stringify({
+              error: "Invalid request body",
+              details: "product requires either name or color",
+            }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        }
+      });
 
       if (!result.success) {
         return new Response(

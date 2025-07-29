@@ -106,7 +106,9 @@ export default function CartPageIsland() {
                       <div className="mask mask-squircle w-16 h-16">
                         <img
                           src={item.variant.images[0] || ""}
-                          alt={`${item.variant.color.name} ${item.variant.size}`}
+                          alt={`${
+                            item.variant.color?.name ?? item.variant.name
+                          } ${item.variant.size}`}
                         />
                       </div>
                     </div>
@@ -119,12 +121,17 @@ export default function CartPageIsland() {
                 </td>
                 <td>
                   <div className="flex items-center gap-2">
-                    <div
+                    {
+                      /* <div
                       className="w-4 h-4 rounded-full border"
-                      style={{ backgroundColor: item.variant.color.hex }}
+                      style={{ backgroundColor: item.variant.color?.hex }}
                     >
-                    </div>
-                    <span>{item.variant.color.name.replace(/_/g, " ")}</span>
+                    </div> */
+                    }
+                    <span>
+                      {item.variant.color?.name.replace(/_/g, " ") ??
+                        item.variant.name}
+                    </span>
                     <span className="mx-1">/</span>
                     <span>{item.variant.size}</span>
                   </div>
