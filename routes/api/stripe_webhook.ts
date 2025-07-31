@@ -99,6 +99,16 @@ export const handler: AppHandlers = {
           session.collected_information?.shipping_details!,
           session.customer_details?.email || undefined,
         );
+        await emailService.sendEmail({
+          to: Deno.env.get("ADMIN_EMAIL") ?? "",
+          subject: "💰 Order Placed 💰",
+          htmlBody:
+            "<div>an order was placed on printful! yay! Go click confirm</div>",
+        }).catch((err) => {
+          log.error("error sending admin email", {
+            error: err,
+          });
+        });
       } else {
         log.error("No valid items found in checkout session");
       }
@@ -161,7 +171,9 @@ async function submitOrder(
     try {
       // Get product names and prices for the email
       const emailItems = orderItems.map((item) => ({
-        name: `${item.variant.color.name} ${item.variant.size}`,
+        name: item.variant.color 
+          ? `${item.variant.color.name} ${item.variant.size}`
+          : item.variant.name || `Variant ${item.variant.size}`,
         quantity: item.quantity,
         price: item.variant.price || 0,
       }));
