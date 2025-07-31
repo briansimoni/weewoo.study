@@ -1,5 +1,6 @@
 import { PageProps } from "$fresh/server.ts";
 import {
+  BarChart3,
   Bug,
   FileQuestion,
   Home,
@@ -109,7 +110,7 @@ export default function AdminIndex(_props: PageProps) {
 
         <div class="divider my-10">Reports & Analytics</div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
             <div class="card-body">
               <h2 class="card-title flex items-center gap-2">
@@ -122,6 +123,23 @@ export default function AdminIndex(_props: PageProps) {
               <div class="card-actions justify-end mt-4">
                 <a href="/admin/question-reports" class="btn btn-primary">
                   View Reports
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
+            <div class="card-body">
+              <h2 class="card-title flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-primary" />
+                Question Reports Stats
+              </h2>
+              <p class="text-base-content/70">
+                Analytics dashboard showing user report activity and statistics
+              </p>
+              <div class="card-actions justify-end mt-4">
+                <a href="/admin/questions/question-reports-stats" class="btn btn-primary">
+                  View Stats
                 </a>
               </div>
             </div>
