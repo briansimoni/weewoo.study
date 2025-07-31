@@ -129,7 +129,7 @@ export default function ProductDetails(
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">Description</h3>
-          <p className="text-gray-600">{product.description}</p>
+          <p className="text-base-content/70">{product.description}</p>
         </div>
 
         {/* Color selection */}
