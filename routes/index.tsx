@@ -274,7 +274,7 @@ export default function Home(props: AppProps) {
                   when you wear this to the pool.
                 </p>
                 <div className="card-actions justify-center mt-4">
-                  <a href="/shop" className="btn btn-primary">Shop Hats</a>
+                  <a href="/shop" className="btn btn-primary">Shop Swimwear</a>
                 </div>
               </div>
             </div>
