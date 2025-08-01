@@ -213,7 +213,7 @@ export default function Home(props: AppProps) {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-8xl mx-auto">
             {/* Hoodie */}
             <div className="card bg-base-100 shadow-xl">
               <figure className="px-10 pt-10">
@@ -255,12 +255,35 @@ export default function Home(props: AppProps) {
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="text-center mt-12">
-            <a href="/shop" className="btn btn-outline btn-lg">
-              View All Merchandise
-            </a>
+            {/* Hot Girl */}
+            <div className="card bg-base-100 shadow-xl">
+              <figure className="px-10 pt-10">
+                <img
+                  src="https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-left-front-688c1b392b34d.png"
+                  alt="WeeWoo High-Waisted Bikini"
+                  className="rounded-xl h-64 object-cover"
+                />
+              </figure>
+              <div className="card-body text-center">
+                <h3 className="card-title justify-center">
+                  WeeWoo High-Waisted Bikini
+                </h3>
+                <p className="text-base-content/70">
+                  Get the c-collars ready because you'll really be turning heads
+                  when you wear this to the pool.
+                </p>
+                <div className="card-actions justify-center mt-4">
+                  <a href="/shop" className="btn btn-primary">Shop Hats</a>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center mt-12">
+              <a href="/shop" className="btn btn-outline btn-lg">
+                View All Merchandise
+              </a>
+            </div>
           </div>
         </div>
       </div>
