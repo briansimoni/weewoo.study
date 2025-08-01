@@ -278,12 +278,12 @@ export default function Home(props: AppProps) {
                 </div>
               </div>
             </div>
-
-            <div className="text-center mt-12">
-              <a href="/shop" className="btn btn-outline btn-lg">
-                View All Merchandise
-              </a>
-            </div>
+          </div>
+          
+          <div className="text-center mt-12">
+            <a href="/shop" className="btn btn-outline btn-lg">
+              View All Merchandise
+            </a>
           </div>
         </div>
       </div>
