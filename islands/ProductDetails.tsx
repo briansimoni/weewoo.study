@@ -14,6 +14,14 @@ export default function ProductDetails(
   const [selectedSize, setSelectedSize] = useState(variants[0].size);
   const [selectedName, setSelectedName] = useState(variants[0].name);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleImageLoad = (img: HTMLImageElement) => {
+    // Check if image is already loaded (cached)
+    if (img.complete && img.naturalHeight !== 0) {
+      setImageLoaded(true);
+    }
+  };
 
   // Get unique sizes from variants
   const sizes = Array.from(new Set(variants.map((v) => v.size))).filter(
@@ -63,29 +71,38 @@ export default function ProductDetails(
       {/* Left side - Image gallery */}
       <div className="lg:w-2/3">
         <div className="relative aspect-square mb-4">
+          {!imageLoaded && <div className="skeleton w-full h-full absolute inset-0" />}
           <img
             src={images[currentImageIndex] || product.thumbnail_url}
             alt={`${selectedName || selectedColor?.name} ${product.name}`}
-            className="w-full h-full object-cover rounded-lg"
+            className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ${
+              imageLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            onLoad={() => {
+              setImageLoaded(true);
+            }}
+            ref={(img) => {
+              if (img) handleImageLoad(img);
+            }}
           />
           {images.length > 1 && (
             <div className="absolute inset-0 flex items-center justify-between">
               <button
                 type="button"
-                onClick={() =>
-                  setCurrentImageIndex((
-                    prev,
-                  ) => (prev > 0 ? prev - 1 : images.length - 1))}
+                onClick={() => {
+                  setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+                  setImageLoaded(false);
+                }}
                 className="btn btn-circle btn-ghost bg-base-100 bg-opacity-50"
               >
                 ❮
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  setCurrentImageIndex((
-                    prev,
-                  ) => (prev < images.length - 1 ? prev + 1 : 0))}
+                onClick={() => {
+                  setCurrentImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+                  setImageLoaded(false);
+                }}
                 className="btn btn-circle btn-ghost bg-base-100 bg-opacity-50"
               >
                 ❯
@@ -100,7 +117,10 @@ export default function ProductDetails(
               <button
                 key={image}
                 type="button"
-                onClick={() => setCurrentImageIndex(index)}
+                onClick={() => {
+                  setCurrentImageIndex(index);
+                  setImageLoaded(false);
+                }}
                 className={`w-20 h-20 rounded-md overflow-hidden flex-shrink-0 border-2 ${
                   currentImageIndex === index
                     ? "border-primary"
@@ -151,6 +171,7 @@ export default function ProductDetails(
                     onClick={() => {
                       setSelectedColor(variantColor);
                       setCurrentImageIndex(0);
+                      setImageLoaded(false);
                     }}
                     className={`w-10 h-10 rounded-full border-2 ${
                       selectedColor?.name === colorName

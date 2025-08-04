@@ -8,14 +8,34 @@ export default function ProductCard({ product }: { product: Product }) {
     : product.thumbnail_url;
 
   const [currentThumbnail, setCurrentThumbnail] = useState(defaultThumbnail);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleImageLoad = (img: HTMLImageElement) => {
+    // Check if image is already loaded (cached)
+    if (img.complete && img.naturalHeight !== 0) {
+      setImageLoaded(true);
+    }
+  };
 
   return (
     <div className="card border-info-content shadow-2xl hover:shadow-3xl hover:border-primary">
       <a href={`/shop/${product.printful_id}`}>
-        <figure>
+        <figure className="relative">
+          {!imageLoaded && <div className="skeleton w-full absolute inset-0" />}
           <img
+            loading="lazy"
             src={currentThumbnail}
             alt={product.name}
+            onLoad={(_e) => {
+              setImageLoaded(true);
+            }}
+            onError={() => setImageLoaded(true)}
+            ref={(img) => {
+              if (img) handleImageLoad(img);
+            }}
+            className={`transition-opacity duration-300 ${
+              imageLoaded ? "opacity-100" : "opacity-0"
+            }`}
           />
         </figure>
       </a>
@@ -36,8 +56,12 @@ export default function ProductCard({ product }: { product: Product }) {
                 style={{ backgroundColor: color.hex }}
                 onMouseEnter={() => {
                   setCurrentThumbnail(color.thumbnail_url);
+                  setImageLoaded(false); // Reset loading state for new image
                 }}
-                onMouseLeave={() => setCurrentThumbnail(defaultThumbnail)}
+                onMouseLeave={() => {
+                  setCurrentThumbnail(defaultThumbnail);
+                  setImageLoaded(false); // Reset loading state for default image
+                }}
               >
               </div>
             ))}
