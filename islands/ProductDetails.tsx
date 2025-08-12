@@ -71,7 +71,9 @@ export default function ProductDetails(
       {/* Left side - Image gallery */}
       <div className="lg:w-2/3">
         <div className="relative aspect-square mb-4">
-          {!imageLoaded && <div className="skeleton w-full h-full absolute inset-0" />}
+          {!imageLoaded && (
+            <div className="skeleton w-full h-full absolute inset-0" />
+          )}
           <img
             src={images[currentImageIndex] || product.thumbnail_url}
             alt={`${selectedName || selectedColor?.name} ${product.name}`}
@@ -90,7 +92,9 @@ export default function ProductDetails(
               <button
                 type="button"
                 onClick={() => {
-                  setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+                  setCurrentImageIndex((
+                    prev,
+                  ) => (prev > 0 ? prev - 1 : images.length - 1));
                   setImageLoaded(false);
                 }}
                 className="btn btn-circle btn-ghost bg-base-100 bg-opacity-50"
@@ -100,7 +104,9 @@ export default function ProductDetails(
               <button
                 type="button"
                 onClick={() => {
-                  setCurrentImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+                  setCurrentImageIndex((
+                    prev,
+                  ) => (prev < images.length - 1 ? prev + 1 : 0));
                   setImageLoaded(false);
                 }}
                 className="btn btn-circle btn-ghost bg-base-100 bg-opacity-50"
