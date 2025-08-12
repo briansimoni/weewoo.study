@@ -5,6 +5,8 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import JSZip from "npm:jszip";
+import sharp from "npm:sharp";
+import { log } from "../../../../../lib/logger.ts";
 
 // S3 client instance
 const s3Client = new S3Client({
@@ -30,6 +32,64 @@ interface ExtractedFile {
   name: string;
   data: Uint8Array;
   contentType: string;
+}
+
+/**
+ * Processes an image by converting to WebP and resizing if needed
+ * @param imageBuffer - The original image buffer
+ * @param originalFileName - The original filename for reference
+ * @returns Promise with processed image buffer and WebP filename
+ */
+async function processImage(
+  imageBuffer: Uint8Array,
+  originalFileName: string,
+): Promise<{ buffer: Uint8Array; fileName: string }> {
+  try {
+    // Get original image metadata
+    const metadata = await sharp(imageBuffer).metadata();
+    log.info(
+      `Processing ${originalFileName}: ${metadata.width}x${metadata.height}`,
+    );
+
+    // Create Sharp instance
+    const sharpInstance = sharp(imageBuffer);
+
+    // Conditionally resize if width > 1000px
+    if (metadata.width && metadata.width > 1000) {
+      sharpInstance.resize(1000, null, {
+        kernel: sharp.kernel.lanczos3, // Better quality than default
+        withoutEnlargement: true, // Don't upscale if image is smaller
+      });
+    }
+
+    // Convert to WebP with high quality settings
+    const processedBuffer = await sharpInstance
+      .webp({
+        quality: 85, // Higher quality (default is 80)
+        effort: 6, // Maximum compression effort (0-6, higher = better compression)
+        smartSubsample: false, // Better quality for images with fine details
+        nearLossless: false, // Set to true for even higher quality if file size allows
+      })
+      .toBuffer();
+
+    // Generate WebP filename
+    const baseName = originalFileName.replace(/\.[^/.]+$/, ""); // Remove extension
+    const webpFileName = `${baseName}.webp`;
+
+    return {
+      buffer: processedBuffer,
+      fileName: webpFileName,
+    };
+  } catch (error) {
+    log.error(`Error processing image ${originalFileName}:`, {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw new Error(
+      `Failed to process image: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
+    );
+  }
 }
 
 /**
@@ -68,7 +128,9 @@ async function uploadToS3(
       key,
     };
   } catch (error) {
-    console.error("Error uploading to S3:", error);
+    log.error("Error uploading to S3:", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return {
       success: false,
       url: "",
@@ -85,7 +147,7 @@ async function uploadToS3(
 async function listS3ProductImages(productId: string): Promise<string[]> {
   try {
     if (!BUCKET_NAME) {
-      console.warn("S3 bucket name not configured");
+      log.warn("S3 bucket name not configured");
       return [];
     }
 
@@ -106,7 +168,9 @@ async function listS3ProductImages(productId: string): Promise<string[]> {
       .filter((obj) => obj.Key && obj.Key.match(/\.(jpg|jpeg|png|gif|webp)$/i))
       .map((obj) => `${CLOUDFRONT_URL}/${obj.Key}`);
   } catch (error) {
-    console.error("Error listing S3 objects:", error);
+    log.error("Error listing S3 objects:", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return [];
   }
 }
@@ -181,7 +245,9 @@ async function extractFromZip(
 
     return extractedFiles;
   } catch (error) {
-    console.error("Error extracting ZIP file:", error);
+    log.error("Error extracting ZIP file:", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     throw new Error(
       `Failed to extract ZIP file: ${
         error instanceof Error ? error.message : "Unknown error"
@@ -212,7 +278,9 @@ export const handler: Handlers = {
         { status: 200, headers: { "Content-Type": "application/json" } },
       );
     } catch (error) {
-      console.error("Error retrieving S3 images:", error);
+      log.error("Error retrieving S3 images:", {
+        error: error instanceof Error ? error.message : String(error),
+      });
 
       return new Response(
         JSON.stringify({
@@ -271,11 +339,34 @@ export const handler: Handlers = {
         );
       }
 
-      // Upload each extracted file to S3
+      // Process and upload each extracted file to S3
       const uploadResults = await Promise.all(
-        extractedFiles.map((file) =>
-          uploadToS3(file.data, file.name, file.contentType, productId)
-        ),
+        extractedFiles.map(async (file) => {
+          try {
+            // Process the image (convert to WebP and resize if needed)
+            const processed = await processImage(file.data, file.name);
+
+            // Upload the processed WebP image
+            return await uploadToS3(
+              processed.buffer,
+              processed.fileName,
+              "image/webp", // Always WebP now
+              productId,
+            );
+          } catch (error) {
+            log.error(`Failed to process ${file.name}:`, {
+              error: error instanceof Error ? error.message : String(error),
+            });
+            return {
+              success: false,
+              url: "",
+              key: "",
+              error: `Processing failed: ${
+                error instanceof Error ? error.message : "Unknown error"
+              }`,
+            };
+          }
+        }),
       );
 
       // Filter out successful uploads and extract their URLs
@@ -294,7 +385,9 @@ export const handler: Handlers = {
         { status: 200, headers: { "Content-Type": "application/json" } },
       );
     } catch (error) {
-      console.error("Error processing ZIP upload:", error);
+      log.error("Error processing ZIP upload:", {
+        error: error instanceof Error ? error.message : String(error),
+      });
 
       return new Response(
         JSON.stringify({
