@@ -5,7 +5,6 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import JSZip from "npm:jszip";
-import sharp from "npm:sharp";
 import { log } from "../../../../../lib/logger.ts";
 
 // S3 client instance
@@ -35,61 +34,13 @@ interface ExtractedFile {
 }
 
 /**
- * Processes an image by converting to WebP and resizing if needed
- * @param imageBuffer - The original image buffer
- * @param originalFileName - The original filename for reference
- * @returns Promise with processed image buffer and WebP filename
+ * Converts image filename to PNG format
+ * @param originalFileName - The original filename
+ * @returns PNG filename
  */
-async function processImage(
-  imageBuffer: Uint8Array,
-  originalFileName: string,
-): Promise<{ buffer: Uint8Array; fileName: string }> {
-  try {
-    // Get original image metadata
-    const metadata = await sharp(imageBuffer).metadata();
-    log.info(
-      `Processing ${originalFileName}: ${metadata.width}x${metadata.height}`,
-    );
-
-    // Create Sharp instance
-    const sharpInstance = sharp(imageBuffer);
-
-    // Conditionally resize if width > 1000px
-    if (metadata.width && metadata.width > 1000) {
-      sharpInstance.resize(1000, null, {
-        kernel: sharp.kernel.lanczos3, // Better quality than default
-        withoutEnlargement: true, // Don't upscale if image is smaller
-      });
-    }
-
-    // Convert to WebP with high quality settings
-    const processedBuffer = await sharpInstance
-      .webp({
-        quality: 85, // Higher quality (default is 80)
-        effort: 6, // Maximum compression effort (0-6, higher = better compression)
-        smartSubsample: false, // Better quality for images with fine details
-        nearLossless: false, // Set to true for even higher quality if file size allows
-      })
-      .toBuffer();
-
-    // Generate WebP filename
-    const baseName = originalFileName.replace(/\.[^/.]+$/, ""); // Remove extension
-    const webpFileName = `${baseName}.webp`;
-
-    return {
-      buffer: processedBuffer,
-      fileName: webpFileName,
-    };
-  } catch (error) {
-    log.error(`Error processing image ${originalFileName}:`, {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    throw new Error(
-      `Failed to process image: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`,
-    );
-  }
+function convertToPngFilename(originalFileName: string): string {
+  const baseName = originalFileName.replace(/\.[^/.]+$/, ""); // Remove extension
+  return `${baseName}.png`;
 }
 
 /**
@@ -163,9 +114,9 @@ async function listS3ProductImages(productId: string): Promise<string[]> {
       return [];
     }
 
-    // Convert S3 objects to URLs
+    // Convert S3 objects to URLs - only show WebP files (processed images)
     return response.Contents
-      .filter((obj) => obj.Key && obj.Key.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+      .filter((obj) => obj.Key && obj.Key.match(/\.webp$/i))
       .map((obj) => `${CLOUDFRONT_URL}/${obj.Key}`);
   } catch (error) {
     log.error("Error listing S3 objects:", {
@@ -339,29 +290,29 @@ export const handler: Handlers = {
         );
       }
 
-      // Process and upload each extracted file to S3
+      // Upload each extracted file to S3 as PNG (Lambda will process later)
       const uploadResults = await Promise.all(
         extractedFiles.map(async (file) => {
           try {
-            // Process the image (convert to WebP and resize if needed)
-            const processed = await processImage(file.data, file.name);
+            // Convert filename to PNG format
+            const pngFileName = convertToPngFilename(file.name);
 
-            // Upload the processed WebP image
+            // Upload the original image as PNG (Lambda will convert to WebP)
             return await uploadToS3(
-              processed.buffer,
-              processed.fileName,
-              "image/webp", // Always WebP now
+              file.data,
+              pngFileName,
+              "image/png", // Upload as PNG, Lambda will convert
               productId,
             );
           } catch (error) {
-            log.error(`Failed to process ${file.name}:`, {
+            log.error(`Failed to upload ${file.name}:`, {
               error: error instanceof Error ? error.message : String(error),
             });
             return {
               success: false,
               url: "",
               key: "",
-              error: `Processing failed: ${
+              error: `Upload failed: ${
                 error instanceof Error ? error.message : "Unknown error"
               }`,
             };
@@ -369,18 +320,18 @@ export const handler: Handlers = {
         }),
       );
 
-      // Filter out successful uploads and extract their URLs
-      const successfulUploads = uploadResults
-        .filter((result) => result.success)
-        .map((result) => result.url);
+      const successfulUploads = uploadResults.filter((result) =>
+        result.success
+      );
 
-      // Return the array of image URLs
+      // Return success message but don't return PNG URLs since we want to show WebP
       return new Response(
         JSON.stringify({
           success: true,
-          uploadedImages: successfulUploads,
           message:
-            `Successfully uploaded ${successfulUploads.length} of ${extractedFiles.length} images`,
+            `Successfully uploaded ${successfulUploads.length} of ${extractedFiles.length} images. Lambda is processing them to WebP format.`,
+          note:
+            "Use 'View S3 Images' to see processed WebP files after Lambda completes.",
         }),
         { status: 200, headers: { "Content-Type": "application/json" } },
       );

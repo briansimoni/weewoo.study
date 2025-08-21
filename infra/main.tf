@@ -127,6 +127,22 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 }
 
+# S3 bucket notification configuration
+resource "aws_s3_bucket_notification" "static_assets_notification" {
+  bucket = aws_s3_bucket.static_assets.id
+
+  queue {
+    queue_arn = aws_sqs_queue.image_processing_queue.arn
+    events    = ["s3:ObjectCreated:*"]
+    
+    # Only trigger for image files in the root directory (not processed/)
+    filter_prefix = ""
+    filter_suffix = ""
+  }
+
+  depends_on = [aws_sqs_queue_policy.image_processing_queue_policy]
+}
+
 # Outputs
 output "cloudfront_domain_name" {
   description = "Domain name of the CloudFront distribution"

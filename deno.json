@@ -11,14 +11,14 @@
     "update": "deno run -A -r https://fresh.deno.dev/update .",
     "tailwind": "deno run -A npm:@tailwindcss/cli --input ./static/styles.css --output ./static/dist.css --watch",
     "build:css": "deno run -A npm:@tailwindcss/cli --input ./static/styles.css --output ./static/dist.css --minify",
-    "test": "deno test ./**/*.test.ts"
+    "test": "deno test --ignore=image-converter,node_modules ./**/*.test.ts"
   },
   "lint": {
     "rules": {
       "tags": ["fresh", "recommended"]
     }
   },
-  "exclude": ["**/_fresh/*"],
+  "exclude": ["**/_fresh/*", "image-converter/**/*"],
   "nodeModulesDir": "auto",
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
