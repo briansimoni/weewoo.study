@@ -68,21 +68,18 @@ export default function ZipImageUploader(
 
         // Process the successful response
         const data = await response.json();
-        const uploadedImages = data.uploadedImages || [];
 
         // Update progress to show completion
         setUploadProgress(100);
 
-        // Store the extracted image URLs
-        setExtractedImages(uploadedImages);
+        // Show success message but don't display PNG images
+        alert(data.message + " " + (data.note || ""));
 
-        // Call the callback with the new image URLs
-        if (uploadedImages.length > 0) {
-          onImagesExtracted(uploadedImages);
-          setShowPreview(true);
-        } else {
-          alert("No images were extracted from the ZIP file.");
-        }
+        // Clear any previous images since we uploaded PNG but want to show WebP
+        setExtractedImages([]);
+        
+        // Call the callback to notify parent component
+        onImagesExtracted([]);
       } catch (fetchError: unknown) {
         if (fetchError instanceof Error && fetchError.name === "AbortError") {
           throw new Error(
@@ -167,7 +164,7 @@ export default function ZipImageUploader(
           onClick={showS3BucketContents}
           class="bg-secondary hover:bg-secondary-focus  py-2 px-4 rounded transition cursor-pointer"
         >
-          View S3 Images
+          View WebP Images
         </button>
       </div>
 
@@ -180,7 +177,7 @@ export default function ZipImageUploader(
           >
           </div>
           <p class="text-sm text-base-content mt-1">
-            Uploading and extracting images... {uploadProgress}%
+            Uploading images for Lambda processing... {uploadProgress}%
           </p>
         </div>
       )}
@@ -190,7 +187,7 @@ export default function ZipImageUploader(
         <div class="fixed inset-0 bg-base-300 bg-opacity-80 flex items-center justify-center z-50">
           <div class="bg-base-100 p-6 rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-base-300">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-xl font-bold">Extracted Images</h3>
+              <h3 class="text-xl font-bold">Processed WebP Images</h3>
               <button
                 type="button"
                 onClick={closePreview}
@@ -242,7 +239,7 @@ export default function ZipImageUploader(
       {/* Extracted Images List (when not in preview modal) */}
       {extractedImages.length > 0 && !showPreview && (
         <div class="mt-4">
-          <h4 class="font-medium mb-2">Extracted Images:</h4>
+          <h4 class="font-medium mb-2">Processed WebP Images:</h4>
           <div class="bg-base-200 p-3 rounded">
             <ul class="text-sm text-base-content">
               {extractedImages.map((imageUrl, index) => (

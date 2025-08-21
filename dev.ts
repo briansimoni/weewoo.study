@@ -2,7 +2,6 @@
 
 import dev from "$fresh/dev.ts";
 import config from "./fresh.config.ts";
-import { CronTime } from "npm:cron-time-generator";
 
 import "$std/dotenv/load.ts";
 
