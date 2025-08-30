@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { Product } from "../lib/product_store.ts";
+import { Product } from "../../lib/product_store.ts";
 
 export default function ProductCard({ product }: { product: Product }) {
   // Default to product thumbnail if no colors are available
