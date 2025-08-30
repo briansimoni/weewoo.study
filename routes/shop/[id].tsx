@@ -1,6 +1,6 @@
 import { defineRoute } from "$fresh/server.ts";
-import { Product, ProductStore } from "../../lib/product_store.ts";
-import ProductDetails from "../../islands/ProductDetails.tsx";
+import { ProductStore } from "../../lib/product_store.ts";
+import ProductDetails from "../../islands/shop/ProductDetails.tsx";
 
 const productStore = await ProductStore.make();
 
@@ -15,30 +15,12 @@ export default defineRoute(async (req, ctx) => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <nav className="text-sm mb-8">
-        <ol className="list-none p-0 inline-flex">
-          <li className="flex items-center">
-            <a href="/shop" className="text-primary hover:text-primary-focus">
-              Shop
-            </a>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 mx-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </li>
-          <li className="text-gray-500">{product.name}</li>
-        </ol>
-      </nav>
+      <div className="breadcrumbs text-sm mb-8">
+        <ul>
+          <li><a href="/shop">Shop</a></li>
+          <li>{product.name}</li>
+        </ul>
+      </div>
 
       <ProductDetails product={product} variants={variants} />
     </div>

@@ -159,7 +159,9 @@ export default function ProductDetail(
       description: storedProduct.description || "",
       price: storedProduct.price,
       active: storedProduct.active,
+      category: storedProduct.category,
       product_template_id: storedProduct.product_template_id || "",
+      thumbnail_url: storedProduct.thumbnail_url,
       colors: storedProduct.colors || [],
       size_guide: storedProduct.size_guide,
     };

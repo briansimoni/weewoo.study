@@ -63,8 +63,6 @@ import * as $CartIcon from "./islands/CartIcon.tsx";
 import * as $CartPageIsland from "./islands/CartPageIsland.tsx";
 import * as $DeleteQuestionButton from "./islands/DeleteQuestionButton.tsx";
 import * as $NavAvatar from "./islands/NavAvatar.tsx";
-import * as $ProductCard from "./islands/ProductCard.tsx";
-import * as $ProductDetails from "./islands/ProductDetails.tsx";
 import * as $Profile from "./islands/Profile.tsx";
 import * as $Question from "./islands/Question.tsx";
 import * as $QuestionEditor from "./islands/QuestionEditor.tsx";
@@ -75,6 +73,9 @@ import * as $TrialQuestions from "./islands/TrialQuestions.tsx";
 import * as $admin_ProductDetail from "./islands/admin/ProductDetail.tsx";
 import * as $admin_ReportCard from "./islands/admin/ReportCard.tsx";
 import * as $admin_ZipImageUploader from "./islands/admin/ZipImageUploader.tsx";
+import * as $shop_Catalog from "./islands/shop/Catalog.tsx";
+import * as $shop_ProductCard from "./islands/shop/ProductCard.tsx";
+import * as $shop_ProductDetails from "./islands/shop/ProductDetails.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -150,8 +151,6 @@ const manifest = {
     "./islands/CartPageIsland.tsx": $CartPageIsland,
     "./islands/DeleteQuestionButton.tsx": $DeleteQuestionButton,
     "./islands/NavAvatar.tsx": $NavAvatar,
-    "./islands/ProductCard.tsx": $ProductCard,
-    "./islands/ProductDetails.tsx": $ProductDetails,
     "./islands/Profile.tsx": $Profile,
     "./islands/Question.tsx": $Question,
     "./islands/QuestionEditor.tsx": $QuestionEditor,
@@ -162,6 +161,9 @@ const manifest = {
     "./islands/admin/ProductDetail.tsx": $admin_ProductDetail,
     "./islands/admin/ReportCard.tsx": $admin_ReportCard,
     "./islands/admin/ZipImageUploader.tsx": $admin_ZipImageUploader,
+    "./islands/shop/Catalog.tsx": $shop_Catalog,
+    "./islands/shop/ProductCard.tsx": $shop_ProductCard,
+    "./islands/shop/ProductDetails.tsx": $shop_ProductDetails,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

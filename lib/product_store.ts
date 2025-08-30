@@ -1,5 +1,14 @@
 import { getKv } from "./kv.ts";
 
+export const productCategories = [
+  "apparel",
+  "hats",
+  "swimwear",
+  "swag",
+  "kids",
+] as const;
+export type Category = typeof productCategories[number];
+
 export interface Product {
   /** id of the product in printful */
   printful_id: string;
@@ -12,6 +21,7 @@ export interface Product {
   description: string;
   price: number;
   active: boolean;
+  category: Category;
   colors?: {
     name: string;
     hex: string;

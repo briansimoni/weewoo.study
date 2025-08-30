@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
-import { Product, ProductVariant } from "../lib/product_store.ts";
-import { addToCart } from "../lib/cart_store.ts";
+import { Product, ProductVariant } from "../../lib/product_store.ts";
+import { addToCart } from "../../lib/cart_store.ts";
 
 interface ProductDetailsProps {
   product: Product;
