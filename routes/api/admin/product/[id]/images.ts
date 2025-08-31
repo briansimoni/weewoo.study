@@ -1,5 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
 import {
+  _Object,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
@@ -108,15 +109,28 @@ async function listS3ProductImages(productId: string): Promise<string[]> {
       MaxKeys: 100,
     });
 
-    const response = await s3Client.send(command);
-
-    if (!response.Contents) {
-      return [];
+    const images: _Object[] = [];
+    let response = await s3Client.send(command);
+    if (response.Contents) {
+      images.push(...response.Contents);
+    }
+    while (response.NextContinuationToken) {
+      response = await s3Client.send(
+        new ListObjectsV2Command({
+          Bucket: BUCKET_NAME,
+          Prefix: `${productId}/`,
+          MaxKeys: 100,
+          ContinuationToken: response.NextContinuationToken,
+        }),
+      );
+      if (response.Contents) {
+        images.push(...response.Contents);
+      }
     }
 
     // Convert S3 objects to URLs - only show WebP files (processed images)
-    return response.Contents
-      .filter((obj) => obj.Key && obj.Key.match(/\.webp$/i))
+    return images
+      .filter((obj) => obj.Key?.match(/\.webp$/i))
       .map((obj) => `${CLOUDFRONT_URL}/${obj.Key}`);
   } catch (error) {
     log.error("Error listing S3 objects:", {
