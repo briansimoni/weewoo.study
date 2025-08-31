@@ -7,7 +7,9 @@ import { z } from "zod";
 
 // Validation schema for product updates
 const UpdateProductSchema = z.object({
-  product_template_id: z.string().min(1, "Product template ID is required").optional(),
+  printful_id: z.string(),
+  product_template_id: z.string().min(1, "Product template ID is required")
+    .optional(),
   name: z.string().min(1, "Product name is required").optional(),
   thumbnail_url: z.string().url("Invalid thumbnail URL").optional(),
   description: z.string().optional(),
@@ -87,8 +89,8 @@ export const handler: Handlers = {
 
       // Update the product
       const updatedProduct = await productStore.updateProduct({
-        printful_id: productId,
         ...data,
+        printful_id: productId,
       });
 
       return new Response(
