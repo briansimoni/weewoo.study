@@ -10,7 +10,9 @@ interface QuestionPageProps {
 }
 
 export default function QuestionPage(props: QuestionPageProps) {
-  const [question, setQuestion] = useState<Question | undefined>();
+  const [question, setQuestion] = useState<
+    Question & { timestamp_started: string } | undefined
+  >();
   const [correct, setCorrect] = useState<boolean | undefined>();
   const [submitted, setSubmitted] = useState<boolean | undefined>();
   const [selectedAnswer, setSelectedAnswer] = useState<number | undefined>();
@@ -51,6 +53,7 @@ export default function QuestionPage(props: QuestionPageProps) {
         body: JSON.stringify({
           questionId: question?.id,
           answer: selectedAnswer,
+          timestamp_started: question?.timestamp_started,
         }),
         headers: {
           "Content-Type": "application/json",

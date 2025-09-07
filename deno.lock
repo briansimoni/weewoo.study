@@ -6,6 +6,7 @@
     "jsr:@openai/openai@^4.102.0": "4.102.0",
     "jsr:@std/assert@*": "1.0.14",
     "jsr:@std/assert@^1.0.13": "1.0.14",
+    "jsr:@std/assert@^1.0.14": "1.0.14",
     "jsr:@std/async@^1.0.13": "1.0.14",
     "jsr:@std/bytes@^1.0.2": "1.0.6",
     "jsr:@std/bytes@^1.0.6": "1.0.6",
@@ -15,6 +16,7 @@
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/encoding@^1.0.5": "1.0.10",
     "jsr:@std/encoding@^1.0.7": "1.0.10",
+    "jsr:@std/expect@^1.0.17": "1.0.17",
     "jsr:@std/fmt@1.0.3": "1.0.3",
     "jsr:@std/fmt@^1.0.8": "1.0.8",
     "jsr:@std/fs@^1.0.19": "1.0.19",
@@ -37,6 +39,8 @@
     "npm:@tailwindcss/cli@*": "4.1.11",
     "npm:@tailwindcss/cli@^4.0.9": "4.1.11",
     "npm:@types/node@*": "24.2.0",
+    "npm:chart.js@*": "4.5.0",
+    "npm:chart.js@^4.5.0": "4.5.0",
     "npm:cron-time-generator@*": "2.0.3",
     "npm:cron-time-generator@^2.0.3": "2.0.3",
     "npm:daisyui@5.0.27": "5.0.27",
@@ -109,6 +113,13 @@
     },
     "@std/encoding@1.0.10": {
       "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
+    },
+    "@std/expect@1.0.17": {
+      "integrity": "316b47dd65c33e3151344eb3267bf42efba17d1415425f07ed96185d67fc04d9",
+      "dependencies": [
+        "jsr:@std/assert@^1.0.14",
+        "jsr:@std/internal@^1.0.10"
+      ]
     },
     "@std/fmt@1.0.3": {
       "integrity": "97765c16aa32245ff4e2204ecf7d8562496a3cb8592340a80e7e554e0bb9149f"
@@ -1354,6 +1365,9 @@
         "@jridgewell/sourcemap-codec"
       ]
     },
+    "@kurkle/color@0.3.4": {
+      "integrity": "sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w=="
+    },
     "@napi-rs/wasm-runtime@0.2.12": {
       "integrity": "sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==",
       "dependencies": [
@@ -2079,6 +2093,12 @@
       "dependencies": [
         "ansi-styles",
         "supports-color"
+      ]
+    },
+    "chart.js@4.5.0": {
+      "integrity": "sha512-aYeC/jDgSEx8SHWZvANYMioYMZ2KX02W6f6uVfyteuCGcadDLcYVHdfdygsTQkQ4TKn5lghoojAsPj5pu0SnvQ==",
+      "dependencies": [
+        "@kurkle/color"
       ]
     },
     "chownr@3.0.0": {
@@ -3123,12 +3143,14 @@
       "jsr:@openai/openai@^4.102.0",
       "jsr:@std/assert@^1.0.13",
       "jsr:@std/csv@^1.0.5",
+      "jsr:@std/expect@^1.0.17",
       "jsr:@std/http@^1.0.13",
       "jsr:@std/testing@^1.0.9",
       "npm:@aws-sdk/client-s3@3.797.0",
       "npm:@aws-sdk/client-sqs@3.797.0",
       "npm:@preact/signals@2.0.1",
       "npm:@tailwindcss/cli@^4.0.9",
+      "npm:chart.js@^4.5.0",
       "npm:cron-time-generator@^2.0.3",
       "npm:daisyui@5.0.27",
       "npm:dayjs-plugin-utc@~0.1.2",

@@ -4,15 +4,18 @@ import { SessionData } from "../routes/_middleware.ts";
 import { Streak } from "../lib/streak_store.ts";
 import { CATEGORIES } from "../lib/categories.ts";
 import dayjs from "npm:dayjs";
+import BasicLine from "../components/charts/BasicLine.tsx";
+import { Attempt } from "../lib/attempt_store.ts";
 
 interface Props {
   user: User;
   streak?: Streak;
   session?: SessionData;
+  attempts: Attempt[];
 }
 
 export default function Profile(props: Props) {
-  const { user, session, streak } = props;
+  const { user, session, streak, attempts } = props;
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(user.display_name);
   const [streakTimer, setStreakTimer] = useState({
@@ -75,31 +78,34 @@ export default function Profile(props: Props) {
   const streakDays = streak?.days ?? 0;
 
   // Calculate category stats for display, including all available categories
-  const categoriesWithStats = CATEGORIES.map(category => {
+  const categoriesWithStats = CATEGORIES.map((category) => {
     // Get existing stats for this category if available
     const existingStats = user.stats.categories?.[category];
-    
+
     return {
       category,
       stats: existingStats || { questions_answered: 0, questions_correct: 0 },
-      accuracy: existingStats 
-        ? Math.round((existingStats.questions_correct / existingStats.questions_answered) * 100) || 0
+      accuracy: existingStats
+        ? Math.round(
+          (existingStats.questions_correct / existingStats.questions_answered) *
+            100,
+        ) || 0
         : 0,
-      hasData: !!existingStats && existingStats.questions_answered > 0
+      hasData: !!existingStats && existingStats.questions_answered > 0,
     };
   });
-  
+
   // Sort: first categories with data (by number of questions), then alphabetically
   categoriesWithStats.sort((a, b) => {
     // First sort by whether they have data
     if (a.hasData && !b.hasData) return -1;
     if (!a.hasData && b.hasData) return 1;
-    
+
     // If both have data, sort by questions answered
     if (a.hasData && b.hasData) {
       return b.stats.questions_answered - a.stats.questions_answered;
     }
-    
+
     // If neither has data, sort alphabetically
     return a.category.localeCompare(b.category);
   });
@@ -236,6 +242,9 @@ export default function Profile(props: Props) {
         </div>
       </div>
 
+      <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6 bg-base-100 mb-6">
+        <BasicLine attempts={attempts} />
+      </div>
       {/* Category Stats Section */}
       {categoriesWithStats.length > 0 && (
         <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6 bg-base-100">
@@ -251,16 +260,22 @@ export default function Profile(props: Props) {
                 </tr>
               </thead>
               <tbody>
-                {categoriesWithStats.map(({ category, stats, accuracy, hasData }) => (
+                {categoriesWithStats.map((
+                  { category, stats, accuracy, hasData },
+                ) => (
                   <tr key={category} class={hasData ? "" : "opacity-60"}>
                     <td class="font-medium">{category}</td>
                     <td>{stats.questions_answered}</td>
                     <td>{stats.questions_correct}</td>
-                    <td class={!hasData ? "text-base-content" : 
-                        accuracy >= 70 ? "text-success" : 
-                        accuracy >= 50 ? "text-warning" : 
-                        "text-error"
-                    }>
+                    <td
+                      class={!hasData
+                        ? "text-base-content"
+                        : accuracy >= 70
+                        ? "text-success"
+                        : accuracy >= 50
+                        ? "text-warning"
+                        : "text-error"}
+                    >
                       {accuracy}%
                     </td>
                   </tr>
@@ -270,6 +285,43 @@ export default function Profile(props: Props) {
           </div>
         </div>
       )}
+
+      <div>
+        <div class="overflow-x-auto">
+          <table class="table table-zebra">
+            <thead>
+              <tr>
+                <th>Attempt ID</th>
+                <th>Question ID</th>
+                <th>Correct</th>
+                <th>Response Time (ms)</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              {attempts.map((attempt) => {
+                return (
+                  <tr key={attempt.attempt_id}>
+                    <td>{attempt.attempt_id}</td>
+                    <td>{attempt.question_id}</td>
+                    <td>
+                      <div
+                        class={`badge ${
+                          attempt.is_correct ? "badge-success" : "badge-error"
+                        }`}
+                      >
+                        {attempt.is_correct ? "Yes" : "No"}
+                      </div>
+                    </td>
+                    <td>{attempt.response_time_ms}</td>
+                    <td>{attempt.category}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

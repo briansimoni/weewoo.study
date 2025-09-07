@@ -37,9 +37,6 @@ export default function App(props: AppProps) {
         <meta property="og:image" content="/static/ambulance.svg" />
         <meta property="og:url" content="https://weewoo.study" />
         <meta property="og:type" content="website" />
-        
-        {/* Service Worker Registration Script */}
-        <script src="/register-sw.js" defer></script>
       </head>
       <body>
         <props.Component />

@@ -33,6 +33,7 @@ import * as $api_admin_product_id_variants from "./routes/api/admin/product/[id]
 import * as $api_admin_question from "./routes/api/admin/question.ts";
 import * as $api_admin_questions_id_ from "./routes/api/admin/questions/[id].ts";
 import * as $api_admin_questions_report_resolve from "./routes/api/admin/questions/report/resolve.ts";
+import * as $api_attempt from "./routes/api/attempt.ts";
 import * as $api_checkout from "./routes/api/checkout.ts";
 import * as $api_preferences from "./routes/api/preferences.ts";
 import * as $api_printful_webhook from "./routes/api/printful_webhook.ts";
@@ -119,6 +120,7 @@ const manifest = {
     "./routes/api/admin/questions/[id].ts": $api_admin_questions_id_,
     "./routes/api/admin/questions/report/resolve.ts":
       $api_admin_questions_report_resolve,
+    "./routes/api/attempt.ts": $api_attempt,
     "./routes/api/checkout.ts": $api_checkout,
     "./routes/api/preferences.ts": $api_preferences,
     "./routes/api/printful_webhook.ts": $api_printful_webhook,
