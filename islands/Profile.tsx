@@ -285,43 +285,6 @@ export default function Profile(props: Props) {
           </div>
         </div>
       )}
-
-      <div>
-        <div class="overflow-x-auto">
-          <table class="table table-zebra">
-            <thead>
-              <tr>
-                <th>Attempt ID</th>
-                <th>Question ID</th>
-                <th>Correct</th>
-                <th>Response Time (ms)</th>
-                <th>Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attempts.map((attempt) => {
-                return (
-                  <tr key={attempt.attempt_id}>
-                    <td>{attempt.attempt_id}</td>
-                    <td>{attempt.question_id}</td>
-                    <td>
-                      <div
-                        class={`badge ${
-                          attempt.is_correct ? "badge-success" : "badge-error"
-                        }`}
-                      >
-                        {attempt.is_correct ? "Yes" : "No"}
-                      </div>
-                    </td>
-                    <td>{attempt.response_time_ms}</td>
-                    <td>{attempt.category}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   );
 }
