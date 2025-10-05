@@ -40,7 +40,11 @@ export default function Catalog(props: { products: Product[] }) {
 
   return (
     <div class="drawer">
-      <input id="filter-drawer" type="checkbox" class="drawer-toggle" />
+      <input
+        id="filter-drawer"
+        type="checkbox"
+        class="drawer-toggle"
+      />
 
       {/* Main content */}
       <div class="drawer-content">
@@ -91,6 +95,13 @@ export default function Catalog(props: { products: Product[] }) {
               </section>
             );
           })}
+
+          {Object.values(filters).every((category) => category === false) &&
+            (
+              <div class="text-center">
+                No products found. Try adjusting the filters.
+              </div>
+            )}
         </div>
       </div>
 
@@ -164,6 +175,19 @@ export default function Catalog(props: { products: Product[] }) {
                 );
               })}
             </div>
+            <button
+              onClick={() => {
+                const drawer = document.getElementById(
+                  "filter-drawer",
+                ) as HTMLInputElement;
+                if (!drawer) return;
+                drawer.checked = !drawer.checked;
+              }}
+              type="button"
+              class="btn btn-primary"
+            >
+              Done
+            </button>
 
             <div class="divider"></div>
           </div>
