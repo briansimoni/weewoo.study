@@ -1,4 +1,4 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { PageProps } from "fresh";
 import {
   Question,
   QuestionReport,
@@ -16,6 +16,7 @@ import {
   ThumbsUp,
 } from "lucide-preact";
 import ReportCard from "../../../islands/admin/ReportCard.tsx";
+import { Handlers } from "fresh/compat";
 
 interface Data {
   question: Question | null;
@@ -24,7 +25,7 @@ interface Data {
 }
 
 export const handler: Handlers = {
-  async GET(_req, ctx) {
+  async GET(ctx) {
     try {
       const questionId = ctx.params.id;
       const store = await QuestionStore.make();

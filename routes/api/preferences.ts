@@ -4,7 +4,8 @@ import * as http from "@std/http";
 import { encodeBase64 } from "jsr:@std/encoding@^1.0.7/base64";
 
 export const handler: AppHandlers = {
-  async POST(req, ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
     const body = await req.json();
     const schema = z.object({
       theme: z.enum(["light", "dark"]).optional(),

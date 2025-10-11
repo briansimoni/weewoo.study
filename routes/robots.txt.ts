@@ -4,7 +4,7 @@ import { AppHandlers } from "./_middleware.ts";
 const stage = Deno.env.get("STAGE");
 
 export const handler: AppHandlers = {
-  GET: (_req) => {
+  GET: () => {
     // Allow indexing if stage is empty or undefined (production)
     // Disallow indexing for any other stage (TEST, DEV, etc.)
     const robotsTxt = stage === undefined || stage === "" || stage === "PROD"

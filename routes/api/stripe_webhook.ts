@@ -1,6 +1,6 @@
 import { ProductStore, ProductVariant } from "../../lib/product_store.ts";
 import { AppHandlers } from "../_middleware.ts";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import { emailService } from "../../lib/email_service.ts";
 import { log } from "../../lib/logger.ts";
 
@@ -9,7 +9,9 @@ const stripeAPIKey = Deno.env.get("STRIPE_API_KEY")?.trim();
 const printfulSecret = Deno.env.get("PRINTFUL_SECRET")?.trim();
 
 export const handler: AppHandlers = {
-  POST: async (req) => {
+  POST: async (ctx) => {
+    const req = ctx.req;
+
     if (!stripeSigningKey) {
       throw new Error("STRIPE_SIGNING_SECRET is not set");
     }
@@ -171,7 +173,7 @@ async function submitOrder(
     try {
       // Get product names and prices for the email
       const emailItems = orderItems.map((item) => ({
-        name: item.variant.color 
+        name: item.variant.color
           ? `${item.variant.color.name} ${item.variant.size}`
           : item.variant.name || `Variant ${item.variant.size}`,
         quantity: item.quantity,

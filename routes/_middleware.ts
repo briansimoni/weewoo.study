@@ -1,12 +1,9 @@
-import diff from "https://deno.land/x/microdiff@v1.2.0/index.ts";
+import diff from "microdiff";
 import { asyncLocalStorage, log } from "../lib/logger.ts";
 import { Session, SessionStore } from "../lib/session_store.ts";
-import { decodeBase64 } from "jsr:@std/encoding@^1.0.7/base64";
-import type {
-  Handler,
-  Handlers,
-  PageProps,
-} from "https://deno.land/x/fresh@1.7.3/server.ts";
+import { decodeBase64 } from "@std/encoding/base64";
+import type { HandlerFn, PageProps } from "fresh";
+import type { Handlers } from "fresh/compat";
 import * as http from "@std/http";
 
 export interface SessionData {
@@ -37,15 +34,16 @@ export interface AppState extends Record<string, unknown> {
   };
 }
 
-export type AppHandler = Handler<unknown, AppState>;
+export type AppHandler = HandlerFn<unknown, AppState>;
 export type AppHandlers = Handlers<unknown, AppState>;
 
-const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
+const statefulSessionMiddleware: AppHandler = async function handler(ctx) {
+  const req = ctx.req;
   const excluded = [
-    "static",
-    "internal",
+    "/static",
+    "/_fresh",
   ];
-  if (excluded.includes(ctx.destination)) {
+  if (excluded.some((path) => ctx.url.pathname.startsWith(path))) {
     return ctx.next();
   }
   const sessionStore = await SessionStore.make();
@@ -101,17 +99,18 @@ const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
   return response;
 };
 
-const logMiddleware: AppHandler = function (req, ctx) {
+const logMiddleware: AppHandler = function (ctx) {
+  const req = ctx.req;
   const excluded = [
-    "static",
-    "internal",
+    "/static",
+    "/_fresh",
   ];
-  if (excluded.includes(ctx.destination)) {
+  if (excluded.some((path) => ctx.url.pathname.startsWith(path))) {
     return ctx.next();
   }
 
   const user_agent = req.headers.get("user-agent");
-  const ip = ctx.remoteAddr;
+  const ip = ctx.info.remoteAddr;
   const requestId = crypto.randomUUID();
   // log a request id with every log statement
   return asyncLocalStorage.run(requestId, async () => {
@@ -155,7 +154,8 @@ const logMiddleware: AppHandler = function (req, ctx) {
   });
 };
 
-const preferencesMiddleware: AppHandler = async function (req, ctx) {
+const preferencesMiddleware: AppHandler = async function (ctx) {
+  const req = ctx.req;
   const cookies = http.getCookies(req.headers);
   const preferences = cookies["preferences"];
   if (preferences) {

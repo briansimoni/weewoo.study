@@ -3,7 +3,8 @@ import { AppHandlers } from "../../_middleware.ts";
 import { QuestionStore } from "../../../lib/question_store.ts";
 
 export const handler: AppHandlers = {
-  POST: async (req, ctx) => {
+  POST: async (ctx) => {
+    const req = ctx.req;
     const questionStore = await QuestionStore.make();
     const body = await req.json();
     const schema = z.object({

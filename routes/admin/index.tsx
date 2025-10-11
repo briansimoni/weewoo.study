@@ -1,4 +1,4 @@
-import { PageProps } from "$fresh/server.ts";
+import { PageProps } from "fresh";
 import {
   BarChart3,
   Bug,
@@ -138,7 +138,10 @@ export default function AdminIndex(_props: PageProps) {
                 Analytics dashboard showing user report activity and statistics
               </p>
               <div class="card-actions justify-end mt-4">
-                <a href="/admin/questions/question-reports-stats" class="btn btn-primary">
+                <a
+                  href="/admin/questions/question-reports-stats"
+                  class="btn btn-primary"
+                >
                   View Stats
                 </a>
               </div>

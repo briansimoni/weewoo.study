@@ -3,7 +3,8 @@ import { AppHandlers } from "../_middleware.ts";
 import * as http from "@std/http";
 
 export const handler: AppHandlers = {
-  async GET(req, ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
     const cookies = http.getCookies(req.headers);
     const session_id = cookies["app_session"];
     if (session_id) {

@@ -77,7 +77,8 @@ const createQuestionSchema = Zod.object({
 export type AdminCreateQuestionResponse = typeof createQuestionSchema._type;
 
 export const handler: AppHandlers = {
-  async GET(req, _ctx) {
+  async GET(_ctx) {
+    const req = ctx.req;
     const url = new URL(req.url);
     const prompt = url.searchParams.get("prompt");
     const chapterId = url.searchParams.get("chapterId");
@@ -146,7 +147,8 @@ export const handler: AppHandlers = {
     return new Response(JSON.stringify(question), { status: 200 });
   },
 
-  async POST(req, _ctx) {
+  async POST(_ctx) {
+    const req = ctx.req;
     const body = await req.json();
     const question = createQuestionSchema.parse(body);
     if (

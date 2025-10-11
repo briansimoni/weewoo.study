@@ -1,11 +1,11 @@
-import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../../lib/product_store.ts";
 import { ProductVariant } from "../../../../../../lib/product_store.ts";
 import { z } from "zod";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import "$std/dotenv/load.ts";
 import { log } from "../../../../../../lib/logger.ts";
 import { sortImagesInPlace } from "../../../../../../lib/util.ts";
+import { Handlers } from "fresh/compat";
 
 // Zod schema for ProductVariant
 const ProductVariantSchema = z.object({
@@ -27,7 +27,7 @@ export const handler: Handlers = {
   /**
    * Delete a product variant: deactivate all prices, delete Stripe product, then remove from DB
    */
-  async DELETE(_req, ctx) {
+  async DELETE(ctx) {
     const productId = ctx.params.id;
     const variantId = ctx.params.variant_id;
 
@@ -113,7 +113,9 @@ export const handler: Handlers = {
   /**
    * Update a product variant in the local product store
    */
-  async PUT(req, ctx) {
+  async PUT(ctx) {
+    const req = ctx.req;
+
     try {
       const productId = ctx.params.id;
       const variantId = ctx.params.variant_id;

@@ -6,7 +6,8 @@ import { User, UserStore } from "../lib/user_store.ts";
 import { AppHandlers, AppProps } from "./_middleware.ts";
 
 export const handler: AppHandlers = {
-  async GET(req, ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
     const user_id = ctx.state.session?.user_id;
     if (!user_id) {
       return new Response("Unauthorized", { status: 401 });

@@ -5,7 +5,8 @@ import { UserStore } from "../../lib/user_store.ts";
 import { AppHandlers, AppProps } from "../_middleware.ts";
 
 export const handler: AppHandlers = {
-  GET: async (req, ctx) => {
+  GET: async (ctx) => {
+    const req = ctx.req;
     const userStore = await UserStore.make();
     const streakStore = await StreakStore.make();
     const user_id = decodeURIComponent(ctx.params["user_id"]);

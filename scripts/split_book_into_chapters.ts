@@ -11,23 +11,23 @@ async function splitBookIntoChapters() {
   try {
     // Read the book file
     const bookContent = await Deno.readTextFile("./book.txt");
-    
+
     // Split the book by lines
     const lines = bookContent.split("\n");
-    
+
     let currentChapterNum = 0;
     let currentChapterTitle = "";
     let lookingForTitle = false;
     let currentChapterContent: string[] = [];
     const chapters: { num: number; title: string; content: string }[] = [];
-    
+
     // Process each line
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
+
       // Check if the line is a chapter heading
       const match = line.match(CHAPTER_PATTERN);
-      
+
       if (match) {
         // If we already have a chapter in progress, save it
         if (currentChapterNum > 0) {
@@ -39,11 +39,11 @@ async function splitBookIntoChapters() {
           // Reset content array for next chapter
           currentChapterContent = [];
         }
-        
+
         // Start a new chapter
         currentChapterNum = parseInt(match[1]);
         lookingForTitle = true;
-        
+
         // Add the chapter heading to the content
         currentChapterContent.push(line);
       } else if (lookingForTitle && line.trim() !== "") {
@@ -56,7 +56,7 @@ async function splitBookIntoChapters() {
         currentChapterContent.push(line);
       }
     }
-    
+
     // Don't forget to add the last chapter
     if (currentChapterNum > 0 && currentChapterContent.length > 0) {
       chapters.push({
@@ -65,31 +65,37 @@ async function splitBookIntoChapters() {
         content: currentChapterContent.join("\n"),
       });
     }
-    
+
     // Create chapters directory if it doesn't exist
     try {
       await Deno.mkdir("./book_chapters", { recursive: true });
     } catch (error: unknown) {
-      if (error instanceof Error && !(error instanceof Deno.errors.AlreadyExists)) {
+      if (
+        error instanceof Error && !(error instanceof Deno.errors.AlreadyExists)
+      ) {
         throw error;
       }
     }
-    
+
     // Save each chapter as a separate file
     let savedCount = 0;
     for (const chapter of chapters) {
-      const filename = `./book_chapters/${chapter.num.toString().padStart(2, '0')} - ${chapter.title.replace(/[<>:"/\\|?*]/g, "_")}.txt`;
+      const filename = `./book_chapters/${
+        chapter.num.toString().padStart(2, "0")
+      } - ${chapter.title.replace(/[<>:"/\\|?*]/g, "_")}.txt`;
       await Deno.writeTextFile(filename, chapter.content);
       savedCount++;
       console.log(`Saved: ${filename}`);
     }
-    
+
     console.log(`\nSplit complete! Saved ${savedCount} chapters.`);
-    
+
     if (savedCount === 0) {
-      console.warn("\nWARNING: No chapters were detected. You may need to adjust the CHAPTER_PATTERN regex to match your book's format.");
+      console.warn(
+        "\nWARNING: No chapters were detected. You may need to adjust the CHAPTER_PATTERN regex to match your book's format.",
+      );
       console.log("Current pattern:", CHAPTER_PATTERN);
-      
+
       // Print some debug information to help identify chapter patterns
       console.log("\nSearching for 'Chapter' in the book:");
       const chapterLines = [];
@@ -99,22 +105,27 @@ async function splitBookIntoChapters() {
           if (chapterLines.length >= 10) break; // Only show first 10 matches
         }
       }
-      
+
       if (chapterLines.length > 0) {
-        console.log("Found lines containing 'Chapter':")
-        chapterLines.forEach(line => console.log(`Line ${line.lineNumber}: "${line.content}"`));
+        console.log("Found lines containing 'Chapter':");
+        chapterLines.forEach((line) =>
+          console.log(`Line ${line.lineNumber}: "${line.content}"`)
+        );
       } else {
         console.log("No lines containing 'Chapter' were found.");
-        console.log("\nHere are the first 10 lines of your book for reference:");
+        console.log(
+          "\nHere are the first 10 lines of your book for reference:",
+        );
         console.log(lines.slice(0, 10).join("\n"));
       }
     }
-    
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
       if (error.message.includes("No such file or directory")) {
-        console.error("Could not find book.txt file. Make sure it exists in the root directory.");
+        console.error(
+          "Could not find book.txt file. Make sure it exists in the root directory.",
+        );
       }
     } else {
       console.error("An unknown error occurred:", error);

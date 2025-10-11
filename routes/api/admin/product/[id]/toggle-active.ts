@@ -1,11 +1,13 @@
-import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../lib/product_store.ts";
+import { Handlers } from "fresh/compat";
 
 export const handler: Handlers = {
   /**
    * Toggle the active status of a product
    */
-  async POST(req, _ctx) {
+  async POST(_ctx) {
+    const req = ctx.req;
+
     try {
       const url = new URL(req.url);
       const pathParts = url.pathname.split("/");

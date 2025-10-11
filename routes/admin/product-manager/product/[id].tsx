@@ -1,10 +1,11 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { PageProps } from "fresh";
 import {
   PrintfulApiClient,
   PrintfulProductVariant,
 } from "../../../../lib/client/printful.ts";
 import { Product, ProductStore } from "../../../../lib/product_store.ts";
 import ProductDetail from "../../../../islands/admin/ProductDetail.tsx";
+import { Handlers } from "fresh/compat";
 
 interface ProductDetailData {
   productId: string;
@@ -24,7 +25,7 @@ interface ProductDetailData {
 }
 
 export const handler: Handlers<ProductDetailData> = {
-  async GET(_req, ctx) {
+  async GET(ctx) {
     const productId = ctx.params.id;
 
     try {

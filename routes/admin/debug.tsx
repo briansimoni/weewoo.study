@@ -12,7 +12,9 @@ async function list(prefix: string) {
 }
 
 export const handler: AppHandlers = {
-  async GET(req, ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
+
     if (ctx.state.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
       throw new Error("Unauthorized access.");
     }
@@ -38,7 +40,9 @@ export const handler: AppHandlers = {
     });
   },
 
-  async POST(req, ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
+
     if (ctx.state.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
       throw new Error("Unauthorized access.");
     }

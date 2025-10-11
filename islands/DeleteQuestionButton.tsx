@@ -1,32 +1,38 @@
 import { useState } from "preact/hooks";
 import { Trash } from "lucide-preact";
 
-export default function DeleteQuestionButton({ questionId }: { questionId: string }) {
+export default function DeleteQuestionButton(
+  { questionId }: { questionId: string },
+) {
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this question? This action cannot be undone.')) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this question? This action cannot be undone.",
+      )
+    ) {
       return;
     }
-    
+
     setIsDeleting(true);
     try {
       const response = await fetch(`/api/admin/questions/${questionId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-      
+
       if (response.ok) {
-        globalThis.location.href = '/admin/questions?deleted=true';
+        globalThis.location.href = "/admin/questions?deleted=true";
       } else {
         const error = await response.json();
-        alert(`Failed to delete question: ${error.message || 'Unknown error'}`);
+        alert(`Failed to delete question: ${error.message || "Unknown error"}`);
       }
     } catch (error) {
-      console.error('Error deleting question:', error);
-      alert('An error occurred while deleting the question');
+      console.error("Error deleting question:", error);
+      alert("An error occurred while deleting the question");
     } finally {
       setIsDeleting(false);
     }
@@ -41,7 +47,7 @@ export default function DeleteQuestionButton({ questionId }: { questionId: strin
       aria-busy={isDeleting}
     >
       <Trash className="w-4 h-4 mr-2" />
-      {isDeleting ? 'Deleting...' : 'Delete Question'}
+      {isDeleting ? "Deleting..." : "Delete Question"}
     </button>
   );
 }

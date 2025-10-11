@@ -1,7 +1,8 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { PageProps } from "fresh";
 import { QuestionReport, QuestionStore } from "../../../lib/question_store.ts";
 import { User, UserStore } from "../../../lib/user_store.ts";
-import { Users, FileText, BarChart3, FileX, ArrowLeft } from "lucide-preact";
+import { ArrowLeft, BarChart3, FileText, FileX, Users } from "lucide-preact";
+import { Handlers } from "fresh/compat";
 
 interface Thing {
   user_id: string;
@@ -10,7 +11,7 @@ interface Thing {
 }
 
 export const handler: Handlers = {
-  GET: async (_req, ctx) => {
+  GET: async (ctx) => {
     const [questionStore, userStore] = await Promise.all([
       QuestionStore.make(),
       UserStore.make(),
@@ -59,10 +60,14 @@ interface PropItem {
 export default function ({ data }: PageProps<PropItem[]>) {
   const totalReports = data.reduce((sum, item) => sum + item.reports.length, 0);
   const totalUsers = data.length;
-  const averageReportsPerUser = totalUsers > 0 ? (totalReports / totalUsers).toFixed(1) : '0';
+  const averageReportsPerUser = totalUsers > 0
+    ? (totalReports / totalUsers).toFixed(1)
+    : "0";
 
   // Sort users by report count (descending)
-  const sortedData = [...data].sort((a, b) => b.reports.length - a.reports.length);
+  const sortedData = [...data].sort((a, b) =>
+    b.reports.length - a.reports.length
+  );
 
   return (
     <div class="container mx-auto p-6 max-w-7xl">
@@ -82,7 +87,9 @@ export default function ({ data }: PageProps<PropItem[]>) {
       {/* Header */}
       <div class="mb-8">
         <h1 class="text-3xl font-bold mb-2">Question Reports Dashboard</h1>
-        <p class="text-base-content/70">Overview of users who have submitted question reports</p>
+        <p class="text-base-content/70">
+          Overview of users who have submitted question reports
+        </p>
       </div>
 
       {/* Summary Stats using DaisyUI stats */}
@@ -119,8 +126,10 @@ export default function ({ data }: PageProps<PropItem[]>) {
       <div class="card bg-base-100 shadow-xl">
         <div class="card-body">
           <h2 class="card-title mb-4">Users by Report Activity</h2>
-          <p class="text-base-content/70 mb-4">Sorted by number of reports submitted</p>
-          
+          <p class="text-base-content/70 mb-4">
+            Sorted by number of reports submitted
+          </p>
+
           <div class="overflow-x-auto">
             <table class="table table-zebra">
               <thead>
@@ -133,9 +142,17 @@ export default function ({ data }: PageProps<PropItem[]>) {
               </thead>
               <tbody>
                 {sortedData.map(({ user, reports }) => {
-                  const activityLevel = reports.length >= 10 ? 'High' : reports.length >= 5 ? 'Medium' : 'Low';
-                  const badgeClass = reports.length >= 10 ? 'badge-error' : reports.length >= 5 ? 'badge-warning' : 'badge-success';
-                  
+                  const activityLevel = reports.length >= 10
+                    ? "High"
+                    : reports.length >= 5
+                    ? "Medium"
+                    : "Low";
+                  const badgeClass = reports.length >= 10
+                    ? "badge-error"
+                    : reports.length >= 5
+                    ? "badge-warning"
+                    : "badge-success";
+
                   return (
                     <tr key={user.user_id}>
                       <td>
@@ -170,7 +187,9 @@ export default function ({ data }: PageProps<PropItem[]>) {
                 <FileX size={48} />
               </div>
               <h1 class="text-2xl font-bold">No reports yet</h1>
-              <p class="py-6 text-base-content/70">No users have submitted question reports yet.</p>
+              <p class="py-6 text-base-content/70">
+                No users have submitted question reports yet.
+              </p>
             </div>
           </div>
         </div>

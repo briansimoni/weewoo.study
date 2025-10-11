@@ -1,15 +1,17 @@
-import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../../../lib/product_store.ts";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import "$std/dotenv/load.ts";
-import { z } from "npm:zod";
+import { z } from "zod";
 import { dollarsToCents } from "../../../../../../../lib/util.ts";
+import { Handlers } from "fresh/compat";
 
 export const handler: Handlers = {
   /**
    * Update the Stripe price for a variant that already has a stripe_product_id
    */
-  async POST(req, ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
+
     try {
       // Validate URL parameters
       const paramsSchema = z.object({

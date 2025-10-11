@@ -1,8 +1,8 @@
 import QuestionPage from "../../../islands/Question.tsx";
-import { Handlers } from "$fresh/server.ts";
+import { Handlers } from "fresh/compat";
 
 export const handler: Handlers = {
-  GET(_req, ctx) {
+  GET(ctx) {
     if (!ctx.state.session) {
       return new Response("Unauthorized", { status: 401 });
     }

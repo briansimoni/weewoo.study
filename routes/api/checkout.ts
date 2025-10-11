@@ -1,7 +1,7 @@
-import { Handlers } from "$fresh/server.ts";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import { z } from "zod";
 import { ProductStore, ProductVariant } from "../../lib/product_store.ts";
+import { Handlers } from "fresh/compat";
 
 // Initialize Stripe with your secret key
 const stripeAPIKey = Deno.env.get("STRIPE_API_KEY") || "";
@@ -34,7 +34,8 @@ const CheckoutRequestSchema = z.object({
 });
 
 export const handler: Handlers = {
-  async POST(req) {
+  async POST(ctx) {
+    const req = ctx.req;
     const stripe = new Stripe(stripeAPIKey);
     try {
       // Parse and validate the request body

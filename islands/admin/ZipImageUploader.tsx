@@ -77,7 +77,7 @@ export default function ZipImageUploader(
 
         // Clear any previous images since we uploaded PNG but want to show WebP
         setExtractedImages([]);
-        
+
         // Call the callback to notify parent component
         onImagesExtracted([]);
       } catch (fetchError: unknown) {

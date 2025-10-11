@@ -1,4 +1,4 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { PageProps } from "fresh";
 import {
   Edit,
   FileText,
@@ -7,6 +7,7 @@ import {
   PanelRight,
 } from "lucide-preact";
 import { Question, QuestionStore } from "../../lib/question_store.ts";
+import { Handlers } from "fresh/compat";
 
 interface Data {
   questions: Question[];
@@ -18,7 +19,9 @@ const allowedScopes = ["emt", "advanced", "medic"] as const;
 type Scope = (typeof allowedScopes)[number];
 
 export const handler: Handlers<Data> = {
-  async GET(req, ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
+
     try {
       const url = new URL(req.url);
 

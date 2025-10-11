@@ -4,7 +4,8 @@ import { AppHandlers } from "../_middleware.ts";
 import dayjs from "dayjs";
 
 export const handler: AppHandlers = {
-  async GET(req, ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
     const user_id = ctx.state.session?.user_id;
     if (!user_id) {
       return new Response("unauthorized", {

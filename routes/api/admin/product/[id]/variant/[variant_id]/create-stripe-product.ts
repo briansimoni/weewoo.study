@@ -1,14 +1,14 @@
-import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../../../lib/product_store.ts";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import "$std/dotenv/load.ts";
 import { dollarsToCents } from "../../../../../../../lib/util.ts";
+import { Handlers } from "fresh/compat";
 
 export const handler: Handlers = {
   /**
    * Create a Stripe product for a variant that doesn't have a stripe_product_id
    */
-  async POST(_req, ctx) {
+  async POST(ctx) {
     try {
       const productId = ctx.params.id;
       const variantId = ctx.params.variant_id;

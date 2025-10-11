@@ -1,4 +1,4 @@
-import * as oauth from "npm:oauth4webapi";
+import * as oauth from "oauth4webapi";
 import { AppHandlers } from "../_middleware.ts";
 import { Cookie, setCookie } from "@std/http/cookie";
 
@@ -6,7 +6,9 @@ const client_id = Deno.env.get("CLIENT_ID");
 const client_secret = Deno.env.get("CLIENT_SECRET");
 
 export const handler: AppHandlers = {
-  async GET(req, _ctx) {
+  async GET(_ctx) {
+    const req = ctx.req;
+
     if (!client_id || !client_secret) {
       throw new Error("Missing environment variables");
     }

@@ -34,7 +34,7 @@ export default function App(props: AppProps) {
           property="og:description"
           content="Prepare for your NREMT Basic, Advanced, or Paramedic exam with the most fun study app out there."
         />
-        <meta property="og:image" content="/static/ambulance.svg" />
+        <meta property="og:image" content="/ambulance.svg" />
         <meta property="og:url" content="https://weewoo.study" />
         <meta property="og:type" content="website" />
       </head>

@@ -1,9 +1,9 @@
-import { Handlers } from "$fresh/server.ts";
 import {
   productCategories,
   ProductStore,
 } from "../../../../../lib/product_store.ts";
 import { z } from "zod";
+import { Handlers } from "fresh/compat";
 
 // Validation schema for product updates
 const UpdateProductSchema = z.object({
@@ -38,7 +38,9 @@ export const handler: Handlers = {
   /**
    * Update a product in the local product store
    */
-  async PUT(req, ctx) {
+  async PUT(ctx) {
+    const req = ctx.req;
+
     try {
       const productId = ctx.params.id;
 
@@ -120,7 +122,7 @@ export const handler: Handlers = {
   /**
    * Delete a product from the local product store
    */
-  async DELETE(_req, _ctx) {
+  async DELETE(_ctx) {
     try {
       const productId = _ctx.params.id;
 

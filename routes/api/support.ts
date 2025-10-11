@@ -16,7 +16,9 @@ const SupportFormSchema = z.object({
 });
 
 export const handler: AppHandlers = {
-  async POST(req, ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
+
     try {
       // Parse form data
       const formData = await req.formData();

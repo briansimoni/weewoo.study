@@ -1,4 +1,3 @@
-import { Handlers } from "$fresh/server.ts";
 import {
   _Object,
   ListObjectsV2Command,
@@ -7,6 +6,7 @@ import {
 } from "@aws-sdk/client-s3";
 import JSZip from "npm:jszip";
 import { log } from "../../../../../lib/logger.ts";
+import { Handlers } from "fresh/compat";
 
 // S3 client instance
 const s3Client = new S3Client({
@@ -228,7 +228,7 @@ export const handler: Handlers = {
   /**
    * GET handler for listing images from S3
    */
-  async GET(_req, ctx) {
+  async GET(ctx) {
     const productId = ctx.params.id;
     try {
       // Get all product images from S3
@@ -260,7 +260,9 @@ export const handler: Handlers = {
   /**
    * POST handler for uploading and processing ZIP files
    */
-  async POST(req, ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
+
     try {
       const productId = ctx.params.id;
       // Check if request is multipart form data

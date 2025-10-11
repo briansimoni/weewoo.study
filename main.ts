@@ -1,17 +1,9 @@
-/// <reference no-default-lib="true" />
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
-/// <reference lib="dom.asynciterable" />
-/// <reference lib="deno.ns" />
-/// <reference lib="deno.unstable" />;
-
 import "$std/dotenv/load.ts";
+import "./jsx-runtime.ts";
 
-import { start } from "$fresh/server.ts";
-import manifest from "./fresh.gen.ts";
-import config from "./fresh.config.ts";
+import { App, staticFiles } from "fresh";
 
-import { CronTime } from "npm:cron-time-generator";
+import { CronTime } from "cron-time-generator";
 import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
 import { asyncLocalStorage, log } from "./lib/logger.ts";
 
@@ -35,16 +27,28 @@ function prepare<T extends () => Promise<void>>(fn: T) {
   };
 }
 
-Deno.cron(
-  "Poll WeeWoo Ops SQS Messages",
-  CronTime.every(15).minutes(),
-  prepare(pollWeeWooOpsSQSMessages),
-);
+// Only register cron jobs in production
+if (Deno.env.get("STAGE") === "PROD") {
+  Deno.cron(
+    "Poll WeeWoo Ops SQS Messages",
+    CronTime.every(15).minutes(),
+    prepare(pollWeeWooOpsSQSMessages),
+  );
 
-Deno.cron(
-  "Weekly Question Report",
-  CronTime.everySaturdayAt(9),
-  prepare(sendReport),
-);
+  Deno.cron(
+    "Weekly Question Report",
+    CronTime.everySaturdayAt(9),
+    prepare(sendReport),
+  );
+  
+  log.info("Cron jobs registered for production environment");
+} else {
+  log.info("Skipping cron job registration - not in production environment");
+}
 
-await start(manifest, config);
+// Create and start the Fresh app
+export const app = new App()
+  // Add static file serving middleware
+  .use(staticFiles())
+  // Enable file-system based routing
+  .fsRoutes();

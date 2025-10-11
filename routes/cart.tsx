@@ -1,4 +1,4 @@
-import { Head } from "$fresh/runtime.ts";
+import { Head } from "fresh/runtime";
 import CartPageIsland from "../islands/CartPageIsland.tsx";
 
 export default function CartPage() {
