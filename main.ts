@@ -1,5 +1,4 @@
 import "$std/dotenv/load.ts";
-import "./jsx-runtime.ts";
 
 import { App, staticFiles } from "fresh";
 

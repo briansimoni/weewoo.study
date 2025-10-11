@@ -33,3 +33,5 @@ scripts/question_generation_workflow/config
 scripts/question_generation_workflow/.env
 
 image-converter-lambda.zip
+
+.vite

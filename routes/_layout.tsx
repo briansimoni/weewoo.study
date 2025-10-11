@@ -4,12 +4,12 @@ import CartIcon from "../islands/CartIcon.tsx";
 import { StreakStore } from "../lib/streak_store.ts";
 import { AppState } from "./_middleware.ts";
 import { BarChart, Dumbbell, ShoppingBag, Trophy } from "lucide-preact";
-import { defineLayout } from "fresh/compat";
+import { PageProps } from "fresh";
 
 const stage = Deno.env.get("STAGE");
 
-export default defineLayout<AppState>(async (ctx) => {
-  const { state, Component } = ctx;
+export default async function Layout(props: PageProps<unknown, AppState>) {
+  const { state, Component, route } = props;
   const streakStore = await StreakStore.make();
   let initialStreak: number | undefined = undefined;
   if (state.session?.user_id) {
@@ -40,7 +40,7 @@ export default defineLayout<AppState>(async (ctx) => {
           {/* Hamburger Menu for Mobile */}
           <div className="md:hidden">
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-ghost">
+              <label tabindex={0} className="btn btn-ghost">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6"
@@ -57,7 +57,7 @@ export default defineLayout<AppState>(async (ctx) => {
                 </svg>
               </label>
               <ul
-                tabIndex={0}
+                tabindex={0}
                 className="menu dropdown-content bg-base-300 rounded-box z-10 mt-3 w-52 p-2 shadow"
               >
                 <li>
@@ -146,7 +146,7 @@ export default defineLayout<AppState>(async (ctx) => {
         <a
           href="/leaderboard"
           className={`flex flex-col items-center ${
-            ctx.route === "/leaderboard" ? "dock-active" : ""
+            route === "/leaderboard" ? "dock-active" : ""
           }`}
         >
           <Trophy className="size-[1.2em]" />
@@ -156,7 +156,7 @@ export default defineLayout<AppState>(async (ctx) => {
         <a
           href="/emt/practice"
           className={`flex flex-col items-center ${
-            ctx.route === "/emt/practice" ? "dock-active" : ""
+            route === "/emt/practice" ? "dock-active" : ""
           }`}
         >
           <Dumbbell className="size-[1.2em]" />
@@ -166,7 +166,7 @@ export default defineLayout<AppState>(async (ctx) => {
         <a
           href={state.session ? "/profile" : "/auth/login"}
           className={`flex flex-col items-center ${
-            ctx.route === "/profile" ? "dock-active" : ""
+            route === "/profile" ? "dock-active" : ""
           }`}
         >
           <BarChart className="size-[1.2em]" />
@@ -176,7 +176,7 @@ export default defineLayout<AppState>(async (ctx) => {
         <a
           href="/shop"
           className={`flex flex-col items-center ${
-            ctx.route.includes("/shop") ? "dock-active" : ""
+            route?.includes("/shop") ? "dock-active" : ""
           }`}
         >
           <ShoppingBag className="size-[1.2em]" />
@@ -185,4 +185,4 @@ export default defineLayout<AppState>(async (ctx) => {
       </div>
     </>
   );
-});
+}

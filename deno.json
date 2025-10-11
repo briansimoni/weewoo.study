@@ -30,7 +30,7 @@
     "dayjs-plugin-utc": "npm:dayjs-plugin-utc@^0.1.2",
     "jszip": "npm:jszip@^3.10.1",
     "preact": "npm:preact@^10.27.2",
-    "lucide-preact": "npm:lucide-preact@^0.477.0",
+    "lucide-preact": "npm:lucide-preact@^0.545.0",
     "$std/": "https://deno.land/std@0.216.0/",
     "sharp": "npm:sharp@^0.34.3",
     "stripe": "npm:stripe@^19.1.0",

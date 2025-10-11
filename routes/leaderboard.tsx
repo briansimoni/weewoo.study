@@ -2,10 +2,10 @@ import { LeaderBoardEntry, UserStore } from "../lib/user_store.ts";
 import { AppHandlers, AppProps } from "./_middleware.ts";
 
 export const handler: AppHandlers = {
-  async GET(ctx) {
+  async GET(_ctx) {
     const userStore = await UserStore.make();
     const leaderboard = await userStore.listLeaderbaord();
-    return ctx.render({ leaderboard });
+    return { data: { leaderboard } };
   },
 };
 
