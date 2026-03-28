@@ -159,9 +159,13 @@ const preferencesMiddleware: AppHandler = async function (req, ctx) {
   const cookies = http.getCookies(req.headers);
   const preferences = cookies["preferences"];
   if (preferences) {
-    const decodedPreferences = decodeBase64(preferences);
-    const preferencesText = new TextDecoder().decode(decodedPreferences);
-    ctx.state.preferences = JSON.parse(preferencesText);
+    try {
+      const decodedPreferences = decodeBase64(preferences);
+      const preferencesText = new TextDecoder().decode(decodedPreferences);
+      ctx.state.preferences = JSON.parse(preferencesText);
+    } catch (error) {
+      log.error("Failed to parse preferences", { error });
+    }
   }
   const response = await ctx.next();
   return response;

@@ -22,6 +22,7 @@ import * as $api_admin_middleware from "./routes/api/admin/_middleware.ts";
 import * as $api_admin_book_content from "./routes/api/admin/book-content.ts";
 import * as $api_admin_chapter_content from "./routes/api/admin/chapter-content.ts";
 import * as $api_admin_chapters from "./routes/api/admin/chapters.ts";
+import * as $api_admin_env from "./routes/api/admin/env.ts";
 import * as $api_admin_product from "./routes/api/admin/product.ts";
 import * as $api_admin_product_id_images from "./routes/api/admin/product/[id]/images.ts";
 import * as $api_admin_product_id_index from "./routes/api/admin/product/[id]/index.ts";
@@ -103,6 +104,7 @@ const manifest = {
     "./routes/api/admin/book-content.ts": $api_admin_book_content,
     "./routes/api/admin/chapter-content.ts": $api_admin_chapter_content,
     "./routes/api/admin/chapters.ts": $api_admin_chapters,
+    "./routes/api/admin/env.ts": $api_admin_env,
     "./routes/api/admin/product.ts": $api_admin_product,
     "./routes/api/admin/product/[id]/images.ts": $api_admin_product_id_images,
     "./routes/api/admin/product/[id]/index.ts": $api_admin_product_id_index,
