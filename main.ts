@@ -15,8 +15,6 @@ import { CronTime } from "npm:cron-time-generator";
 import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
 import { asyncLocalStorage, log } from "./lib/logger.ts";
 
-console.log(Deno.env.toObject());
-
 /**
  * Wrap a cron job in a request ID and logging context
  */

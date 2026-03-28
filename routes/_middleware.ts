@@ -140,6 +140,7 @@ const logMiddleware: AppHandler = function (req, ctx) {
       });
       throw error;
     }
+    console.log(Deno.env.toObject());
     const end = Date.now();
     log.info("request log", {
       method: req.method,
