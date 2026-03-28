@@ -6,6 +6,7 @@
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable-* -A -",
     "manifest": "deno task cli manifest $(pwd)",
     "start": "deno task tailwind & deno run -A --inspect --watch=static/,routes/ --unstable-kv --unstable-cron dev.ts",
+    "start:tunnel": "deno task tailwind & deno run --tunnel -A --inspect --watch=static/,routes/ --unstable-kv --unstable-cron dev.ts",
     "build": "deno task build:css && deno run -A --unstable-kv dev.ts build",
     "preview": "deno run -A --unstable-cron main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
@@ -55,5 +56,10 @@
     "jsx": "react-jsx",
     "jsxImportSource": "npm:preact",
     "lib": ["deno.unstable", "dom"]
+  },
+  "deploy": {
+    "org": "briansimoni",
+    "app": "test-weewoo-study"
   }
 }
+
