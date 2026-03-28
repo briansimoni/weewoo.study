@@ -5,8 +5,9 @@
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable-* -A -",
     "manifest": "deno task cli manifest $(pwd)",
-    "start": "deno task tailwind & deno run -A --inspect --watch=static/,routes/ --unstable-kv --unstable-cron dev.ts",
-    "start:tunnel": "deno task tailwind & deno run --tunnel -A --inspect --watch=static/,routes/ --unstable-kv --unstable-cron dev.ts",
+    "dev": "deno task tailwind & deno run -A --inspect --watch=static/,routes/ --unstable-kv --unstable-cron dev.ts",
+    "dev:tunnel": "deno task tailwind & deno run --tunnel -A --inspect --watch=static/,routes/ --unstable-kv --unstable-cron dev.ts",
+    "start": "deno run -A --unstable-cron main.ts",
     "build": "deno task build:css && deno run -A --unstable-kv dev.ts build",
     "preview": "deno run -A --unstable-cron main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
@@ -62,4 +63,3 @@
     "app": "test-weewoo-study"
   }
 }
-
