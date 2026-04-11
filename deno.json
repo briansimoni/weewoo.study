@@ -59,6 +59,6 @@
   },
   "deploy": {
     "org": "briansimoni",
-    "app": "test-weewoo-study"
+    "app": "weewoo-study"
   }
 }
