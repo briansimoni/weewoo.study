@@ -29,6 +29,9 @@ export class SessionStore {
    */
   async get(id: string) {
     const session = (await this.kv.get<Session>(["sessions", id])).value;
+    const thing = this.kv.list({ prefix: ["sessions"] });
+    const next = await thing.next();
+    console.log(next);
     return session;
   }
 

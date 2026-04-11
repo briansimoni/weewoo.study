@@ -8,6 +8,7 @@ import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $about from "./routes/about.tsx";
 import * as $admin_middleware from "./routes/admin/_middleware.ts";
+import * as $admin_database from "./routes/admin/database.tsx";
 import * as $admin_debug from "./routes/admin/debug.tsx";
 import * as $admin_index from "./routes/admin/index.tsx";
 import * as $admin_product_manager from "./routes/admin/product-manager.tsx";
@@ -23,6 +24,8 @@ import * as $api_admin_book_content from "./routes/api/admin/book-content.ts";
 import * as $api_admin_chapter_content from "./routes/api/admin/chapter-content.ts";
 import * as $api_admin_chapters from "./routes/api/admin/chapters.ts";
 import * as $api_admin_env from "./routes/api/admin/env.ts";
+import * as $api_admin_kv_export from "./routes/api/admin/kv/export.ts";
+import * as $api_admin_kv_import from "./routes/api/admin/kv/import.ts";
 import * as $api_admin_product from "./routes/api/admin/product.ts";
 import * as $api_admin_product_id_images from "./routes/api/admin/product/[id]/images.ts";
 import * as $api_admin_product_id_index from "./routes/api/admin/product/[id]/index.ts";
@@ -88,6 +91,7 @@ const manifest = {
     "./routes/_middleware.ts": $_middleware,
     "./routes/about.tsx": $about,
     "./routes/admin/_middleware.ts": $admin_middleware,
+    "./routes/admin/database.tsx": $admin_database,
     "./routes/admin/debug.tsx": $admin_debug,
     "./routes/admin/index.tsx": $admin_index,
     "./routes/admin/product-manager.tsx": $admin_product_manager,
@@ -105,6 +109,8 @@ const manifest = {
     "./routes/api/admin/chapter-content.ts": $api_admin_chapter_content,
     "./routes/api/admin/chapters.ts": $api_admin_chapters,
     "./routes/api/admin/env.ts": $api_admin_env,
+    "./routes/api/admin/kv/export.ts": $api_admin_kv_export,
+    "./routes/api/admin/kv/import.ts": $api_admin_kv_import,
     "./routes/api/admin/product.ts": $api_admin_product,
     "./routes/api/admin/product/[id]/images.ts": $api_admin_product_id_images,
     "./routes/api/admin/product/[id]/index.ts": $api_admin_product_id_index,

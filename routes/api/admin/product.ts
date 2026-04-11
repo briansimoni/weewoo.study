@@ -50,6 +50,7 @@ export const handler: Handlers = {
         price: 0, // This would need to be set later
         active: false, // Set to false as requested
         colors: [],
+        category: "apparel",
       };
 
       // Store the product

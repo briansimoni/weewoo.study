@@ -166,6 +166,11 @@ const preferencesMiddleware: AppHandler = async function (req, ctx) {
       ctx.state.preferences = JSON.parse(preferencesText);
     } catch (error) {
       log.error("Failed to parse preferences", { error });
+      // http.setCookie(response.headers, {
+      //   name: "preferences",
+      //   value: "",
+      //   expires: new Date(0),
+      // });
     }
   }
   const response = await ctx.next();

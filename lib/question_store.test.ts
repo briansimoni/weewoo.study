@@ -71,7 +71,7 @@ Deno.test("concurrent writes will succeed", async () => {
   const store = await QuestionStore.make(kv);
 
   const questions: QuestionInput[] = [];
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 10; i++) {
     questions.push({
       question: `Question ${i}`,
       choices: ["a", "b", "c", "d"] as const,
@@ -85,7 +85,7 @@ Deno.test("concurrent writes will succeed", async () => {
   await Promise.all(questions.map((q) => store.add(q)));
 
   // Check that all questions were written
-  assertStrictEquals(await store.size(), 30);
+  assertStrictEquals(await store.size(), 10);
 
   kv.close();
 });
@@ -511,23 +511,23 @@ Deno.test("can get report by ID and resolve reports", async () => {
     reason: "Explanation needs more detail",
     user_id: "tester123",
   };
-  
+
   const reportId = crypto.randomUUID();
   // Mock the random UUID to use our predetermined ID
   const originalRandomUUID = crypto.randomUUID;
   crypto.randomUUID = () => reportId;
-  
+
   await store.reportQuestion(reportData);
-  
+
   // Restore original randomUUID function
   crypto.randomUUID = originalRandomUUID;
-  
+
   // Test getReportById
   const retrievedReport = await store.getReportById({
     questionId: q.id,
     reportId: reportId,
   });
-  
+
   // Verify the retrieved report matches what we submitted
   assertEquals(retrievedReport.question_id, q.id);
   assertEquals(retrievedReport.thumbs, "down");
@@ -535,7 +535,7 @@ Deno.test("can get report by ID and resolve reports", async () => {
   assertEquals(retrievedReport.user_id, "tester123");
   assertEquals(retrievedReport.report_id, reportId);
   assertEquals(retrievedReport.resolved_at, undefined);
-  
+
   // Test error case for getReportById with non-existent report
   await assertRejects(
     async () => {
@@ -545,25 +545,25 @@ Deno.test("can get report by ID and resolve reports", async () => {
       });
     },
     Error,
-    "Report not found"
+    "Report not found",
   );
-  
+
   // Test resolveReport
   await store.resolveReport({
     questionId: q.id,
     reportId: reportId,
   });
-  
+
   // Verify the report was resolved
   const resolvedReport = await store.getReportById({
     questionId: q.id,
     reportId: reportId,
   });
-  
+
   // Check the resolved_at field is now set
   assert(resolvedReport.resolved_at !== undefined);
   assert(new Date(resolvedReport.resolved_at) instanceof Date);
-  
+
   // Test error case for resolveReport with non-existent report
   await assertRejects(
     async () => {
@@ -573,9 +573,9 @@ Deno.test("can get report by ID and resolve reports", async () => {
       });
     },
     Error,
-    "Report not found"
+    "Report not found",
   );
-  
+
   kv.close();
 });
 

@@ -2,6 +2,7 @@ import { PageProps } from "$fresh/server.ts";
 import {
   BarChart3,
   Bug,
+  Database,
   FileQuestion,
   Home,
   LayoutDashboard,
@@ -49,6 +50,12 @@ export default function AdminIndex(_props: PageProps) {
       description: "Debug tools and system diagnostics",
       url: "/admin/debug",
       icon: Bug,
+    },
+    {
+      title: "Database Tools",
+      description: "Download backups and upload full database restores",
+      url: "/admin/database",
+      icon: Database,
     },
     {
       title: "User Management",
@@ -138,7 +145,10 @@ export default function AdminIndex(_props: PageProps) {
                 Analytics dashboard showing user report activity and statistics
               </p>
               <div class="card-actions justify-end mt-4">
-                <a href="/admin/questions/question-reports-stats" class="btn btn-primary">
+                <a
+                  href="/admin/questions/question-reports-stats"
+                  class="btn btn-primary"
+                >
                   View Stats
                 </a>
               </div>
