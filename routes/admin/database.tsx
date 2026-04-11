@@ -8,6 +8,7 @@ import {
   KvImportProgress,
 } from "../../lib/kv_backup.ts";
 import { getKv } from "../../lib/kv.ts";
+import KvBackupUploader from "../../islands/admin/KvBackupUploader.tsx";
 
 interface DatabasePageData {
   stage?: string;
@@ -218,41 +219,7 @@ export default function DatabasePage({ data }: PageProps<DatabasePageData>) {
           </form>
         </div>
 
-        <div class="card bg-base-200 shadow-md p-6">
-          <h2 class="text-xl font-semibold mb-2">Upload & Merge</h2>
-          <p class="text-base-content/70 mb-4">
-            Upload a backup JSON file to merge entries into the current KV
-            database.
-          </p>
-          <form method="POST" encType="multipart/form-data" class="space-y-4">
-            <input
-              type="file"
-              name="backup_file"
-              accept="application/json,.json"
-              class="file-input file-input-bordered w-full"
-              required
-            />
-            <label class="label cursor-pointer justify-start gap-3">
-              <input
-                type="checkbox"
-                name="confirm_upload"
-                class="checkbox checkbox-warning"
-                required
-              />
-              <span class="label-text">
-                I understand this will merge uploaded entries into the database.
-              </span>
-            </label>
-            <button
-              type="submit"
-              name="action"
-              value="upload"
-              class="btn btn-warning"
-            >
-              Upload and Merge Database
-            </button>
-          </form>
-        </div>
+        <KvBackupUploader stage={data.stage} chunkSize={250} />
       </div>
     </div>
   );
