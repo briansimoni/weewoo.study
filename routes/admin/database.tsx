@@ -5,6 +5,7 @@ import {
   exportKv,
   importKvReplace,
   isKvBackupBlob,
+  KvImportProgress,
 } from "../../lib/kv_backup.ts";
 import { getKv } from "../../lib/kv.ts";
 
@@ -12,6 +13,15 @@ interface DatabasePageData {
   stage?: string;
   success?: string;
   error?: string;
+}
+
+interface ImportLogger {
+  info: (message: string, meta?: Record<string, unknown>) => void;
+}
+
+interface ImportFromJsonOptions {
+  logger?: ImportLogger;
+  progressInterval?: number;
 }
 
 export async function buildDownloadResponse(kv: Deno.Kv): Promise<Response> {
@@ -33,15 +43,56 @@ export async function importFromJsonText(
   kv: Deno.Kv,
   jsonText: string,
   stage?: string,
+  options?: ImportFromJsonOptions,
 ): Promise<number> {
+  const logger = options?.logger;
+  const progressInterval = options?.progressInterval ?? 250;
+  const importStart = Date.now();
+  logger?.info("admin database import started", {
+    stage: stage ?? "undefined",
+    payloadSizeBytes: jsonText.length,
+  });
+
   assertKvImportAllowed(stage);
 
+  const parseStart = Date.now();
   const payload = JSON.parse(jsonText);
+  logger?.info("admin database import parsed payload", {
+    parseDurationMs: Date.now() - parseStart,
+  });
+
   if (!isKvBackupBlob(payload)) {
     throw new Error("Invalid payload. Expected { entries: [{ key, value }] }.");
   }
 
-  await importKvReplace(kv, payload);
+  logger?.info("admin database import validated payload", {
+    entries: payload.entries.length,
+  });
+
+  let lastLogAt = 0;
+  const logProgress = (progress: KvImportProgress) => {
+    const now = Date.now();
+    if (now - lastLogAt < 1000 && progress.processed !== progress.total) {
+      return;
+    }
+    lastLogAt = now;
+    logger?.info("admin database import progress", {
+      phase: progress.phase,
+      processed: progress.processed,
+      total: progress.total,
+      elapsedMs: now - importStart,
+    });
+  };
+
+  await importKvReplace(kv, payload, {
+    onProgress: logProgress,
+    progressInterval,
+  });
+
+  logger?.info("admin database import completed", {
+    entries: payload.entries.length,
+    totalDurationMs: Date.now() - importStart,
+  });
   return payload.entries.length;
 }
 
@@ -80,10 +131,15 @@ export const handler: Handlers<DatabasePageData> = {
       }
 
       try {
+        const { log } = await import("../../lib/logger.ts");
         const importedCount = await importFromJsonText(
           kv,
           await file.text(),
           Deno.env.get("STAGE"),
+          {
+            logger: log,
+            progressInterval: 250,
+          },
         );
         return ctx.render({
           stage,
