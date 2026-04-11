@@ -1,5 +1,5 @@
 import { assertEquals } from "$std/assert/assert_equals.ts";
-import { exportKv, importKvReplace, isKvBackupBlob } from "./kv_backup.ts";
+import { exportKv, importKvUpsert, isKvBackupBlob } from "./kv_backup.ts";
 
 Deno.test("exportKv returns all entries", async () => {
   const kv = await Deno.openKv(":memory:");
@@ -24,12 +24,12 @@ Deno.test("exportKv returns all entries", async () => {
   kv.close();
 });
 
-Deno.test("importKvReplace clears existing data and imports blob", async () => {
+Deno.test("importKvUpsert merges uploaded data into existing database", async () => {
   const kv = await Deno.openKv(":memory:");
 
-  await kv.set(["old", "value"], "remove-me");
+  await kv.set(["old", "value"], "keep-me");
 
-  await importKvReplace(kv, {
+  await importKvUpsert(kv, {
     entries: [
       { key: ["new", "one"], value: 1 },
       { key: ["new", "two"], value: { ok: true } },
@@ -40,7 +40,7 @@ Deno.test("importKvReplace clears existing data and imports blob", async () => {
   const newOne = await kv.get<number>(["new", "one"]);
   const newTwo = await kv.get<{ ok: boolean }>(["new", "two"]);
 
-  assertEquals(oldValue.value, null);
+  assertEquals(oldValue.value, "keep-me");
   assertEquals(newOne.value, 1);
   assertEquals(newTwo.value, { ok: true });
 
@@ -55,7 +55,7 @@ Deno.test("export then import roundtrip into clean database", async () => {
   await sourceKv.set(["attempts", "a2"], { score: 20 });
 
   const blob = await exportKv(sourceKv);
-  await importKvReplace(targetKv, blob);
+  await importKvUpsert(targetKv, blob);
 
   const targetBlob = await exportKv(targetKv);
 
@@ -96,11 +96,11 @@ Deno.test("exportKv preserves null and deeply nested values", async () => {
   kv.close();
 });
 
-Deno.test("importKvReplace supports keys with Uint8Array parts", async () => {
+Deno.test("importKvUpsert supports keys with Uint8Array parts", async () => {
   const kv = await Deno.openKv(":memory:");
 
   const byteKey = new Uint8Array([1, 2, 3]);
-  await importKvReplace(kv, {
+  await importKvUpsert(kv, {
     entries: [
       { key: ["bytes", byteKey], value: { ok: true } },
     ],
@@ -112,16 +112,16 @@ Deno.test("importKvReplace supports keys with Uint8Array parts", async () => {
   kv.close();
 });
 
-Deno.test("importKvReplace with empty entries clears existing database", async () => {
+Deno.test("importKvUpsert with empty entries leaves existing data unchanged", async () => {
   const kv = await Deno.openKv(":memory:");
 
   await kv.set(["one"], 1);
   await kv.set(["two"], 2);
 
-  await importKvReplace(kv, { entries: [] });
+  await importKvUpsert(kv, { entries: [] });
 
   const blob = await exportKv(kv);
-  assertEquals(blob.entries.length, 0);
+  assertEquals(blob.entries.length, 2);
 
   kv.close();
 });

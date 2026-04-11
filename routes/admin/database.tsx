@@ -3,7 +3,7 @@ import { ArrowLeft, Database } from "lucide-preact";
 import {
   assertKvImportAllowed,
   exportKv,
-  importKvReplace,
+  importKvUpsert,
   isKvBackupBlob,
   KvImportProgress,
 } from "../../lib/kv_backup.ts";
@@ -84,7 +84,7 @@ export async function importFromJsonText(
     });
   };
 
-  await importKvReplace(kv, payload, {
+  await importKvUpsert(kv, payload, {
     onProgress: logProgress,
     progressInterval,
   });
@@ -114,11 +114,11 @@ export const handler: Handlers<DatabasePageData> = {
     }
 
     if (action === "upload") {
-      const confirmed = formData.get("confirm_replace") === "on";
+      const confirmed = formData.get("confirm_upload") === "on";
       if (!confirmed) {
         return ctx.render({
           stage,
-          error: "You must confirm full database replacement before uploading.",
+          error: "You must confirm database merge upload before uploading.",
         });
       }
 
@@ -143,7 +143,7 @@ export const handler: Handlers<DatabasePageData> = {
         );
         return ctx.render({
           stage,
-          success: `Import complete. ${importedCount} entries loaded.`,
+          success: `Import complete. ${importedCount} entries upserted.`,
         });
       } catch (error) {
         if (error instanceof Error) {
@@ -219,9 +219,10 @@ export default function DatabasePage({ data }: PageProps<DatabasePageData>) {
         </div>
 
         <div class="card bg-base-200 shadow-md p-6">
-          <h2 class="text-xl font-semibold mb-2">Upload & Replace</h2>
+          <h2 class="text-xl font-semibold mb-2">Upload & Merge</h2>
           <p class="text-base-content/70 mb-4">
-            Upload a backup JSON file to replace the entire current KV database.
+            Upload a backup JSON file to merge entries into the current KV
+            database.
           </p>
           <form method="POST" encType="multipart/form-data" class="space-y-4">
             <input
@@ -234,12 +235,12 @@ export default function DatabasePage({ data }: PageProps<DatabasePageData>) {
             <label class="label cursor-pointer justify-start gap-3">
               <input
                 type="checkbox"
-                name="confirm_replace"
+                name="confirm_upload"
                 class="checkbox checkbox-warning"
                 required
               />
               <span class="label-text">
-                I understand this will replace the entire database.
+                I understand this will merge uploaded entries into the database.
               </span>
             </label>
             <button
@@ -248,7 +249,7 @@ export default function DatabasePage({ data }: PageProps<DatabasePageData>) {
               value="upload"
               class="btn btn-warning"
             >
-              Upload and Replace Database
+              Upload and Merge Database
             </button>
           </form>
         </div>

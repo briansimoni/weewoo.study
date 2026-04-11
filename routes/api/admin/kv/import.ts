@@ -1,6 +1,6 @@
 import {
   assertKvImportAllowed,
-  importKvReplace,
+  importKvUpsert,
   isKvBackupBlob,
   KvBackupBlob,
 } from "../../../../lib/kv_backup.ts";
@@ -29,7 +29,7 @@ export async function importKvResponse(
   }
 
   const blob = payload as KvBackupBlob;
-  await importKvReplace(kv, blob);
+  await importKvUpsert(kv, blob);
 
   return new Response(
     JSON.stringify({ ok: true, imported: blob.entries.length }),

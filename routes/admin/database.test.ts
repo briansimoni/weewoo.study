@@ -23,14 +23,14 @@ Deno.test("database page requires upload confirmation checkbox", () => {
   const formData = new FormData();
   formData.set("action", "upload");
 
-  const confirmed = formData.get("confirm_replace") === "on";
+  const confirmed = formData.get("confirm_upload") === "on";
 
   assertEquals(confirmed, false);
 });
 
-Deno.test("database page import helper replaces data in non-prod stage", async () => {
+Deno.test("database page import helper merges data in non-prod stage", async () => {
   const kv = await Deno.openKv(":memory:");
-  await kv.set(["old", "entry"], "delete-me");
+  await kv.set(["old", "entry"], "keep-me");
 
   const imported = await importFromJsonText(
     kv,
@@ -48,7 +48,7 @@ Deno.test("database page import helper replaces data in non-prod stage", async (
   const counter = await kv.get(["counter"]);
 
   assertEquals(imported, 2);
-  assertEquals(oldEntry.value, null);
+  assertEquals(oldEntry.value, "keep-me");
   assertEquals(user.value, { display_name: "Brian" });
   assertEquals(counter.value, 9);
 

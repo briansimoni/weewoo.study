@@ -20,10 +20,10 @@ Deno.test("admin kv export route response returns entries envelope", async () =>
   kv.close();
 });
 
-Deno.test("admin kv import route response replaces existing data", async () => {
+Deno.test("admin kv import route response merges uploaded data", async () => {
   const kv = await Deno.openKv(":memory:");
 
-  await kv.set(["old", "data"], "to-delete");
+  await kv.set(["old", "data"], "keep-me");
 
   const response = await importKvResponse(kv, {
     entries: [
@@ -40,7 +40,7 @@ Deno.test("admin kv import route response replaces existing data", async () => {
   assertEquals(response.status, 200);
   assertEquals(body.ok, true);
   assertEquals(body.imported, 2);
-  assertEquals(oldData.value, null);
+  assertEquals(oldData.value, "keep-me");
   assertEquals(user.value, { display_name: "Brian" });
   assertEquals(counter.value, 7);
 
