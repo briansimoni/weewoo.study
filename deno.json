@@ -42,7 +42,7 @@
     "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
     "microdiff": "npm:microdiff@^1.0.0",
     "sharp": "npm:sharp@^0.34.3",
-    "stripe-node": "npm:stripe-node@^6.0.0",
+    "stripe": "npm:stripe@22.0.1",
     "tailwindcss": "npm:tailwindcss@4.0.9",
     "tailwindcss/": "npm:/tailwindcss@4.0.9/",
     "tailwindcss/plugin": "npm:/tailwindcss@4.0.9/plugin",
@@ -69,4 +69,3 @@
     "app": "weewoo-study"
   }
 }
-

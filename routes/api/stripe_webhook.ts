@@ -1,6 +1,6 @@
 import { ProductStore, ProductVariant } from "../../lib/product_store.ts";
 import { AppHandlers } from "../_middleware.ts";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import { emailService } from "../../lib/email_service.ts";
 import { log } from "../../lib/logger.ts";
 
@@ -94,9 +94,17 @@ export const handler: AppHandlers = {
 
       // If we found any valid items, submit a single order to Printful
       if (orderItems.length > 0) {
+        const shippingDetails = session.collected_information?.shipping_details;
+        if (!shippingDetails) {
+          log.error("Missing shipping details in checkout session", {
+            sessionId: session.id,
+          });
+          return new Response();
+        }
+
         await submitOrder(
           orderItems,
-          session.collected_information?.shipping_details!,
+          shippingDetails,
           session.customer_details?.email || undefined,
         );
         await emailService.sendEmail({
@@ -120,7 +128,11 @@ export const handler: AppHandlers = {
 
 async function submitOrder(
   orderItems: Array<{ variant: ProductVariant; quantity: number }>,
-  shippingDetails: Stripe.Checkout.Session.CollectedInformation.ShippingDetails,
+  shippingDetails: NonNullable<
+    NonNullable<
+      Stripe.Checkout.Session["collected_information"]
+    >["shipping_details"]
+  >,
   customerEmail?: string,
 ) {
   // Map the order items to the format expected by Printful
