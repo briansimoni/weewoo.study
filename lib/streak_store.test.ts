@@ -1,6 +1,5 @@
-import { assertEquals } from "$std/assert/assert_equals.ts";
+import { assert, assertEquals } from "@std/assert";
 import { StreakStore } from "./streak_store.ts";
-import { assert } from "$std/assert/assert.ts";
 import dayjs from "npm:dayjs";
 
 let streakStore: StreakStore;

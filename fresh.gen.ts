@@ -20,7 +20,15 @@ import * as $admin_questions_id_ from "./routes/admin/questions/[id].tsx";
 import * as $admin_questions_question_reports_stats from "./routes/admin/questions/question-reports-stats.tsx";
 import * as $admin_users from "./routes/admin/users.tsx";
 import * as $api_admin_middleware from "./routes/api/admin/_middleware.ts";
+import * as $api_admin_book_content from "./routes/api/admin/book-content.ts";
+import * as $api_admin_chapter_content from "./routes/api/admin/chapter-content.ts";
+import * as $api_admin_chapters from "./routes/api/admin/chapters.ts";
+import * as $api_admin_kv_export from "./routes/api/admin/kv/export.ts";
+import * as $api_admin_kv_import from "./routes/api/admin/kv/import.ts";
 import * as $api_admin_product from "./routes/api/admin/product.ts";
+import * as $api_admin_product_id_images from "./routes/api/admin/product/[id]/images.ts";
+import * as $api_admin_product_id_index from "./routes/api/admin/product/[id]/index.ts";
+import * as $api_admin_product_id_toggle_active from "./routes/api/admin/product/[id]/toggle-active.ts";
 import * as $api_admin_product_id_variant_variant_id_ from "./routes/api/admin/product/[id]/variant/[variant_id].ts";
 import * as $api_admin_product_id_variant_variant_id_create_stripe_product from "./routes/api/admin/product/[id]/variant/[variant_id]/create-stripe-product.ts";
 import * as $api_admin_product_id_variant_variant_id_update_price from "./routes/api/admin/product/[id]/variant/[variant_id]/update-price.ts";
@@ -97,7 +105,16 @@ const manifest = {
       $admin_questions_question_reports_stats,
     "./routes/admin/users.tsx": $admin_users,
     "./routes/api/admin/_middleware.ts": $api_admin_middleware,
+    "./routes/api/admin/book-content.ts": $api_admin_book_content,
+    "./routes/api/admin/chapter-content.ts": $api_admin_chapter_content,
+    "./routes/api/admin/chapters.ts": $api_admin_chapters,
+    "./routes/api/admin/kv/export.ts": $api_admin_kv_export,
+    "./routes/api/admin/kv/import.ts": $api_admin_kv_import,
     "./routes/api/admin/product.ts": $api_admin_product,
+    "./routes/api/admin/product/[id]/images.ts": $api_admin_product_id_images,
+    "./routes/api/admin/product/[id]/index.ts": $api_admin_product_id_index,
+    "./routes/api/admin/product/[id]/toggle-active.ts":
+      $api_admin_product_id_toggle_active,
     "./routes/api/admin/product/[id]/variant/[variant_id].ts":
       $api_admin_product_id_variant_variant_id_,
     "./routes/api/admin/product/[id]/variant/[variant_id]/create-stripe-product.ts":

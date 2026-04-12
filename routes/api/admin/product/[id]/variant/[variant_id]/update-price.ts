@@ -1,7 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../../../lib/product_store.ts";
 import Stripe from "npm:stripe";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 import { z } from "npm:zod";
 import { dollarsToCents } from "../../../../../../../lib/util.ts";
 

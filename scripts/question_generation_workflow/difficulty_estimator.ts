@@ -2,7 +2,7 @@
 
 import { OpenAIClient, readJsonFile, writeJsonFile } from "./shared/utils.ts";
 import { DifficultyResult, GeneratedQuestion } from "./shared/types.ts";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 interface GeneratedQuestionsFile {
   generated_at: string;

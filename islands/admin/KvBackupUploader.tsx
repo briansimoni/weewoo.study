@@ -76,7 +76,9 @@ export default function KvBackupUploader(
     }
 
     if (!confirmed) {
-      throw new Error("You must confirm database merge upload before uploading.");
+      throw new Error(
+        "You must confirm database merge upload before uploading.",
+      );
     }
 
     const fileText = await selectedFile.text();
@@ -101,7 +103,9 @@ export default function KvBackupUploader(
       const batchEntries = entries.slice(start, end);
 
       setStatusText(
-        `Uploading batch ${batchIndex + 1} of ${totalBatches} (${end}/${entries.length} entries)...`,
+        `Uploading batch ${
+          batchIndex + 1
+        } of ${totalBatches} (${end}/${entries.length} entries)...`,
       );
 
       const response = await fetch("/api/admin/kv/import", {
@@ -214,7 +218,7 @@ export default function KvBackupUploader(
             <div class="text-sm text-base-content/80">
               {statusText}
               {totalEntries > 0 && (
-                <span> ({uploadedEntries}/{totalEntries})</span>
+                <span>({uploadedEntries}/{totalEntries})</span>
               )}
             </div>
           </div>

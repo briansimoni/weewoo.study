@@ -1,19 +1,27 @@
 # Question Generation Workflow
 
-A comprehensive system for generating, validating, and preparing EMT test questions for database insertion.
+A comprehensive system for generating, validating, and preparing EMT test
+questions for database insertion.
 
 ## Overview
 
 This workflow consists of five main steps:
-1. **Generate Questions** - Uses OpenAI to create new questions based on textbook content and NREMT samples
-2. **Optimize Questions** - Uses OpenAI O3 to refine and improve questions for NREMT alignment
-3. **Check Similarity** - Analyzes optimized questions for duplicates and high similarity to existing content
-4. **Rate Difficulty** - Uses OpenAI O3 model to assess question difficulty on a 1-10 scale
-5. **Format for Database** - Validates and formats questions for database insertion using Zod schemas
+
+1. **Generate Questions** - Uses OpenAI to create new questions based on
+   textbook content and NREMT samples
+2. **Optimize Questions** - Uses OpenAI O3 to refine and improve questions for
+   NREMT alignment
+3. **Check Similarity** - Analyzes optimized questions for duplicates and high
+   similarity to existing content
+4. **Rate Difficulty** - Uses OpenAI O3 model to assess question difficulty on a
+   1-10 scale
+5. **Format for Database** - Validates and formats questions for database
+   insertion using Zod schemas
 
 ## Category Restrictions
 
-All generated questions must use **EXACTLY** one of the following official EMT categories:
+All generated questions must use **EXACTLY** one of the following official EMT
+categories:
 
 1. EMS Systems
 2. Workforce Safety and Wellness
@@ -57,7 +65,8 @@ All generated questions must use **EXACTLY** one of the following official EMT c
 40. Incident Management
 41. Terrorism Response and Disaster Management
 
-These categories are enforced at the schema level and in AI prompts to ensure consistency with the database API requirements.
+These categories are enforced at the schema level and in AI prompts to ensure
+consistency with the database API requirements.
 
 ## Quick Start
 
@@ -117,8 +126,10 @@ question_generation_workflow/
 ## Individual Commands
 
 - `deno run --allow-all run_workflow.ts generate` - Generate questions only
-- `deno run --allow-all run_workflow.ts optimize` - Optimize questions for NREMT alignment
-- `deno run --allow-all run_workflow.ts similarity` - Check similarity of optimized questions
+- `deno run --allow-all run_workflow.ts optimize` - Optimize questions for NREMT
+  alignment
+- `deno run --allow-all run_workflow.ts similarity` - Check similarity of
+  optimized questions
 - `deno run --allow-all run_workflow.ts difficulty` - Rate difficulty only
 - `deno run --allow-all run_workflow.ts format` - Format for DB only
 - `deno run --allow-all run_workflow.ts status` - Check workflow status
@@ -128,6 +139,7 @@ question_generation_workflow/
 All configuration files are located in the `config/` directory:
 
 ### Generation Config (`config/config.json`)
+
 ```json
 {
   "chapter_ids": ["1", "2", "3"],
@@ -145,7 +157,9 @@ All configuration files are located in the `config/` directory:
 ```
 
 **Configuration Options:**
-- `chapter_ids`: Array of chapter IDs to download from S3 (e.g., ["1", "2", "15"])
+
+- `chapter_ids`: Array of chapter IDs to download from S3 (e.g., ["1", "2",
+  "15"])
 - `textbook_files`: Array of local file paths for offline content (fallback)
 - `sample_questions_file`: Path to NREMT sample questions for style reference
 - `num_questions`: Number of questions to generate
@@ -154,6 +168,7 @@ All configuration files are located in the `config/` directory:
 - `s3_config`: S3 bucket configuration for textbook chapter retrieval
 
 ### Optimization Config (`config/optimize_config.json`)
+
 ```json
 {
   "generated_questions_file": "./output/generated_questions.json",
@@ -164,6 +179,7 @@ All configuration files are located in the `config/` directory:
 ```
 
 ### Similarity Config (`config/similarity_config.json`)
+
 ```json
 {
   "generated_questions_file": "./output/optimized_questions.json",
@@ -174,6 +190,7 @@ All configuration files are located in the `config/` directory:
 ```
 
 ### Difficulty Config (`config/difficulty_config.json`)
+
 ```json
 {
   "generated_questions_file": "./output/optimized_questions.json",
@@ -183,6 +200,7 @@ All configuration files are located in the `config/` directory:
 ```
 
 ### Format Config (`config/format_config.json`)
+
 ```json
 {
   "generated_questions_file": "./output/optimized_questions.json",
@@ -200,9 +218,11 @@ All configuration files are located in the `config/` directory:
 
 ## Environment Variables
 
-The workflow automatically loads environment variables from the project root `.env` file using Deno's dotenv module.
+The workflow automatically loads environment variables from the project root
+`.env` file using Deno's dotenv module.
 
 ### Required Variables in `.env`
+
 ```bash
 # OpenAI API Configuration
 CHAT_GPT_KEY=your_openai_api_key_here
@@ -218,14 +238,18 @@ S3_PREFIX_KEY=emt-book/
 ```
 
 ### Variable Details
+
 - `CHAT_GPT_KEY`: **Required** - Your OpenAI API key for question generation
 - `AWS_ACCESS_KEY_ID`: **Required** - AWS access key for S3 chapter retrieval
 - `AWS_SECRET_ACCESS_KEY`: **Required** - AWS secret access key for S3 access
 - `AWS_REGION`: Optional - AWS region (default: "us-east-1")
-- `S3_BUCKET_NAME`: Optional - S3 bucket containing textbook chapters (default: "ems-questions-static-assets")
-- `S3_PREFIX_KEY`: Optional - S3 prefix for textbook files (default: "emt-book/")
+- `S3_BUCKET_NAME`: Optional - S3 bucket containing textbook chapters (default:
+  "ems-questions-static-assets")
+- `S3_PREFIX_KEY`: Optional - S3 prefix for textbook files (default:
+  "emt-book/")
 
-**Note**: The workflow will fallback to system environment variables if any values are missing from the `.env` file.
+**Note**: The workflow will fallback to system environment variables if any
+values are missing from the `.env` file.
 
 ## Output Files
 
@@ -235,24 +259,28 @@ All output files are generated in the `output/` directory:
 - `output/optimized_questions.json` - Optimized questions for NREMT alignment
 - `output/similarity_scores.json` - Similarity analysis results with scores 1-10
 - `output/difficulty_scores.json` - Difficulty ratings with O3 model reasoning
-- `output/db_ready_questions.json` - Final validated questions ready for database insertion
+- `output/db_ready_questions.json` - Final validated questions ready for
+  database insertion
 
 ## Models Used
 
 - **Question Generation**: `gpt-4o-mini` (fast, cost-effective)
 - **Optimization**: `o3-preview` (advanced reasoning for NREMT alignment)
 - **Similarity Checking**: `gpt-4o-mini` (fast, cost-effective)
-- **Difficulty Rating**: `o1-preview` (advanced reasoning for accurate difficulty assessment)
+- **Difficulty Rating**: `o1-preview` (advanced reasoning for accurate
+  difficulty assessment)
 
 ## Quality Controls
 
 ### Similarity Filtering
+
 - Compares new questions against existing database questions
 - Compares new questions against each other
 - Scores similarity 1-10 (10 = essentially identical)
 - Filters out questions above similarity threshold
 
 ### Difficulty Assessment
+
 - Rates questions 1-10 based on:
   - Knowledge level required
   - Clinical reasoning complexity
@@ -261,6 +289,7 @@ All output files are generated in the `output/` directory:
 - Provides detailed reasoning for each score
 
 ### Schema Validation
+
 - Uses Zod schemas to ensure data integrity
 - Validates all required fields before database insertion
 - Provides detailed error reporting for invalid questions
@@ -268,6 +297,7 @@ All output files are generated in the `output/` directory:
 ## Question Format
 
 Questions follow the NREMT sample format:
+
 ```json
 {
   "category": "Primary Assessment",
@@ -305,7 +335,9 @@ Questions follow the NREMT sample format:
    - Add more diverse textbook content
 
 ### File Permissions
+
 All scripts require these Deno permissions:
+
 - `--allow-net` (OpenAI API calls)
 - `--allow-read` (reading config and input files)
 - `--allow-write` (writing output files)
@@ -314,17 +346,21 @@ All scripts require these Deno permissions:
 ## Extending the Workflow
 
 ### Adding New Models
+
 Modify the OpenAI client in `shared/utils.ts` to use different models:
+
 ```typescript
 // For generation
-model: "gpt-4o" // More capable but slower
+model: "gpt-4o"; // More capable but slower
 
 // For difficulty
-model: "o1" // Most advanced reasoning
+model: "o1"; // Most advanced reasoning
 ```
 
 ### Custom Validation
+
 Add custom validation rules in `format_for_db.ts`:
+
 ```typescript
 // Example: Filter questions by category
 if (question.category === "Unwanted Category") {
@@ -334,7 +370,9 @@ if (question.category === "Unwanted Category") {
 ```
 
 ### Batch Processing
-For large textbook collections, modify the generation script to process chapters in batches and merge results.
+
+For large textbook collections, modify the generation script to process chapters
+in batches and merge results.
 
 ## Cost Estimation
 
@@ -346,4 +384,5 @@ Approximate costs for 100 questions (using current OpenAI pricing):
 - Difficulty (o1-preview): ~$2.00-4.00
 - **Total**: ~$4.30-8.60 per 100 questions
 
-The O3 model would be more expensive but provide the highest quality difficulty assessments.
+The O3 model would be more expensive but provide the highest quality difficulty
+assessments.

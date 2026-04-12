@@ -9,7 +9,7 @@ import {
 } from "./shared/types.ts";
 import { QuestionStore } from "../../lib/question_store.ts";
 import { getKv } from "../../lib/kv.ts";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 interface GeneratedQuestionsFile {
   generated_at: string;

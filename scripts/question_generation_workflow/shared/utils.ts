@@ -1,12 +1,16 @@
 import { OpenAI } from "jsr:@openai/openai";
-import { S3Client, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { load } from "https://deno.land/std@0.224.0/dotenv/mod.ts";
+import {
+  GetObjectCommand,
+  ListObjectsV2Command,
+  S3Client,
+} from "@aws-sdk/client-s3";
+import { load } from "@std/dotenv";
 import {
   DifficultyResult,
+  EMT_CATEGORIES,
   GeneratedQuestion,
   OptimizationResult,
   SimilarityResult,
-  EMT_CATEGORIES,
 } from "./types.ts";
 
 // Load environment variables from .env file (relative to project root)
@@ -14,24 +18,31 @@ const env = await load({ envPath: "../../../.env" });
 
 // Validate required environment variables
 export function validateEnvironment(): void {
-  const apiKey = env.CHAT_GPT_KEY || env.OPENAI_API_KEY || Deno.env.get("CHAT_GPT_KEY") || Deno.env.get("OPENAI_API_KEY");
-  
+  const apiKey = env.CHAT_GPT_KEY || env.OPENAI_API_KEY ||
+    Deno.env.get("CHAT_GPT_KEY") || Deno.env.get("OPENAI_API_KEY");
+
   if (!apiKey) {
     console.error("❌ Error: Missing OpenAI API key!");
-    console.error("   Set CHAT_GPT_KEY in your .env file or environment variables");
+    console.error(
+      "   Set CHAT_GPT_KEY in your .env file or environment variables",
+    );
     console.error("   Example: CHAT_GPT_KEY=sk-your-key-here");
     Deno.exit(1);
   }
 }
 
 // S3 configuration
-const S3_BUCKET_NAME = env.S3_BUCKET_NAME || Deno.env.get("S3_BUCKET_NAME") || "ems-questions-static-assets";
-const S3_PREFIX_KEY = env.S3_PREFIX_KEY || Deno.env.get("S3_PREFIX_KEY") || "emt-book/";
+const S3_BUCKET_NAME = env.S3_BUCKET_NAME || Deno.env.get("S3_BUCKET_NAME") ||
+  "ems-questions-static-assets";
+const S3_PREFIX_KEY = env.S3_PREFIX_KEY || Deno.env.get("S3_PREFIX_KEY") ||
+  "emt-book/";
 const s3Client = new S3Client({
   region: env.AWS_REGION || Deno.env.get("AWS_REGION") || "us-east-1",
   credentials: {
-    accessKeyId: env.AWS_ACCESS_KEY_ID || Deno.env.get("AWS_ACCESS_KEY_ID") || "",
-    secretAccessKey: env.AWS_SECRET_ACCESS_KEY || Deno.env.get("AWS_SECRET_ACCESS_KEY") || "",
+    accessKeyId: env.AWS_ACCESS_KEY_ID || Deno.env.get("AWS_ACCESS_KEY_ID") ||
+      "",
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY ||
+      Deno.env.get("AWS_SECRET_ACCESS_KEY") || "",
   },
 });
 
@@ -39,12 +50,13 @@ export class OpenAIClient {
   private client: OpenAI;
 
   constructor(apiKey?: string) {
-    const finalApiKey = apiKey || env.CHAT_GPT_KEY || env.OPENAI_API_KEY || Deno.env.get("CHAT_GPT_KEY") || Deno.env.get("OPENAI_API_KEY");
-    
+    const finalApiKey = apiKey || env.CHAT_GPT_KEY || env.OPENAI_API_KEY ||
+      Deno.env.get("CHAT_GPT_KEY") || Deno.env.get("OPENAI_API_KEY");
+
     if (!finalApiKey) {
       throw new Error("OpenAI API key is required but not provided");
     }
-    
+
     this.client = new OpenAI({
       apiKey: finalApiKey,
     });
@@ -69,10 +81,10 @@ export class OpenAIClient {
           throw new Error(`Failed to parse JSON from markdown block: ${error}`);
         }
       }
-      
+
       // If no markdown blocks, try to find JSON-like content
-      const jsonStart = content.indexOf('[');
-      const jsonEnd = content.lastIndexOf(']');
+      const jsonStart = content.indexOf("[");
+      const jsonEnd = content.lastIndexOf("]");
       if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
         try {
           return JSON.parse(content.slice(jsonStart, jsonEnd + 1));
@@ -81,8 +93,8 @@ export class OpenAIClient {
         }
       }
 
-      const objStart = content.indexOf('{');
-      const objEnd = content.lastIndexOf('}');
+      const objStart = content.indexOf("{");
+      const objEnd = content.lastIndexOf("}");
       if (objStart !== -1 && objEnd !== -1 && objEnd > objStart) {
         try {
           return JSON.parse(content.slice(objStart, objEnd + 1));
@@ -91,7 +103,11 @@ export class OpenAIClient {
         }
       }
 
-      throw new Error(`Could not extract valid JSON from response: ${content.substring(0, 200)}...`);
+      throw new Error(
+        `Could not extract valid JSON from response: ${
+          content.substring(0, 200)
+        }...`,
+      );
     }
   }
 
@@ -114,7 +130,9 @@ Requirements:
 2. Each question should have 4 multiple choice answers
 3. **CRITICAL: The correct_answer field must be 0-based indexed (0, 1, 2, or 3) where 0 = first choice, 1 = second choice, etc.**
 4. Include clear explanations for the correct answers
-5. Use only these categories: ${EMT_CATEGORIES.map((cat) => `"${cat}"`).join(", ")}
+5. Use only these categories: ${
+        EMT_CATEGORIES.map((cat) => `"${cat}"`).join(", ")
+      }
 6. Vary difficulty appropriately for EMT-level knowledge
 7. Focus on real-world scenarios EMTs encounter
 8. Ensure questions are clear and unambiguous
@@ -127,8 +145,8 @@ Requirements:
 
 Return a JSON array in this exact format:
 [{
-"category": "string", 
-"question": "string", 
+"category": "string",
+"question": "string",
 "choices": ["string", "string", "string", "string"],
 "correct_answer": 0,
 "explanation": "string"
@@ -207,15 +225,17 @@ Only include questions with similarity score >= 5.`;
       try {
         // Extract JSON from potential code blocks or explanatory text
         let jsonContent = content.trim();
-        
+
         // Remove markdown code blocks if present
-        const jsonMatch = jsonContent.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/);
+        const jsonMatch = jsonContent.match(
+          /```(?:json)?\s*(\{[\s\S]*\})\s*```/,
+        );
         if (jsonMatch) {
           jsonContent = jsonMatch[1];
         } else {
           // Try to find JSON object in the content
-          const jsonStart = jsonContent.indexOf('{');
-          const jsonEnd = jsonContent.lastIndexOf('}');
+          const jsonStart = jsonContent.indexOf("{");
+          const jsonEnd = jsonContent.lastIndexOf("}");
           if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
             jsonContent = jsonContent.slice(jsonStart, jsonEnd + 1);
           }
@@ -230,12 +250,17 @@ Only include questions with similarity score >= 5.`;
             similarity_score: number;
           }>;
         };
-        
+
         // Validate the response structure
-        if (!analysis.similar_questions || !Array.isArray(analysis.similar_questions)) {
-          throw new Error("Invalid response structure: missing similar_questions array");
+        if (
+          !analysis.similar_questions ||
+          !Array.isArray(analysis.similar_questions)
+        ) {
+          throw new Error(
+            "Invalid response structure: missing similar_questions array",
+          );
         }
-        
+
         const maxSimilarity = Math.max(
           ...analysis.similar_questions.map((sq) => sq.similarity_score),
           1,
@@ -249,7 +274,9 @@ Only include questions with similarity score >= 5.`;
         });
       } catch (_error) {
         console.warn(
-          `⚠️  Failed to parse similarity analysis for question ${i}, using fallback. Content: "${content?.slice(0, 100)}..."`
+          `⚠️  Failed to parse similarity analysis for question ${i}, using fallback. Content: "${
+            content?.slice(0, 100)
+          }..."`,
         );
         results.push({
           question_index: i,
@@ -281,7 +308,7 @@ Only include questions with similarity score >= 5.`;
 
 Consider:
 - Knowledge level required
-- Clinical reasoning complexity  
+- Clinical reasoning complexity
 - Number of variables to consider
 - Likelihood of confusion with similar concepts
 - Real-world application difficulty
@@ -317,27 +344,33 @@ Provide your rating as JSON:
       try {
         // Extract JSON from potential code blocks or explanatory text
         let jsonContent = content.trim();
-        
+
         // Remove markdown code blocks if present
-        const jsonMatch = jsonContent.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/);
+        const jsonMatch = jsonContent.match(
+          /```(?:json)?\s*(\{[\s\S]*\})\s*```/,
+        );
         if (jsonMatch) {
           jsonContent = jsonMatch[1];
         } else {
           // Try to find JSON object in the content
-          const jsonStart = jsonContent.indexOf('{');
-          const jsonEnd = jsonContent.lastIndexOf('}');
+          const jsonStart = jsonContent.indexOf("{");
+          const jsonEnd = jsonContent.lastIndexOf("}");
           if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
             jsonContent = jsonContent.slice(jsonStart, jsonEnd + 1);
           }
         }
 
         const analysis = JSON.parse(jsonContent);
-        
+
         // Validate the response structure
-        if (typeof analysis.difficulty_score !== 'number' || !analysis.reasoning) {
-          throw new Error("Invalid response structure: missing difficulty_score or reasoning");
+        if (
+          typeof analysis.difficulty_score !== "number" || !analysis.reasoning
+        ) {
+          throw new Error(
+            "Invalid response structure: missing difficulty_score or reasoning",
+          );
         }
-        
+
         results.push({
           question_index: i,
           question_text: question.question,
@@ -346,7 +379,9 @@ Provide your rating as JSON:
         });
       } catch (_error) {
         console.warn(
-          `⚠️  Failed to parse difficulty analysis for question ${i}, using fallback. Content: "${content?.slice(0, 100)}..."`
+          `⚠️  Failed to parse difficulty analysis for question ${i}, using fallback. Content: "${
+            content?.slice(0, 100)
+          }..."`,
         );
         results.push({
           question_index: i,
@@ -373,12 +408,10 @@ Provide your rating as JSON:
 ORIGINAL QUESTION:
 Category: ${question.category}
 Question: "${question.question}"
-Choices: ${
-        question.choices.map((c, idx) =>
-          `${idx + 1}. ${c}`
-        ).join("\n")
-      }
-Correct Answer: Choice ${question.correct_answer + 1} (${question.choices[question.correct_answer]})
+Choices: ${question.choices.map((c, idx) => `${idx + 1}. ${c}`).join("\n")}
+Correct Answer: Choice ${question.correct_answer + 1} (${
+          question.choices[question.correct_answer]
+        })
 Explanation: ${question.explanation}
 
 OPTIMIZATION GUIDELINES:
@@ -388,7 +421,9 @@ OPTIMIZATION GUIDELINES:
 4. Use realistic, scenario-based language that EMTs encounter
 5. Ensure the correct answer is definitively the best choice
 6. **CRITICAL: Maintain 0-based indexing for correct_answer (0, 1, 2, or 3)**
-7. Use only these categories: ${EMT_CATEGORIES.map((cat) => `"${cat}"`).join(", ")}
+7. Use only these categories: ${
+          EMT_CATEGORIES.map((cat) => `"${cat}"`).join(", ")
+        }
 8. Keep explanations concise but complete
 
 **IMPORTANT: The correct_answer field must remain 0-based indexed:**
@@ -398,7 +433,7 @@ Provide your response as JSON in this format:
 {
   "optimized_question": {
     "category": "string",
-    "question": "string", 
+    "question": "string",
     "choices": ["string", "string", "string", "string"],
     "correct_answer": 0,
     "explanation": "string"
@@ -420,16 +455,18 @@ Provide your response as JSON in this format:
 
       try {
         const parsedContent = this.extractJson(content);
-        
-        if (typeof parsedContent === 'object' && parsedContent !== null && 
-            'optimized_question' in parsedContent) {
+
+        if (
+          typeof parsedContent === "object" && parsedContent !== null &&
+          "optimized_question" in parsedContent
+        ) {
           const optimization = parsedContent as {
             optimized_question: GeneratedQuestion;
             changes_made: string[];
             optimization_reasoning: string;
             improvement_score: number;
           };
-          
+
           results.push({
             question_index: i,
             original_question: {
@@ -445,7 +482,11 @@ Provide your response as JSON in this format:
             improvement_score: optimization.improvement_score,
           });
         } else {
-          console.warn(`Unexpected optimization response format for question ${i + 1}, using fallback`);
+          console.warn(
+            `Unexpected optimization response format for question ${
+              i + 1
+            }, using fallback`,
+          );
           results.push({
             question_index: i,
             original_question: {
@@ -469,8 +510,11 @@ Provide your response as JSON in this format:
           });
         }
       } catch (error) {
-        console.warn(`Failed to parse optimization for question ${i + 1}:`, error);
-        
+        console.warn(
+          `Failed to parse optimization for question ${i + 1}:`,
+          error,
+        );
+
         results.push({
           question_index: i,
           original_question: {
@@ -510,7 +554,7 @@ export function getEMTCategories(): string[] {
  * Format EMT categories as a string for AI prompts
  */
 export function formatCategoriesForPrompt(): string {
-  return EMT_CATEGORIES.map((cat, index) => `${index + 1}. ${cat}`).join('\n');
+  return EMT_CATEGORIES.map((cat, index) => `${index + 1}. ${cat}`).join("\n");
 }
 
 export async function readJsonFile<T>(filePath: string): Promise<T> {
@@ -544,14 +588,16 @@ export async function downloadTextbookChapter(
       Bucket: S3_BUCKET_NAME,
       Prefix: S3_PREFIX_KEY,
     });
-    
+
     const listResponse = await s3Client.send(listCommand);
     let chapterKey = "";
-    
+
     if (listResponse.Contents) {
       // Find the chapter file that starts with the provided chapterId
       for (const object of listResponse.Contents) {
-        if (object.Key && object.Key.includes(`${chapterId.padStart(2, "0")} -`)) {
+        if (
+          object.Key && object.Key.includes(`${chapterId.padStart(2, "0")} -`)
+        ) {
           chapterKey = object.Key;
           break;
         }
@@ -567,13 +613,13 @@ export async function downloadTextbookChapter(
       Bucket: S3_BUCKET_NAME,
       Key: chapterKey,
     });
-    
+
     const getResponse = await s3Client.send(getCommand);
-    
+
     if (!getResponse.Body) {
       throw new Error(`Failed to get chapter ${chapterId} content from S3`);
     }
-    
+
     // Convert the response body to a string
     const bodyContents = await getResponse.Body.transformToByteArray();
     const chapterContent = new TextDecoder().decode(bodyContents);

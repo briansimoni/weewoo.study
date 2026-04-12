@@ -1,15 +1,20 @@
 import { AppHandlers } from "../../_middleware.ts";
-import { S3Client, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  ListObjectsV2Command,
+  S3Client,
+} from "@aws-sdk/client-s3";
 
 // S3 configuration
-const S3_BUCKET_NAME = Deno.env.get("S3_BUCKET_NAME") || "ems-questions-static-assets";
+const S3_BUCKET_NAME = Deno.env.get("S3_BUCKET_NAME") ||
+  "ems-questions-static-assets";
 const S3_PREFIX_KEY = Deno.env.get("S3_PREFIX_KEY") || "emt-book/";
 const s3Client = new S3Client({
   region: Deno.env.get("AWS_REGION") || "us-east-1",
   credentials: {
     accessKeyId: Deno.env.get("AWS_ACCESS_KEY_ID") || "",
     secretAccessKey: Deno.env.get("AWS_SECRET_ACCESS_KEY") || "",
-  }
+  },
 });
 
 export const handler: AppHandlers = {
@@ -33,14 +38,16 @@ export const handler: AppHandlers = {
         Bucket: S3_BUCKET_NAME,
         Prefix: S3_PREFIX_KEY,
       });
-      
+
       const listResponse = await s3Client.send(listCommand);
       let chapterKey = "";
-      
+
       if (listResponse.Contents) {
         // Find the chapter file that starts with the provided chapterId
         for (const object of listResponse.Contents) {
-          if (object.Key && object.Key.includes(`${chapterId.padStart(2, "0")} -`)) {
+          if (
+            object.Key && object.Key.includes(`${chapterId.padStart(2, "0")} -`)
+          ) {
             chapterKey = object.Key;
             break;
           }
@@ -62,19 +69,21 @@ export const handler: AppHandlers = {
         Bucket: S3_BUCKET_NAME,
         Key: chapterKey,
       });
-      
+
       const getResponse = await s3Client.send(getCommand);
-      
+
       if (!getResponse.Body) {
         return new Response(
-          JSON.stringify({ error: `Failed to get chapter ${chapterId} content` }),
+          JSON.stringify({
+            error: `Failed to get chapter ${chapterId} content`,
+          }),
           {
             status: 500,
             headers: { "Content-Type": "application/json" },
           },
         );
       }
-      
+
       // Convert the response body to a string
       const bodyContents = await getResponse.Body.transformToByteArray();
       const chapterContent = new TextDecoder().decode(bodyContents);

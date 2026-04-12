@@ -2,23 +2,23 @@
 
 import { ProductStore } from "../lib/product_store.ts";
 import { log } from "../lib/logger.ts";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 /**
  * Converts a single URL from .png to .webp
  */
 function convertUrlToWebP(url: string): string {
   if (!url) return url;
-  
+
   // Replace .png with .webp (case insensitive)
-  return url.replace(/\.png$/i, '.webp');
+  return url.replace(/\.png$/i, ".webp");
 }
 
 /**
  * Converts an array of URLs from .png to .webp
  */
 function convertUrlsToWebP(urls: string[]): string[] {
-  return urls.map(url => convertUrlToWebP(url));
+  return urls.map((url) => convertUrlToWebP(url));
 }
 
 /**
@@ -40,29 +40,33 @@ async function updateUrlsToWebP() {
 
     for (const product of products) {
       log.info(`Processing product: ${product.name} (${product.printful_id})`);
-      
+
       let productNeedsUpdate = false;
       const updatedProduct = { ...product };
 
       // Update product thumbnail URL
-      if (product.thumbnail_url && product.thumbnail_url.endsWith('.png')) {
+      if (product.thumbnail_url && product.thumbnail_url.endsWith(".png")) {
         const newUrl = convertUrlToWebP(product.thumbnail_url);
         if (newUrl !== product.thumbnail_url) {
           updatedProduct.thumbnail_url = newUrl;
           productNeedsUpdate = true;
           totalUpdates++;
-          log.info(`Updated product thumbnail: ${product.thumbnail_url} -> ${newUrl}`);
+          log.info(
+            `Updated product thumbnail: ${product.thumbnail_url} -> ${newUrl}`,
+          );
         }
       }
 
       // Update product color thumbnail URLs
       if (product.colors && product.colors.length > 0) {
-        const updatedColors = product.colors.map(color => {
-          if (color.thumbnail_url && color.thumbnail_url.endsWith('.png')) {
+        const updatedColors = product.colors.map((color) => {
+          if (color.thumbnail_url && color.thumbnail_url.endsWith(".png")) {
             const newUrl = convertUrlToWebP(color.thumbnail_url);
             if (newUrl !== color.thumbnail_url) {
               totalUpdates++;
-              log.info(`Updated color thumbnail for ${color.name}: ${color.thumbnail_url} -> ${newUrl}`);
+              log.info(
+                `Updated color thumbnail for ${color.name}: ${color.thumbnail_url} -> ${newUrl}`,
+              );
               return { ...color, thumbnail_url: newUrl };
             }
           }
@@ -70,7 +74,7 @@ async function updateUrlsToWebP() {
         });
 
         // Check if any colors were updated
-        const colorsChanged = updatedColors.some((color, index) => 
+        const colorsChanged = updatedColors.some((color, index) =>
           color.thumbnail_url !== product.colors![index].thumbnail_url
         );
 
@@ -88,8 +92,12 @@ async function updateUrlsToWebP() {
       }
 
       // Process variant images
-      const variants = await productStore.listProductVariants(product.printful_id);
-      log.info(`Found ${variants.length} variants for product ${product.printful_id}`);
+      const variants = await productStore.listProductVariants(
+        product.printful_id,
+      );
+      log.info(
+        `Found ${variants.length} variants for product ${product.printful_id}`,
+      );
 
       for (const variant of variants) {
         if (variant.images && variant.images.length > 0) {
@@ -97,26 +105,30 @@ async function updateUrlsToWebP() {
           const updatedImages = convertUrlsToWebP(originalImages);
 
           // Check if any images were updated
-          const imagesChanged = updatedImages.some((url, index) => url !== originalImages[index]);
+          const imagesChanged = updatedImages.some((url, index) =>
+            url !== originalImages[index]
+          );
 
           if (imagesChanged) {
             const updatedVariant = {
               ...variant,
-              images: updatedImages
+              images: updatedImages,
             };
 
             await productStore.updateVariant(updatedVariant);
             variantsUpdated++;
 
             // Count how many URLs were actually changed
-            const changedCount = updatedImages.filter((url, index) => 
+            const changedCount = updatedImages.filter((url, index) =>
               url !== originalImages[index]
             ).length;
-            
+
             totalUpdates += changedCount;
-            
-            log.info(`Updated variant ${variant.variant_id}: ${changedCount} image URLs changed`);
-            
+
+            log.info(
+              `Updated variant ${variant.variant_id}: ${changedCount} image URLs changed`,
+            );
+
             // Log the specific changes
             originalImages.forEach((originalUrl, index) => {
               if (updatedImages[index] !== originalUrl) {
@@ -134,9 +146,8 @@ async function updateUrlsToWebP() {
       productsUpdated,
       variantsUpdated,
       totalUrlUpdates: totalUpdates,
-      note: "All .png URLs have been updated to .webp in the database"
+      note: "All .png URLs have been updated to .webp in the database",
     });
-
   } catch (error) {
     log.error("Database URL update failed:", {
       error: error instanceof Error ? error.message : String(error),

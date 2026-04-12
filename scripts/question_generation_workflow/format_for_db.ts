@@ -9,7 +9,7 @@ import {
   SimilarityResult,
 } from "./shared/types.ts";
 import { z } from "zod";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 interface GeneratedQuestionsFile {
   generated_at: string;

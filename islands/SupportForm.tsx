@@ -19,7 +19,9 @@ export default function SupportForm() {
 
     grecaptcha.ready(() => {
       grecaptcha
-        .execute("6Lc2v3crAAAAAJjzdpnvxKxk_qIAZZ-AewWvWY7X", { action: "submit" })
+        .execute("6Lc2v3crAAAAAJjzdpnvxKxk_qIAZZ-AewWvWY7X", {
+          action: "submit",
+        })
         .then((token: string) => {
           if (tokenRef.current) {
             tokenRef.current.value = token;

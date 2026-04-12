@@ -1,4 +1,4 @@
-import { assertEquals } from "$std/assert/assert_equals.ts";
+import { assertEquals } from "@std/assert";
 import { exportKv, importKvUpsert, isKvBackupBlob } from "./kv_backup.ts";
 
 Deno.test("exportKv returns all entries", async () => {

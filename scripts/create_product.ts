@@ -1,6 +1,6 @@
 import { parse } from "@std/csv";
 import Stripe from "npm:stripe";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 import { ProductStore } from "../lib/product_store.ts";
 import { dollarsToCents } from "../lib/util.ts";
 
@@ -155,7 +155,6 @@ const main = async () => {
         size: variant.size,
         images: variant.images,
         stripe_product_id: stripeProduct.id,
-
       });
     }
   }

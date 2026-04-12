@@ -39,21 +39,21 @@ export function sortImagesInPlace(images: string[]) {
  */
 export function dollarsToCents(dollars: number | string): number {
   const dollarString = dollars.toString();
-  
+
   // Handle cases where there's no decimal point
-  if (!dollarString.includes('.')) {
+  if (!dollarString.includes(".")) {
     return parseInt(dollarString) * 100;
   }
-  
+
   // Split on decimal point
-  const [wholePart, decimalPart] = dollarString.split('.');
-  
+  const [wholePart, decimalPart] = dollarString.split(".");
+
   // Ensure we have exactly 2 decimal places
-  const normalizedDecimalPart = (decimalPart + '00').substring(0, 2);
-  
+  const normalizedDecimalPart = (decimalPart + "00").substring(0, 2);
+
   // Convert to integer cents
-  const wholePartCents = parseInt(wholePart || '0') * 100;
+  const wholePartCents = parseInt(wholePart || "0") * 100;
   const decimalPartCents = parseInt(normalizedDecimalPart);
-  
+
   return wholePartCents + decimalPartCents;
 }

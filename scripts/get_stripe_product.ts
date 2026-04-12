@@ -1,10 +1,9 @@
 // Script to fetch product information from Stripe
 import Stripe from "npm:stripe@17.7.0";
-import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
+import "@std/dotenv/load";
 
 // Load environment variables
-const env = config();
-const stripeApiKey = env.STRIPE_API_KEY || Deno.env.get("STRIPE_API_KEY");
+const stripeApiKey = Deno.env.get("STRIPE_API_KEY");
 
 if (!stripeApiKey) {
   console.error("Error: STRIPE_API_KEY is not set in environment variables");

@@ -1,5 +1,5 @@
 import Stripe from "npm:stripe";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 const main = async () => {
   const stripeKey = Deno.env.get("STRIPE_API_KEY");

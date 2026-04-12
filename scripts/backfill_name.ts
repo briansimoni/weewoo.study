@@ -1,4 +1,4 @@
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 import { generateName } from "../lib/name_generator.ts";
 import { UserStore } from "../lib/user_store.ts";
 

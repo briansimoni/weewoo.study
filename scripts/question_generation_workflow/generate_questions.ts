@@ -7,9 +7,13 @@ import {
   validateEnvironment,
   writeJsonFile,
 } from "./shared/utils.ts";
-import { GeneratedQuestion, GeneratedQuestionSchema, EMT_CATEGORIES } from "./shared/types.ts";
+import {
+  EMT_CATEGORIES,
+  GeneratedQuestion,
+  GeneratedQuestionSchema,
+} from "./shared/types.ts";
 import { z } from "zod";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 interface Config {
   chapter_ids?: string[];
@@ -89,26 +93,34 @@ async function main() {
   }
 
   if (textbookContext.length > 50000) {
-    console.log(`📝 Chapter content is ${textbookContext.length} characters, splitting into chunks...`);
-    
+    console.log(
+      `📝 Chapter content is ${textbookContext.length} characters, splitting into chunks...`,
+    );
+
     // Split content into manageable chunks
     const maxChunkSize = 45000; // Leave room for prompt overhead
     const chunks: string[] = [];
-    
+
     for (let i = 0; i < textbookContext.length; i += maxChunkSize) {
       const chunk = textbookContext.substring(i, i + maxChunkSize);
       chunks.push(chunk);
     }
-    
+
     console.log(`📚 Processing ${chunks.length} chunks of chapter content`);
-    
+
     // Generate questions from each chunk
     const allGeneratedQuestions: GeneratedQuestion[] = [];
-    const questionsPerChunk = Math.ceil((config.num_questions || 10) / chunks.length);
-    
+    const questionsPerChunk = Math.ceil(
+      (config.num_questions || 10) / chunks.length,
+    );
+
     for (let i = 0; i < chunks.length; i++) {
-      console.log(`🔄 Processing chunk ${i + 1}/${chunks.length} (${questionsPerChunk} questions)...`);
-      
+      console.log(
+        `🔄 Processing chunk ${
+          i + 1
+        }/${chunks.length} (${questionsPerChunk} questions)...`,
+      );
+
       try {
         const client = new OpenAIClient();
         const chunkQuestions = await client.generateQuestions(
@@ -116,22 +128,29 @@ async function main() {
           JSON.stringify(sampleQuestions, null, 2),
           questionsPerChunk,
         );
-        
+
         allGeneratedQuestions.push(...chunkQuestions);
-        console.log(`✅ Generated ${chunkQuestions.length} questions from chunk ${i + 1}`);
-        
+        console.log(
+          `✅ Generated ${chunkQuestions.length} questions from chunk ${i + 1}`,
+        );
+
         // Brief pause between requests to avoid rate limiting
         if (i < chunks.length - 1) {
           console.log("⏱️  Waiting 2 seconds before next chunk...");
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          await new Promise((resolve) => setTimeout(resolve, 2000));
         }
       } catch (error) {
-        console.warn(`⚠️  Failed to generate questions from chunk ${i + 1}:`, error);
+        console.warn(
+          `⚠️  Failed to generate questions from chunk ${i + 1}:`,
+          error,
+        );
       }
     }
-    
-    console.log(`✅ Generated ${allGeneratedQuestions.length} questions from all chunks`);
-    
+
+    console.log(
+      `✅ Generated ${allGeneratedQuestions.length} questions from all chunks`,
+    );
+
     // Validate and filter questions
     const validQuestions = allGeneratedQuestions.filter((q) => {
       if (!q.question || !q.choices || !q.explanation || !q.category) {
@@ -140,7 +159,10 @@ async function main() {
       if (!Array.isArray(q.choices) || q.choices.length < 2) {
         return false;
       }
-      if (typeof q.correct_answer !== "number" || q.correct_answer < 0 || q.correct_answer >= q.choices.length) {
+      if (
+        typeof q.correct_answer !== "number" || q.correct_answer < 0 ||
+        q.correct_answer >= q.choices.length
+      ) {
         return false;
       }
       if (!EMT_CATEGORIES.includes(q.category)) {
@@ -152,30 +174,37 @@ async function main() {
     console.log(`✅ ${validQuestions.length} valid questions after validation`);
 
     // Trim to requested count if we have more than needed
-    const finalQuestions = validQuestions.length > (config.num_questions || 10) 
+    const finalQuestions = validQuestions.length > (config.num_questions || 10)
       ? validQuestions.slice(0, config.num_questions || 10)
       : validQuestions;
 
-    await writeJsonFile(config.output_file || "./output/generated_questions.json", {
-      created_at: new Date().toISOString(),
-      config: config,
-      questions: finalQuestions,
-      metadata: {
-        total_chunks_processed: chunks.length,
-        questions_per_chunk: questionsPerChunk,
-        raw_generated_count: allGeneratedQuestions.length,
-        valid_after_filtering: validQuestions.length,
-        final_question_count: finalQuestions.length,
+    await writeJsonFile(
+      config.output_file || "./output/generated_questions.json",
+      {
+        created_at: new Date().toISOString(),
+        config: config,
+        questions: finalQuestions,
+        metadata: {
+          total_chunks_processed: chunks.length,
+          questions_per_chunk: questionsPerChunk,
+          raw_generated_count: allGeneratedQuestions.length,
+          valid_after_filtering: validQuestions.length,
+          final_question_count: finalQuestions.length,
+        },
       },
-    });
+    );
 
     console.log(
-      `Successfully wrote data to ${config.output_file || "./output/generated_questions.json"}`,
+      `Successfully wrote data to ${
+        config.output_file || "./output/generated_questions.json"
+      }`,
     );
     console.log(
-      `🎉 Question generation complete! Output saved to ${config.output_file || "./output/generated_questions.json"}`,
+      `🎉 Question generation complete! Output saved to ${
+        config.output_file || "./output/generated_questions.json"
+      }`,
     );
-    
+
     return; // Exit early since we handled everything here
   }
 

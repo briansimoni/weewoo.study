@@ -1,6 +1,6 @@
 // Script to backfill the secondary index for stripe_product_id
 import { ProductStore, ProductVariant } from "../lib/product_store.ts";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 async function backfillStripeIndex() {
   console.log("Starting to backfill stripe_product_id secondary index...");

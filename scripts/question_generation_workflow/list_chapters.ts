@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-net --allow-read --allow-write --allow-env
 
 import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 // S3 configuration using environment variables
 const S3_BUCKET_NAME = Deno.env.get("S3_BUCKET_NAME") ||

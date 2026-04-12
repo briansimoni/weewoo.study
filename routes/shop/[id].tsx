@@ -17,7 +17,9 @@ export default defineRoute(async (req, ctx) => {
     <div className="container mx-auto py-8 px-4">
       <div className="breadcrumbs text-sm mb-8">
         <ul>
-          <li><a href="/shop">Shop</a></li>
+          <li>
+            <a href="/shop">Shop</a>
+          </li>
           <li>{product.name}</li>
         </ul>
       </div>

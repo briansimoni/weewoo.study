@@ -171,7 +171,7 @@ async function submitOrder(
     try {
       // Get product names and prices for the email
       const emailItems = orderItems.map((item) => ({
-        name: item.variant.color 
+        name: item.variant.color
           ? `${item.variant.color.name} ${item.variant.size}`
           : item.variant.name || `Variant ${item.variant.size}`,
         quantity: item.quantity,

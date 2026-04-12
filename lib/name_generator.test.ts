@@ -1,7 +1,4 @@
-import {
-  assert,
-  assertMatch,
-} from "https://deno.land/std@0.217.0/assert/mod.ts";
+import { assert, assertMatch } from "@std/assert";
 import { adjectives, generateName, medicalRoles } from "./name_generator.ts";
 
 Deno.test("Generated name follows PascalCase format and has no spaces", () => {

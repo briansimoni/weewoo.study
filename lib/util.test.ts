@@ -1,8 +1,5 @@
-import {
-  assert,
-  assertEquals,
-} from "https://deno.land/std@0.217.0/assert/mod.ts";
-import { sortImagesInPlace, dollarsToCents } from "./util.ts";
+import { assert, assertEquals } from "@std/assert";
+import { dollarsToCents, sortImagesInPlace } from "./util.ts";
 
 Deno.test("sortImagesInPlace - sorts by position keywords in correct order", () => {
   const images = [

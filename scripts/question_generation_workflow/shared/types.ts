@@ -3,7 +3,7 @@ import { z } from "zod";
 // Official EMT Categories (matches admin API createQuestionSchema)
 export const EMT_CATEGORIES = [
   "EMS Systems",
-  "Workforce Safety and Wellness", 
+  "Workforce Safety and Wellness",
   "Medical, Legal, and Ethical Issues",
   "Communications and Documentation",
   "Medical Terminology",

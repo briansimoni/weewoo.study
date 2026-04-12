@@ -1,5 +1,4 @@
-import { assertEquals } from "$std/assert/assert_equals.ts";
-import { assertRejects } from "$std/assert/assert_rejects.ts";
+import { assertEquals, assertRejects } from "@std/assert";
 import { buildDownloadResponse, importFromJsonText } from "./database.tsx";
 
 Deno.test("database page download helper returns attachment response", async () => {

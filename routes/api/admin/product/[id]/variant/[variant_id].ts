@@ -3,7 +3,7 @@ import { ProductStore } from "../../../../../../lib/product_store.ts";
 import { ProductVariant } from "../../../../../../lib/product_store.ts";
 import { z } from "zod";
 import Stripe from "npm:stripe";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 import { log } from "../../../../../../lib/logger.ts";
 import { sortImagesInPlace } from "../../../../../../lib/util.ts";
 

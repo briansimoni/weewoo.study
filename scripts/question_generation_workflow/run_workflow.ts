@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-net --allow-read --allow-write --allow-env
 
 import { writeJsonFile } from "./shared/utils.ts";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 interface WorkflowConfig {
   textbook_urls?: string[];

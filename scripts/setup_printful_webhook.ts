@@ -1,7 +1,7 @@
 // This script sets up a Printful webhook for package_shipped events
 import { PrintfulApiClient } from "../lib/client/printful.ts";
 import { log } from "../lib/logger.ts";
-import "$std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 // URL where Printful will send webhook events
 const WEBHOOK_URL = "https://weewoo.study/api/printful_webhook";

@@ -1,5 +1,4 @@
-import { assertEquals } from "$std/assert/assert_equals.ts";
-import { assertRejects } from "$std/assert/assert_rejects.ts";
+import { assertEquals, assertRejects } from "@std/assert";
 import { exportKvResponse } from "./export.ts";
 import { importKvResponse } from "./import.ts";
 
