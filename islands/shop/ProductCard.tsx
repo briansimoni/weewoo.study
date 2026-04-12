@@ -2,12 +2,9 @@ import { useState } from "preact/hooks";
 import { Product } from "../../lib/product_store.ts";
 
 export default function ProductCard({ product }: { product: Product }) {
-  // Default to product thumbnail if no colors are available
-  const defaultThumbnail = product.colors && product.colors.length > 0
-    ? product.colors[0].thumbnail_url
-    : product.thumbnail_url;
-
-  const [currentThumbnail, setCurrentThumbnail] = useState(defaultThumbnail);
+  const [currentThumbnail, setCurrentThumbnail] = useState(
+    product.thumbnail_url,
+  );
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleImageLoad = (img: HTMLImageElement) => {
