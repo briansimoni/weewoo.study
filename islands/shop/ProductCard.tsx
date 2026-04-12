@@ -56,7 +56,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   setImageLoaded(false); // Reset loading state for new image
                 }}
                 onMouseLeave={() => {
-                  setCurrentThumbnail(defaultThumbnail);
+                  setCurrentThumbnail(product.thumbnail_url);
                   setImageLoaded(false); // Reset loading state for default image
                 }}
               >
