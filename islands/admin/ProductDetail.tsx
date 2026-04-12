@@ -1,9 +1,17 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { PrintfulProductVariant } from "../../lib/client/printful.ts";
 import { Product, ProductVariant } from "../../lib/product_store.ts";
-import { JSX } from "preact";
 import { AlertTriangle } from "lucide-preact";
 import ZipImageUploader from "./ZipImageUploader.tsx";
+import { json } from "@codemirror/lang-json";
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import {
+  defaultHighlightStyle,
+  syntaxHighlighting,
+} from "@codemirror/language";
+import { Compartment, EditorState } from "@codemirror/state";
+import { EditorView, keymap, lineNumbers } from "@codemirror/view";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 interface ProductDetailProps {
   productDetails: {
@@ -35,6 +43,9 @@ export default function ProductDetail(
   const [jsonError, setJsonError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isZipUploaderOpen, setIsZipUploaderOpen] = useState(false);
+  const editorContainerRef = useRef<HTMLDivElement | null>(null);
+  const editorViewRef = useRef<EditorView | null>(null);
+  const editorThemeCompartmentRef = useRef(new Compartment());
 
   // Color management states
   const [isColorDialogOpen, setIsColorDialogOpen] = useState(false);
@@ -149,12 +160,122 @@ export default function ProductDetail(
     }
   };
 
+  const getThemeExtension = () => {
+    const appTheme = document.documentElement.getAttribute("data-theme") ||
+      "light";
+    if (appTheme === "dark") {
+      return oneDark;
+    }
+    return EditorView.theme({
+      "&": {
+        backgroundColor: "hsl(var(--b1))",
+        color: "hsl(var(--bc))",
+      },
+      ".cm-gutters": {
+        backgroundColor: "hsl(var(--b2))",
+        color: "hsl(var(--bc) / 0.6)",
+        borderRight: "1px solid hsl(var(--b3))",
+      },
+      ".cm-activeLine": {
+        backgroundColor: "hsl(var(--b2))",
+      },
+      ".cm-activeLineGutter": {
+        backgroundColor: "hsl(var(--b2))",
+      },
+      ".cm-cursor": {
+        borderLeftColor: "hsl(var(--bc))",
+      },
+      ".cm-selectionBackground": {
+        backgroundColor: "hsl(var(--p) / 0.2)",
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (!isEditing || !editorContainerRef.current || editorViewRef.current) {
+      return;
+    }
+
+    const editor = new EditorView({
+      state: EditorState.create({
+        doc: productJson,
+        extensions: [
+          history(),
+          keymap.of([...defaultKeymap, ...historyKeymap]),
+          lineNumbers(),
+          json(),
+          syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+          EditorView.lineWrapping,
+          EditorView.updateListener.of((update) => {
+            if (update.docChanged) {
+              handleJsonTextChange(update.state.doc.toString());
+            }
+          }),
+          editorThemeCompartmentRef.current.of(getThemeExtension()),
+          EditorView.theme({
+            "&": {
+              height: "24rem",
+              borderRadius: "0.5rem",
+              fontSize: "0.875rem",
+            },
+            ".cm-scroller": {
+              fontFamily:
+                "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+            },
+            ".cm-content": {
+              padding: "0.75rem",
+            },
+          }),
+        ],
+      }),
+      parent: editorContainerRef.current,
+    });
+
+    editorViewRef.current = editor;
+
+    return () => {
+      editor.destroy();
+      editorViewRef.current = null;
+    };
+  }, [isEditing]);
+
+  useEffect(() => {
+    if (!isEditing || !editorViewRef.current) return;
+
+    const updateTheme = () => {
+      if (!editorViewRef.current) return;
+      editorViewRef.current.dispatch({
+        effects: editorThemeCompartmentRef.current.reconfigure(
+          getThemeExtension(),
+        ),
+      });
+    };
+
+    updateTheme();
+
+    const observer = new MutationObserver((mutations) => {
+      if (
+        mutations.some((mutation) => mutation.attributeName === "data-theme")
+      ) {
+        updateTheme();
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, [isEditing]);
+
   const openJsonEditor = () => {
     if (!storedProduct) return;
 
     // Create a formatted JSON string with the product data
     // Exclude fields that shouldn't be editable
     const editableProduct = {
+      printful_id: storedProduct.printful_id,
       name: storedProduct.name,
       description: storedProduct.description || "",
       price: storedProduct.price,
@@ -171,8 +292,7 @@ export default function ProductDetail(
     setIsEditing(true);
   };
 
-  const handleJsonChange = (e: JSX.TargetedEvent<HTMLTextAreaElement>) => {
-    const newJson = e.currentTarget.value;
+  const handleJsonTextChange = (newJson: string) => {
     setProductJson(newJson);
 
     // Validate JSON as user types
@@ -208,6 +328,7 @@ export default function ProductDetail(
         return {
           success: false,
           error: result.error || "Failed to update product",
+          details: result.details,
         };
       }
     } catch (error) {
@@ -236,7 +357,28 @@ export default function ProductDetail(
         // Reload the page to show the updated information
         globalThis.location.reload();
       } else if (result) {
-        alert(`Error: ${result.error}`);
+        const detailsText = Array.isArray(result.details)
+          ? result.details.map((detail) => {
+            if (typeof detail === "string") return detail;
+            if (detail && typeof detail === "object") {
+              const typedDetail = detail as {
+                field?: string;
+                message?: string;
+              };
+              if (typedDetail.field && typedDetail.message) {
+                return `${typedDetail.field}: ${typedDetail.message}`;
+              }
+              if (typedDetail.message) return typedDetail.message;
+            }
+            return JSON.stringify(detail);
+          }).join("\n")
+          : "";
+
+        alert(
+          detailsText
+            ? `Error: ${result.error}\n\n${detailsText}`
+            : `Error: ${result.error}`,
+        );
       }
     } catch (_error) {
       alert(
@@ -320,13 +462,11 @@ export default function ProductDetail(
                   </div>
 
                   <div className="p-4 flex-grow overflow-auto">
-                    <textarea
-                      value={productJson}
-                      onChange={handleJsonChange}
-                      className={`w-full h-96 font-mono text-sm p-3 border rounded-md ${
+                    <div
+                      ref={editorContainerRef}
+                      className={`w-full border rounded-md overflow-hidden ${
                         jsonError ? "border-error" : "border-border"
                       }`}
-                      spellcheck={false}
                     />
                     {jsonError && (
                       <p className="text-error text-sm mt-2">{jsonError}</p>
