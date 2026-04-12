@@ -2,7 +2,7 @@ import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../../lib/product_store.ts";
 import { ProductVariant } from "../../../../../../lib/product_store.ts";
 import { z } from "zod";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import "@std/dotenv/load";
 import { log } from "../../../../../../lib/logger.ts";
 import { sortImagesInPlace } from "../../../../../../lib/util.ts";

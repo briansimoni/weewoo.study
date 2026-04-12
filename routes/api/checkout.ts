@@ -1,5 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import { z } from "zod";
 import { ProductStore, ProductVariant } from "../../lib/product_store.ts";
 

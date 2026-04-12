@@ -1,6 +1,6 @@
 // Script to verify that all product variants have a valid stripe_product_id
 import { ProductStore } from "../lib/product_store.ts";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import "@std/dotenv/load";
 
 async function verifyStripeProducts() {

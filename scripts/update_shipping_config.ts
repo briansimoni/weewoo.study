@@ -1,4 +1,4 @@
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import "@std/dotenv/load";
 
 const main = async () => {

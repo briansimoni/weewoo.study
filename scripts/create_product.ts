@@ -1,5 +1,5 @@
 import { parse } from "@std/csv";
-import Stripe from "npm:stripe";
+import Stripe from "stripe";
 import "@std/dotenv/load";
 import { ProductStore } from "../lib/product_store.ts";
 import { dollarsToCents } from "../lib/util.ts";
