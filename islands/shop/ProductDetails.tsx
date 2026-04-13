@@ -24,15 +24,17 @@ export default function ProductDetails(
   };
 
   // Get unique sizes from variants
-  const sizes = Array.from(new Set(variants.map((v) => v.size))).filter(
-    Boolean,
+  const sizes = sortSizes(
+    Array.from(new Set(variants.map((v) => v.size))).filter(
+      (v): v is string => v !== undefined,
+    ).filter(Boolean),
   );
   const colors = Array.from(new Set(variants.map((v) => v.color?.name))).filter(
-    Boolean,
-  );
+    (v) => v !== undefined,
+  ).filter(Boolean);
   const names = Array.from(new Set(variants.map((v) => v.name))).filter(
-    Boolean,
-  );
+    (v) => v !== undefined,
+  ).filter(Boolean);
 
   // Get the selected variant based on size and color/name
   // Prioritize name-based selection for products that have custom names
@@ -320,4 +322,46 @@ export default function ProductDetails(
       </div>
     </div>
   );
+}
+
+export function sortSizes(sizes: string[]): string[] {
+  const normalizedOrder = new Map([
+    ["XXS", 0],
+    ["XS", 1],
+    ["S", 2],
+    ["M", 3],
+    ["L", 4],
+    ["XL", 5],
+  ]);
+
+  const getSortKey = (size: string): [number, number, string] => {
+    const normalizedSize = size.trim().toUpperCase();
+    const standardRank = normalizedOrder.get(normalizedSize);
+
+    if (standardRank !== undefined) {
+      return [0, standardRank, normalizedSize];
+    }
+
+    const extendedMatch = normalizedSize.match(/^(\d+)XL$/);
+    if (extendedMatch) {
+      return [1, Number(extendedMatch[1]), normalizedSize];
+    }
+
+    return [2, Number.POSITIVE_INFINITY, normalizedSize];
+  };
+
+  return [...sizes].sort((a, b) => {
+    const [aGroup, aRank, aLabel] = getSortKey(a);
+    const [bGroup, bRank, bLabel] = getSortKey(b);
+
+    if (aGroup !== bGroup) {
+      return aGroup - bGroup;
+    }
+
+    if (aRank !== bRank) {
+      return aRank - bRank;
+    }
+
+    return aLabel.localeCompare(bLabel);
+  });
 }
