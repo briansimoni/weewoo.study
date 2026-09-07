@@ -26,7 +26,7 @@ export default function Profile(props: Props) {
   const [timerColor, setTimerColor] = useState<string | undefined>();
 
   useEffect(() => {
-    let interval: number | undefined;
+    let interval: ReturnType<typeof setInterval> | undefined;
     function updateTimer() {
       const hours = dayjs(streak?.expires_on).diff(dayjs(), "hours");
       const minutes = dayjs(streak?.expires_on).diff(dayjs(), "minutes") % 60;

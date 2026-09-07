@@ -7,9 +7,8 @@
 
 import "@std/dotenv/load";
 
-import { start } from "$fresh/server.ts";
-import manifest from "./fresh.gen.ts";
-import config from "./fresh.config.ts";
+import { App, staticFiles, trailingSlashes } from "fresh";
+import type { AppState } from "./routes/_middleware.ts";
 
 import { CronTime } from "npm:cron-time-generator";
 import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
@@ -35,16 +34,21 @@ function prepare<T extends () => Promise<void>>(fn: T) {
   };
 }
 
-Deno.cron(
-  "Poll WeeWoo Ops SQS Messages",
-  CronTime.every(15).minutes(),
-  prepare(pollWeeWooOpsSQSMessages),
-);
+if (import.meta.env.PROD) {
+  Deno.cron(
+    "Poll WeeWoo Ops SQS Messages",
+    CronTime.every(15).minutes(),
+    prepare(pollWeeWooOpsSQSMessages),
+  );
 
-Deno.cron(
-  "Weekly Question Report",
-  CronTime.everySaturdayAt(9),
-  prepare(sendReport),
-);
+  Deno.cron(
+    "Weekly Question Report",
+    CronTime.everySaturdayAt(9),
+    prepare(sendReport),
+  );
+}
 
-await start(manifest, config);
+export const app = new App<AppState>()
+  .use(staticFiles())
+  .use(trailingSlashes("never"))
+  .fsRoutes();

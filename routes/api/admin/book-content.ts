@@ -1,7 +1,7 @@
 import { AppHandlers } from "../../_middleware.ts";
 
 export const handler: AppHandlers = {
-  async GET(_req, _ctx) {
+  async GET(_ctx) {
     try {
       // Read the book.txt file
       const content = await Deno.readTextFile("./book.txt");

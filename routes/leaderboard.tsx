@@ -1,11 +1,12 @@
+import { page } from "fresh";
 import { LeaderBoardEntry, UserStore } from "../lib/user_store.ts";
 import { AppHandlers, AppProps } from "./_middleware.ts";
 
 export const handler: AppHandlers = {
-  async GET(_req, ctx) {
+  async GET() {
     const userStore = await UserStore.make();
     const leaderboard = await userStore.listLeaderbaord();
-    return ctx.render({ leaderboard });
+    return page({ leaderboard });
   },
 };
 

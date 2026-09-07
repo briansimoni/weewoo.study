@@ -1,4 +1,4 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { page, type PageProps } from "fresh";
 import { ArrowLeft, Database } from "lucide-preact";
 import {
   assertKvImportAllowed,
@@ -9,6 +9,7 @@ import {
 } from "../../lib/kv_backup.ts";
 import { getKv } from "../../lib/kv.ts";
 import KvBackupUploader from "../../islands/admin/KvBackupUploader.tsx";
+import { Handlers } from "fresh/compat";
 
 interface DatabasePageData {
   stage?: string;
@@ -98,13 +99,14 @@ export async function importFromJsonText(
 }
 
 export const handler: Handlers<DatabasePageData> = {
-  GET(_req, ctx) {
-    return ctx.render({
+  GET() {
+    return page({
       stage: Deno.env.get("STAGE") ?? "undefined",
     });
   },
 
-  async POST(req, ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
     const formData = await req.formData();
     const action = formData.get("action")?.toString();
     const stage = Deno.env.get("STAGE") ?? "undefined";
@@ -117,7 +119,7 @@ export const handler: Handlers<DatabasePageData> = {
     if (action === "upload") {
       const confirmed = formData.get("confirm_upload") === "on";
       if (!confirmed) {
-        return ctx.render({
+        return page({
           stage,
           error: "You must confirm database merge upload before uploading.",
         });
@@ -125,7 +127,7 @@ export const handler: Handlers<DatabasePageData> = {
 
       const file = formData.get("backup_file");
       if (!(file instanceof File)) {
-        return ctx.render({
+        return page({
           stage,
           error: "Please select a JSON file to upload.",
         });
@@ -142,19 +144,19 @@ export const handler: Handlers<DatabasePageData> = {
             progressInterval: 250,
           },
         );
-        return ctx.render({
+        return page({
           stage,
           success: `Import complete. ${importedCount} entries upserted.`,
         });
       } catch (error) {
         if (error instanceof Error) {
-          return ctx.render({ stage, error: error.message });
+          return page({ stage, error: error.message });
         }
-        return ctx.render({ stage, error: "Import failed." });
+        return page({ stage, error: "Import failed." });
       }
     }
 
-    return ctx.render({ stage, error: "Unknown action." });
+    return page({ stage, error: "Unknown action." });
   },
 };
 

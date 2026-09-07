@@ -6,7 +6,6 @@ export default function App(props: AppProps) {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>NREMT practice questions</title>
-        <link rel="stylesheet" href="/dist.css" />
 
         {/* PWA Related Tags */}
         <meta name="theme-color" content="#ffffff" />

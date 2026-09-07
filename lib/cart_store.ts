@@ -1,5 +1,5 @@
 import { ProductVariant } from "./product_store.ts";
-import { signal } from "preact/signals";
+import { signal } from "@preact/signals";
 
 export interface CartItem {
   variant: ProductVariant;

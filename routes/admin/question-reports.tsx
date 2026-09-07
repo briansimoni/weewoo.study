@@ -1,5 +1,4 @@
-import { PageProps } from "$fresh/server.ts";
-import { Handlers } from "$fresh/server.ts";
+import { page, type PageProps } from "fresh";
 import {
   FileText,
   Info,
@@ -9,13 +8,14 @@ import {
 } from "lucide-preact";
 import { QuestionReport, QuestionStore } from "../../lib/question_store.ts";
 import { Question } from "../../lib/question_store.ts";
+import { Handlers } from "fresh/compat";
 
 interface PageData {
-  reports: (QuestionReport & { question?: Question })[];
+  reports: (QuestionReport & { question?: Question | null })[];
 }
 
-export const handler: Handlers = {
-  async GET(_req, ctx) {
+export const handler: Handlers<PageData> = {
+  async GET() {
     const store = await QuestionStore.make();
     const reports = (await store.getQuestionReports()).filter((report) =>
       !report.resolved_at
@@ -37,7 +37,7 @@ export const handler: Handlers = {
       }),
     );
 
-    return ctx.render({ reports: reportsWithQuestions });
+    return page({ reports: reportsWithQuestions });
   },
 };
 

@@ -3,12 +3,12 @@ import ThemeController from "../islands/ThemeController.tsx";
 import CartIcon from "../islands/CartIcon.tsx";
 import { StreakStore } from "../lib/streak_store.ts";
 import { AppState } from "./_middleware.ts";
-import { defineLayout } from "$fresh/server.ts";
 import { BarChart, Dumbbell, ShoppingBag, Trophy } from "lucide-preact";
+import type { PageProps } from "fresh";
 
 const stage = Deno.env.get("STAGE");
 
-export default defineLayout<AppState>(async (_req, ctx) => {
+export default async function Layout(ctx: PageProps<unknown, AppState>) {
   const { state, Component } = ctx;
   const streakStore = await StreakStore.make();
   let initialStreak: number | undefined = undefined;
@@ -176,7 +176,7 @@ export default defineLayout<AppState>(async (_req, ctx) => {
         <a
           href="/shop"
           className={`flex flex-col items-center ${
-            ctx.route.includes("/shop") ? "dock-active" : ""
+            ctx.route?.includes("/shop") ? "dock-active" : ""
           }`}
         >
           <ShoppingBag className="size-[1.2em]" />
@@ -185,4 +185,4 @@ export default defineLayout<AppState>(async (_req, ctx) => {
       </div>
     </>
   );
-});
+}

@@ -1,7 +1,8 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { page, type PageProps } from "fresh";
 import { QuestionReport, QuestionStore } from "../../../lib/question_store.ts";
 import { User, UserStore } from "../../../lib/user_store.ts";
 import { ArrowLeft, BarChart3, FileText, FileX, Users } from "lucide-preact";
+import { Handlers } from "fresh/compat";
 
 interface Thing {
   user_id: string;
@@ -9,8 +10,8 @@ interface Thing {
   reports: QuestionReport[];
 }
 
-export const handler: Handlers = {
-  GET: async (_req, ctx) => {
+export const handler: Handlers<PropItem[]> = {
+  GET: async () => {
     const [questionStore, userStore] = await Promise.all([
       QuestionStore.make(),
       UserStore.make(),
@@ -38,14 +39,14 @@ export const handler: Handlers = {
       .filter((user): user is User => Boolean(user));
 
     const pageData = users.map((user) => {
-      const reports = reportsByUserId[user.user_id];
+      const reports = reportsByUserId[user.user_id] ?? [];
       return {
         user,
         reports,
       };
     });
 
-    return ctx.render(pageData);
+    return page(pageData);
   },
 };
 

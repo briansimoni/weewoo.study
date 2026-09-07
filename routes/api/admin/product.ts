@@ -1,13 +1,15 @@
-import { Handlers } from "$fresh/server.ts";
 import { Product, ProductStore } from "../../../lib/product_store.ts";
 import { PrintfulApiClient } from "../../../lib/client/printful.ts";
+import { Handlers } from "fresh/compat";
 
 export const handler: Handlers = {
   /**
    * Import a product from Printful to the local product store
    * Sets active to false by default
    */
-  async POST(req) {
+  async POST(ctx) {
+    const req = ctx.req;
+
     try {
       const body = await req.json();
       const { printful_id } = body;

@@ -1,10 +1,11 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { page, type PageProps } from "fresh";
 import {
   PrintfulApiClient,
   PrintfulProductVariant,
 } from "../../../../lib/client/printful.ts";
 import { Product, ProductStore } from "../../../../lib/product_store.ts";
 import ProductDetail from "../../../../islands/admin/ProductDetail.tsx";
+import { Handlers } from "fresh/compat";
 
 interface ProductDetailData {
   productId: string;
@@ -24,7 +25,7 @@ interface ProductDetailData {
 }
 
 export const handler: Handlers<ProductDetailData> = {
-  async GET(_req, ctx) {
+  async GET(ctx) {
     const productId = ctx.params.id;
 
     try {
@@ -44,7 +45,7 @@ export const handler: Handlers<ProductDetailData> = {
         })),
       };
 
-      return ctx.render({
+      return page({
         productId,
         productDetails,
         storedProduct,
@@ -61,7 +62,7 @@ export const handler: Handlers<ProductDetailData> = {
         const productStore = await ProductStore.make();
         const storedProduct = await productStore.getProduct(productId);
 
-        return ctx.render({
+        return page({
           productId,
           productDetails: null,
           storedProduct,
@@ -72,7 +73,7 @@ export const handler: Handlers<ProductDetailData> = {
             : "Failed to fetch product details",
         });
       } catch (_dbError) {
-        return ctx.render({
+        return page({
           productId,
           productDetails: null,
           storedProduct: null,

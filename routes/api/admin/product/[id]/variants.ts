@@ -1,8 +1,8 @@
-import { Handlers } from "$fresh/server.ts";
 import { ProductStore } from "../../../../../lib/product_store.ts";
+import { Handlers } from "fresh/compat";
 
 export const handler: Handlers = {
-  async GET(_req, ctx) {
+  async GET(ctx) {
     const productId = ctx.params.id;
 
     try {

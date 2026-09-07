@@ -6,7 +6,9 @@ const client_id = Deno.env.get("CLIENT_ID");
 const client_secret = Deno.env.get("CLIENT_SECRET");
 
 export const handler: AppHandlers = {
-  async GET(req, _ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
+
     if (!client_id || !client_secret) {
       throw new Error("Missing environment variables");
     }

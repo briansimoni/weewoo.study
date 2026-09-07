@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { Question } from "../lib/question_store.ts";
-import { IS_BROWSER } from "$fresh/runtime.ts";
+import { IS_BROWSER } from "fresh/runtime";
 import { setDisplayedStreak } from "./StreakIndicator.tsx";
 import { QuestionPostResponse } from "../routes/api/question.ts";
 import { ThumbsDown, ThumbsUp } from "lucide-preact";

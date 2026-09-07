@@ -1,7 +1,8 @@
-import { Head } from "$fresh/runtime.ts";
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { Head } from "fresh/runtime";
+import { page, type PageProps } from "fresh";
 import { CheckCircle, XCircle } from "lucide-preact";
 import SupportForm from "../islands/SupportForm.tsx";
+import { Handlers } from "fresh/compat";
 
 interface SupportPageData {
   success?: boolean;
@@ -54,12 +55,13 @@ export default function Support({ data }: PageProps<SupportPageData>) {
 
 // Handle form submissions with client-side navigation
 export const handler: Handlers<SupportPageData> = {
-  GET(req, ctx) {
+  GET(ctx) {
+    const req = ctx.req;
     const url = new URL(req.url);
     const success = url.searchParams.get("success") === "true";
     const error = url.searchParams.get("error");
 
-    return ctx.render({
+    return page({
       success,
       error: error || undefined,
     });

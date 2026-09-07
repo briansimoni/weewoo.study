@@ -4,7 +4,7 @@ import {
   removeFromCart,
   updateCartItemQuantity,
 } from "../lib/cart_store.ts";
-import { useSignal } from "preact/signals";
+import { useSignal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
 
 export default function CartPageIsland() {

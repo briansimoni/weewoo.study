@@ -1,4 +1,4 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { page, type PageProps } from "fresh";
 import {
   Edit,
   FileText,
@@ -7,6 +7,7 @@ import {
   PanelRight,
 } from "lucide-preact";
 import { Question, QuestionStore } from "../../lib/question_store.ts";
+import { Handlers } from "fresh/compat";
 
 interface Data {
   questions: Question[];
@@ -18,7 +19,9 @@ const allowedScopes = ["emt", "advanced", "medic"] as const;
 type Scope = (typeof allowedScopes)[number];
 
 export const handler: Handlers<Data> = {
-  async GET(req, ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
+
     try {
       const url = new URL(req.url);
 
@@ -46,12 +49,12 @@ export const handler: Handlers<Data> = {
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
       );
 
-      return ctx.render({ questions, scope });
+      return page({ questions, scope });
     } catch (error) {
       const errorMessage = error instanceof Error
         ? error.message
         : String(error);
-      return ctx.render({ questions: [], scope: "emt", error: errorMessage });
+      return page({ questions: [], scope: "emt", error: errorMessage });
     }
   },
 };

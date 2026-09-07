@@ -14,7 +14,7 @@ const s3Client = new S3Client({
 });
 
 export const handler: AppHandlers = {
-  async GET(_req, _ctx) {
+  async GET(_ctx) {
     try {
       // List objects in the S3 bucket to get chapters
       const listCommand = new ListObjectsV2Command({

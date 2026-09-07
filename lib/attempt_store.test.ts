@@ -42,8 +42,7 @@ Deno.test("can list out all of the attempts for a user", async () => {
   const startTime = dayjs().subtract(1, "minute");
   const endTime = dayjs();
   const attempts = new Array(10).fill(0).map((_, i) => ({
-    attempt_id: dayjs().add(Math.round(Math.random() * 1000), "seconds")
-      .toISOString(),
+    attempt_id: endTime.add(i, "seconds").toISOString(),
     user_id: user_id,
     question_id: crypto.randomUUID(),
     category: "EMS Systems",
@@ -83,8 +82,7 @@ Deno.test("can list all of the attempts for a particular question", async () => 
   const endTime = dayjs();
 
   const attempts = new Array(5).fill(0).map((_, i) => ({
-    attempt_id: dayjs().add(Math.round(Math.random() * 1000), "seconds")
-      .toISOString(),
+    attempt_id: endTime.add(i, "seconds").toISOString(),
     user_id: user_id,
     question_id: question_id,
     category: "EMS Systems",

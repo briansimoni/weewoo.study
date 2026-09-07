@@ -7,6 +7,7 @@
 
 # Fresh build directory
 _fresh/
+vite.config.ts.timestamp-*.mjs
 # npm dependencies
 node_modules/
 

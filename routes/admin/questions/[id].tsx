@@ -1,4 +1,4 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { page, type PageProps } from "fresh";
 import {
   Question,
   QuestionReport,
@@ -16,6 +16,7 @@ import {
   ThumbsUp,
 } from "lucide-preact";
 import ReportCard from "../../../islands/admin/ReportCard.tsx";
+import { Handlers } from "fresh/compat";
 
 interface Data {
   question: Question | null;
@@ -23,8 +24,8 @@ interface Data {
   error?: string;
 }
 
-export const handler: Handlers = {
-  async GET(_req, ctx) {
+export const handler: Handlers<Data> = {
+  async GET(ctx) {
     try {
       const questionId = ctx.params.id;
       const store = await QuestionStore.make();
@@ -48,12 +49,12 @@ export const handler: Handlers = {
         return aTime - bTime;
       });
 
-      return ctx.render({ question, reports: questionReports });
+      return page({ question, reports: questionReports });
     } catch (error) {
       const errorMessage = error instanceof Error
         ? error.message
         : String(error);
-      return ctx.render({ question: null, reports: [], error: errorMessage });
+      return page({ question: null, reports: [], error: errorMessage });
     }
   },
 };

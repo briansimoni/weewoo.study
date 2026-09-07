@@ -56,7 +56,7 @@ export default function Home(props: AppProps) {
                 <ShoppingBag className="inline-block w-8 h-8 stroke-current" />
               </div>
               <div className="stat-title">Practice Questions</div>
-              <div className="stat-value text-primary">421+</div>
+              <div className="stat-value text-primary">420+</div>
               <div className="stat-desc">Updated whenever</div>
             </div>
 

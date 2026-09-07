@@ -1,4 +1,4 @@
-import { useSignal } from "preact/signals";
+import { useSignal } from "@preact/signals";
 import { Question } from "../lib/question_store.ts";
 import { useEffect } from "preact/hooks";
 import { AlertCircle, CheckCircle, Edit } from "lucide-preact";

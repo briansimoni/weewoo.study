@@ -1,17 +1,15 @@
-import { defineRoute } from "$fresh/server.ts";
 import { ProductStore } from "../../lib/product_store.ts";
 import ProductDetails from "../../islands/shop/ProductDetails.tsx";
+import { defineRoute } from "fresh/compat";
 
-const productStore = await ProductStore.make();
-
-export default defineRoute(async (req, ctx) => {
+export default defineRoute(async (ctx) => {
+  const productStore = await ProductStore.make();
   const id = ctx.params.id;
   const product = await productStore.getProduct(id);
-  const variants = await productStore.listProductVariants(id);
-
   if (!product) {
     return new Response("Product not found", { status: 404 });
   }
+  const variants = await productStore.listProductVariants(id);
 
   return (
     <div className="container mx-auto py-8 px-4">

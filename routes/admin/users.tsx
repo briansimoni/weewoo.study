@@ -1,6 +1,7 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { page, type PageProps } from "fresh";
 import { User, UserStore } from "../../lib/user_store.ts";
 import { AlertTriangle, ArrowLeft, RotateCcw, Users } from "lucide-preact";
+import { Handlers } from "fresh/compat";
 
 interface UserManagementData {
   users: User[];
@@ -10,7 +11,7 @@ interface UserManagementData {
 }
 
 export const handler: Handlers<UserManagementData> = {
-  async GET(_req, ctx) {
+  async GET() {
     const userStore = await UserStore.make();
 
     try {
@@ -19,14 +20,15 @@ export const handler: Handlers<UserManagementData> = {
         userStore.listLeaderbaord(),
       ]);
 
-      return ctx.render({ users, leaderboard });
+      return page({ users, leaderboard });
     } catch (error) {
       console.error("Error loading user data:", error);
-      return ctx.render({ users: [], leaderboard: [] });
+      return page({ users: [], leaderboard: [] });
     }
   },
 
-  async POST(req, _ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
     const formData = await req.formData();
     const action = formData.get("action")?.toString();
     const userId = formData.get("userId")?.toString();

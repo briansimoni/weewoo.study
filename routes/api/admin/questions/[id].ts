@@ -11,7 +11,7 @@ const updateQuestionSchema = Zod.object({
 });
 
 export const handler: AppHandlers = {
-  async GET(_req, ctx) {
+  async GET(ctx) {
     const questionId = ctx.params.id;
 
     if (!questionId) {
@@ -38,7 +38,8 @@ export const handler: AppHandlers = {
     }
   },
 
-  async PUT(req, ctx) {
+  async PUT(ctx) {
+    const req = ctx.req;
     const questionId = ctx.params.id;
 
     if (!questionId) {
@@ -89,7 +90,7 @@ export const handler: AppHandlers = {
     }
   },
 
-  async DELETE(_req, ctx) {
+  async DELETE(ctx) {
     const questionId = ctx.params.id;
 
     if (!questionId) {

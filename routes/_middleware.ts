@@ -2,8 +2,9 @@ import diff from "microdiff";
 import { asyncLocalStorage, log } from "../lib/logger.ts";
 import { Session, SessionStore } from "../lib/session_store.ts";
 import { decodeBase64 } from "jsr:@std/encoding@^1.0.7/base64";
-import type { Handler, Handlers, PageProps } from "$fresh/server.ts";
+import type { Middleware, PageProps } from "fresh";
 import * as http from "@std/http";
+import type { Handlers } from "fresh/compat";
 
 export interface SessionData {
   session_id: string;
@@ -33,17 +34,11 @@ export interface AppState extends Record<string, unknown> {
   };
 }
 
-export type AppHandler = Handler<unknown, AppState>;
+export type AppHandler = Middleware<AppState>;
 export type AppHandlers = Handlers<unknown, AppState>;
 
-const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
-  const excluded = [
-    "static",
-    "internal",
-  ];
-  if (excluded.includes(ctx.destination)) {
-    return ctx.next();
-  }
+const statefulSessionMiddleware: AppHandler = async function handler(ctx) {
+  const req = ctx.req;
   const sessionStore = await SessionStore.make();
   const cookies = http.getCookies(req.headers);
   const cookie_session_id = cookies["app_session"];
@@ -97,17 +92,10 @@ const statefulSessionMiddleware: AppHandler = async function handler(req, ctx) {
   return response;
 };
 
-const logMiddleware: AppHandler = function (req, ctx) {
-  const excluded = [
-    "static",
-    "internal",
-  ];
-  if (excluded.includes(ctx.destination)) {
-    return ctx.next();
-  }
-
+const logMiddleware: AppHandler = function (ctx) {
+  const req = ctx.req;
   const user_agent = req.headers.get("user-agent");
-  const ip = ctx.remoteAddr;
+  const ip = ctx.info.remoteAddr;
   const requestId = crypto.randomUUID();
   // log a request id with every log statement
   return asyncLocalStorage.run(requestId, async () => {
@@ -151,8 +139,8 @@ const logMiddleware: AppHandler = function (req, ctx) {
   });
 };
 
-const preferencesMiddleware: AppHandler = async function (req, ctx) {
-  const cookies = http.getCookies(req.headers);
+const preferencesMiddleware: AppHandler = async function (ctx) {
+  const cookies = http.getCookies(ctx.req.headers);
   const preferences = cookies["preferences"];
   if (preferences) {
     try {

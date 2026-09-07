@@ -18,7 +18,9 @@ const s3Client = new S3Client({
 });
 
 export const handler: AppHandlers = {
-  async GET(req, _ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
+
     try {
       const url = new URL(req.url);
       const chapterId = url.searchParams.get("chapterId");

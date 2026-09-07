@@ -3,7 +3,7 @@ import {
   SendEmailCommand,
   SendEmailCommandInput,
   SESClient,
-} from "npm:@aws-sdk/client-ses";
+} from "@aws-sdk/client-ses";
 import { log } from "./logger.ts";
 
 // Environment variable names

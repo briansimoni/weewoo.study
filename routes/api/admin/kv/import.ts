@@ -43,7 +43,9 @@ export async function importKvResponse(
 }
 
 export const handler: AppHandlers = {
-  async POST(req) {
+  async POST(ctx) {
+    const req = ctx.req;
+
     try {
       const payload = await req.json();
       const kv = await getKv();

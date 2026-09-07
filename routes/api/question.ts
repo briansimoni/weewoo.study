@@ -34,7 +34,8 @@ export const handler: AppHandlers = {
     );
   },
 
-  async POST(req, ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
     const questionStore = await QuestionStore.make();
     const body = await req.json();
     const schema = z.object({

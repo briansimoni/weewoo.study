@@ -1,3 +1,4 @@
+import { page } from "fresh";
 import { getKv } from "../../lib/kv.ts";
 import { AppHandlers, AppProps } from "../_middleware.ts";
 
@@ -12,7 +13,9 @@ async function list(prefix: string) {
 }
 
 export const handler: AppHandlers = {
-  async GET(req, ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
+
     if (ctx.state.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
       throw new Error("Unauthorized access.");
     }
@@ -26,7 +29,7 @@ export const handler: AppHandlers = {
     const streak = await list("streaks");
     const products = await list("products");
     const variants = await list("variants");
-    return ctx.render({
+    return page({
       session: ctx.state.session,
       users,
       sessions,
@@ -38,7 +41,9 @@ export const handler: AppHandlers = {
     });
   },
 
-  async POST(req, ctx) {
+  async POST(ctx) {
+    const req = ctx.req;
+
     if (ctx.state.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
       throw new Error("Unauthorized access.");
     }

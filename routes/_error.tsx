@@ -1,21 +1,26 @@
-import { Head } from "$fresh/runtime.ts";
+import { HttpError, type PageProps } from "fresh";
+import { Head } from "fresh/runtime";
 
-export default function Error404() {
+export default function ErrorPage({ error }: PageProps) {
+  const status = error instanceof HttpError ? error.status : 500;
+  const title = status === 404 ? "Page not found" : "Something went wrong";
   return (
     <>
       <Head>
-        <title>404 - Page not found</title>
+        <title>{status} - {title}</title>
       </Head>
       <div class="flex items-center justify-center px-4">
         <div class="bg-white p-10 rounded-xl shadow-2xl text-center max-w-lg">
           <img
             class="mx-auto w-32 h-32 mb-6 animate-bounce"
             src="/ambulance.svg"
-            alt="Fresh logo: a sliced lemon dripping with juice"
+            alt="Ambulance"
           />
-          <h1 class="text-6xl font-extrabold text-gray-800 mb-4">404</h1>
+          <h1 class="text-6xl font-extrabold text-gray-800 mb-4">{status}</h1>
           <p class="text-2xl text-gray-600 mb-8">
-            Oops! The page you&apos;re looking for doesn&apos;t exist.
+            {status === 404
+              ? "Oops! The page you're looking for doesn't exist."
+              : "Oops! Something went wrong. Please try again later."}
           </p>
           <a
             href="/"

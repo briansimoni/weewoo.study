@@ -4,7 +4,8 @@ import Zod from "npm:zod";
 
 export const handler: AppHandlers = {
   // resolve the report
-  POST: async (req) => {
+  POST: async (ctx) => {
+    const req = ctx.req;
     const resolveQuestionSchema = Zod.object({
       questionId: Zod.string().min(1),
       reportId: Zod.string().min(1),

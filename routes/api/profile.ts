@@ -3,7 +3,9 @@ import { AppHandlers } from "../_middleware.ts";
 import { UserStore } from "../../lib/user_store.ts";
 
 export const handler: AppHandlers = {
-  async PATCH(req, ctx) {
+  async PATCH(ctx) {
+    const req = ctx.req;
+
     if (!ctx.state.session || !ctx.state.session.user_id) {
       return new Response("Unauthorized", { status: 401 });
     }

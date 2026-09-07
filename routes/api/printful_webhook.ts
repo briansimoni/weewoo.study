@@ -51,7 +51,8 @@ interface PrintfulPackageShippedWebhook extends PrintfulWebhookBase {
 }
 
 export const handler: AppHandlers = {
-  POST: async (req) => {
+  POST: async (ctx) => {
+    const req = ctx.req;
     const printfulClient = new PrintfulApiClient();
     // Parse the webhook payload
     if (!req.body) {

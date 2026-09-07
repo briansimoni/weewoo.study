@@ -1,12 +1,14 @@
+import { page } from "fresh";
 import QuestionPage from "../../../islands/Question.tsx";
-import { Handlers } from "$fresh/server.ts";
+import type { Handlers } from "fresh/compat";
+import type { AppState } from "../../_middleware.ts";
 
-export const handler: Handlers = {
-  GET(_req, ctx) {
+export const handler: Handlers<undefined, AppState> = {
+  GET(ctx) {
     if (!ctx.state.session) {
       return new Response("Unauthorized", { status: 401 });
     }
-    return ctx.render();
+    return page();
   },
 };
 

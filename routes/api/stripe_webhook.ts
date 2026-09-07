@@ -9,7 +9,9 @@ const stripeAPIKey = Deno.env.get("STRIPE_API_KEY")?.trim();
 const printfulSecret = Deno.env.get("PRINTFUL_SECRET")?.trim();
 
 export const handler: AppHandlers = {
-  POST: async (req) => {
+  POST: async (ctx) => {
+    const req = ctx.req;
+
     if (!stripeSigningKey) {
       throw new Error("STRIPE_SIGNING_SECRET is not set");
     }

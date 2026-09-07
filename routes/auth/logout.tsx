@@ -3,7 +3,9 @@ import { AppHandlers } from "../_middleware.ts";
 const client_id = Deno.env.get("CLIENT_ID");
 
 export const handler: AppHandlers = {
-  async GET(req, _ctx) {
+  async GET(ctx) {
+    const req = ctx.req;
+
     if (!client_id) {
       throw new Error("Missing environment variables");
     }

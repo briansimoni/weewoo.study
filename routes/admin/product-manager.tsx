@@ -1,7 +1,8 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { page, type PageProps } from "fresh";
 import ProductManager from "../../components/ProductManager.tsx";
 import { Product, ProductStore } from "../../lib/product_store.ts";
 import { PrintfulApiClient } from "../../lib/client/printful.ts";
+import { Handlers } from "fresh/compat";
 
 interface PrintfulProduct {
   id: number;
@@ -18,7 +19,7 @@ interface ProductManagerData {
 }
 
 export const handler: Handlers<ProductManagerData> = {
-  async GET(_req, ctx) {
+  async GET() {
     try {
       // Fetch products from our database
       const productStore = await ProductStore.make();
@@ -29,10 +30,10 @@ export const handler: Handlers<ProductManagerData> = {
       const printfulResponse = await printfulClient.listProducts();
       const printfulProducts = printfulResponse.result;
 
-      return ctx.render({ appProducts, printfulProducts });
+      return page({ appProducts, printfulProducts });
     } catch (error) {
       console.error("Error fetching products:", error);
-      return ctx.render({ appProducts: [], printfulProducts: [] });
+      return page({ appProducts: [], printfulProducts: [] });
     }
   },
 };

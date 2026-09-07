@@ -1,5 +1,5 @@
-import { Head } from "$fresh/runtime.ts";
-import { PageProps } from "$fresh/server.ts";
+import { Head } from "fresh/runtime";
+import { PageProps } from "fresh";
 import CartClearer from "../../islands/CartClearer.tsx";
 
 export default function CheckoutSuccessPage(props: PageProps) {
