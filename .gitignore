@@ -34,3 +34,5 @@ scripts/question_generation_workflow/config
 scripts/question_generation_workflow/.env
 
 image-converter-lambda.zip
+# local seeded KV databases (deno task seed)
+.kv/

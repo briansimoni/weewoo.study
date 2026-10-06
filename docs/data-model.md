@@ -1,10 +1,12 @@
 # Data model (Deno KV)
 
 All persistent server data lives in a single Deno KV database opened by
-`getKv()` in `lib/kv.ts` (a process-wide singleton). `Deno.openKv()` is called
-with no path: locally that is a SQLite file in Deno's cache, and on Deno Deploy
-it is the database attached to the app's current context (production or
-preview). Branch preview deployments start with an empty database.
+`getKv()` in `lib/kv.ts` (a process-wide singleton). It opens `KV_PATH` if set,
+otherwise `Deno.openKv()` with no path: locally that is a SQLite file in Deno's
+cache, and on Deno Deploy it is the database attached to the app's current
+context. Deploy creates **one database per git branch** (`<app>--<branch>`) next
+to `production`, `preview` and `local`, so every branch preview starts empty
+(see "Seed data").
 
 Stores take an optional `Deno.Kv` in `make()`, so tests pass
 `Deno.openKv(":memory:")`. **Only touch KV through the owning store.** Several
@@ -62,5 +64,23 @@ Types are defined in the owning store module: `Question` and `QuestionReport` in
 - Update the interface, the store, its tests, and this file in the same PR.
 - There are no migrations framework or schema versions yet. Write a one-off
   script in `scripts/` and run it against a backup first.
-- `DB_URL` is documented in the README but currently ignored: `lib/kv.ts` has
-  that branch commented out.
+- Update `lib/seed.ts` and its tests too, so seed data keeps matching the model.
+
+## Seed data
+
+`lib/seed.ts` writes deterministic test data through the stores: `[Seed]`
+questions in every category and scope, `seed|…` users with attempts, stats,
+leaderboard entries and streaks, question reports, and `seed-…` products and
+variants. It refuses to run when `STAGE=PROD`. Streaks are written directly to
+`["streaks", userId]`, because `StreakStore` only advances them in real time.
+`seedIfEmpty` holds a `["seed", "lock"]` key (5-minute TTL) while seeding, so
+concurrent isolates don't seed twice.
+
+- Local: `deno task seed` creates `.kv/seed.sqlite3`; run the app with
+  `KV_PATH=.kv/seed.sqlite3`.
+- Deploy previews: every branch gets its own KV database (`<app>--<branch>`),
+  seeded on startup when `SEED_ON_EMPTY=true`. The flag is set on both apps for
+  all contexts (`deno deploy env update-contexts` currently fails with
+  MALFORMED_REQUEST, so it could not be scoped to Preview). That is safe:
+  production has `STAGE=PROD` (seeding refuses), and test.weewoo.study is not
+  empty. Scope it to Preview in the Deno console if preferred.

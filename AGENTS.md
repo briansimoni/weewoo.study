@@ -47,9 +47,12 @@ architecture map and environment variables.
 - Deno Deploy builds every push via its GitHub integration. Branch previews:
   `https://test-weewoo-study--<branch>.briansimoni.deno.net` (test config) and
   `https://weewoo-study--<branch>.briansimoni.deno.net` (prod config), where
-  `<branch>` is the git branch with `/` removed (`feat/x` → `featx`). Preview KV
-  is empty, so data-backed routes such as `/api/question` return 500 there. That
-  is expected until seeding exists.
+  `<branch>` is the git branch with `/` removed (`feat/x` → `featx`). Each
+  branch gets its own KV database, which seeds itself from `lib/seed.ts` on
+  startup (`SEED_ON_EMPTY=true` on both Deploy apps). Previews therefore show
+  `[Seed]` questions, `seed|…` users and `[Seed]` products, never real data.
+- Local test data: `deno task seed`, then run with `KV_PATH=.kv/seed.sqlite3`.
+  Never seed the developer's default local database or any production one.
 - Merging to `main` deploys test.weewoo.study **and** weewoo.study. Do not merge
   or push to `main` without the human's explicit go-ahead.
 

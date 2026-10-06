@@ -72,8 +72,9 @@ Actions):
 
 Every branch also gets previews at
 `https://<app>--<branch>.briansimoni.deno.net` (`<branch>` with `/` removed,
-e.g. `feat/x` → `featx`). Previews use an **empty KV database**, so data-backed
-pages (questions, shop) fail there until seeding exists. See ROADMAP Phase 0.2.
+e.g. `feat/x` → `featx`). Each branch gets its **own empty KV database**, which
+seeds itself with test data (`lib/seed.ts`) on startup because
+`SEED_ON_EMPTY=true` is set on both Deploy apps.
 
 Merging to `main` currently ships to test **and** prod at once. ROADMAP Phase
 0.4 separates them.
@@ -87,8 +88,11 @@ This application uses various environment variables for configuration. Create a
 
 - `CLIENT_ID`: Auth provider client ID used by the login/logout/callback routes.
 - `CLIENT_SECRET`: Auth provider client secret used during OAuth callback.
-- `DB_URL`: Currently **ignored**. `lib/kv.ts` always calls `Deno.openKv()`
-  (local SQLite file, or the Deploy-attached database).
+- `KV_PATH`: Optional local KV file, e.g. `.kv/seed.sqlite3` from
+  `deno task seed`. Unset, `Deno.openKv()` uses Deno's default local database
+  (or the Deploy-attached one).
+- `SEED_ON_EMPTY`: `true` seeds an empty database at startup (never when
+  `STAGE=PROD`). Set on both Deploy apps (all contexts; see data-model.md).
 - `STAGE`: Environment identifier. `PROD` enables cron jobs and affects some app
   behavior. Non-`PROD` values skip production-only cron work.
 - `LOG_LEVEL`: Optional logger level. Defaults to `debug`.

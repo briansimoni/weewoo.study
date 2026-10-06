@@ -1,17 +1,13 @@
 let kv: Deno.Kv | null = null;
 
 /**
- * singleton for Deno.kv connection
+ * Singleton Deno KV connection. `KV_PATH` points local runs at a specific
+ * SQLite file (e.g. the seeded `.kv/seed.sqlite3`); unset, `Deno.openKv()`
+ * uses Deno's default local database or the Deploy-attached one.
  */
 export async function getKv(): Promise<Deno.Kv> {
   if (!kv) {
-    // if (Deno.env.get("DB_URL")) {
-    //   kv = await Deno.openKv(Deno.env.get("DB_URL")!);
-    // } else {
-    //   // if not in a Deno deploy environment this supposedly is using SQLite
-    //   kv = await Deno.openKv();
-    // }
-    kv = await Deno.openKv();
+    kv = await Deno.openKv(Deno.env.get("KV_PATH") || undefined);
   }
   return kv;
 }
