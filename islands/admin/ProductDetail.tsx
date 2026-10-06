@@ -299,7 +299,7 @@ export default function ProductDetail(
     try {
       JSON.parse(newJson);
       setJsonError("");
-    } catch (error) {
+    } catch {
       setJsonError("Invalid JSON format");
     }
   };

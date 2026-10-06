@@ -1,6 +1,6 @@
 import { emailService } from "../../lib/email_service.ts";
 import { log } from "../../lib/logger.ts";
-import { z } from "npm:zod";
+import { z } from "zod";
 import { AppHandlers } from "../_middleware.ts";
 
 // Zod schema for form data validation

@@ -1,6 +1,4 @@
-import { PageProps } from "fresh";
-
-export default function (props?: PageProps) {
+export default function NavAvatar() {
   return (
     <div class="flex-none">
       <div class="dropdown dropdown-end">

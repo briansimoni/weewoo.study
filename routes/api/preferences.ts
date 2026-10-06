@@ -1,5 +1,5 @@
 import { AppHandlers } from "../_middleware.ts";
-import { z } from "npm:zod";
+import { z } from "zod";
 import * as http from "@std/http";
 import { encodeBase64 } from "jsr:@std/encoding@^1.0.7/base64";
 

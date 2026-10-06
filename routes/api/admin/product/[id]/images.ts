@@ -4,7 +4,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import JSZip from "npm:jszip";
+import JSZip from "jszip";
 import { log } from "../../../../../lib/logger.ts";
 import { Handlers } from "fresh/compat";
 

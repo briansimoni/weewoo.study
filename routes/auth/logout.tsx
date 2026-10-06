@@ -1,4 +1,4 @@
-import * as oauth from "npm:oauth4webapi";
+import * as oauth from "oauth4webapi";
 import { AppHandlers } from "../_middleware.ts";
 const client_id = Deno.env.get("CLIENT_ID");
 

@@ -1,6 +1,6 @@
 import { AppHandlers } from "../../../../_middleware.ts";
 import { QuestionStore } from "../../../../../lib/question_store.ts";
-import Zod from "npm:zod";
+import Zod from "zod";
 
 export const handler: AppHandlers = {
   // resolve the report

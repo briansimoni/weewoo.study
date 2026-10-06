@@ -1,4 +1,4 @@
-import dayjs from "npm:dayjs";
+import dayjs from "dayjs";
 import { getKv } from "./kv.ts";
 
 export type Streak = {

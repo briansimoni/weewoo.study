@@ -3,7 +3,7 @@ import { User } from "../lib/user_store.ts";
 import { SessionData } from "../routes/_middleware.ts";
 import { Streak } from "../lib/streak_store.ts";
 import { CATEGORIES } from "../lib/categories.ts";
-import dayjs from "npm:dayjs";
+import dayjs from "dayjs";
 import BasicLine from "../components/charts/BasicLine.tsx";
 import { Attempt } from "../lib/attempt_store.ts";
 

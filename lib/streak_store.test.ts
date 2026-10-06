@@ -1,6 +1,6 @@
 import { assert, assertEquals } from "@std/assert";
 import { StreakStore } from "./streak_store.ts";
-import dayjs from "npm:dayjs";
+import dayjs from "dayjs";
 
 let streakStore: StreakStore;
 let kv: Deno.Kv;

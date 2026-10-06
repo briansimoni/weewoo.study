@@ -1,7 +1,7 @@
 #!/usr/bin/env deno run --allow-net --allow-read --allow-write --allow-env
 
 import { log } from "../lib/logger.ts";
-import sharp from "npm:sharp";
+import sharp from "sharp";
 import {
   GetObjectCommand,
   ListObjectsV2Command,

@@ -192,10 +192,6 @@ export class UserStore {
     return entries.map((entry) => entry.value);
   }
 
-  async deleteUser(id: string) {
-    throw new Error("not implemented");
-  }
-
   closeConnection() {
     this.kv.close();
   }

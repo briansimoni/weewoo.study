@@ -2,6 +2,8 @@
   "unstable": ["kv", "cron"],
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check",
+    "verify": "deno task check && deno task test",
+    "smoke": "deno run --allow-net scripts/smoke.ts",
     "dev": "vite",
     "start": "deno serve -A --unstable-kv --unstable-cron _fresh/server.js",
     "build": "vite build",
@@ -13,7 +15,8 @@
   "exclude": [
     "**/_fresh/*",
     "image-converter/**/*",
-    "vite.config.ts.timestamp-*.mjs"
+    "vite.config.ts.timestamp-*.mjs",
+    ".deno_cache/"
   ],
   "nodeModulesDir": "auto",
   "imports": {
@@ -53,7 +56,8 @@
     "winston": "npm:winston@^3.12.0",
     "winston-cloudwatch": "npm:winston-cloudwatch@^6.2.0",
     "fresh": "jsr:@fresh/core@^2.3.3",
-    "@preact/signals": "npm:@preact/signals@^2.9.0"
+    "@preact/signals": "npm:@preact/signals@^2.9.0",
+    "oauth4webapi": "npm:oauth4webapi@^3.6.1"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

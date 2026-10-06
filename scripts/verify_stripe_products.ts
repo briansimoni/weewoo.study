@@ -47,7 +47,7 @@ async function verifyStripeProducts() {
     // Process each variant
     for (const variant of variants) {
       console.log(
-        `\nChecking variant ${variant.variant_id} (${variant.color.name} ${variant.size})`,
+        `\nChecking variant ${variant.variant_id} (${variant.color?.name} ${variant.size})`,
       );
 
       // Check if stripe_product_id exists
@@ -84,7 +84,7 @@ async function verifyStripeProducts() {
       } catch (error) {
         console.error(
           `❌ Error retrieving Stripe product ${variant.stripe_product_id}:`,
-          error.message,
+          error instanceof Error ? error.message : error,
         );
         missingStripeProducts++;
         invalidVariants++;

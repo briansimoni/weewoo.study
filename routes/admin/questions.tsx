@@ -1,11 +1,5 @@
 import { page, type PageProps } from "fresh";
-import {
-  Edit,
-  FileText,
-  Info,
-  LayoutDashboard,
-  PanelRight,
-} from "lucide-preact";
+import { FileText, Info, LayoutDashboard, PanelRight } from "lucide-preact";
 import { Question, QuestionStore } from "../../lib/question_store.ts";
 import { Handlers } from "fresh/compat";
 
