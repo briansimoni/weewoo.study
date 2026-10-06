@@ -20,3 +20,9 @@
 - For local smoke checks, use `STAGE=DEV`; do not trigger real email, payment,
   webhook, or production-data operations. Full OAuth and commerce flows require
   separate staging verification.
+- Server debugging uses the `Start And Debug Deno Server` launch configuration.
+  Keep its source-map path overrides (and the attach configuration's): Vite
+  emits workspace-relative source paths that otherwise resolve to duplicated
+  directories such as `routes/routes/shop.tsx`. The inspector waits for
+  attachment before startup. Set breakpoints inside handlers and request the
+  corresponding route.

@@ -6,7 +6,7 @@ import { AppState } from "./_middleware.ts";
 import { BarChart, Dumbbell, ShoppingBag, Trophy } from "lucide-preact";
 import type { PageProps } from "fresh";
 
-const stage = Deno.env.get("STAGE");
+const stage = Deno.env.get("STAGE") ?? "DEV";
 
 export default async function Layout(ctx: PageProps<unknown, AppState>) {
   const { state, Component } = ctx;
