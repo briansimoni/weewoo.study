@@ -137,12 +137,10 @@ have to seed themselves.
 - [ ] **Let humans sign in on previews (human, Auth0).** Auth0 currently rejects
       preview callbacks ("Callback URL mismatch" for
       `https://test-weewoo-study--<branch>.briansimoni.deno.net/auth/callback`).
-      Recommended: create a separate Auth0 application for test and previews
-      that allows `https://*.briansimoni.deno.net/auth/callback` (and the logout
-      URL), and set its `CLIENT_ID`/`CLIENT_SECRET` on both Deploy apps for
-      non-production contexts. That keeps the wildcard off the production
-      client. A user signing in on a preview is created in that preview's KV
-      automatically.
+      Decided: add `https://*.briansimoni.deno.net/auth/callback` (and the
+      matching logout URL) to the **existing** Auth0 application's allowed URLs,
+      not a separate app. A user signing in on a preview is created in that
+      preview's KV automatically.
 - [ ] **Add a test login.** OAuth can't run in CI. Add a login route that
       creates a session for a seeded user. It must be compiled in only when
       `STAGE` is `DEV`, `TEST`, or `PREVIEW`, and must be impossible to reach in
