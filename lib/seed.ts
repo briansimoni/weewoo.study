@@ -8,12 +8,15 @@ import {
   ProductStore,
   type ProductVariant,
 } from "./product_store.ts";
+import seedCatalog from "./seed_catalog.json" with { type: "json" };
 
 /**
  * Deterministic test data for local development, branch previews, and E2E
- * tests. Everything is clearly marked as seed data ("[Seed]", user IDs
- * starting with "seed|", Printful IDs starting with "seed-"). Never run this
- * against production: see {@link assertSeedAllowed}.
+ * tests. Questions are synthetic and marked "[Seed]" (the repo is public, so
+ * the real question bank stays out of it); users are KV-only `seed|…`
+ * accounts, which can't sign in through Auth0; the shop catalog is a copy of
+ * the TEST database's (see seedProducts). Never run this against production:
+ * see {@link assertSeedAllowed}.
  */
 
 export interface SeedSummary {
@@ -273,118 +276,42 @@ async function seedReports(
   return count;
 }
 
-const SEED_IMAGE = "/shop/unisex-premium-hoodie-black-front-67cdee6673f8f.png";
-
-const SEED_PRODUCTS: {
-  product: Product;
-  colors: { name: string; hex: string }[];
-  sizes: string[];
-}[] = [
-  {
-    product: {
-      printful_id: "seed-hoodie",
-      product_template_id: "seed-template-hoodie",
-      name: "[Seed] WeeWoo Hoodie",
-      thumbnail_url: SEED_IMAGE,
-      description: "[Seed] A cozy hoodie for test checkouts.",
-      price: 45,
-      active: true,
-      category: "apparel",
-      colors: [
-        { name: "Black", hex: "#000000", thumbnail_url: SEED_IMAGE },
-        { name: "Navy", hex: "#1f2a44", thumbnail_url: SEED_IMAGE },
-      ],
-      size_guide: {
-        sizes: ["S", "M", "L"].map((name, i) => ({
-          name,
-          dimensions: [
-            { name: "chest", value: String(38 + i * 4) },
-            { name: "length", value: String(27 + i) },
-          ],
-        })),
-      },
-    },
-    colors: [{ name: "Black", hex: "#000000" }, {
-      name: "Navy",
-      hex: "#1f2a44",
-    }],
-    sizes: ["S", "M", "L"],
-  },
-  {
-    product: {
-      printful_id: "seed-hat",
-      product_template_id: "seed-template-hat",
-      name: "[Seed] Ambulance Dad Hat",
-      thumbnail_url: SEED_IMAGE,
-      description: "[Seed] One-size hat.",
-      price: 25,
-      active: true,
-      category: "hats",
-    },
-    colors: [{ name: "White", hex: "#ffffff" }],
-    sizes: ["One size"],
-  },
-  {
-    product: {
-      printful_id: "seed-sticker",
-      product_template_id: "seed-template-sticker",
-      name: "[Seed] Sticker Pack",
-      thumbnail_url: SEED_IMAGE,
-      description: "[Seed] Stickers.",
-      price: 5,
-      active: true,
-      category: "swag",
-    },
-    colors: [],
-    sizes: [],
-  },
-  {
-    product: {
-      printful_id: "seed-retired-tee",
-      product_template_id: "seed-template-tee",
-      name: "[Seed] Retired Tee (inactive)",
-      thumbnail_url: SEED_IMAGE,
-      description: "[Seed] Inactive products must not appear in the shop.",
-      price: 20,
-      active: false,
-      category: "apparel",
-    },
-    colors: [{ name: "Red", hex: "#cc0000" }],
-    sizes: ["M"],
-  },
-];
-
+/**
+ * The shop catalog is a copy of the TEST database's products and variants
+ * (regenerate with scripts/export_seed_catalog.ts). Its Stripe product IDs are
+ * test-mode products and its Printful IDs are the real store's, so checkout
+ * works with Stripe test cards wherever a test-mode STRIPE_API_KEY is set.
+ */
 async function seedProducts(kv: Deno.Kv) {
   const productStore = await ProductStore.make(kv);
+  const catalog = seedCatalog as {
+    products: Product[];
+    variants: ProductVariant[];
+  };
   let products = 0;
   let variants = 0;
-  for (const { product, colors, sizes } of SEED_PRODUCTS) {
+  for (const product of catalog.products) {
     if (await productStore.getProduct(product.printful_id)) continue;
     await productStore.addProduct(product);
     products++;
-    const combos = colors.length && sizes.length
-      ? colors.flatMap((color) => sizes.map((size) => ({ color, size })))
-      : [{ color: undefined, size: undefined }];
-    for (const [i, { color, size }] of combos.entries()) {
-      const variant: ProductVariant = {
-        variant_id: `${product.printful_id}-${i + 1}`,
-        printful_product_id: product.printful_id,
-        product_template_id: product.product_template_id,
-        price: product.price,
-        color,
-        size,
-        name: product.name,
-        images: [SEED_IMAGE],
-        // Not a real Stripe product: checkout with seed data fails at Stripe
-        // until test-mode catalog data exists (ROADMAP 0.5).
-        stripe_product_id: `prod_seed_${product.printful_id}_${i + 1}`,
-      };
+    for (const variant of catalog.variants) {
+      if (variant.printful_product_id !== product.printful_id) continue;
       await productStore.addVariant(variant);
       variants++;
     }
   }
   return { products, variants };
 }
+/**
+ * Bump whenever the seed data changes. Databases holding older seed data are
+ * wiped and reseeded by {@link ensureSeeded}.
+ * 2: the shop catalog comes from the TEST database (lib/seed_catalog.json).
+ */
+export const SEED_VERSION = 2;
+const VERSION_KEY = ["seed", "version"];
+const LOCK_KEY = ["seed", "lock"];
+/** Present in every seeded database, including those seeded before versioning. */
+const MARKER_USER = SEED_USERS[SEED_USERS.length - 1].user_id;
 
 /**
  * Seed the given database. Safe to re-run: existing seed records are kept and
@@ -400,32 +327,52 @@ export async function seed(
   const { users, attempts } = await seedUsers(kv, emt, now);
   const reports = await seedReports(emtStore, emt);
   const { products, variants } = await seedProducts(kv);
+  await kv.set(VERSION_KEY, SEED_VERSION);
   return { questions: created, users, attempts, reports, products, variants };
 }
 
 /**
- * Seed only when the EMT question bank is empty, e.g. a fresh branch preview
- * database. A KV lock stops concurrent isolates from seeding twice. Returns
- * null when nothing was done.
+ * Make sure a branch preview database holds current seed data:
+ * - empty database (fresh preview): seed it;
+ * - database holding seed data from an older {@link SEED_VERSION}: wipe it and
+ *   reseed;
+ * - anything else (real data, or current seed data): leave it alone.
+ *
+ * A database counts as seed-owned only if it has the seed version key or the
+ * seed marker user, so real databases are never wiped. A KV lock stops
+ * concurrent isolates from seeding twice. Returns null when nothing was done.
  */
-export async function seedIfEmpty(
+export async function ensureSeeded(
   kv: Deno.Kv,
   options: { now?: Date; stage?: string } = {},
 ): Promise<SeedSummary | null> {
   assertSeedAllowed(options.stage ?? Deno.env.get("STAGE"));
-  const emtStore = await QuestionStore.make(kv, "emt");
-  if (await emtStore.size() > 0) return null;
+  const version = (await kv.get<number>(VERSION_KEY)).value;
+  if (version === SEED_VERSION) return null;
 
-  const lockKey = ["seed", "lock"];
+  const seedOwned = version !== null ||
+    (await kv.get(["users", MARKER_USER])).value !== null;
+  const empty = await (await QuestionStore.make(kv, "emt")).size() === 0;
+  if (!seedOwned && !empty) return null; // real data: never touch
+
   const lock = await kv.atomic()
-    .check({ key: lockKey, versionstamp: null })
-    .set(lockKey, new Date().toISOString(), { expireIn: 5 * 60 * 1000 })
+    .check({ key: LOCK_KEY, versionstamp: null })
+    .set(LOCK_KEY, new Date().toISOString(), { expireIn: 5 * 60 * 1000 })
     .commit();
   if (!lock.ok) return null; // another isolate is seeding
 
   try {
+    if (seedOwned) await wipe(kv);
     return await seed(kv, options);
   } finally {
-    await kv.delete(lockKey);
+    await kv.delete(LOCK_KEY);
+  }
+}
+
+/** Delete every key except the seed lock. Only called on seed-owned databases. */
+async function wipe(kv: Deno.Kv) {
+  for await (const entry of kv.list({ prefix: [] })) {
+    if (entry.key[0] === LOCK_KEY[0] && entry.key[1] === LOCK_KEY[1]) continue;
+    await kv.delete(entry.key);
   }
 }

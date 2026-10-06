@@ -134,6 +134,15 @@ have to seed themselves.
       `deno run -A npm:@playwright/test`, and keep a Node fallback if Deno
       compatibility bites. `BASE_URL` defaults to `localhost`; it can point at a
       preview.
+- [ ] **Let humans sign in on previews (human, Auth0).** Auth0 currently rejects
+      preview callbacks ("Callback URL mismatch" for
+      `https://test-weewoo-study--<branch>.briansimoni.deno.net/auth/callback`).
+      Recommended: create a separate Auth0 application for test and previews
+      that allows `https://*.briansimoni.deno.net/auth/callback` (and the logout
+      URL), and set its `CLIENT_ID`/`CLIENT_SECRET` on both Deploy apps for
+      non-production contexts. That keeps the wildcard off the production
+      client. A user signing in on a preview is created in that preview's KV
+      automatically.
 - [ ] **Add a test login.** OAuth can't run in CI. Add a login route that
       creates a session for a seeded user. It must be compiled in only when
       `STAGE` is `DEV`, `TEST`, or `PREVIEW`, and must be impossible to reach in
@@ -194,9 +203,11 @@ webhook handler submits a **real Printful order** and sends emails on
 - [ ] **Give the test app per-context config** like the prod app: test Stripe
       keys and the test.weewoo.study signing secret in Production, test keys in
       Preview.
-- [ ] **Add test-mode catalog data.** Stripe product IDs stored in KV must exist
-      in the matching Stripe mode. Seed (0.2) or sync test-mode products so
-      checkout works on test.weewoo.study and previews.
+- [ ] **Add test-mode catalog data.** Partly done: seeded previews now get the
+      TEST catalog (test-mode Stripe IDs, `lib/seed_catalog.json`). Remaining:
+      confirm which Stripe mode each Preview key uses. Stripe product IDs stored
+      in KV must exist in the matching Stripe mode. Seed (0.2) or sync test-mode
+      products so checkout works on test.weewoo.study and previews.
 - [ ] **Define local and preview webhook testing.** Use the Stripe CLI
       (`stripe listen --forward-to localhost:8000/api/stripe_webhook`) or the
       Deploy Local tunnel. Previews don't get a Stripe endpoint per branch, so

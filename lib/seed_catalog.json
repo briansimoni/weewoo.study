@@ -1,0 +1,4529 @@
+{
+  "products": [
+    {
+      "printful_id": "377478087",
+      "product_template_id": "85855720",
+      "name": "Unisex Hoodie",
+      "thumbnail_url": "https://files.cdn.printful.com/files/c07/c0732453e5253619cc78b2213ea92479_preview.webp",
+      "description": "premium quality hoodie available in various sizes and colors",
+      "price": 39.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "black",
+          "hex": "#000000",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-front-67cdee6673f8f.webp"
+        },
+        {
+          "name": "Navy Blazer",
+          "hex": "#000080",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-front-67cdee66801b7.webp"
+        },
+        {
+          "name": "maroon",
+          "hex": "#800000",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-front-67cdee66a2efd.webp"
+        },
+        {
+          "name": "Charcoal Heather",
+          "hex": "#36454F",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-front-67cdee66d8dd1.webp"
+        },
+        {
+          "name": "Vintage Black",
+          "hex": "#222222",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-front-67cdee6736250.webp"
+        },
+        {
+          "name": "Team Royal",
+          "hex": "#002366",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-front-67cdee6a3999c.webp"
+        },
+        {
+          "name": "purple",
+          "hex": "#800080",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-front-67cdee684cee7.webp"
+        },
+        {
+          "name": "Forest Green",
+          "hex": "#228B22",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-front-67cdee68ce0da.webp"
+        },
+        {
+          "name": "Military Green",
+          "hex": "#4B5320",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-front-67cdee6973857.webp"
+        },
+        {
+          "name": "Team Red",
+          "hex": "#CC0000",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-front-67cdee6a3999c.webp"
+        },
+        {
+          "name": "Dusty Rose",
+          "hex": "#DC8099",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-front-67cdee6af3367.webp"
+        }
+      ],
+      "category": "apparel"
+    },
+    {
+      "printful_id": "379242202",
+      "product_template_id": "86992845",
+      "name": "weewoo.study tee",
+      "thumbnail_url": "https://files.cdn.printful.com/files/6f9/6f9cba2649d066ac23e9ae16ef49818c_preview.webp",
+      "description": "temp",
+      "price": 29.99,
+      "active": false,
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#111111",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-front-6895445914912.webp"
+        }
+      ],
+      "category": "apparel"
+    },
+    {
+      "printful_id": "379505012",
+      "product_template_id": "87158414",
+      "name": "Summer WeeWoo t-shirt",
+      "thumbnail_url": "https://files.cdn.printful.com/files/287/287e9d91df55fe1a1e249aa92a94a4ec_preview.webp",
+      "description": "Support EMS education with this comical yet stylish summer t-shirt",
+      "price": 24.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "Orange",
+          "hex": "#e5541e",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec6a67.webp"
+        },
+        {
+          "name": "Kelly Green",
+          "hex": "#2e8d60",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec474d.webp"
+        },
+        {
+          "name": "Jade Dome",
+          "hex": "#359f97",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ec9f5a.webp"
+        },
+        {
+          "name": "Carolina Blue",
+          "hex": "#8faae3",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed21c3.webp"
+        },
+        {
+          "name": "Light Pink",
+          "hex": "#e7b9bc",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45ed9576.webp"
+        },
+        {
+          "name": "Ash",
+          "hex": "#d7d7d7",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee19f7.webp"
+        },
+        {
+          "name": "White",
+          "hex": "#e5e5e5",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeae80.webp"
+        }
+      ],
+      "category": "apparel"
+    },
+    {
+      "printful_id": "382435621",
+      "product_template_id": "88765465",
+      "name": "WeeWoo Recycled Swim Trunks",
+      "thumbnail_url": null,
+      "description": "For when your beach bod requires emergency attention. 🚑☀️",
+      "price": 44.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "Blue",
+          "hex": "#274a8b",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-6826adfac7086.webp"
+        }
+      ],
+      "category": "swimwear"
+    },
+    {
+      "printful_id": "382601748",
+      "product_template_id": "88845084",
+      "name": "Camouflage Trucker Hat",
+      "thumbnail_url": "https://files.cdn.printful.com/files/f8c/f8cc2b504e95684907865bd7f2e5da12_preview.webp",
+      "description": "Probably the most stylish hat you'll ever own!",
+      "price": 29.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "Camo/Brown",
+          "hex": "#594439",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-brown-front-682a0e4ad018a.webp"
+        },
+        {
+          "name": "Camo/Black",
+          "hex": "#252525",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-black-front-682a0e4acf630.webp"
+        },
+        {
+          "name": "Camo/Olive",
+          "hex": "#655b4a",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-olive-front-682a0e4ad0885.webp"
+        }
+      ],
+      "category": "hats"
+    },
+    {
+      "printful_id": "384715216",
+      "product_template_id": "89844332",
+      "name": "weewoo mug",
+      "thumbnail_url": null,
+      "description": "Required by OSHA for you to have one",
+      "price": 19.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#FFFFFF",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-handle-on-right-684f2271206c5.webp"
+        }
+      ],
+      "category": "swag"
+    },
+    {
+      "printful_id": "386256066",
+      "product_template_id": "89905805",
+      "name": "Travel Mug",
+      "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/386256066/travel-mug-with-a-handle-white-25-oz-right-6869a92438afb.webp",
+      "description": "The best alternative to IV fluids",
+      "price": 36.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "White",
+          "hex": "#CCCCCC",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/386256066/travel-mug-with-a-handle-white-25-oz-right-6869a92438afb.webp"
+        }
+      ],
+      "category": "swag"
+    },
+    {
+      "printful_id": "386465412",
+      "product_template_id": "",
+      "name": "Jango",
+      "thumbnail_url": "https://files.cdn.printful.com/files/5b3/5b31ea43f5db838d87c53e5aa9c9a629_preview.png",
+      "description": "",
+      "price": 0,
+      "active": false,
+      "colors": []
+    },
+    {
+      "printful_id": "387792016",
+      "product_template_id": "91237896",
+      "name": "Purple Sani-Cloth Candle",
+      "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+      "description": "The perfect gift for the healthcare professional in your life. Don't worry the scents are actually quite pleasant.",
+      "price": 24.99,
+      "active": true,
+      "colors": [],
+      "category": "swag"
+    },
+    {
+      "printful_id": "388417454",
+      "product_template_id": "91500234",
+      "name": "WeeWoo High-Waisted Bikini",
+      "thumbnail_url": "https://files.cdn.printful.com/files/b9a/b9a6aecaaf7ac7b6f942b068d79c1a05_preview.webp",
+      "description": "Get the c-collars ready because you'll really be turning heads when you wear this to the pool.",
+      "price": 59.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "Blue",
+          "hex": "#214689",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-left-front-688c1b392b34d.webp"
+        }
+      ],
+      "size_guide": {
+        "sizes": [
+          {
+            "name": "XS",
+            "dimensions": [
+              {
+                "name": "Top front length",
+                "value": "10 ¼"
+              },
+              {
+                "name": "½ top width",
+                "value": "11 ¾"
+              },
+              {
+                "name": "½ waist",
+                "value": "12 ¼"
+              },
+              {
+                "name": "Bottom height",
+                "value": "11 ⅜"
+              }
+            ]
+          },
+          {
+            "name": "S",
+            "dimensions": [
+              {
+                "name": "Top front length",
+                "value": "10 ⅝"
+              },
+              {
+                "name": "½ top width",
+                "value": "12 ⅝"
+              },
+              {
+                "name": "½ waist",
+                "value": "13"
+              },
+              {
+                "name": "Bottom height",
+                "value": "11 ⅝"
+              }
+            ]
+          },
+          {
+            "name": "M",
+            "dimensions": [
+              {
+                "name": "Top front length",
+                "value": "11"
+              },
+              {
+                "name": "½ top width",
+                "value": "13 ⅜"
+              },
+              {
+                "name": "½ waist",
+                "value": "13 ¾"
+              },
+              {
+                "name": "Bottom height",
+                "value": "11 ¾"
+              }
+            ]
+          },
+          {
+            "name": "L",
+            "dimensions": [
+              {
+                "name": "Top front length",
+                "value": "11 ⅜"
+              },
+              {
+                "name": "½ top width",
+                "value": "15"
+              },
+              {
+                "name": "½ waist",
+                "value": "15 ⅜"
+              },
+              {
+                "name": "Bottom height",
+                "value": "12"
+              }
+            ]
+          },
+          {
+            "name": "XL",
+            "dimensions": [
+              {
+                "name": "Top front length",
+                "value": "11 ¾"
+              },
+              {
+                "name": "½ top width",
+                "value": "16 ½"
+              },
+              {
+                "name": "½ waist",
+                "value": "16 ⅞"
+              },
+              {
+                "name": "Bottom height",
+                "value": "12 ¼"
+              }
+            ]
+          },
+          {
+            "name": "2XL",
+            "dimensions": [
+              {
+                "name": "Top front length",
+                "value": "12 ⅝"
+              },
+              {
+                "name": "½ top width",
+                "value": "18 ⅛"
+              },
+              {
+                "name": "½ waist",
+                "value": "18 ½"
+              },
+              {
+                "name": "Bottom height",
+                "value": "12 ⅝"
+              }
+            ]
+          },
+          {
+            "name": "3XL",
+            "dimensions": [
+              {
+                "name": "Top front length",
+                "value": "13 ⅜"
+              },
+              {
+                "name": "½ top width",
+                "value": "19 ¾"
+              },
+              {
+                "name": "½ waist",
+                "value": "20 ⅛"
+              },
+              {
+                "name": "Bottom height",
+                "value": "13"
+              }
+            ]
+          }
+        ]
+      },
+      "category": "swimwear"
+    },
+    {
+      "printful_id": "391334576",
+      "product_template_id": "92676850",
+      "name": "Under Armour® Dad Hat",
+      "thumbnail_url": "https://files.cdn.printful.com/files/bf0/bf023dec26eaded1ee1f524e6cc342bd_preview.png",
+      "description": "A hat that your dad would be proud to wear",
+      "price": 39.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#000000",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-black-front-68b44ac20a9b1.webp"
+        },
+        {
+          "name": "Navy",
+          "hex": "#1f2546",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-navy-front-68b44ac20b403.webp"
+        },
+        {
+          "name": "Royal Blue",
+          "hex": "#19348c",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-royal-blue-front-68b44ac20bbdb.webp"
+        },
+        {
+          "name": "Red",
+          "hex": "#f4000f",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-red-front-68b44ac20c734.webp"
+        },
+        {
+          "name": "Grey",
+          "hex": "#636660",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-grey-front-68b44ac20d1c4.webp"
+        },
+        {
+          "name": "White",
+          "hex": "#FFFFFF",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-white-front-68b44ac20dd0e.webp"
+        }
+      ],
+      "category": "hats"
+    },
+    {
+      "printful_id": "391830924",
+      "product_template_id": "92923983",
+      "name": "Women's Organic WeeWoo T-Shirt",
+      "thumbnail_url": "https://files.cdn.printful.com/files/ec9/ec9ca1d1b4fb5e05cf0c7b38968da4c1_preview.png",
+      "description": "As stylish as they come. Organic without the Whole Foods pricing.",
+      "price": 24.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "Green Bay",
+          "hex": "#53705f",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb66042469d.webp"
+        },
+        {
+          "name": "Fiesta",
+          "hex": "#ff735c",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb660424634.webp"
+        },
+        {
+          "name": "Bubble Pink",
+          "hex": "#fd9cba",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660424543.webp"
+        },
+        {
+          "name": "Lavender",
+          "hex": "#dfd9e7",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb66042476b.webp"
+        },
+        {
+          "name": "Heather Grey",
+          "hex": "#e2e2e2",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660424703.webp"
+        },
+        {
+          "name": "Cool Heather Grey",
+          "hex": "#e8e8e8",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb6604245c8.webp"
+        },
+        {
+          "name": "Off White",
+          "hex": "#fcfbf6",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb6604247d1.webp"
+        },
+        {
+          "name": "White",
+          "hex": "#ffffff",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb6604247d1.webp"
+        }
+      ],
+      "category": "apparel"
+    },
+    {
+      "printful_id": "403017788",
+      "product_template_id": "95871675",
+      "name": "Fire WeeWoo",
+      "thumbnail_url": "https://files.cdn.printful.com/files/ad7/ad7d64dc1a3fd9e6fd520129f8ac22ac_preview.png",
+      "description": "Because people love fire trucks",
+      "price": 24.99,
+      "active": false,
+      "colors": []
+    },
+    {
+      "printful_id": "403242028",
+      "product_template_id": "95930330",
+      "name": "WeeWoo Toddler T",
+      "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-right-front-691bdf7343bff.webp",
+      "description": "Kids love fire trucks!",
+      "price": 24.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#000000",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-right-front-691bdf73439be.webp"
+        },
+        {
+          "name": "Heather Columbia Blue",
+          "hex": "#7b9df1",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-right-front-691bdf7343a9b.webp"
+        },
+        {
+          "name": "Pink",
+          "hex": "#efc8cf",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-right-front-691bdf7343b5e.webp"
+        },
+        {
+          "name": "White",
+          "hex": "#FFFFFF",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-right-front-691bdf7343bff.webp"
+        }
+      ],
+      "category": "kids"
+    },
+    {
+      "printful_id": "426908536",
+      "product_template_id": "101036494",
+      "name": "WeeWoo Recycled String Bikini",
+      "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+      "description": "Prepare to treat for hyperthermia",
+      "price": 49.99,
+      "active": true,
+      "colors": [
+        {
+          "name": "Blue",
+          "hex": "#214689",
+          "thumbnail_url": "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp"
+        }
+      ],
+      "category": "swimwear",
+      "size_guide": {
+        "sizes": [
+          {
+            "name": "2XS",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "6 ½"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "7 ⅛"
+              },
+              {
+                "name": "Back width",
+                "value": "9 ⅝"
+              },
+              {
+                "name": "Bottom height",
+                "value": "9 ⅜"
+              }
+            ]
+          },
+          {
+            "name": "XS",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "6 ¾"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "7 ½"
+              },
+              {
+                "name": "Back width",
+                "value": "10 ⅜"
+              },
+              {
+                "name": "Bottom height",
+                "value": "9 ⅝"
+              }
+            ]
+          },
+          {
+            "name": "S",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "7 ⅛"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "7 ⅞"
+              },
+              {
+                "name": "Back width",
+                "value": "11 ¼"
+              },
+              {
+                "name": "Bottom height",
+                "value": "9 ¾"
+              }
+            ]
+          },
+          {
+            "name": "M",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "7 ¼"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "8 ¼"
+              },
+              {
+                "name": "Back width",
+                "value": "12"
+              },
+              {
+                "name": "Bottom height",
+                "value": "10"
+              }
+            ]
+          },
+          {
+            "name": "L",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "7 ⅞"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "9 ⅛"
+              },
+              {
+                "name": "Back width",
+                "value": "13 ⅝"
+              },
+              {
+                "name": "Bottom height",
+                "value": "10 ⅜"
+              }
+            ]
+          },
+          {
+            "name": "XL",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "8 ½"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "9 ¾"
+              },
+              {
+                "name": "Back width",
+                "value": "15 ¼"
+              },
+              {
+                "name": "Bottom height",
+                "value": "11 ¼"
+              }
+            ]
+          },
+          {
+            "name": "2XL",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "9 ⅛"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "10 ⅝"
+              },
+              {
+                "name": "Back width",
+                "value": "16 ¾"
+              },
+              {
+                "name": "Bottom height",
+                "value": "12"
+              }
+            ]
+          },
+          {
+            "name": "3XL",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "9 ⅝"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "11 ⅜"
+              },
+              {
+                "name": "Back width",
+                "value": "18 ¼"
+              },
+              {
+                "name": "Bottom height",
+                "value": "12 ¾"
+              }
+            ]
+          },
+          {
+            "name": "4XL",
+            "dimensions": [
+              {
+                "name": "Bra cup length",
+                "value": "10 ¼"
+              },
+              {
+                "name": "Bra cup width",
+                "value": "12 ¼"
+              },
+              {
+                "name": "Back width",
+                "value": "19 ⅞"
+              },
+              {
+                "name": "Bottom height",
+                "value": "13 ⅝"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "variants": [
+    {
+      "variant_id": "10779",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee667ce66.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee6679604.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-67cdee667c242.webp"
+      ],
+      "stripe_product_id": "prod_RyV6nkK3nukdtx"
+    },
+    {
+      "variant_id": "10780",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee667ce66.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee6679604.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-67cdee667c242.webp"
+      ],
+      "stripe_product_id": "prod_RyV62X8dzPykPM"
+    },
+    {
+      "variant_id": "10781",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 47.99,
+      "color": {
+        "name": "black",
+        "hex": "#000000"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-front-67cdee6676569.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-front-67cdee6675e2d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-front-67cdee667486d.webp"
+      ],
+      "stripe_product_id": "prod_RyV6M3MkVEGJp8"
+    },
+    {
+      "variant_id": "10782",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee667ce66.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee6679604.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-67cdee667c242.webp"
+      ],
+      "stripe_product_id": "prod_RyV6ImTatYD9R8"
+    },
+    {
+      "variant_id": "10783",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee667ce66.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee6679604.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-67cdee667c242.webp"
+      ],
+      "stripe_product_id": "prod_RyV6cUAbmnmu9A"
+    },
+    {
+      "variant_id": "11481",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Charcoal Heather",
+        "hex": "#36454F"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6728ec0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6715b69.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-67cdee6724f8f.webp"
+      ],
+      "stripe_product_id": "prod_RyV6JxE1qOXkzY"
+    },
+    {
+      "variant_id": "11482",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Charcoal Heather",
+        "hex": "#36454F"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6728ec0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6715b69.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-67cdee6724f8f.webp"
+      ],
+      "stripe_product_id": "prod_RyV6CvgFKWQlkP"
+    },
+    {
+      "variant_id": "11483",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Charcoal Heather",
+        "hex": "#36454F"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6728ec0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6715b69.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-67cdee6724f8f.webp"
+      ],
+      "stripe_product_id": "prod_RyV6yhVLfDllKs"
+    },
+    {
+      "variant_id": "11484",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Charcoal Heather",
+        "hex": "#36454F"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6728ec0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6715b69.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-67cdee6724f8f.webp"
+      ],
+      "stripe_product_id": "prod_RyV60Y2hF881VY"
+    },
+    {
+      "variant_id": "11485",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Charcoal Heather",
+        "hex": "#36454F"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6728ec0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6715b69.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-67cdee6724f8f.webp"
+      ],
+      "stripe_product_id": "prod_RyV6oUTTYgqZtq"
+    },
+    {
+      "variant_id": "11486",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Maroon",
+        "hex": "#800000"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66d24f4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66c4182.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-67cdee66cf87b.webp"
+      ],
+      "stripe_product_id": "prod_RyV6DkpUYQsh1c"
+    },
+    {
+      "variant_id": "11487",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Maroon",
+        "hex": "#800000"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66d24f4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66c4182.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-67cdee66cf87b.webp"
+      ],
+      "stripe_product_id": "prod_RyV68DFnyT46oP"
+    },
+    {
+      "variant_id": "11488",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Maroon",
+        "hex": "#800000"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66d24f4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66c4182.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-67cdee66cf87b.webp"
+      ],
+      "stripe_product_id": "prod_RyV6qS3oYujNqB"
+    },
+    {
+      "variant_id": "11489",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Maroon",
+        "hex": "#800000"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66d24f4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66c4182.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-67cdee66cf87b.webp"
+      ],
+      "stripe_product_id": "prod_RyV6IsEayLUCp2"
+    },
+    {
+      "variant_id": "11490",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Maroon",
+        "hex": "#800000"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66d24f4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-front-67cdee66c4182.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-right-67cdee66cf87b.webp"
+      ],
+      "stripe_product_id": "prod_RyV6LTAjSpoRzW"
+    },
+    {
+      "variant_id": "11491",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Navy Blazer",
+        "hex": "#000080"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee669d7bc.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee6694c3a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-67cdee669bb47.webp"
+      ],
+      "stripe_product_id": "prod_RyV61Z6maSErup"
+    },
+    {
+      "variant_id": "11492",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Navy Blazer",
+        "hex": "#000080"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee669d7bc.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee6694c3a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-67cdee669bb47.webp"
+      ],
+      "stripe_product_id": "prod_RyV6EpFpQk9tUZ"
+    },
+    {
+      "variant_id": "11493",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Navy Blazer",
+        "hex": "#000080"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee669d7bc.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee6694c3a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-67cdee669bb47.webp"
+      ],
+      "stripe_product_id": "prod_RyV6tK3dPTWxHC"
+    },
+    {
+      "variant_id": "11494",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Navy Blazer",
+        "hex": "#000080"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee669d7bc.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee6694c3a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-67cdee669bb47.webp"
+      ],
+      "stripe_product_id": "prod_RyV6WGutQPSOo7"
+    },
+    {
+      "variant_id": "11495",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Navy Blazer",
+        "hex": "#000080"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee669d7bc.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee6694c3a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-67cdee669bb47.webp"
+      ],
+      "stripe_product_id": "prod_RyV6J7NIwVALCV"
+    },
+    {
+      "variant_id": "13416",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 42.99,
+      "color": {
+        "name": "black",
+        "hex": "#000000"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee667ce66.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-front-67cdee6679604.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-black-right-67cdee667c242.webp"
+      ],
+      "stripe_product_id": "prod_RyV69cnSBt4nkP"
+    },
+    {
+      "variant_id": "13417",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Navy Blazer",
+        "hex": "#000080"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee669d7bc.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-front-67cdee6694c3a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-navy-blazer-right-67cdee669bb47.webp"
+      ],
+      "stripe_product_id": "prod_RyV6m1oczQv4wl"
+    },
+    {
+      "variant_id": "13418",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 42.99,
+      "color": {
+        "name": "maroon",
+        "hex": "#800000"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-front-67cdee66b1f3b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-front-67cdee66aefb8.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-maroon-front-67cdee66a696b.webp"
+      ],
+      "stripe_product_id": "prod_RyV604WTu3ofTY"
+    },
+    {
+      "variant_id": "13419",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Charcoal Heather",
+        "hex": "#36454F"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6728ec0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-front-67cdee6715b69.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-charcoal-heather-right-67cdee6724f8f.webp"
+      ],
+      "stripe_product_id": "prod_RyV6vMse24NOH7"
+    },
+    {
+      "variant_id": "13887",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Dusty Rose",
+        "hex": "#DC8099"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6be6605.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6b99cfa.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-67cdee6bd3d3c.webp"
+      ],
+      "stripe_product_id": "prod_RyV78bIY1tNh3m"
+    },
+    {
+      "variant_id": "13888",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Dusty Rose",
+        "hex": "#DC8099"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6be6605.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6b99cfa.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-67cdee6bd3d3c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7VwP06yIU57"
+    },
+    {
+      "variant_id": "13889",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Dusty Rose",
+        "hex": "#DC8099"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6be6605.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6b99cfa.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-67cdee6bd3d3c.webp"
+      ],
+      "stripe_product_id": "prod_RyV79e9wwpS7GY"
+    },
+    {
+      "variant_id": "13890",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Dusty Rose",
+        "hex": "#DC8099"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6be6605.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6b99cfa.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-67cdee6bd3d3c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7m1JhAt2Fb0"
+    },
+    {
+      "variant_id": "13891",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Dusty Rose",
+        "hex": "#DC8099"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6be6605.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6b99cfa.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-67cdee6bd3d3c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7TInpQBqlJI"
+    },
+    {
+      "variant_id": "13892",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Dusty Rose",
+        "hex": "#DC8099"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6be6605.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-front-67cdee6b99cfa.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-dusty-rose-right-67cdee6bd3d3c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7QvdEEGRbjF"
+    },
+    {
+      "variant_id": "13893",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Military Green",
+        "hex": "#4B5320"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee6a181cf.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee69dc37f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-67cdee6a0d3af.webp"
+      ],
+      "stripe_product_id": "prod_RyV7wlVC4dmfCb"
+    },
+    {
+      "variant_id": "13894",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Military Green",
+        "hex": "#4B5320"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee6a181cf.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee69dc37f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-67cdee6a0d3af.webp"
+      ],
+      "stripe_product_id": "prod_RyV7LvfBMjlAwp"
+    },
+    {
+      "variant_id": "13895",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Military Green",
+        "hex": "#4B5320"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee6a181cf.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee69dc37f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-67cdee6a0d3af.webp"
+      ],
+      "stripe_product_id": "prod_RyV7u0oCF04PgP"
+    },
+    {
+      "variant_id": "13896",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Military Green",
+        "hex": "#4B5320"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee6a181cf.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee69dc37f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-67cdee6a0d3af.webp"
+      ],
+      "stripe_product_id": "prod_RyV75beBo8dD6j"
+    },
+    {
+      "variant_id": "13897",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Military Green",
+        "hex": "#4B5320"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee6a181cf.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee69dc37f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-67cdee6a0d3af.webp"
+      ],
+      "stripe_product_id": "prod_RyV7Vl0adcMiEu"
+    },
+    {
+      "variant_id": "13898",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Military Green",
+        "hex": "#4B5320"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee6a181cf.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-front-67cdee69dc37f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-military-green-right-67cdee6a0d3af.webp"
+      ],
+      "stripe_product_id": "prod_RyV7QKygPK9YIl"
+    },
+    {
+      "variant_id": "13905",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Royal",
+        "hex": "#002366"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee683fa42.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee681a957.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-67cdee68362cc.webp"
+      ],
+      "stripe_product_id": "prod_RyV7vztN7ATwFv"
+    },
+    {
+      "variant_id": "13906",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Royal",
+        "hex": "#002366"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee683fa42.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee681a957.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-67cdee68362cc.webp"
+      ],
+      "stripe_product_id": "prod_RyV7m5rzAyOi6r"
+    },
+    {
+      "variant_id": "13907",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Royal",
+        "hex": "#002366"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee683fa42.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee681a957.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-67cdee68362cc.webp"
+      ],
+      "stripe_product_id": "prod_RyV7WeABoHN4L7"
+    },
+    {
+      "variant_id": "13908",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Royal",
+        "hex": "#002366"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee683fa42.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee681a957.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-67cdee68362cc.webp"
+      ],
+      "stripe_product_id": "prod_RyV7v3o3Qe4Q5i"
+    },
+    {
+      "variant_id": "13909",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Royal",
+        "hex": "#002366"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee683fa42.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee681a957.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-67cdee68362cc.webp"
+      ],
+      "stripe_product_id": "prod_RyV7oFCEQZPGJd"
+    },
+    {
+      "variant_id": "13910",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Royal",
+        "hex": "#002366"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee683fa42.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-front-67cdee681a957.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-royal-right-67cdee68362cc.webp"
+      ],
+      "stripe_product_id": "prod_RyV75YTAYvfUwv"
+    },
+    {
+      "variant_id": "13911",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Purple",
+        "hex": "#800080"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee68bd632.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee6898e74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-67cdee68b6a4c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7U4SR1MrpqI"
+    },
+    {
+      "variant_id": "13912",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Purple",
+        "hex": "#800080"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee68bd632.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee6898e74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-67cdee68b6a4c.webp"
+      ],
+      "stripe_product_id": "prod_RyV78h9P7KEE87"
+    },
+    {
+      "variant_id": "13913",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Purple",
+        "hex": "#800080"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee68bd632.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee6898e74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-67cdee68b6a4c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7T8rPTAQDhO"
+    },
+    {
+      "variant_id": "13914",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Purple",
+        "hex": "#800080"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee68bd632.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee6898e74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-67cdee68b6a4c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7ezT6n2iX6f"
+    },
+    {
+      "variant_id": "13915",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Purple",
+        "hex": "#800080"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee68bd632.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee6898e74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-67cdee68b6a4c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7HYbRm1JXkH"
+    },
+    {
+      "variant_id": "13916",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Purple",
+        "hex": "#800080"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee68bd632.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-front-67cdee6898e74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-purple-right-67cdee68b6a4c.webp"
+      ],
+      "stripe_product_id": "prod_RyV7kkaYAUFk8K"
+    },
+    {
+      "variant_id": "16162",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Forest Green",
+        "hex": "#228B22"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee69635a3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee6939916.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-67cdee695bd91.webp"
+      ],
+      "stripe_product_id": "prod_RyV7ZKxDDygFsz"
+    },
+    {
+      "variant_id": "16163",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Forest Green",
+        "hex": "#228B22"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee69635a3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee6939916.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-67cdee695bd91.webp"
+      ],
+      "stripe_product_id": "prod_RyV7KoA4Ezm1dG"
+    },
+    {
+      "variant_id": "16164",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Forest Green",
+        "hex": "#228B22"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee69635a3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee6939916.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-67cdee695bd91.webp"
+      ],
+      "stripe_product_id": "prod_RyV7Bdqr6uiqDS"
+    },
+    {
+      "variant_id": "16165",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Forest Green",
+        "hex": "#228B22"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee69635a3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee6939916.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-67cdee695bd91.webp"
+      ],
+      "stripe_product_id": "prod_RyV7ONFNTjemVt"
+    },
+    {
+      "variant_id": "16166",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Forest Green",
+        "hex": "#228B22"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee69635a3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee6939916.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-67cdee695bd91.webp"
+      ],
+      "stripe_product_id": "prod_RyV7c0leKQKEhi"
+    },
+    {
+      "variant_id": "16167",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Forest Green",
+        "hex": "#228B22"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee69635a3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-front-67cdee6939916.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-forest-green-right-67cdee695bd91.webp"
+      ],
+      "stripe_product_id": "prod_RyV7zaiubFNMUY"
+    },
+    {
+      "variant_id": "20272",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Vintage Black",
+        "hex": "#222222"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee67750f0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee6752ebb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-67cdee6793411.webp"
+      ],
+      "stripe_product_id": "prod_RyV6kYrLVeSjm2"
+    },
+    {
+      "variant_id": "20273",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Vintage Black",
+        "hex": "#222222"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee67750f0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee6752ebb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-67cdee6793411.webp"
+      ],
+      "stripe_product_id": "prod_RyV64094090CHz"
+    },
+    {
+      "variant_id": "20274",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Vintage Black",
+        "hex": "#222222"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee67750f0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee6752ebb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-67cdee6793411.webp"
+      ],
+      "stripe_product_id": "prod_RyV6g4mos6eGtS"
+    },
+    {
+      "variant_id": "20275",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Vintage Black",
+        "hex": "#222222"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee67750f0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee6752ebb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-67cdee6793411.webp"
+      ],
+      "stripe_product_id": "prod_RyV6TqIoD99o62"
+    },
+    {
+      "variant_id": "20276",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Vintage Black",
+        "hex": "#222222"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee67750f0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee6752ebb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-67cdee6793411.webp"
+      ],
+      "stripe_product_id": "prod_RyV7NH7yXbDJ7R"
+    },
+    {
+      "variant_id": "20277",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Vintage Black",
+        "hex": "#222222"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee67750f0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-front-67cdee6752ebb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-vintage-black-right-67cdee6793411.webp"
+      ],
+      "stripe_product_id": "prod_RyV7zd2bd5YPb4"
+    },
+    {
+      "variant_id": "20278",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Red",
+        "hex": "#CC0000"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a94d74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a62d1d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-67cdee6ace4f2.webp"
+      ],
+      "stripe_product_id": "prod_RyV7xqfVu6zGR0"
+    },
+    {
+      "variant_id": "20279",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Red",
+        "hex": "#CC0000"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a94d74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a62d1d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-67cdee6ace4f2.webp"
+      ],
+      "stripe_product_id": "prod_RyV7PG0jPeIsXt"
+    },
+    {
+      "variant_id": "20280",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Red",
+        "hex": "#CC0000"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a94d74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a62d1d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-67cdee6ace4f2.webp"
+      ],
+      "stripe_product_id": "prod_RyV7mR7TjksmBo"
+    },
+    {
+      "variant_id": "20281",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Red",
+        "hex": "#CC0000"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a94d74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a62d1d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-67cdee6ace4f2.webp"
+      ],
+      "stripe_product_id": "prod_RyV7pdH8aKgqKg"
+    },
+    {
+      "variant_id": "20282",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Red",
+        "hex": "#CC0000"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a94d74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a62d1d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-67cdee6ace4f2.webp"
+      ],
+      "stripe_product_id": "prod_RyV769k7hWfkgK"
+    },
+    {
+      "variant_id": "20283",
+      "printful_product_id": "377478087",
+      "product_template_id": "85855720",
+      "price": 39.99,
+      "color": {
+        "name": "Team Red",
+        "hex": "#CC0000"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a94d74.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-front-67cdee6a62d1d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/hoodie/unisex-premium-hoodie-team-red-right-67cdee6ace4f2.webp"
+      ],
+      "stripe_product_id": "prod_RyV7wHSahe7XI1"
+    },
+    {
+      "variant_id": "11546",
+      "printful_product_id": "379242202",
+      "product_template_id": "86992845",
+      "price": 19.99,
+      "color": {
+        "name": "Black",
+        "hex": "#111111"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-front-6895445914912.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-back-6895445917cff.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-left-front-68954459166c6.webp"
+      ]
+    },
+    {
+      "variant_id": "11547",
+      "printful_product_id": "379242202",
+      "product_template_id": "86992845",
+      "price": 19.99,
+      "color": {
+        "name": "Black",
+        "hex": "#111111"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-front-6895445914912.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-back-6895445917cff.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-left-front-68954459166c6.webp"
+      ]
+    },
+    {
+      "variant_id": "11548",
+      "printful_product_id": "379242202",
+      "product_template_id": "86992845",
+      "price": 19.99,
+      "color": {
+        "name": "Black",
+        "hex": "#111111"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-front-6895445914912.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-back-6895445917cff.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-left-front-68954459166c6.webp"
+      ]
+    },
+    {
+      "variant_id": "11549",
+      "printful_product_id": "379242202",
+      "product_template_id": "86992845",
+      "price": 19.99,
+      "color": {
+        "name": "Black",
+        "hex": "#111111"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-front-6895445914912.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-back-6895445917cff.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-left-front-68954459166c6.webp"
+      ]
+    },
+    {
+      "variant_id": "11550",
+      "printful_product_id": "379242202",
+      "product_template_id": "86992845",
+      "price": 21.99,
+      "color": {
+        "name": "Black",
+        "hex": "#111111"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-front-6895445914912.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-back-6895445917cff.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-left-front-68954459166c6.webp"
+      ]
+    },
+    {
+      "variant_id": "12644",
+      "printful_product_id": "379242202",
+      "product_template_id": "86992845",
+      "price": 22.99,
+      "color": {
+        "name": "Black",
+        "hex": "#111111"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-front-6895445914912.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-back-6895445917cff.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/379242202/unisex-classic-tee-black-left-front-68954459166c6.webp"
+      ]
+    },
+    {
+      "variant_id": "19903",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Ash",
+        "hex": "#d7d7d7"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee19f7.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee504e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee5ddb.webp"
+      ],
+      "stripe_product_id": "prod_SAMGZPmayqc22a"
+    },
+    {
+      "variant_id": "19905",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Carolina Blue",
+        "hex": "#8faae3"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed21c3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed5098.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed590d.webp"
+      ],
+      "stripe_product_id": "prod_SAMF8YuhZt2Wrb"
+    },
+    {
+      "variant_id": "19912",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Light Pink",
+        "hex": "#e7b9bc"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45ed9576.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edc151.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edcc37.webp"
+      ],
+      "stripe_product_id": "prod_SAMFa9euRkW5m4"
+    },
+    {
+      "variant_id": "19913",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Kelly Green",
+        "hex": "#2e8d60"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec474d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec55e4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec58bf.webp"
+      ],
+      "stripe_product_id": "prod_SAM25WxOB3uIEk"
+    },
+    {
+      "variant_id": "19914",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Jade Dome",
+        "hex": "#359f97"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ec9f5a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ecc315.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45eccca2.webp"
+      ],
+      "stripe_product_id": "prod_SAMElw0viXdcAU"
+    },
+    {
+      "variant_id": "19915",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Orange",
+        "hex": "#e5541e"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec6a67.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7b79.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7f5f.webp"
+      ],
+      "stripe_product_id": "prod_SA6axyH0VYCZhq"
+    },
+    {
+      "variant_id": "19919",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#e5e5e5"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeae80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeedd2.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eefd7f.webp"
+      ],
+      "stripe_product_id": "prod_SAMGsHW79HA7rw"
+    },
+    {
+      "variant_id": "19920",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Ash",
+        "hex": "#d7d7d7"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee19f7.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee504e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee5ddb.webp"
+      ],
+      "stripe_product_id": "prod_SAMGhinQHeq3ve"
+    },
+    {
+      "variant_id": "19922",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Carolina Blue",
+        "hex": "#8faae3"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed21c3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed5098.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed590d.webp"
+      ],
+      "stripe_product_id": "prod_SAMF5sO1RgAeA2"
+    },
+    {
+      "variant_id": "19929",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Light Pink",
+        "hex": "#e7b9bc"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45ed9576.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edc151.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edcc37.webp"
+      ],
+      "stripe_product_id": "prod_SAMFIdccWh1Y5F"
+    },
+    {
+      "variant_id": "19930",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Kelly Green",
+        "hex": "#2e8d60"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec474d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec55e4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec58bf.webp"
+      ],
+      "stripe_product_id": "prod_SAM3sBuzOO9PwD"
+    },
+    {
+      "variant_id": "19931",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Jade Dome",
+        "hex": "#359f97"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ec9f5a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ecc315.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45eccca2.webp"
+      ],
+      "stripe_product_id": "prod_SAMEYOmOwyLZvq"
+    },
+    {
+      "variant_id": "19932",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Orange",
+        "hex": "#e5541e"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec6a67.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7b79.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7f5f.webp"
+      ],
+      "stripe_product_id": "prod_SAMAszLl1I1X1W"
+    },
+    {
+      "variant_id": "19936",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#e5e5e5"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeae80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeedd2.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eefd7f.webp"
+      ],
+      "stripe_product_id": "prod_SAMG4FdCSTRLSd"
+    },
+    {
+      "variant_id": "19937",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Ash",
+        "hex": "#d7d7d7"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee19f7.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee504e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee5ddb.webp"
+      ],
+      "stripe_product_id": "prod_SAMGMZJgSuFysh"
+    },
+    {
+      "variant_id": "19939",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Carolina Blue",
+        "hex": "#8faae3"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed21c3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed5098.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed590d.webp"
+      ],
+      "stripe_product_id": "prod_SAMFWABgwcDfUd"
+    },
+    {
+      "variant_id": "19946",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Light Pink",
+        "hex": "#e7b9bc"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45ed9576.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edc151.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edcc37.webp"
+      ],
+      "stripe_product_id": "prod_SAMFJHkBDSiwIh"
+    },
+    {
+      "variant_id": "19947",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Kelly Green",
+        "hex": "#2e8d60"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec474d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec55e4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec58bf.webp"
+      ],
+      "stripe_product_id": "prod_SAM3ypCzIKrSko"
+    },
+    {
+      "variant_id": "19948",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Jade Dome",
+        "hex": "#359f97"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ec9f5a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ecc315.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45eccca2.webp"
+      ],
+      "stripe_product_id": "prod_SAMF3fFMscIums"
+    },
+    {
+      "variant_id": "19949",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Orange",
+        "hex": "#e5541e"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec6a67.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7b79.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7f5f.webp"
+      ],
+      "stripe_product_id": "prod_SAMA6aQ6wErFaE"
+    },
+    {
+      "variant_id": "19953",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#e5e5e5"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeae80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeedd2.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eefd7f.webp"
+      ],
+      "stripe_product_id": "prod_SAMGcYNGZ0hbAx"
+    },
+    {
+      "variant_id": "19954",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Ash",
+        "hex": "#d7d7d7"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee19f7.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee504e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee5ddb.webp"
+      ],
+      "stripe_product_id": "prod_SAMGUoTbwDZOB7"
+    },
+    {
+      "variant_id": "19956",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Carolina Blue",
+        "hex": "#8faae3"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed21c3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed5098.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed590d.webp"
+      ],
+      "stripe_product_id": "prod_SAMFdcjEXreigB"
+    },
+    {
+      "variant_id": "19963",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Light Pink",
+        "hex": "#e7b9bc"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45ed9576.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edc151.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edcc37.webp"
+      ],
+      "stripe_product_id": "prod_SAMFC46FEqByKx"
+    },
+    {
+      "variant_id": "19964",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Kelly Green",
+        "hex": "#2e8d60"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec474d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec55e4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec58bf.webp"
+      ],
+      "stripe_product_id": "prod_SAM7n0UsUUEyvy"
+    },
+    {
+      "variant_id": "19965",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Jade Dome",
+        "hex": "#359f97"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ec9f5a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ecc315.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45eccca2.webp"
+      ],
+      "stripe_product_id": "prod_SAMFuwGZoMczj2"
+    },
+    {
+      "variant_id": "19966",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "Orange",
+        "hex": "#e5541e"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec6a67.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7b79.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7f5f.webp"
+      ],
+      "stripe_product_id": "prod_SAMAFMaNKh8Ftp"
+    },
+    {
+      "variant_id": "19970",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#e5e5e5"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeae80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeedd2.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eefd7f.webp"
+      ],
+      "stripe_product_id": "prod_SAMGfqG7Is4DA0"
+    },
+    {
+      "variant_id": "19971",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 29.99,
+      "color": {
+        "name": "Ash",
+        "hex": "#d7d7d7"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee19f7.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee504e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee5ddb.webp"
+      ],
+      "stripe_product_id": "prod_SAMGrshrPCAX3l"
+    },
+    {
+      "variant_id": "19973",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 29.99,
+      "color": {
+        "name": "Carolina Blue",
+        "hex": "#8faae3"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed21c3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed5098.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed590d.webp"
+      ],
+      "stripe_product_id": "prod_SAMFtH8Sglg2Zl"
+    },
+    {
+      "variant_id": "19980",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 29.99,
+      "color": {
+        "name": "Light Pink",
+        "hex": "#e7b9bc"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45ed9576.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edc151.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edcc37.webp"
+      ],
+      "stripe_product_id": "prod_SAMFKiPJTy2yuD"
+    },
+    {
+      "variant_id": "19981",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 29.99,
+      "color": {
+        "name": "Kelly Green",
+        "hex": "#2e8d60"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec474d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec55e4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec58bf.webp"
+      ],
+      "stripe_product_id": "prod_SAM7sBCBBKcXUi"
+    },
+    {
+      "variant_id": "19982",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 29.99,
+      "color": {
+        "name": "Jade Dome",
+        "hex": "#359f97"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ec9f5a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ecc315.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45eccca2.webp"
+      ],
+      "stripe_product_id": "prod_SAMFBSdwTSn7WF"
+    },
+    {
+      "variant_id": "19983",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 29.99,
+      "color": {
+        "name": "Orange",
+        "hex": "#e5541e"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec6a67.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7b79.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7f5f.webp"
+      ],
+      "stripe_product_id": "prod_SAMAIdS3W5I7iE"
+    },
+    {
+      "variant_id": "19987",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 29.99,
+      "color": {
+        "name": "White",
+        "hex": "#e5e5e5"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeae80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeedd2.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eefd7f.webp"
+      ],
+      "stripe_product_id": "prod_SAMGLqNHMZRnt9"
+    },
+    {
+      "variant_id": "19988",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 31.99,
+      "color": {
+        "name": "Ash",
+        "hex": "#d7d7d7"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee19f7.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee504e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-ash-front-67f2d45ee5ddb.webp"
+      ],
+      "stripe_product_id": "prod_SAMGrixMiBFCNQ"
+    },
+    {
+      "variant_id": "19990",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 31.99,
+      "color": {
+        "name": "Carolina Blue",
+        "hex": "#8faae3"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed21c3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed5098.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-carolina-blue-front-67f2d45ed590d.webp"
+      ],
+      "stripe_product_id": "prod_SAMFoy47ar3f2N"
+    },
+    {
+      "variant_id": "19997",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 31.99,
+      "color": {
+        "name": "Light Pink",
+        "hex": "#e7b9bc"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45ed9576.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edc151.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-light-pink-front-67f2d45edcc37.webp"
+      ],
+      "stripe_product_id": "prod_SAMG2LiOVQZw3D"
+    },
+    {
+      "variant_id": "19998",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 31.99,
+      "color": {
+        "name": "Kelly Green",
+        "hex": "#2e8d60"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec474d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec55e4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-kelly-green-front-67f2d45ec58bf.webp"
+      ],
+      "stripe_product_id": "prod_SAM7wyHfyGUSiN"
+    },
+    {
+      "variant_id": "19999",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 31.99,
+      "color": {
+        "name": "Jade Dome",
+        "hex": "#359f97"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ec9f5a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45ecc315.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-jade-dome-front-67f2d45eccca2.webp"
+      ],
+      "stripe_product_id": "prod_SAMFQtG1IAN4yS"
+    },
+    {
+      "variant_id": "20000",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 31.99,
+      "color": {
+        "name": "Orange",
+        "hex": "#e5541e"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec6a67.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7b79.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-orange-front-67f2d45ec7f5f.webp"
+      ],
+      "stripe_product_id": "prod_SAMAaylBqshT66"
+    },
+    {
+      "variant_id": "20004",
+      "printful_product_id": "379505012",
+      "product_template_id": "87158414",
+      "price": 31.99,
+      "color": {
+        "name": "White",
+        "hex": "#e5e5e5"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeae80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eeedd2.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/summer-tshirt/unisex-sports-tee-white-front-67f2d45eefd7f.webp"
+      ],
+      "stripe_product_id": "prod_SAMGEVl0Il1xZ7"
+    },
+    {
+      "variant_id": "14637",
+      "printful_product_id": "382435621",
+      "product_template_id": "88765465",
+      "price": 44.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#274a8b"
+      },
+      "size": "XS",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-2-6826adfac5d80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-6826adfac7086.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-back-6826adfac51e3.webp"
+      ],
+      "stripe_product_id": "prod_SJsjSjLGiT5Seu"
+    },
+    {
+      "variant_id": "14638",
+      "printful_product_id": "382435621",
+      "product_template_id": "88765465",
+      "price": 44.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#274a8b"
+      },
+      "size": "S",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-2-6826adfac5d80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-6826adfac7086.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-back-6826adfac51e3.webp"
+      ],
+      "stripe_product_id": "prod_SJsj7SG0ecIn9v"
+    },
+    {
+      "variant_id": "14639",
+      "printful_product_id": "382435621",
+      "product_template_id": "88765465",
+      "price": 44.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#274a8b"
+      },
+      "size": "M",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-2-6826adfac5d80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-6826adfac7086.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-back-6826adfac51e3.webp"
+      ],
+      "stripe_product_id": "prod_SJsj9OC20e1eU7"
+    },
+    {
+      "variant_id": "14640",
+      "printful_product_id": "382435621",
+      "product_template_id": "88765465",
+      "price": 44.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#274a8b"
+      },
+      "size": "L",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-2-6826adfac5d80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-6826adfac7086.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-back-6826adfac51e3.webp"
+      ],
+      "stripe_product_id": "prod_SJsj8KY5IvsvGM"
+    },
+    {
+      "variant_id": "14641",
+      "printful_product_id": "382435621",
+      "product_template_id": "88765465",
+      "price": 44.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#274a8b"
+      },
+      "size": "XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-2-6826adfac5d80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-6826adfac7086.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-back-6826adfac51e3.webp"
+      ],
+      "stripe_product_id": "prod_SJsjv1VJLdtypW"
+    },
+    {
+      "variant_id": "14642",
+      "printful_product_id": "382435621",
+      "product_template_id": "88765465",
+      "price": 49.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#274a8b"
+      },
+      "size": "2XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-2-6826adfac5d80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-6826adfac7086.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-back-6826adfac51e3.webp"
+      ],
+      "stripe_product_id": "prod_SJsjHTzV1Eq6wx"
+    },
+    {
+      "variant_id": "14643",
+      "printful_product_id": "382435621",
+      "product_template_id": "88765465",
+      "price": 51.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#274a8b"
+      },
+      "size": "3XL",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-2-6826adfac5d80.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-front-6826adfac7086.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/weewoo-swim-trunks/all-over-print-recycled-swim-trunks-white-back-6826adfac51e3.webp"
+      ],
+      "stripe_product_id": "prod_SJsj0o7t4vt7cj"
+    },
+    {
+      "variant_id": "16856",
+      "printful_product_id": "382601748",
+      "product_template_id": "88845084",
+      "price": 29.99,
+      "color": {
+        "name": "Camo/Black",
+        "hex": "#252525"
+      },
+      "size": "One size",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-black-front-682a0e4acf630.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-black-front-682a0e4acfeb3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-black-front-682a0e4ad0055.webp"
+      ],
+      "stripe_product_id": "prod_SKqgGeOE85Itfe"
+    },
+    {
+      "variant_id": "16857",
+      "printful_product_id": "382601748",
+      "product_template_id": "88845084",
+      "price": 29.99,
+      "color": {
+        "name": "Camo/Brown",
+        "hex": "#594439"
+      },
+      "size": "One size",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-brown-front-682a0e4ad018a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-brown-front-682a0e4ad05ab.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-brown-front-682a0e4ad075e.webp"
+      ],
+      "stripe_product_id": "prod_SKqg6WAVA9MVHB"
+    },
+    {
+      "variant_id": "16858",
+      "printful_product_id": "382601748",
+      "product_template_id": "88845084",
+      "price": 29.99,
+      "color": {
+        "name": "Camo/Olive",
+        "hex": "#655b4a"
+      },
+      "size": "One size",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-olive-front-682a0e4ad0885.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-olive-front-682a0e4ad0ca0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/camo-hat/camouflage-trucker-hat-camo-olive-front-682a0e4ad0e3b.webp"
+      ],
+      "stripe_product_id": "prod_SKqgWM6E3FWCSy"
+    },
+    {
+      "variant_id": "1320",
+      "printful_product_id": "384715216",
+      "product_template_id": "89844332",
+      "price": 19.99,
+      "color": {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      "size": "11 oz",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-front-view-684f22712078e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-handle-on-left-684f227120748.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-handle-on-right-684f2271206c5.webp"
+      ],
+      "stripe_product_id": "prod_SVR9hWXITR7JEL"
+    },
+    {
+      "variant_id": "16586",
+      "printful_product_id": "384715216",
+      "product_template_id": "89844332",
+      "price": 22.99,
+      "color": {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      "size": "20 oz",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-front-view-684f22712078e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-handle-on-left-684f227120748.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-handle-on-right-684f2271206c5.webp"
+      ],
+      "stripe_product_id": "prod_SVQTeCWDBBqtI4"
+    },
+    {
+      "variant_id": "4830",
+      "printful_product_id": "384715216",
+      "product_template_id": "89844332",
+      "price": 21.99,
+      "color": {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      "size": "15 oz",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-front-view-684f22712078e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-handle-on-left-684f227120748.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/384715216/white-glossy-mug-white-11-oz-handle-on-right-684f2271206c5.webp"
+      ],
+      "stripe_product_id": "prod_SVQTaPDPClJH17"
+    },
+    {
+      "variant_id": "16440",
+      "printful_product_id": "386256066",
+      "product_template_id": "89905805",
+      "price": 36.99,
+      "color": {
+        "name": "White",
+        "hex": "#CCCCCC"
+      },
+      "size": "25 oz",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/386256066/travel-mug-with-a-handle-white-25-oz-front-6869a92438c87.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/386256066/travel-mug-with-a-handle-white-25-oz-front-6869a92438e07.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/386256066/travel-mug-with-a-handle-white-40-oz-front-6869a92439275.webp"
+      ],
+      "stripe_product_id": "prod_ScuynHW7kTHDhJ"
+    },
+    {
+      "variant_id": "19514",
+      "printful_product_id": "386256066",
+      "product_template_id": "89905805",
+      "price": 39.99,
+      "color": {
+        "name": "White",
+        "hex": "#CCCCCC"
+      },
+      "size": "40 oz",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/386256066/travel-mug-with-a-handle-white-25-oz-front-6869a92438c87.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/386256066/travel-mug-with-a-handle-white-25-oz-front-6869a92438e07.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/386256066/travel-mug-with-a-handle-white-40-oz-front-6869a92439275.webp"
+      ],
+      "stripe_product_id": "prod_ScuyqF4qzvJFJN"
+    },
+    {
+      "variant_id": "22455",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "Holistic Hysteria",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_SlayI49cnyFdh6"
+    },
+    {
+      "variant_id": "22804",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "Anaphylactic Orchard",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_Slaq05x2gAAJPn"
+    },
+    {
+      "variant_id": "22805",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "ICU Lagoon",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_SlaylAQ6ZiL34e"
+    },
+    {
+      "variant_id": "22806",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "Code Brown Noel",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_SlayCvLSoFraMn"
+    },
+    {
+      "variant_id": "22807",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "CinnaSTAT Discharge",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_SlayfDp7cGajts"
+    },
+    {
+      "variant_id": "22808",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "Freshly Rolled Kerlix",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_SlayXHbOizebLh"
+    },
+    {
+      "variant_id": "22809",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "Tropical Scrub Tech",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_SlayDu7lGiQBjX"
+    },
+    {
+      "variant_id": "22810",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "PPE & Pheromones",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_SlayYAPIzLVrxX"
+    },
+    {
+      "variant_id": "22811",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "Waiting Room Aquatics",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_Slay4uxivmLySd"
+    },
+    {
+      "variant_id": "22812",
+      "printful_product_id": "387792016",
+      "product_template_id": "91237896",
+      "price": 24.99,
+      "size": "9oz",
+      "name": "Unscented",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-cinnamon-vanilla-front-6882e7ccee8a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-clean-cotton-front-6882e7ccee934.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/387792016/scented-soy-candle,-9oz-coconut-cream-and-cardamom-front-6882e7ccee97b.webp"
+      ],
+      "stripe_product_id": "prod_Slaylg0CchTg5z"
+    },
+    {
+      "variant_id": "12028",
+      "printful_product_id": "388417454",
+      "product_template_id": "91500234",
+      "price": 59.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "XS",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-2-688c1b392b67c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392afd0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392b19e.webp"
+      ],
+      "stripe_product_id": "prod_Smhcok5mNa2V0n"
+    },
+    {
+      "variant_id": "12029",
+      "printful_product_id": "388417454",
+      "product_template_id": "91500234",
+      "price": 59.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-2-688c1b392b67c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392afd0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392b19e.webp"
+      ],
+      "stripe_product_id": "prod_Smhc34vMA3Cxxu"
+    },
+    {
+      "variant_id": "12030",
+      "printful_product_id": "388417454",
+      "product_template_id": "91500234",
+      "price": 59.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-2-688c1b392b67c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392afd0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392b19e.webp"
+      ],
+      "stripe_product_id": "prod_SmhcNJD43ibHBS"
+    },
+    {
+      "variant_id": "12031",
+      "printful_product_id": "388417454",
+      "product_template_id": "91500234",
+      "price": 59.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-2-688c1b392b67c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392afd0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392b19e.webp"
+      ],
+      "stripe_product_id": "prod_SmhciODdbG0a8c"
+    },
+    {
+      "variant_id": "12032",
+      "printful_product_id": "388417454",
+      "product_template_id": "91500234",
+      "price": 59.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-2-688c1b392b67c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392afd0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392b19e.webp"
+      ],
+      "stripe_product_id": "prod_SmhdtJ8NATwxOf"
+    },
+    {
+      "variant_id": "12033",
+      "printful_product_id": "388417454",
+      "product_template_id": "91500234",
+      "price": 64.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-2-688c1b392b67c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392afd0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392b19e.webp"
+      ],
+      "stripe_product_id": "prod_SmhdFNkNWuiJxM"
+    },
+    {
+      "variant_id": "12034",
+      "printful_product_id": "388417454",
+      "product_template_id": "91500234",
+      "price": 69.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-2-688c1b392b67c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392afd0.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/388417454/all-over-print-recycled-high-waisted-bikini-white-front-688c1b392b19e.webp"
+      ],
+      "stripe_product_id": "prod_SmhdJH4QtpYQIN"
+    },
+    {
+      "variant_id": "19342",
+      "printful_product_id": "391334576",
+      "product_template_id": "92676850",
+      "price": 39.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "One size",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-black-front-68b44ac20a9b1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-black-front-68b44ac20b04f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-black-front-68b44ac20b1c4.webp"
+      ],
+      "stripe_product_id": "prod_Sy81lTsJho4lfd"
+    },
+    {
+      "variant_id": "19343",
+      "printful_product_id": "391334576",
+      "product_template_id": "92676850",
+      "price": 39.99,
+      "color": {
+        "name": "Grey",
+        "hex": "#636660"
+      },
+      "size": "One size",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-grey-front-68b44ac20d1c4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-grey-front-68b44ac20d3f3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-grey-front-68b44ac20d643.webp"
+      ],
+      "stripe_product_id": "prod_Sy8132qVFfqOFc"
+    },
+    {
+      "variant_id": "19344",
+      "printful_product_id": "391334576",
+      "product_template_id": "92676850",
+      "price": 39.99,
+      "color": {
+        "name": "Navy",
+        "hex": "#1f2546"
+      },
+      "size": "One size",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-navy-front-68b44ac20b403.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-navy-front-68b44ac20b59e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-navy-front-68b44ac20b770.webp"
+      ],
+      "stripe_product_id": "prod_Sy81YmTnZO64g3"
+    },
+    {
+      "variant_id": "19345",
+      "printful_product_id": "391334576",
+      "product_template_id": "92676850",
+      "price": 39.99,
+      "color": {
+        "name": "Red",
+        "hex": "#f4000f"
+      },
+      "size": "One size",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-red-front-68b44ac20c734.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-red-front-68b44ac20ca9f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-red-front-68b44ac20cd62.webp"
+      ],
+      "stripe_product_id": "prod_Sy81twIiYV5eUs"
+    },
+    {
+      "variant_id": "19346",
+      "printful_product_id": "391334576",
+      "product_template_id": "92676850",
+      "price": 39.99,
+      "color": {
+        "name": "Royal Blue",
+        "hex": "#19348c"
+      },
+      "size": "One size",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-royal-blue-front-68b44ac20bbdb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-royal-blue-front-68b44ac20be73.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-royal-blue-front-68b44ac20c1c9.webp"
+      ],
+      "stripe_product_id": "prod_Sy81jtvzVIhLSO"
+    },
+    {
+      "variant_id": "19347",
+      "printful_product_id": "391334576",
+      "product_template_id": "92676850",
+      "price": 39.99,
+      "color": {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      "size": "One size",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-white-front-68b44ac20dd0e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-white-front-68b44ac20e17e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391334576/under-armour-dad-hat-white-front-68b44ac20e610.webp"
+      ],
+      "stripe_product_id": "prod_Sy81VV83Zdw7Vp"
+    },
+    {
+      "variant_id": "21371",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Bubble Pink",
+        "hex": "#fd9cba"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660423061.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660424543.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-back-68bb6604235e6.webp"
+      ],
+      "stripe_product_id": "prod_T08lxiiTxSfbNy"
+    },
+    {
+      "variant_id": "21372",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Cool Heather Grey",
+        "hex": "#e8e8e8"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb66042312b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb6604245c8.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-back-68bb660423673.webp"
+      ],
+      "stripe_product_id": "prod_T08mlAgqGOQ5d7"
+    },
+    {
+      "variant_id": "21373",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Fiesta",
+        "hex": "#ff735c"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb6604231a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb660424634.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-back-68bb6604236e2.webp"
+      ],
+      "stripe_product_id": "prod_T08lxjgbY6nreS"
+    },
+    {
+      "variant_id": "21375",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Green Bay",
+        "hex": "#53705f"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb660423215.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb66042469d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-back-68bb66042374b.webp"
+      ],
+      "stripe_product_id": "prod_T08l4t0GrEtNww"
+    },
+    {
+      "variant_id": "21376",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Heather Grey",
+        "hex": "#e2e2e2"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660423283.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660424703.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-back-68bb6604237b1.webp"
+      ],
+      "stripe_product_id": "prod_T08mc3B3JHEaST"
+    },
+    {
+      "variant_id": "21377",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Lavender",
+        "hex": "#dfd9e7"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb6604232f3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb66042476b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-back-68bb66042381a.webp"
+      ],
+      "stripe_product_id": "prod_T08mbO5xYmkpoE"
+    },
+    {
+      "variant_id": "21378",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Off White",
+        "hex": "#fcfbf6"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb66042335f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb6604247d1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-back-68bb66042388a.webp"
+      ],
+      "stripe_product_id": "prod_T08nTwDlQY9f6E"
+    },
+    {
+      "variant_id": "21379",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#ffffff"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb6604233cb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb66042483e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-back-68bb6604238f2.webp"
+      ],
+      "stripe_product_id": "prod_T08nKz86wbgDfa"
+    },
+    {
+      "variant_id": "21381",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Bubble Pink",
+        "hex": "#fd9cba"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660423061.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660424543.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-back-68bb6604235e6.webp"
+      ],
+      "stripe_product_id": "prod_T08l2u5xfisWt0"
+    },
+    {
+      "variant_id": "21382",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Cool Heather Grey",
+        "hex": "#e8e8e8"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb66042312b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb6604245c8.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-back-68bb660423673.webp"
+      ],
+      "stripe_product_id": "prod_T08mOXBVjcw28O"
+    },
+    {
+      "variant_id": "21383",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Fiesta",
+        "hex": "#ff735c"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb6604231a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb660424634.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-back-68bb6604236e2.webp"
+      ],
+      "stripe_product_id": "prod_T08l5zDjCy2Hkb"
+    },
+    {
+      "variant_id": "21385",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Green Bay",
+        "hex": "#53705f"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb660423215.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb66042469d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-back-68bb66042374b.webp"
+      ],
+      "stripe_product_id": "prod_T08lD2IgS206Bf"
+    },
+    {
+      "variant_id": "21386",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Heather Grey",
+        "hex": "#e2e2e2"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660423283.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660424703.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-back-68bb6604237b1.webp"
+      ],
+      "stripe_product_id": "prod_T08mg6FN2bceF9"
+    },
+    {
+      "variant_id": "21387",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Lavender",
+        "hex": "#dfd9e7"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb6604232f3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb66042476b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-back-68bb66042381a.webp"
+      ],
+      "stripe_product_id": "prod_T08mqLbePUL77k"
+    },
+    {
+      "variant_id": "21388",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Off White",
+        "hex": "#fcfbf6"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb66042335f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb6604247d1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-back-68bb66042388a.webp"
+      ],
+      "stripe_product_id": "prod_T08n2oFcslcZr7"
+    },
+    {
+      "variant_id": "21389",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#ffffff"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb6604233cb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb66042483e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-back-68bb6604238f2.webp"
+      ],
+      "stripe_product_id": "prod_T08nURphmEEHaf"
+    },
+    {
+      "variant_id": "21391",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Bubble Pink",
+        "hex": "#fd9cba"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660423061.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660424543.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-back-68bb6604235e6.webp"
+      ],
+      "stripe_product_id": "prod_T08l2Yoy9YwloT"
+    },
+    {
+      "variant_id": "21392",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Cool Heather Grey",
+        "hex": "#e8e8e8"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb66042312b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb6604245c8.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-back-68bb660423673.webp"
+      ],
+      "stripe_product_id": "prod_T08m52mkNdJX4q"
+    },
+    {
+      "variant_id": "21393",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Fiesta",
+        "hex": "#ff735c"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb6604231a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb660424634.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-back-68bb6604236e2.webp"
+      ],
+      "stripe_product_id": "prod_T08l0WNduoBLkn"
+    },
+    {
+      "variant_id": "21395",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Green Bay",
+        "hex": "#53705f"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb660423215.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb66042469d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-back-68bb66042374b.webp"
+      ],
+      "stripe_product_id": "prod_T08lJUe7xyYS9e"
+    },
+    {
+      "variant_id": "21396",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Heather Grey",
+        "hex": "#e2e2e2"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660423283.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660424703.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-back-68bb6604237b1.webp"
+      ],
+      "stripe_product_id": "prod_T08mS3VyyukEr3"
+    },
+    {
+      "variant_id": "21397",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Lavender",
+        "hex": "#dfd9e7"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb6604232f3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb66042476b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-back-68bb66042381a.webp"
+      ],
+      "stripe_product_id": "prod_T08mZy44C2xDZd"
+    },
+    {
+      "variant_id": "21398",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Off White",
+        "hex": "#fcfbf6"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb66042335f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb6604247d1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-back-68bb66042388a.webp"
+      ],
+      "stripe_product_id": "prod_T08nLzXMfqdTjc"
+    },
+    {
+      "variant_id": "21399",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#ffffff"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb6604233cb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb66042483e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-back-68bb6604238f2.webp"
+      ],
+      "stripe_product_id": "prod_T08nIbtYEpkiR7"
+    },
+    {
+      "variant_id": "21401",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Bubble Pink",
+        "hex": "#fd9cba"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660423061.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660424543.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-back-68bb6604235e6.webp"
+      ],
+      "stripe_product_id": "prod_T08l277v8tLg83"
+    },
+    {
+      "variant_id": "21402",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Cool Heather Grey",
+        "hex": "#e8e8e8"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb66042312b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb6604245c8.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-back-68bb660423673.webp"
+      ],
+      "stripe_product_id": "prod_T08myiAJSN6D2O"
+    },
+    {
+      "variant_id": "21403",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Fiesta",
+        "hex": "#ff735c"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb6604231a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb660424634.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-back-68bb6604236e2.webp"
+      ],
+      "stripe_product_id": "prod_T08lbZr7D8pJxQ"
+    },
+    {
+      "variant_id": "21405",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Green Bay",
+        "hex": "#53705f"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb660423215.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb66042469d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-back-68bb66042374b.webp"
+      ],
+      "stripe_product_id": "prod_T08l6llPSP7CwR"
+    },
+    {
+      "variant_id": "21406",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Heather Grey",
+        "hex": "#e2e2e2"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660423283.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660424703.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-back-68bb6604237b1.webp"
+      ],
+      "stripe_product_id": "prod_T08mspAPcU5pgF"
+    },
+    {
+      "variant_id": "21407",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Lavender",
+        "hex": "#dfd9e7"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb6604232f3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb66042476b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-back-68bb66042381a.webp"
+      ],
+      "stripe_product_id": "prod_T08mmmTuSSiR6h"
+    },
+    {
+      "variant_id": "21408",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "Off White",
+        "hex": "#fcfbf6"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb66042335f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb6604247d1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-back-68bb66042388a.webp"
+      ],
+      "stripe_product_id": "prod_T08nBWBQ9wQksE"
+    },
+    {
+      "variant_id": "21409",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#ffffff"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb6604233cb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb66042483e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-back-68bb6604238f2.webp"
+      ],
+      "stripe_product_id": "prod_T08nZQ5qxE6GPd"
+    },
+    {
+      "variant_id": "21411",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 29.99,
+      "color": {
+        "name": "Bubble Pink",
+        "hex": "#fd9cba"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660423061.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-front-68bb660424543.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-bubble-pink-back-68bb6604235e6.webp"
+      ],
+      "stripe_product_id": "prod_T08l1g1qInur3j"
+    },
+    {
+      "variant_id": "21412",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 29.99,
+      "color": {
+        "name": "Cool Heather Grey",
+        "hex": "#e8e8e8"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb66042312b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-front-68bb6604245c8.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-cool-heather-grey-back-68bb660423673.webp"
+      ],
+      "stripe_product_id": "prod_T08mTudL6nrxQQ"
+    },
+    {
+      "variant_id": "21413",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 29.99,
+      "color": {
+        "name": "Fiesta",
+        "hex": "#ff735c"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb6604231a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-front-68bb660424634.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-fiesta-back-68bb6604236e2.webp"
+      ],
+      "stripe_product_id": "prod_T08lKhD34FUbir"
+    },
+    {
+      "variant_id": "21415",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 29.99,
+      "color": {
+        "name": "Green Bay",
+        "hex": "#53705f"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb660423215.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-front-68bb66042469d.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-green-bay-back-68bb66042374b.webp"
+      ],
+      "stripe_product_id": "prod_T08l0DFRUHBqjX"
+    },
+    {
+      "variant_id": "21416",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 29.99,
+      "color": {
+        "name": "Heather Grey",
+        "hex": "#e2e2e2"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660423283.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-front-68bb660424703.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-heather-grey-back-68bb6604237b1.webp"
+      ],
+      "stripe_product_id": "prod_T08mYZFcrUkpCf"
+    },
+    {
+      "variant_id": "21417",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 29.99,
+      "color": {
+        "name": "Lavender",
+        "hex": "#dfd9e7"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb6604232f3.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-front-68bb66042476b.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-lavender-back-68bb66042381a.webp"
+      ],
+      "stripe_product_id": "prod_T08mHSnbzNIGHy"
+    },
+    {
+      "variant_id": "21418",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 29.99,
+      "color": {
+        "name": "Off White",
+        "hex": "#fcfbf6"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb66042335f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-front-68bb6604247d1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-off-white-back-68bb66042388a.webp"
+      ],
+      "stripe_product_id": "prod_T08nHHdHjcdMDd"
+    },
+    {
+      "variant_id": "21419",
+      "printful_product_id": "391830924",
+      "product_template_id": "92923983",
+      "price": 29.99,
+      "color": {
+        "name": "White",
+        "hex": "#ffffff"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb6604233cb.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-front-68bb66042483e.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/391830924/womens-organic-ribbed-neck-t-shirt-white-back-68bb6604238f2.webp"
+      ],
+      "stripe_product_id": "prod_T08nI4p3HiHEqm"
+    },
+    {
+      "variant_id": "10300",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Heather Columbia Blue",
+        "hex": "#7b9df1"
+      },
+      "size": "2T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-front-691bdf7342a1a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-front-691bdf73432a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-right-front-691bdf7343a9b.webp"
+      ],
+      "stripe_product_id": "prod_TRYMQ4abEqgxVP"
+    },
+    {
+      "variant_id": "10301",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Heather Columbia Blue",
+        "hex": "#7b9df1"
+      },
+      "size": "3T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-front-691bdf7342a1a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-front-691bdf73432a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-right-front-691bdf7343a9b.webp"
+      ],
+      "stripe_product_id": "prod_TRYMh46K4S4TPF"
+    },
+    {
+      "variant_id": "10302",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Heather Columbia Blue",
+        "hex": "#7b9df1"
+      },
+      "size": "4T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-front-691bdf7342a1a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-front-691bdf73432a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-right-front-691bdf7343a9b.webp"
+      ],
+      "stripe_product_id": "prod_TRYMMcbW0h5pd5"
+    },
+    {
+      "variant_id": "10303",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Heather Columbia Blue",
+        "hex": "#7b9df1"
+      },
+      "size": "5T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-front-691bdf7342a1a.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-front-691bdf73432a4.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-heather-columbia-blue-right-front-691bdf7343a9b.webp"
+      ],
+      "stripe_product_id": "prod_TRYMasaliEfszQ"
+    },
+    {
+      "variant_id": "10304",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Pink",
+        "hex": "#efc8cf"
+      },
+      "size": "2T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-front-691bdf7342ad1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-front-691bdf734339f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-right-front-691bdf7343b5e.webp"
+      ],
+      "stripe_product_id": "prod_TRYMSdxDgGeQyL"
+    },
+    {
+      "variant_id": "10305",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Pink",
+        "hex": "#efc8cf"
+      },
+      "size": "3T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-front-691bdf7342ad1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-front-691bdf734339f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-right-front-691bdf7343b5e.webp"
+      ],
+      "stripe_product_id": "prod_TRYM71LGGqXyb0"
+    },
+    {
+      "variant_id": "10306",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Pink",
+        "hex": "#efc8cf"
+      },
+      "size": "4T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-front-691bdf7342ad1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-front-691bdf734339f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-right-front-691bdf7343b5e.webp"
+      ],
+      "stripe_product_id": "prod_TRYMG6n6bv3jru"
+    },
+    {
+      "variant_id": "10307",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Pink",
+        "hex": "#efc8cf"
+      },
+      "size": "5T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-front-691bdf7342ad1.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-front-691bdf734339f.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-pink-right-front-691bdf7343b5e.webp"
+      ],
+      "stripe_product_id": "prod_TRYMSHvYaYGu3X"
+    },
+    {
+      "variant_id": "9418",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      "size": "2T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-front-691bdf7342b78.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-front-691bdf7343439.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-right-front-691bdf7343bff.webp"
+      ],
+      "stripe_product_id": "prod_TRYMaE7wGpIU9Y"
+    },
+    {
+      "variant_id": "9419",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      "size": "3T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-front-691bdf7342b78.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-front-691bdf7343439.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-right-front-691bdf7343bff.webp"
+      ],
+      "stripe_product_id": "prod_TRYM9HVlaHnfnw"
+    },
+    {
+      "variant_id": "9420",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      "size": "4T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-front-691bdf7342b78.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-front-691bdf7343439.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-right-front-691bdf7343bff.webp"
+      ],
+      "stripe_product_id": "prod_TRYMoJkN1QG0bN"
+    },
+    {
+      "variant_id": "9421",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      "size": "5T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-front-691bdf7342b78.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-front-691bdf7343439.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-white-right-front-691bdf7343bff.webp"
+      ],
+      "stripe_product_id": "prod_TRYNyHW9rE1I5B"
+    },
+    {
+      "variant_id": "9422",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "2T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-front-691bdf73427ea.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-front-691bdf734314c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-right-front-691bdf73439be.webp"
+      ],
+      "stripe_product_id": "prod_TRYML8CdR39C7w"
+    },
+    {
+      "variant_id": "9423",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "3T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-front-691bdf73427ea.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-front-691bdf734314c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-right-front-691bdf73439be.webp"
+      ],
+      "stripe_product_id": "prod_TRYMfMWReRHmfR"
+    },
+    {
+      "variant_id": "9424",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "4T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-front-691bdf73427ea.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-front-691bdf734314c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-right-front-691bdf73439be.webp"
+      ],
+      "stripe_product_id": "prod_TRYMsgwfy5p557"
+    },
+    {
+      "variant_id": "9425",
+      "printful_product_id": "403242028",
+      "product_template_id": "95930330",
+      "price": 24.99,
+      "color": {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      "size": "5T",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-front-691bdf73427ea.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-front-691bdf734314c.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/403242028/toddler-staple-tee-black-right-front-691bdf73439be.webp"
+      ],
+      "stripe_product_id": "prod_TRYMYgbuoDCLVt"
+    },
+    {
+      "variant_id": "16553",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 49.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "2XS",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRffAuACdA21b"
+    },
+    {
+      "variant_id": "16554",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 49.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "XS",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRfubwUA6aJUj"
+    },
+    {
+      "variant_id": "16555",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 49.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "S",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRfjp6NyulEOv"
+    },
+    {
+      "variant_id": "16556",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 49.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "M",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRfVYSlQhGCdh"
+    },
+    {
+      "variant_id": "16557",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 49.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "L",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRfG9prKClS1j"
+    },
+    {
+      "variant_id": "16558",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 49.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRfXrc3KB8VOj"
+    },
+    {
+      "variant_id": "16559",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 52.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "2XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRfBc5iAWoD9F"
+    },
+    {
+      "variant_id": "16560",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 54.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "3XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRfEl2Q408Ibr"
+    },
+    {
+      "variant_id": "16561",
+      "printful_product_id": "426908536",
+      "product_template_id": "101036494",
+      "price": 59.99,
+      "color": {
+        "name": "Blue",
+        "hex": "#214689"
+      },
+      "size": "4XL",
+      "name": "",
+      "images": [
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ed5.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e02c89.webp",
+        "https://d3leqxp227sjlw.cloudfront.net/426908536/all-over-print-recycled-string-bikini-white-front-69d27c4e01ce1.webp"
+      ],
+      "stripe_product_id": "prod_UHRfDxyWtNG10e"
+    }
+  ]
+}

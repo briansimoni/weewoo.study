@@ -1,11 +1,12 @@
 import { assert, assertEquals, assertRejects } from "@std/assert";
 import { CATEGORIES } from "./categories.ts";
-import { seed, SEED_USERS, seedIfEmpty } from "./seed.ts";
+import { ensureSeeded, seed, SEED_USERS, SEED_VERSION } from "./seed.ts";
 import { QuestionStore } from "./question_store.ts";
 import { UserStore } from "./user_store.ts";
 import { AttemptStore } from "./attempt_store.ts";
 import { ProductStore } from "./product_store.ts";
 import { StreakStore } from "./streak_store.ts";
+import catalog from "./seed_catalog.json" with { type: "json" };
 
 const now = new Date("2026-10-01T12:00:00Z");
 
@@ -19,8 +20,8 @@ Deno.test("seed populates every store with consistent data", async () => {
       users: SEED_USERS.length,
       attempts: expectedAttempts,
       reports: 6,
-      products: 4,
-      variants: 6 + 1 + 1 + 1,
+      products: catalog.products.length,
+      variants: catalog.variants.length,
     });
 
     // Question indexes work: counts, random picks, and per-category picks.
@@ -62,10 +63,26 @@ Deno.test("seed populates every store with consistent data", async () => {
     assertEquals(reports.length, 6);
     assertEquals(reports.filter((r) => r.resolved_at).length, 1);
 
-    // Products: the inactive one is stored but flagged inactive.
-    const products = await (await ProductStore.make(kv)).listProducts();
-    assertEquals(products.length, 4);
-    assertEquals(products.filter((p) => p.active).length, 3);
+    // Products: the TEST catalog, inactive ones included but flagged.
+    const productStore = await ProductStore.make(kv);
+    const products = await productStore.listProducts();
+    assertEquals(products.length, catalog.products.length);
+    assertEquals(
+      products.filter((p) => p.active).length,
+      catalog.products.filter((p) => p.active).length,
+    );
+    // Every active product is purchasable: it has a variant with a Stripe
+    // product ID, findable through the index the Stripe webhook uses.
+    for (const product of products.filter((p) => p.active)) {
+      const variant = catalog.variants.find((v) =>
+        v.printful_product_id === product.printful_id && v.stripe_product_id
+      );
+      assert(variant, `no purchasable variant for ${product.name}`);
+      const found = await productStore.getVariantByStripeProductId(
+        variant.stripe_product_id!,
+      );
+      assertEquals(found?.variant_id, variant.variant_id);
+    }
   } finally {
     kv.close();
   }
@@ -96,7 +113,7 @@ Deno.test("seed refuses to run in production", async () => {
   try {
     await assertRejects(() => seed(kv, { stage: "PROD" }), Error, "PROD");
     await assertRejects(
-      () => seedIfEmpty(kv, { stage: "PROD" }),
+      () => ensureSeeded(kv, { stage: "PROD" }),
       Error,
       "PROD",
     );
@@ -106,20 +123,20 @@ Deno.test("seed refuses to run in production", async () => {
   }
 });
 
-Deno.test("seedIfEmpty seeds an empty database only once", async () => {
+Deno.test("ensureSeeded seeds an empty database only once", async () => {
   const kv = await Deno.openKv(":memory:");
   try {
-    const first = await seedIfEmpty(kv, { now, stage: "TEST" });
+    const first = await ensureSeeded(kv, { now, stage: "TEST" });
     assert(first);
     assertEquals(first.users, SEED_USERS.length);
-    assertEquals(await seedIfEmpty(kv, { now, stage: "TEST" }), null);
+    assertEquals(await ensureSeeded(kv, { now, stage: "TEST" }), null);
     assertEquals((await kv.get(["seed", "lock"])).value, null);
   } finally {
     kv.close();
   }
 });
 
-Deno.test("seedIfEmpty leaves existing data alone", async () => {
+Deno.test("ensureSeeded leaves existing data alone", async () => {
   const kv = await Deno.openKv(":memory:");
   try {
     const emt = await QuestionStore.make(kv, "emt");
@@ -130,9 +147,48 @@ Deno.test("seedIfEmpty leaves existing data alone", async () => {
       explanation: "",
       category: CATEGORIES[0],
     });
-    assertEquals(await seedIfEmpty(kv, { stage: "TEST" }), null);
+    assertEquals(await ensureSeeded(kv, { stage: "TEST" }), null);
     assertEquals(await emt.size(), 1);
     assertEquals(await (await UserStore.make(kv)).getUser("seed|expert"), null);
+  } finally {
+    kv.close();
+  }
+});
+
+Deno.test("ensureSeeded replaces seed data from an older version", async () => {
+  const kv = await Deno.openKv(":memory:");
+  try {
+    await seed(kv, { now, stage: "TEST" });
+    // Simulate an older seed: stale version and a product the current
+    // catalog no longer has.
+    await kv.set(["seed", "version"], SEED_VERSION - 1);
+    const products = await ProductStore.make(kv);
+    await products.addProduct(
+      {
+        ...catalog.products[0],
+        printful_id: "seed-stale-product",
+      } as Parameters<typeof products.addProduct>[0],
+    );
+
+    const summary = await ensureSeeded(kv, { now, stage: "TEST" });
+    assert(summary);
+    assertEquals(summary.products, catalog.products.length);
+    assertEquals(await products.getProduct("seed-stale-product"), null);
+    assertEquals((await kv.get(["seed", "version"])).value, SEED_VERSION);
+    assertEquals(await ensureSeeded(kv, { now, stage: "TEST" }), null);
+  } finally {
+    kv.close();
+  }
+});
+
+Deno.test("ensureSeeded upgrades seed databases created before versioning", async () => {
+  const kv = await Deno.openKv(":memory:");
+  try {
+    await seed(kv, { now, stage: "TEST" });
+    await kv.delete(["seed", "version"]); // as seeded by the first release
+    const summary = await ensureSeeded(kv, { now, stage: "TEST" });
+    assert(summary, "legacy seed database should be reseeded");
+    assertEquals((await kv.get(["seed", "version"])).value, SEED_VERSION);
   } finally {
     kv.close();
   }

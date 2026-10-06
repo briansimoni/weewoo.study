@@ -14,7 +14,7 @@ import { CronTime } from "cron-time-generator";
 import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
 import { asyncLocalStorage, log } from "./lib/logger.ts";
 import { getKv } from "./lib/kv.ts";
-import { seedIfEmpty } from "./lib/seed.ts";
+import { ensureSeeded } from "./lib/seed.ts";
 
 /**
  * Wrap a cron job in a request ID and logging context
@@ -56,7 +56,7 @@ if (import.meta.env.PROD) {
 const seeding = Deno.env.get("SEED_ON_EMPTY") === "true" &&
     Deno.env.get("STAGE") !== "PROD"
   ? getKv()
-    .then((kv) => seedIfEmpty(kv))
+    .then((kv) => ensureSeeded(kv))
     .then((summary) => {
       if (summary) log.info("seeded empty database", { summary });
     })

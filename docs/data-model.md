@@ -68,13 +68,26 @@ Types are defined in the owning store module: `Question` and `QuestionReport` in
 
 ## Seed data
 
-`lib/seed.ts` writes deterministic test data through the stores: `[Seed]`
-questions in every category and scope, `seed|…` users with attempts, stats,
-leaderboard entries and streaks, question reports, and `seed-…` products and
-variants. It refuses to run when `STAGE=PROD`. Streaks are written directly to
-`["streaks", userId]`, because `StreakStore` only advances them in real time.
-`seedIfEmpty` holds a `["seed", "lock"]` key (5-minute TTL) while seeding, so
-concurrent isolates don't seed twice.
+`lib/seed.ts` writes deterministic test data through the stores, and refuses to
+run when `STAGE=PROD`. What works where:
+
+| Data                                                         | Source                                                     | Works for                                                                                                                            |
+| ------------------------------------------------------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 143 `[Seed]` questions, all categories and scopes            | Synthetic (the repo is public, so the real bank stays out) | Practice, admin, reports                                                                                                             |
+| 5 `seed\|…` users with attempts, stats, leaderboard, streaks | Synthetic, KV only                                         | Leaderboard and stats pages. **They can't sign in through Auth0**; E2E uses a test-only login (ROADMAP 0.3).                         |
+| 15 products, 217 variants (`lib/seed_catalog.json`)          | Copy of the **TEST** database's catalog                    | Shop pages and Stripe checkout with a test-mode key: the Stripe IDs are test-mode products and the Printful IDs are the real store's |
+
+Regenerate the catalog from a test backup with
+`deno run --allow-read --allow-write scripts/export_seed_catalog.ts <TEST-kv-backup.json>`.
+Never use a production backup: its Stripe IDs are live-mode products.
+
+Streaks are written directly to `["streaks", userId]`, because `StreakStore`
+only advances them in real time. `ensureSeeded` holds a `["seed", "lock"]` key
+(5-minute TTL) while seeding, so concurrent isolates don't seed twice. `seed()`
+records `["seed", "version"]`. **Bump `SEED_VERSION` whenever seed data
+changes**: `ensureSeeded` then wipes and reseeds databases holding older seed
+data (identified by that key or the `seed|expert` user). Databases with real
+data are never wiped.
 
 - Local: `deno task seed` creates `.kv/seed.sqlite3`; run the app with
   `KV_PATH=.kv/seed.sqlite3`.
@@ -84,3 +97,10 @@ concurrent isolates don't seed twice.
   MALFORMED_REQUEST, so it could not be scoped to Preview). That is safe:
   production has `STAGE=PROD` (seeding refuses), and test.weewoo.study is not
   empty. Scope it to Preview in the Deno console if preferred.
+
+## Legacy keys
+
+Production and test backups (2026-10) still contain keys no current code reads:
+`["emt", "questions", …]` and `["emt", "question_count"]` (an older question
+layout) and `["jokes", …]`. They're harmless. Remove them with a one-off script
+once a backup has been taken.
