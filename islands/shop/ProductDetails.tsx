@@ -274,7 +274,7 @@ export default function ProductDetails(
           </details>
 
           {product.size_guide && (
-            <details className="collapse bg-base-200">
+            <details className="collapse bg-base-200 overflow-x-scroll">
               <summary className="collapse-title text-lg font-semibold">
                 Size Guide
               </summary>
