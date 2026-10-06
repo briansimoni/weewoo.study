@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
-import { answerCorrectly } from "./helpers.ts";
+import { answerCorrectly, gotoReady } from "./helpers.ts";
 
 test("visitors can try questions on the landing page", async ({ page }) => {
-  await page.goto("/");
+  await gotoReady(page, "/");
   const trial = page.locator("#trial-questions");
   await trial.scrollIntoViewIfNeeded();
   await expect(trial.getByText(/^\[Seed\]/)).toBeVisible();

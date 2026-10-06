@@ -365,7 +365,12 @@ export async function ensureSeeded(
     .check({ key: LOCK_KEY, versionstamp: null })
     .set(LOCK_KEY, new Date().toISOString(), { expireIn: 5 * 60 * 1000 })
     .commit();
-  if (!lock.ok) return null; // another isolate is seeding
+  if (!lock.ok) {
+    // Another isolate is seeding. Wait for it, so this isolate never serves a
+    // half-seeded database.
+    await waitForSeed(kv);
+    return null;
+  }
 
   try {
     if (seedOwned) await wipe(kv);
@@ -380,5 +385,15 @@ async function wipe(kv: Deno.Kv) {
   for await (const entry of kv.list({ prefix: [] })) {
     if (entry.key[0] === LOCK_KEY[0] && entry.key[1] === LOCK_KEY[1]) continue;
     await kv.delete(entry.key);
+  }
+}
+
+/** Wait until another isolate finishes seeding (the version key is set last). */
+async function waitForSeed(kv: Deno.Kv, timeoutMs = 3 * 60 * 1000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if ((await kv.get<number>(VERSION_KEY)).value === SEED_VERSION) return;
+    if ((await kv.get(LOCK_KEY)).value === null) return; // seeder gave up
+    await new Promise((resolve) => setTimeout(resolve, 250));
   }
 }

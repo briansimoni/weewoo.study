@@ -199,3 +199,21 @@ Deno.test("ensureSeeded upgrades seed databases created before versioning", asyn
     kv.close();
   }
 });
+
+Deno.test("concurrent ensureSeeded calls all wait for complete data", async () => {
+  const kv = await Deno.openKv(":memory:");
+  try {
+    const versionWhenDone: unknown[] = [];
+    const call = () =>
+      ensureSeeded(kv, { now, stage: "TEST" }).then(async (summary) => {
+        versionWhenDone.push((await kv.get(["seed", "version"])).value);
+        return summary;
+      });
+    const results = await Promise.all([call(), call(), call()]);
+    assertEquals(results.filter((r) => r !== null).length, 1);
+    // Every caller, including those that lost the lock, saw finished seeding.
+    assertEquals(versionWhenDone, [SEED_VERSION, SEED_VERSION, SEED_VERSION]);
+  } finally {
+    kv.close();
+  }
+});

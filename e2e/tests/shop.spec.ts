@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { gotoReady } from "./helpers.ts";
 
 test("a shopper adds a product to the cart and reaches Stripe test checkout", async ({ page }) => {
   // Never load Stripe itself; we only check the session the app creates.
@@ -14,12 +15,14 @@ test("a shopper adds a product to the cart and reaches Stripe test checkout", as
     await route.fulfill({ response });
   });
 
-  await page.goto("/shop");
+  await gotoReady(page, "/shop");
   await page.locator('a[href^="/shop/"]').first().click();
+  await page.waitForURL(/\/shop\/.+/);
+  await page.waitForLoadState("networkidle");
   await page.getByRole("button", { name: "Add to Cart" }).click();
   await expect(page.getByText("Added to cart!")).toBeVisible();
 
-  await page.goto("/cart");
+  await gotoReady(page, "/cart");
   await page.getByRole("button", { name: "Proceed to Checkout" }).click();
   await expect.poll(() => checkout?.status).toBeDefined();
 
