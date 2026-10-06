@@ -182,9 +182,12 @@ Preview/Local. `test-weewoo-study` uses one set of values for every context. The
 webhook handler submits a **real Printful order** and sends emails on
 `checkout.session.completed` in every environment.
 
-- [ ] **Audit Stripe modes (human).** Confirm which keys each app/context uses
-      (live vs test) and list the webhook endpoints in both Stripe modes. Target
-      state: Production uses live keys; everything else uses test keys.
+- [ ] **Audit Stripe modes (human, partly done).** Verified 2026-10-06: the
+      Preview contexts of **both** apps use test-mode keys from the same Stripe
+      account as the TEST catalog. Checkout on a seeded preview creates a
+      `cs_test_` session. Still to confirm: test.weewoo.study (Production
+      context of `test-weewoo-study`) is test mode, weewoo.study is live, and
+      which webhook endpoints exist in each Stripe mode.
 - [ ] **Guard side effects by stage.** Only `STAGE=PROD` submits real Printful
       orders and customer emails. Elsewhere, run a dry run that logs the
       Printful payload (optionally creating an unconfirmed Printful draft behind
