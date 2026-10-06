@@ -1,6 +1,6 @@
 import { page } from "fresh";
 import { getKv } from "../../lib/kv.ts";
-import { AppHandlers, AppProps } from "../_middleware.ts";
+import { AppHandlers, AppProps, AppState } from "../_middleware.ts";
 
 async function list(prefix: string) {
   const kv = await getKv();
@@ -75,7 +75,7 @@ export const handler: AppHandlers = {
 
 interface DebugProps extends AppProps {
   data: {
-    session: any;
+    session: AppState["session"];
     users: { key: Deno.KvKey; value: unknown }[];
     sessions: { key: Deno.KvKey; value: unknown }[];
     leaderboard: { key: Deno.KvKey; value: unknown }[];

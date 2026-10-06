@@ -2,7 +2,10 @@ import { useEffect, useRef } from "preact/hooks";
 
 // By declaring grecaptcha at the module level, we inform TypeScript that this
 // variable will be available globally at runtime, provided by the Google script.
-declare const grecaptcha: any;
+declare const grecaptcha: {
+  ready(callback: () => void): void;
+  execute(siteKey: string, options: { action: string }): Promise<string>;
+};
 
 export default function SupportForm() {
   // useRef provides a way to access the DOM element directly without race conditions.
@@ -27,7 +30,7 @@ export default function SupportForm() {
             tokenRef.current.value = token;
           }
         })
-        .catch((error: any) => {
+        .catch((error: unknown) => {
           console.error("reCAPTCHA execution failed:", error);
         });
     });

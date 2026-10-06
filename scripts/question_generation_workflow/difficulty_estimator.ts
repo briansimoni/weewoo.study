@@ -7,7 +7,7 @@ import "@std/dotenv/load";
 interface GeneratedQuestionsFile {
   generated_at: string;
   questions: GeneratedQuestion[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface Config {

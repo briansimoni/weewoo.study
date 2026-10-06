@@ -10,7 +10,7 @@ import "@std/dotenv/load";
 import { App, staticFiles, trailingSlashes } from "fresh";
 import type { AppState } from "./routes/_middleware.ts";
 
-import { CronTime } from "npm:cron-time-generator";
+import { CronTime } from "cron-time-generator";
 import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
 import { asyncLocalStorage, log } from "./lib/logger.ts";
 

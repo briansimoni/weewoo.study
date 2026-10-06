@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "@std/assert";
+import { assertEquals } from "@std/assert";
 import { dollarsToCents, sortImagesInPlace } from "./util.ts";
 
 Deno.test("sortImagesInPlace - sorts by position keywords in correct order", () => {
@@ -44,7 +44,7 @@ Deno.test("sortImagesInPlace - keeps original order when no position keywords", 
     "https://example.com/image3.jpg",
   ];
 
-  const sorted = sortImagesInPlace([...images]);
+  sortImagesInPlace(images);
 
   assertEquals(images[0], "https://example.com/image1.jpg");
   assertEquals(images[1], "https://example.com/image2.jpg");

@@ -1,7 +1,7 @@
 // import * as chartjs from "npm:chart.js";
 import { useEffect, useRef, useState } from "preact/hooks";
 // todo: import and register just the things that we need
-import Chart from "npm:chart.js/auto";
+import Chart from "chart.js/auto";
 import { Attempt } from "../../lib/attempt_store.ts";
 import dayjs from "dayjs";
 

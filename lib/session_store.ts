@@ -9,7 +9,7 @@ export interface Session {
   picture?: string;
   display_name?: string;
   streakDays?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export class SessionStore {

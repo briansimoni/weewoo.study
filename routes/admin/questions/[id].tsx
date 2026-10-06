@@ -12,7 +12,6 @@ import {
   Info,
   LayoutDashboard,
   LogOut,
-  ThumbsDown,
   ThumbsUp,
 } from "lucide-preact";
 import ReportCard from "../../../islands/admin/ReportCard.tsx";
@@ -40,13 +39,11 @@ export const handler: Handlers<Data> = {
       // sort questionReports by resolved_at
       // this basically puts all of the resolved questions at the bottom
       questionReports.sort((a, b) => {
-        const aTime = b.resolved_at
-          ? new Date(b.resolved_at).getTime()
-          : -Infinity;
-        const bTime = b.resolved_at
-          ? new Date(b.resolved_at).getTime()
-          : -Infinity;
-        return aTime - bTime;
+        if (!a.resolved_at || !b.resolved_at) {
+          return Number(!!a.resolved_at) - Number(!!b.resolved_at);
+        }
+        return new Date(a.resolved_at).getTime() -
+          new Date(b.resolved_at).getTime();
       });
 
       return page({ question, reports: questionReports });

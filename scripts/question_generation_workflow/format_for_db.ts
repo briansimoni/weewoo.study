@@ -14,17 +14,17 @@ import "@std/dotenv/load";
 interface GeneratedQuestionsFile {
   generated_at: string;
   questions: GeneratedQuestion[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface SimilarityFile {
   similarity_results: SimilarityResult[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface DifficultyFile {
   difficulty_results: DifficultyResult[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface Config {

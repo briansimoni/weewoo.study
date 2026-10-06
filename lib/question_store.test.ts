@@ -4,7 +4,7 @@ import {
   assertEquals,
   assertRejects,
   assertStrictEquals,
-} from "jsr:@std/assert";
+} from "@std/assert";
 import { QuestionStore } from "./question_store.ts";
 
 type QuestionInput = {

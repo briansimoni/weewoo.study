@@ -5,7 +5,7 @@ import { Question, QuestionStore } from "../../lib/question_store.ts";
 import { Streak, StreakStore } from "../../lib/streak_store.ts";
 import { UserStore } from "../../lib/user_store.ts";
 import { AppHandlers } from "../_middleware.ts";
-import { z, ZodError } from "npm:zod";
+import { z, ZodError } from "zod";
 
 export interface QuestionPostResponse {
   question: Question;

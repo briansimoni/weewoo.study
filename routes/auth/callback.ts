@@ -1,4 +1,4 @@
-import * as oauth from "npm:oauth4webapi";
+import * as oauth from "oauth4webapi";
 import { AppHandlers } from "../_middleware.ts";
 import { UserStore } from "../../lib/user_store.ts";
 import { getCookies, setCookie } from "@std/http/cookie";

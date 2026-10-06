@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(deno task verify)",
+      "Bash(deno task check)",
+      "Bash(deno task test)",
+      "Bash(deno task test *)",
+      "Bash(deno task build)",
+      "Bash(deno fmt *)",
+      "Bash(deno lint *)",
+      "Bash(deno check *)",
+      "Bash(deno test *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git branch *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr checks *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh run list *)",
+      "Bash(gh run view *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "deno run -q --allow-read --allow-run=deno \"$CLAUDE_PROJECT_DIR/.claude/hooks/fmt.ts\"",
+            "timeout": 30,
+            "statusMessage": "deno fmt"
+          }
+        ]
+      }
+    ]
+  }
+}

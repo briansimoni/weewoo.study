@@ -1,4 +1,4 @@
-import { z } from "npm:zod";
+import { z } from "zod";
 import { AppHandlers } from "../_middleware.ts";
 import { UserStore } from "../../lib/user_store.ts";
 

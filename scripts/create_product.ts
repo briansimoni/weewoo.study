@@ -1,10 +1,31 @@
 import { parse } from "@std/csv";
 import Stripe from "stripe";
 import "@std/dotenv/load";
-import { ProductStore } from "../lib/product_store.ts";
+import { Category, Product, ProductStore } from "../lib/product_store.ts";
 import { dollarsToCents } from "../lib/util.ts";
 
-async function getBaseProducts() {
+interface VariantRow {
+  variant_id: string;
+  printful_product_id: string;
+  price: string;
+  color: string;
+  size: string;
+  images: string[];
+}
+
+interface BaseProductRow {
+  printful_product_id: string;
+  product_template_id: string;
+  name: string;
+  thumbnail_url: string;
+  description: string;
+  price: string;
+  category: Category;
+  colors: NonNullable<Product["colors"]>;
+  variants: VariantRow[];
+}
+
+async function getBaseProducts(): Promise<BaseProductRow[]> {
   try {
     const csvContent = await Deno.readTextFile(
       "./scripts/products/weewoo-products.csv",
@@ -13,23 +34,24 @@ async function getBaseProducts() {
       skipFirstRow: true,
     });
 
-    const products = [];
-    for (const record of records) {
-      const colors = JSON.parse(record.colors);
-      const product = {
-        ...record,
-        colors,
-      };
-      products.push(product);
-    }
-    return products as any[];
+    return records.map((record) => ({
+      printful_product_id: record.printful_product_id,
+      product_template_id: record.product_template_id,
+      name: record.name,
+      thumbnail_url: record.thumbnail_url,
+      description: record.description,
+      price: record.price,
+      category: record.category as Category,
+      colors: JSON.parse(record.colors),
+      variants: [],
+    }));
   } catch (error) {
     console.error("Error processing products:", error);
     Deno.exit(1);
   }
 }
 
-async function getVariants() {
+async function getVariants(): Promise<VariantRow[]> {
   try {
     const csvContent = await Deno.readTextFile(
       "./scripts/products/weewoo-variants.csv",
@@ -38,7 +60,7 @@ async function getVariants() {
       skipFirstRow: true,
     });
 
-    const variants = [];
+    const variants: VariantRow[] = [];
 
     for (const record of records) {
       // get images sorted by substring contains
@@ -58,12 +80,16 @@ async function getVariants() {
         return 0;
       });
       const variant = {
-        ...record,
+        variant_id: record.variant_id,
+        printful_product_id: record.printful_product_id,
+        price: record.price,
+        color: record.color,
+        size: record.size,
         images,
       };
       variants.push(variant);
     }
-    return variants as any[];
+    return variants;
   } catch (error) {
     console.error("Error processing variants:", error);
     Deno.exit(1);
@@ -93,6 +119,7 @@ const main = async () => {
       thumbnail_url: product.thumbnail_url,
       description: product.description,
       price: parseFloat(product.price),
+      category: product.category,
       colors: product.colors,
       active: false,
     });
@@ -101,8 +128,7 @@ const main = async () => {
     for (const variant of product.variants) {
       // Find the color object from the product's colors array before creating Stripe product
       const colorObject = product.colors.find(
-        (c: { name: string; hex: string }) =>
-          c.name.toLowerCase() === variant.color.toLowerCase(),
+        (c) => c.name.toLowerCase() === variant.color.toLowerCase(),
       );
       if (!colorObject) {
         console.error(
@@ -131,7 +157,7 @@ const main = async () => {
       });
 
       // create payment link
-      const paymentLink = await stripeClient.paymentLinks.create({
+      await stripeClient.paymentLinks.create({
         line_items: [
           {
             price: price.id,
