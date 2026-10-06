@@ -19,7 +19,8 @@ serves, and it catches bundling problems that `deno task dev` hides.
    already set) and keeps cron work, email, and payments off:
 
    ```sh
-   STAGE=DEV deno serve -A --unstable-kv --unstable-cron --port 8123 _fresh/server.js
+   deno task seed   # creates or tops up .kv/seed.sqlite3
+   KV_PATH=.kv/seed.sqlite3 STAGE=DEV deno serve -A --unstable-kv --unstable-cron --port 8123 _fresh/server.js
    ```
 
    Use port 8123 so a developer's `deno task dev` on 8000 is left alone. **Check
@@ -35,9 +36,9 @@ serves, and it catches bundling problems that `deno task dev` hides.
    deno task smoke http://localhost:8123
    ```
 
-   The local KV is the developer's SQLite database, so data-backed checks should
-   pass. If `/api/question` fails with "No questions", the local database is
-   empty. Rerun with `--empty-db` and say so in your report.
+   `KV_PATH` points at the seeded database (`[Seed]` questions, `seed|…` users,
+   `[Seed]` products), so data-backed checks should pass. Only leave `KV_PATH`
+   unset (the developer's own local database) when the task needs their data.
 
 4. For the specific change, request the affected routes directly (curl, or a
    browser tool if available) and check the server output for errors.

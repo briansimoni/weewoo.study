@@ -34,15 +34,20 @@ integration and reports commit statuses.
    `git branch --show-current | tr -d /`:
 
    ```sh
-   deno task smoke https://test-weewoo-study--<branch>.briansimoni.deno.net --empty-db
+   deno task smoke https://test-weewoo-study--<branch>.briansimoni.deno.net
    ```
 
-   `--empty-db` is required: preview deployments get an empty KV database, so
-   questions and products don't exist there (ROADMAP Phase 0.2 fixes this).
+   Each branch has its own KV database, which seeds itself on startup
+   (`SEED_ON_EMPTY=true` on both apps), so the full smoke test including
+   `/api/question` and a product page should pass. The first request waits for
+   seeding and can take a few extra seconds. If data checks fail with "No
+   questions", look at the runtime logs for "seeding failed":
+   `cd ~ && deno run -A jsr:@deno/deploy logs --org briansimoni --app test-weewoo-study --once --json --non-interactive`.
+   Use `--empty-db` only to separate a seeding problem from an app problem.
 
 4. Report to the human: build status for both apps, smoke results, the preview
    URL, and a short "How to test" list for what changed. Point out anything the
-   preview can't show, such as data-backed pages and login.
+   preview can't show, such as login, real data, and Stripe checkout.
 
 Don't merge to `main` as part of this skill. Merging deploys test.weewoo.study
 and weewoo.study and needs the human's go-ahead.

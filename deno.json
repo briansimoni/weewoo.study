@@ -4,6 +4,7 @@
     "check": "deno fmt --check && deno lint && deno check",
     "verify": "deno task check && deno task test",
     "smoke": "deno run --allow-net scripts/smoke.ts",
+    "seed": "deno run --allow-read --allow-write --allow-env=STAGE --unstable-kv scripts/seed.ts",
     "dev": "vite",
     "start": "deno serve -A --unstable-kv --unstable-cron _fresh/server.js",
     "build": "vite build",

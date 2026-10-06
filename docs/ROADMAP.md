@@ -109,14 +109,24 @@ prove it works, and show a human, without anyone hand-holding the environment.
 
 ### 0.2 Seed data and fixtures
 
-- [ ] **Add a deterministic seed script** (`deno task seed`): about 200
-      questions across all categories and scopes, 5 users with varied attempt
-      histories, active and inactive products, a fake cart. It must never run
-      against prod (guard on `STAGE`).
-- [ ] **Seed preview databases.** Previews currently 500 on `/api/question`
-      because their KV is empty. Either attach a dedicated "preview" KV database
-      in Deploy and seed it, or auto-seed on first request when `STAGE=PREVIEW`.
-      Pick one; this is a prerequisite for meaningful E2E on previews.
+Deno Deploy gives **every git branch its own empty KV database** on both apps
+(`<app>--<branch>`), separate from the `production`, `preview` and `local`
+databases. So a shared, pre-seeded preview database isn't possible, and previews
+have to seed themselves.
+
+- [x] **Add a deterministic seed module** (`lib/seed.ts`) plus `deno task seed`
+      (writes `.kv/seed.sqlite3`; run the app with `KV_PATH`). It creates 143
+      questions across every category and scope, 5 users from new to expert (282
+      attempts, stats, leaderboard, streaks), 6 question reports, and 4 products
+      with 9 variants (one inactive). Re-running it is safe, and it refuses
+      `STAGE=PROD`. 5 unit tests.
+- [x] **Auto-seed empty preview databases.** On startup, with
+      `SEED_ON_EMPTY=true` and `STAGE` not `PROD`, an empty question bank is
+      seeded (a KV lock stops concurrent isolates) before the first request is
+      served. `SEED_ON_EMPTY=true` is set on both Deploy apps for all contexts,
+      because the CLI can't scope it to Preview (see `docs/data-model.md`).
+- [ ] **Scope `SEED_ON_EMPTY` to Preview (human, optional).** Do it in the Deno
+      console, or with `deno deploy env update-contexts` once that works.
 
 ### 0.3 E2E testing
 
@@ -124,6 +134,13 @@ prove it works, and show a human, without anyone hand-holding the environment.
       `deno run -A npm:@playwright/test`, and keep a Node fallback if Deno
       compatibility bites. `BASE_URL` defaults to `localhost`; it can point at a
       preview.
+- [ ] **Let humans sign in on previews (human, Auth0).** Auth0 currently rejects
+      preview callbacks ("Callback URL mismatch" for
+      `https://test-weewoo-study--<branch>.briansimoni.deno.net/auth/callback`).
+      Decided: add `https://*.briansimoni.deno.net/auth/callback` (and the
+      matching logout URL) to the **existing** Auth0 application's allowed URLs,
+      not a separate app. A user signing in on a preview is created in that
+      preview's KV automatically.
 - [ ] **Add a test login.** OAuth can't run in CI. Add a login route that
       creates a session for a seeded user. It must be compiled in only when
       `STAGE` is `DEV`, `TEST`, or `PREVIEW`, and must be impossible to reach in
@@ -153,6 +170,49 @@ prove it works, and show a human, without anyone hand-holding the environment.
 - [ ] **Add a `release` skill** (`.claude/skills/release`) that promotes an
       approved `main` commit to prod and smoke-tests weewoo.study afterwards.
 - [ ] **Enable branch protection** on `main` (CI required) once CI is stable.
+
+### 0.5 Commerce environments (Stripe, Printful)
+
+Found 2026-10-06: test.weewoo.study has **no Stripe webhook**, and the only
+non-prod one targets `weewoo-study--local` (Deno Deploy's _Local_ context
+tunnel). `weewoo-study` keeps separate Stripe keys for Production and for
+Preview/Local. `test-weewoo-study` uses one set of values for every context. The
+webhook handler submits a **real Printful order** and sends emails on
+`checkout.session.completed` in every environment.
+
+- [ ] **Audit Stripe modes (human, partly done).** Verified 2026-10-06: the
+      Preview contexts of **both** apps use test-mode keys from the same Stripe
+      account as the TEST catalog. Checkout on a seeded preview creates a
+      `cs_test_` session. Still to confirm: test.weewoo.study (Production
+      context of `test-weewoo-study`) is test mode, weewoo.study is live, and
+      which webhook endpoints exist in each Stripe mode.
+- [ ] **Guard side effects by stage.** Only `STAGE=PROD` submits real Printful
+      orders and customer emails. Elsewhere, run a dry run that logs the
+      Printful payload (optionally creating an unconfirmed Printful draft behind
+      a flag). Refuse to start if `STAGE` and the Stripe key mode disagree (a
+      `sk_live` key outside PROD, or a test key in PROD).
+- [ ] **Unit-test the webhook handler** with signed fixture events
+      (`stripe.webhooks.generateTestHeaderString`). Make it idempotent (record
+      processed event IDs in KV), and stop throwing 500s for missing
+      configuration on unrelated event types.
+- [ ] **Webhooks as code.** Write `scripts/setup_stripe_webhooks.ts`, an
+      idempotent script that creates or updates one endpoint per environment
+      (weewoo.study live, test.weewoo.study test) with the event list and prints
+      the signing secret to store in Deploy. Parameterize
+      `scripts/setup_printful_webhook.ts` the same way (its prod URL is
+      currently hard-coded).
+- [ ] **Give the test app per-context config** like the prod app: test Stripe
+      keys and the test.weewoo.study signing secret in Production, test keys in
+      Preview.
+- [ ] **Add test-mode catalog data.** Partly done: seeded previews now get the
+      TEST catalog (test-mode Stripe IDs, `lib/seed_catalog.json`). Remaining:
+      confirm which Stripe mode each Preview key uses. Stripe product IDs stored
+      in KV must exist in the matching Stripe mode. Seed (0.2) or sync test-mode
+      products so checkout works on test.weewoo.study and previews.
+- [ ] **Define local and preview webhook testing.** Use the Stripe CLI
+      (`stripe listen --forward-to localhost:8000/api/stripe_webhook`) or the
+      Deploy Local tunnel. Previews don't get a Stripe endpoint per branch, so
+      they rely on unit tests and the CLI.
 
 **Exit criteria:** an agent can take a task from branch to preview with green CI
 and E2E, the human tests on a preview with real-looking data, and prod deploys
