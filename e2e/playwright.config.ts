@@ -12,6 +12,7 @@ const local = !process.env.BASE_URL;
 
 export default defineConfig({
   testDir: "./tests",
+  globalSetup: "./global-setup.ts",
   outputDir: "../.e2e/results",
   timeout: 60_000,
   expect: { timeout: 15_000 },
