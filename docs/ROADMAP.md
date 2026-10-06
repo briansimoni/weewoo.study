@@ -101,10 +101,11 @@ prove it works, and show a human, without anyone hand-holding the environment.
       builds, then smoke-test the preview). The `release` skill moved to 0.4
       because it depends on the release-gate decision. `run-local` and
       `verify-preview` should switch to seeded KV and E2E once 0.2 and 0.3 land.
-- [ ] **Give agents a Deploy token (human).** Create a Deno Deploy access token
-      and set `DENO_DEPLOY_TOKEN` as a user environment variable (not in the
-      repo) so agents can read build and runtime logs. Run the Deploy CLI from
-      outside the project directory, because it rewrites `deno.lock`.
+- [x] **Give agents a Deploy token.** Personal token set as the user env var
+      `DENO_DEPLOY_TOKEN` (2026-10-06); consider replacing it with an
+      org-scoped, expiring token. Run the Deploy CLI from outside the project
+      directory (it rewrites `deno.lock`), e.g.
+      `cd ~ && deno run -A jsr:@deno/deploy logs --org briansimoni --app test-weewoo-study`.
 
 ### 0.2 Seed data and fixtures
 
