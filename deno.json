@@ -1,5 +1,8 @@
 {
-  "unstable": ["kv", "cron"],
+  "unstable": [
+    "kv",
+    "cron"
+  ],
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check",
     "verify": "deno task check && deno task test",
@@ -10,9 +13,20 @@
     "build": "vite build",
     "preview": "deno task start",
     "update": "deno run -A -r jsr:@fresh/update@2.3.3 .",
-    "test": "deno test --allow-env=DENO_DEPLOYMENT_ID,GITHUB_SHA,CI_COMMIT_SHA --ignore=image-converter,node_modules,.deno_cache"
+    "test": "deno test --allow-env=DENO_DEPLOYMENT_ID,GITHUB_SHA,CI_COMMIT_SHA,STAGE --ignore=image-converter,node_modules,.deno_cache",
+    "e2e:serve": "rm -f .kv/e2e.sqlite3 .kv/e2e.sqlite3-shm .kv/e2e.sqlite3-wal && deno run --allow-read --allow-write --allow-env=STAGE --unstable-kv scripts/seed.ts .kv/e2e.sqlite3 && KV_PATH=.kv/e2e.sqlite3 STAGE=DEV deno serve -A --unstable-kv --unstable-cron --port 8123 _fresh/server.js",
+    "e2e": "deno task build && deno run -A npm:@playwright/test@1.63.0 test -c e2e/playwright.config.ts",
+    "e2e:remote": "deno run -A npm:@playwright/test@1.63.0 test -c e2e/playwright.config.ts",
+    "e2e:install": "deno run -A npm:playwright@1.63.0 install chromium"
   },
-  "lint": { "rules": { "tags": ["fresh", "recommended"] } },
+  "lint": {
+    "rules": {
+      "tags": [
+        "fresh",
+        "recommended"
+      ]
+    }
+  },
   "exclude": [
     "**/_fresh/*",
     "image-converter/**/*",
@@ -58,13 +72,24 @@
     "winston-cloudwatch": "npm:winston-cloudwatch@^6.2.0",
     "fresh": "jsr:@fresh/core@^2.3.3",
     "@preact/signals": "npm:@preact/signals@^2.9.0",
-    "oauth4webapi": "npm:oauth4webapi@^3.6.1"
+    "oauth4webapi": "npm:oauth4webapi@^3.6.1",
+    "@playwright/test": "npm:@playwright/test@1.63.0"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "types": ["vite/client"],
-    "lib": ["deno.unstable", "dom", "dom.iterable", "dom.asynciterable"]
+    "types": [
+      "vite/client"
+    ],
+    "lib": [
+      "deno.unstable",
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable"
+    ]
   },
-  "deploy": { "org": "briansimoni", "app": "weewoo-study" }
+  "deploy": {
+    "org": "briansimoni",
+    "app": "weewoo-study"
+  }
 }

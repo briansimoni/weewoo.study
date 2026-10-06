@@ -10,8 +10,10 @@ architecture map and environment variables.
 - `deno task verify` passes (fmt check, lint, type check of the whole repo, and
   unit tests). Do not commit with it failing, and do not add lint-ignore
   comments to make it pass without saying why in the PR.
-- User-facing changes are smoke-tested against a running production build
-  (`deno task build` then `deno task start` with `STAGE=DEV`).
+- User-facing changes are covered by an E2E spec in `e2e/tests/` and
+  `deno task e2e` passes (it builds, seeds a fresh database, and runs Playwright
+  against the production build). Sign in with `loginAs()` from
+  `e2e/tests/helpers.ts`, which uses the test-only `/auth/test-login`.
 - New store logic has unit tests using `Deno.openKv(":memory:")`.
 - Docs are updated in the same change: data model changes go in
   `docs/data-model.md`, and completed roadmap items get checked off in
@@ -50,7 +52,8 @@ architecture map and environment variables.
   `<branch>` is the git branch with `/` removed (`feat/x` → `featx`). Each
   branch gets its own KV database, which seeds itself from `lib/seed.ts` on
   startup (`SEED_ON_EMPTY=true` on both Deploy apps). Previews therefore show
-  `[Seed]` questions, `seed|…` users and `[Seed]` products, never real data.
+  `[Seed]` questions, `seed|…` users and the TEST shop catalog (Stripe test
+  mode), never real user data. Sign in there with `/auth/test-login`.
 - Local test data: `deno task seed`, then run with `KV_PATH=.kv/seed.sqlite3`.
   Never seed the developer's default local database or any production one.
 - Merging to `main` deploys test.weewoo.study **and** weewoo.study. Do not merge

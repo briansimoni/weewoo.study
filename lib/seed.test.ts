@@ -52,6 +52,12 @@ Deno.test("seed populates every store with consistent data", async () => {
     }
     const board = await users.listLeaderbaord();
     assertEquals(board[0].user_id, "seed|expert");
+    for (const entry of board) {
+      assert(
+        entry.display_name,
+        `leaderboard entry without a name: ${entry.user_id}`,
+      );
+    }
 
     // Streaks exist for the profiles that have them.
     const streaks = await StreakStore.make(kv);

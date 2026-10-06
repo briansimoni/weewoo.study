@@ -45,9 +45,21 @@ integration and reports commit statuses.
    `cd ~ && deno run -A jsr:@deno/deploy logs --org briansimoni --app test-weewoo-study --once --json --non-interactive`.
    Use `--empty-db` only to separate a seeding problem from an app problem.
 
-4. Report to the human: build status for both apps, smoke results, the preview
-   URL, and a short "How to test" list for what changed. Point out anything the
-   preview can't show, such as login, real data, and Stripe checkout.
+4. Run the E2E suite against the same preview (seeded data, test login and
+   Stripe test mode all work there):
+
+   ```sh
+   BASE_URL=https://test-weewoo-study--<branch>.briansimoni.deno.net deno task e2e:remote
+   ```
+
+   The tests tolerate re-runs (they only add attempts). Failures leave
+   screenshots and traces under `.e2e/results/`.
+
+5. Report to the human: build status for both apps, smoke and E2E results, the
+   preview URL, and a short "How to test" list for what changed. Humans sign in
+   on previews through `/auth/test-login` (Auth0 rejects preview callbacks).
+   Point out anything the preview can't show, such as real data and the Stripe
+   webhook after payment.
 
 Don't merge to `main` as part of this skill. Merging deploys test.weewoo.study
 and weewoo.study and needs the human's go-ahead.

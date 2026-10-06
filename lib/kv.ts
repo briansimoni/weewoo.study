@@ -11,3 +11,11 @@ export async function getKv(): Promise<Deno.Kv> {
   }
   return kv;
 }
+
+/**
+ * Tests only: make getKv() return the given database (e.g. an in-memory one)
+ * so route handlers never touch a real database. Pass null to reset.
+ */
+export function setKv(next: Deno.Kv | null) {
+  kv = next;
+}

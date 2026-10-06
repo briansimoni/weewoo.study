@@ -74,7 +74,11 @@ const statefulSessionMiddleware: AppHandler = async function handler(ctx) {
   if (
     diff(ctx.state.session, session ?? {}).length > 0
   ) {
-    log.info("updating session", ctx.state.session);
+    // Never log the whole session: it holds the OAuth access token.
+    log.info("updating session", {
+      session_id: ctx.state.session.session_id,
+      user_id: ctx.state.session.user_id,
+    });
     session = await sessionStore.update(ctx.state.session as Session);
     if (cookie_session_id !== session?.session_id) {
       // TODO: use secure true conditionally based on whether the server is running https or not

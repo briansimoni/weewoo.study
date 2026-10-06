@@ -221,7 +221,12 @@ async function seedUsers(
 
     if (profile.attempts > 0) {
       // One update writes aggregate stats, category stats, and the leaderboard.
-      await userStore.updateUser({ user_id: profile.user_id, stats });
+      // Pass display_name too: updateUser copies it into the leaderboard entry.
+      await userStore.updateUser({
+        user_id: profile.user_id,
+        display_name: profile.display_name,
+        stats,
+      });
     }
 
     if (profile.streak > 0) {
@@ -306,8 +311,9 @@ async function seedProducts(kv: Deno.Kv) {
  * Bump whenever the seed data changes. Databases holding older seed data are
  * wiped and reseeded by {@link ensureSeeded}.
  * 2: the shop catalog comes from the TEST database (lib/seed_catalog.json).
+ * 3: leaderboard entries include display names.
  */
-export const SEED_VERSION = 2;
+export const SEED_VERSION = 3;
 const VERSION_KEY = ["seed", "version"];
 const LOCK_KEY = ["seed", "lock"];
 /** Present in every seeded database, including those seeded before versioning. */

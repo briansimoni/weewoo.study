@@ -28,11 +28,7 @@ export class SessionStore {
    * removed from the database the moment it expires.
    */
   async get(id: string) {
-    const session = (await this.kv.get<Session>(["sessions", id])).value;
-    const thing = this.kv.list({ prefix: ["sessions"] });
-    const next = await thing.next();
-    console.log(next);
-    return session;
+    return (await this.kv.get<Session>(["sessions", id])).value;
   }
 
   // handles basically all of the logic for updating the streak
