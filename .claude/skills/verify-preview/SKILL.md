@@ -17,16 +17,21 @@ integration and reports commit statuses.
 
    ```sh
    sha=$(git rev-parse HEAD)
-   until s=$(gh api repos/briansimoni/weewoo.study/commits/$sha/status --jq .state) && [ "$s" != pending ]; do sleep 15; done; echo "$s"
-   gh api repos/briansimoni/weewoo.study/commits/$sha/statuses --jq '.[] | [.context,.state,.description,.target_url] | @tsv'
+   # Combined state can read "success" before the second app registers, so also require 2 contexts.
+   until r=$(gh api repos/briansimoni/weewoo.study/commits/$sha/status --jq '.state + " " + (.statuses|length|tostring)') && set -- $r && [ "$1" != pending ] && [ "$2" -ge 2 ]; do sleep 15; done; echo "$r"
+   gh api repos/briansimoni/weewoo.study/commits/$sha/statuses --jq '.[] | [.context,.state,.description,.target_url] | @tsv' | sort -u -k1,2
    ```
+
+   Run it with a timeout (builds take about 2 minutes).
 
    An empty status list right after a push means the builds haven't registered
    yet. Keep waiting. A `failure` links to the build log in the Deno console.
    Report the link, because logs need a Deploy login.
 
 3. Smoke-test the preview of the **test** app (test configuration). The branch
-   name in the URL is the git branch, with `/` replaced by `-`:
+   name in the URL is the git branch with every `/` **removed** (Deno Deploy
+   slugging, e.g. `feat/phase-0-1` → `featphase-0-1`). Compute it with
+   `git branch --show-current | tr -d /`:
 
    ```sh
    deno task smoke https://test-weewoo-study--<branch>.briansimoni.deno.net --empty-db

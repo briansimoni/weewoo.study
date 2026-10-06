@@ -71,9 +71,9 @@ Actions):
 | `weewoo-study`      | weewoo.study      | `main`       |
 
 Every branch also gets previews at
-`https://<app>--<branch>.briansimoni.deno.net`. Previews use an **empty KV
-database**, so data-backed pages (questions, shop) fail there until seeding
-exists. See ROADMAP Phase 0.2.
+`https://<app>--<branch>.briansimoni.deno.net` (`<branch>` with `/` removed,
+e.g. `feat/x` → `featx`). Previews use an **empty KV database**, so data-backed
+pages (questions, shop) fail there until seeding exists. See ROADMAP Phase 0.2.
 
 Merging to `main` currently ships to test **and** prod at once. ROADMAP Phase
 0.4 separates them.

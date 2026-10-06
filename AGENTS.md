@@ -46,9 +46,10 @@ architecture map and environment variables.
 
 - Deno Deploy builds every push via its GitHub integration. Branch previews:
   `https://test-weewoo-study--<branch>.briansimoni.deno.net` (test config) and
-  `https://weewoo-study--<branch>.briansimoni.deno.net` (prod config). Preview
-  KV is empty, so data-backed routes such as `/api/question` return 500 there.
-  That is expected until seeding exists.
+  `https://weewoo-study--<branch>.briansimoni.deno.net` (prod config), where
+  `<branch>` is the git branch with `/` removed (`feat/x` → `featx`). Preview KV
+  is empty, so data-backed routes such as `/api/question` return 500 there. That
+  is expected until seeding exists.
 - Merging to `main` deploys test.weewoo.study **and** weewoo.study. Do not merge
   or push to `main` without the human's explicit go-ahead.
 

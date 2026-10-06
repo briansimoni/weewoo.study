@@ -42,6 +42,16 @@ async function get(path: string) {
   return { status: res.status, body };
 }
 
+// A wrong preview URL returns Deno Deploy's own 404 for every path.
+const probe = await get("/");
+if (probe.status === 404 && probe.body.includes("DEPLOYMENT_NOT_FOUND")) {
+  console.log(
+    `FAIL no deployment at ${base}. Preview URLs use the branch name with ` +
+      "'/' removed, e.g. feat/x -> https://test-weewoo-study--featx.briansimoni.deno.net",
+  );
+  Deno.exit(1);
+}
+
 const pages = new Map<string, string>();
 for (const check of checks) {
   if (emptyDb && check.needsData) {
