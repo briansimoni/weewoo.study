@@ -1,0 +1,46 @@
+name: Deploy production
+
+# weewoo.study (Deno Deploy app `weewoo-study`) is not linked to GitHub: it is
+# deployed only from here, when the `production` branch moves. A release
+# (the `release` skill) merges `main` into `production` with --no-ff, so the
+# deployed tree is exactly what was tested on test.weewoo.study.
+on:
+  push:
+    branches: [production]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  DEPLOY_CLI: jsr:@deno/deploy@0.0.9908
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Deploy to production
+        env:
+          DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
+        # Run the CLI outside the repo and pass the repo as root-path: run
+        # inside it, the CLI writes its own dependencies into deno.lock, which
+        # would be uploaded with the source.
+        run: |
+          cd "$RUNNER_TEMP"
+          deno run -A "$DEPLOY_CLI" "$GITHUB_WORKSPACE" \
+            --org briansimoni --app weewoo-study --prod \
+            --json --non-interactive | tee deploy.json
+          echo "### Deployed $(git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          cat deploy.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Smoke test weewoo.study
+        run: deno task smoke https://weewoo.study

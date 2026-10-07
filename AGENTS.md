@@ -46,18 +46,22 @@ architecture map and environment variables.
 
 ## Deployment
 
-- Deno Deploy builds every push via its GitHub integration. Branch previews:
-  `https://test-weewoo-study--<branch>.briansimoni.deno.net` (test config) and
-  `https://weewoo-study--<branch>.briansimoni.deno.net` (prod config), where
-  `<branch>` is the git branch with `/` removed (`feat/x` → `featx`). Each
+- The test app is linked to GitHub: Deno Deploy builds every push and serves a
+  branch preview at `https://test-weewoo-study--<branch>.briansimoni.deno.net`,
+  where `<branch>` is the git branch with `/` removed (`feat/x` → `featx`). Each
   branch gets its own KV database, which seeds itself from `lib/seed.ts` on
   startup (`SEED_ON_EMPTY=true` on both Deploy apps). Previews therefore show
   `[Seed]` questions, `seed|…` users and the TEST shop catalog (Stripe test
   mode), never real user data. Sign in there with `/auth/test-login`.
 - Local test data: `deno task seed`, then run with `KV_PATH=.kv/seed.sqlite3`.
   Never seed the developer's default local database or any production one.
-- Merging to `main` deploys test.weewoo.study **and** weewoo.study. Do not merge
-  or push to `main` without the human's explicit go-ahead.
+- Merging to `main` deploys test.weewoo.study only. weewoo.study is deployed
+  only by the `Deploy production` workflow when `production` moves (the prod app
+  isn't linked to GitHub). Do not merge or push to `main` without the human's
+  explicit go-ahead, and release to prod only with the `release` skill when the
+  human asks for a release. Never push to `production` any other way.
+- CI (`.github/workflows/ci.yml`) must be green before merging: `verify`, `e2e`
+  (local) and `preview-e2e` (against the branch preview).
 
 ## Debugging
 

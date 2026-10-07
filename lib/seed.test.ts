@@ -217,3 +217,44 @@ Deno.test("concurrent ensureSeeded calls all wait for complete data", async () =
     kv.close();
   }
 });
+
+Deno.test("ensureSeeded redoes a seed that was interrupted midway", async () => {
+  const kv = await Deno.openKv(":memory:");
+  try {
+    // Simulate an isolate killed after questions were written: "started"
+    // marker present, no users, products or version.
+    await seed(kv, { now, stage: "TEST" });
+    for await (const e of kv.list({ prefix: [] })) {
+      if (!["emt", "advanced", "medic"].includes(String(e.key[0]))) {
+        await kv.delete(e.key);
+      }
+    }
+    await kv.set(["seed", "started"], "earlier");
+
+    const summary = await ensureSeeded(kv, { now, stage: "TEST" });
+    assert(summary, "interrupted seed should be redone");
+    assertEquals(summary.users, SEED_USERS.length);
+    assertEquals(summary.products, catalog.products.length);
+  } finally {
+    kv.close();
+  }
+});
+
+Deno.test("ensureSeeded redoes legacy partial seeds that only have [Seed] questions", async () => {
+  const kv = await Deno.openKv(":memory:");
+  try {
+    // The state found on a Deploy preview database: seed questions only,
+    // no markers at all (interrupted before the "started" key existed).
+    await seed(kv, { now, stage: "TEST" });
+    for await (const e of kv.list({ prefix: [] })) {
+      if (!["emt", "advanced", "medic"].includes(String(e.key[0]))) {
+        await kv.delete(e.key);
+      }
+    }
+    const summary = await ensureSeeded(kv, { now, stage: "TEST" });
+    assert(summary, "legacy partial seed should be redone");
+    assertEquals(summary.users, SEED_USERS.length);
+  } finally {
+    kv.close();
+  }
+});

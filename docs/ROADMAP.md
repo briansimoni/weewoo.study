@@ -166,20 +166,41 @@ have to seed themselves.
 
 ### 0.4 CI and the release gate
 
-- [ ] **Add a GitHub Actions `ci.yml`** for PRs and `main`: `deno task verify`,
-      a production build, and E2E against a local server with seeded KV. Upload
-      the Playwright report on failure.
-- [ ] **Add a post-deploy E2E job** that runs smoke specs against the preview
-      URL once Deno Deploy reports the build as successful.
-- [ ] **Separate test and prod.** Right now a merge to `main` ships to both.
-      Proposal: `test-weewoo-study` keeps deploying `main`, and `weewoo-study`'s
-      production branch changes to `production`. Releasing means fast-forwarding
-      `production` to a `main` commit the human has approved on
-      test.weewoo.study (scripted by the `release` skill). Configure this in the
-      Deno Deploy console.
-- [ ] **Add a `release` skill** (`.claude/skills/release`) that promotes an
-      approved `main` commit to prod and smoke-tests weewoo.study afterwards.
-- [ ] **Enable branch protection** on `main` (CI required) once CI is stable.
+- [x] **Add GitHub Actions CI** (`.github/workflows/ci.yml`) on PRs and `main`:
+      `verify` (fmt, lint, type check, unit tests), `e2e` (production build,
+      fresh seeded database, Playwright; artifacts on failure). Passed first
+      time on PR #5.
+- [x] **Add preview E2E.** The `preview-e2e` job waits for Deno Deploy's
+      test-app build of the PR branch, then runs the smoke test and the full E2E
+      suite against the self-seeding preview. It's part of `ci.yml` rather than
+      a separate `status`-triggered workflow, so its result shows on the PR.
+- [ ] **Add the `STRIPE_TEST_API_KEY` secret (human).** It holds a Stripe
+      test-mode key so the local `e2e` job runs the shop spec (skipped until
+      then): `gh secret set STRIPE_TEST_API_KEY`.
+- [ ] **Separate test and prod.** Deno Deploy only ever puts an app's _default_
+      git branch into production; there's no per-app production branch. So the
+      prod app `weewoo-study` is deployed by the `Deploy production` workflow
+      (`deno deploy --prod` via the CLI, run outside the repo so it never writes
+      `deno.lock`) when the `production` branch moves. The branch was created at
+      `e0f819e`, prod's commit at the time. CLI builds were verified with
+      preview deploys to `weewoo-study`. **Human steps, in order:** (1) add the
+      `DENO_DEPLOY_TOKEN` repo secret (ideally an org-scoped token); (2) merge
+      PR #5; (3) in the Deno console, disconnect `weewoo-study` from GitHub; (4)
+      ask for a first release to prove the flow.
+- [x] **Add a `release` skill** (`.claude/skills/release`). It merges `main`
+      into `production` with `--no-ff` (a new commit with a tree identical to
+      `main`, which triggers the deploy workflow), in a temporary worktree,
+      after checking CI and test.weewoo.study and asking the human. Then it
+      watches the deploy workflow and confirms the prod deployment is routed.
+- [x] **Enable branch protection** on `main` (2026-10-07): PRs required, with
+      the `verify`, `e2e` and `preview-e2e` checks required; admins can bypass.
+- [ ] **Mind the Deno Deploy build quota.** The plan allows **15 deployments per
+      hour**; past that, builds fail with "You have exceeded the deployment
+      limit" (seen 2026-10-07: test.weewoo.study missed a `main` build, and an
+      earlier preview never built). Disconnecting the prod app halves the builds
+      per push. If it keeps biting: batch pushes, or upgrade the plan. A missed
+      `main` build can be redone from the Deno console ("Deploy Default Branch")
+      once the hour passes.
 
 ### 0.5 Commerce environments (Stripe, Printful)
 
