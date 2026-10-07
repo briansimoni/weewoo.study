@@ -192,9 +192,15 @@ have to seed themselves.
       `main`, which triggers the deploy workflow), in a temporary worktree,
       after checking CI and test.weewoo.study and asking the human. Then it
       watches the deploy workflow and confirms the prod deployment is routed.
-- [ ] **Enable branch protection** on `main`. Decided: require the `verify`,
-      `e2e` and `preview-e2e` checks and a PR. Applied once this PR's CI is on
-      `main`.
+- [x] **Enable branch protection** on `main` (2026-10-07): PRs required, with
+      the `verify`, `e2e` and `preview-e2e` checks required; admins can bypass.
+- [ ] **Mind the Deno Deploy build quota.** The plan allows **15 deployments per
+      hour**; past that, builds fail with "You have exceeded the deployment
+      limit" (seen 2026-10-07: test.weewoo.study missed a `main` build, and an
+      earlier preview never built). Disconnecting the prod app halves the builds
+      per push. If it keeps biting: batch pushes, or upgrade the plan. A missed
+      `main` build can be redone from the Deno console ("Deploy Default Branch")
+      once the hour passes.
 
 ### 0.5 Commerce environments (Stripe, Printful)
 

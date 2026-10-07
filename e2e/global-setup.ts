@@ -17,7 +17,8 @@ export default async function globalSetup() {
   if (res.headers.get("x-deno-error")?.includes("DEPLOYMENT_NOT_FOUND")) {
     throw new Error(
       `No deployment at ${baseURL}. Preview hosts use the branch name with "/" removed ` +
-        "(feat/x -> featx), and a commit pushed to two branches may only be built for one.",
+        "(feat/x -> featx). Deno Deploy also skips builds past its plan limit " +
+        "(15 deployments/hour): check the deploy/briansimoni/test-weewoo-study commit status.",
     );
   }
 }
