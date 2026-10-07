@@ -2,6 +2,11 @@ import { expect, test } from "@playwright/test";
 import { gotoReady } from "./helpers.ts";
 
 test("a shopper adds a product to the cart and reaches Stripe test checkout", async ({ page }) => {
+  // Local CI runs need the STRIPE_TEST_API_KEY secret; previews have their own key.
+  test.skip(
+    !!process.env.CI && !process.env.BASE_URL && !process.env.STRIPE_API_KEY,
+    "No Stripe test key in this CI run (set the STRIPE_TEST_API_KEY secret)",
+  );
   // Never load Stripe itself; we only check the session the app creates.
   await page.route("https://checkout.stripe.com/**", (route) => route.abort());
   // Capture the checkout API response: the page navigates to Stripe as soon

@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  statuses: read
+
+env:
+  PLAYWRIGHT_VERSION: "1.63.0"
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno install
+      - run: deno task verify
+
+  e2e:
+    name: e2e
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+      # Stripe TEST-mode secret key, used by the shop spec's checkout. Without
+      # it the shop spec is skipped; a live key fails the run (e2e/global-setup.ts).
+      STRIPE_API_KEY: ${{ secrets.STRIPE_TEST_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno install
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}
+      - run: deno run -A npm:playwright@${{ env.PLAYWRIGHT_VERSION }} install --with-deps chromium
+      - run: deno task e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-local
+          path: .e2e/
+          retention-days: 7
+
+  preview-e2e:
+    # Waits for Deno Deploy to build this PR's branch for the test app, then
+    # runs the smoke test and E2E suite against the (self-seeding) preview.
+    name: preview-e2e
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+      GH_TOKEN: ${{ github.token }}
+      SHA: ${{ github.event.pull_request.head.sha }}
+      CONTEXT: deploy/briansimoni/test-weewoo-study
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Wait for the Deno Deploy preview build
+        run: |
+          for i in $(seq 1 80); do
+            state=$(gh api "repos/${{ github.repository }}/commits/$SHA/statuses" \
+              --jq "[.[] | select(.context == \"$CONTEXT\")][0].state // \"missing\"")
+            echo "attempt $i: $state"
+            case "$state" in
+              success) exit 0 ;;
+              failure|error) echo "::error::Deno Deploy build failed for $CONTEXT"; exit 1 ;;
+            esac
+            sleep 15
+          done
+          echo "::error::Timed out waiting for the Deno Deploy build"; exit 1
+      - name: Compute preview URL
+        run: |
+          # Deno Deploy removes "/" from branch names in preview hostnames.
+          slug=$(echo "${{ github.head_ref }}" | tr -d /)
+          echo "BASE_URL=https://test-weewoo-study--${slug}.briansimoni.deno.net" >> "$GITHUB_ENV"
+      - run: deno install
+      - run: deno task smoke "$BASE_URL"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}
+      - run: deno run -A npm:playwright@${{ env.PLAYWRIGHT_VERSION }} install --with-deps chromium
+      - run: deno task e2e:remote
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-preview
+          path: .e2e/
+          retention-days: 7

@@ -4,6 +4,12 @@
  * 404 and an x-deno-error DEPLOYMENT_NOT_FOUND header.
  */
 export default async function globalSetup() {
+  // The local server inherits this environment (CI passes STRIPE_API_KEY).
+  // Tests must never run against live Stripe.
+  if (/^(sk|rk)_live_/.test(process.env.STRIPE_API_KEY ?? "")) {
+    throw new Error("Refusing to run E2E with a live Stripe key.");
+  }
+
   const baseURL = process.env.BASE_URL;
   if (!baseURL) return; // local run: Playwright's webServer starts the app
   const res = await fetch(new URL("/robots.txt", baseURL));
