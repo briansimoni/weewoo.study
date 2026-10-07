@@ -52,6 +52,12 @@ Deno.test("seed populates every store with consistent data", async () => {
     }
     const board = await users.listLeaderbaord();
     assertEquals(board[0].user_id, "seed|expert");
+    for (const entry of board) {
+      assert(
+        entry.display_name,
+        `leaderboard entry without a name: ${entry.user_id}`,
+      );
+    }
 
     // Streaks exist for the profiles that have them.
     const streaks = await StreakStore.make(kv);
@@ -189,6 +195,24 @@ Deno.test("ensureSeeded upgrades seed databases created before versioning", asyn
     const summary = await ensureSeeded(kv, { now, stage: "TEST" });
     assert(summary, "legacy seed database should be reseeded");
     assertEquals((await kv.get(["seed", "version"])).value, SEED_VERSION);
+  } finally {
+    kv.close();
+  }
+});
+
+Deno.test("concurrent ensureSeeded calls all wait for complete data", async () => {
+  const kv = await Deno.openKv(":memory:");
+  try {
+    const versionWhenDone: unknown[] = [];
+    const call = () =>
+      ensureSeeded(kv, { now, stage: "TEST" }).then(async (summary) => {
+        versionWhenDone.push((await kv.get(["seed", "version"])).value);
+        return summary;
+      });
+    const results = await Promise.all([call(), call(), call()]);
+    assertEquals(results.filter((r) => r !== null).length, 1);
+    // Every caller, including those that lost the lock, saw finished seeding.
+    assertEquals(versionWhenDone, [SEED_VERSION, SEED_VERSION, SEED_VERSION]);
   } finally {
     kv.close();
   }

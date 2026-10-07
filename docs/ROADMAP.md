@@ -130,10 +130,12 @@ have to seed themselves.
 
 ### 0.3 E2E testing
 
-- [ ] **Set up Playwright.** Add an `e2e/` folder, run
-      `deno run -A npm:@playwright/test`, and keep a Node fallback if Deno
-      compatibility bites. `BASE_URL` defaults to `localhost`; it can point at a
-      preview.
+- [x] **Set up Playwright.** It runs natively under Deno
+      (`npm:@playwright/test@1.63.0`), so no Node fallback is needed. Specs are
+      in `e2e/tests/`. `deno task e2e` builds, seeds a fresh `.kv/e2e.sqlite3`,
+      serves it on port 8123 and runs the suite. `deno task e2e:remote` with
+      `BASE_URL` targets a deployment, and `deno task e2e:install` downloads
+      Chromium once per machine. Traces and screenshots go to `.e2e/`.
 - [ ] **Let humans sign in on previews (human, Auth0).** Auth0 currently rejects
       preview callbacks ("Callback URL mismatch" for
       `https://test-weewoo-study--<branch>.briansimoni.deno.net/auth/callback`).
@@ -141,18 +143,26 @@ have to seed themselves.
       matching logout URL) to the **existing** Auth0 application's allowed URLs,
       not a separate app. A user signing in on a preview is created in that
       preview's KV automatically.
-- [ ] **Add a test login.** OAuth can't run in CI. Add a login route that
-      creates a session for a seeded user. It must be compiled in only when
-      `STAGE` is `DEV`, `TEST`, or `PREVIEW`, and must be impossible to reach in
-      prod, with a unit test that proves it.
-- [ ] **Write the first E2E specs:** landing → trial questions; login → practice
-      → answer → streak updates; profile stats render; shop → product → add to
-      cart → checkout redirect (Stripe test mode, stop at the Stripe URL); 404
-      page; admin is blocked for non-admins.
+- [x] **Add a test login.** `/auth/test-login` signs in as a seed user without
+      OAuth, for E2E tests and for humans on previews. It returns 404 unless
+      `STAGE` is `DEV` or `TEST`, and it only accepts `seed|…` users that exist
+      in that database, so test.weewoo.study's real accounts (STAGE=TEST, never
+      seeded) and prod are out of reach. 7 unit tests prove the guards.
+- [x] **Write the first E2E specs (9):** trial questions on the landing page;
+      leaderboard; 404 page; practice requires login; admin blocked for a
+      non-admin; test login refuses non-seed users; answer a question and see
+      the streak and profile stats update; profile stats of an experienced user;
+      shop → product → cart → checkout returns a `cs_test_` Stripe session
+      (Stripe itself is never loaded). Writing them exposed a seed bug (blank
+      leaderboard names), fixed in seed version 3.
 - [ ] **Add visual snapshots** for key pages at mobile and desktop widths. This
-      pays off once the UI redesign starts (Phase 3).
-- [ ] **Give agents eyes.** Configure the Playwright MCP (or Claude in Chrome)
-      so agents can look at the running app themselves before asking a human.
+      is deferred until CI exists (0.4), because baselines must be generated on
+      the CI OS (Linux) to be stable. It's most useful once the Phase 1 design
+      work starts.
+- [ ] **Give agents eyes.** Claude in Chrome is already available to agents in
+      this setup. Optionally add the Playwright MCP (`.mcp.json`) so agents can
+      drive a headless browser against `deno task e2e:serve` without the human's
+      browser.
 
 ### 0.4 CI and the release gate
 

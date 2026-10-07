@@ -41,7 +41,14 @@ serves, and it catches bundling problems that `deno task dev` hides.
    unset (the developer's own local database) when the task needs their data.
 
 4. For the specific change, request the affected routes directly (curl, or a
-   browser tool if available) and check the server output for errors.
+   browser tool if available) and check the server output for errors. To act as
+   a signed-in user, open `/auth/test-login` (seed users only, DEV/TEST).
+
+   For the full browser suite, stop this server first (it uses the same port),
+   then run `deno task e2e`. It builds, seeds a fresh `.kv/e2e.sqlite3`, starts
+   its own server on 8123, and runs Playwright. Failures leave screenshots and
+   traces under `.e2e/results/`. The first time on a machine, run
+   `deno task e2e:install`.
 
 5. Stop the server when done. On Windows (PowerShell tool):
 

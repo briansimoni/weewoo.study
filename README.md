@@ -28,14 +28,19 @@ payments, or email.
 
 ## Tasks
 
-| Command            | What it does                                                    |
-| ------------------ | --------------------------------------------------------------- |
-| `deno task dev`    | Vite dev server on port 8000                                    |
-| `deno task build`  | Production build into `_fresh/`                                 |
-| `deno task start`  | Serve the production build (`_fresh/server.js`)                 |
-| `deno task test`   | Unit tests (in-memory KV)                                       |
-| `deno task check`  | `deno fmt --check`, `deno lint`, `deno check` on the whole repo |
-| `deno task verify` | `check` + `test`: **run this before every commit or PR**        |
+| Command                 | What it does                                                    |
+| ----------------------- | --------------------------------------------------------------- |
+| `deno task dev`         | Vite dev server on port 8000                                    |
+| `deno task build`       | Production build into `_fresh/`                                 |
+| `deno task start`       | Serve the production build (`_fresh/server.js`)                 |
+| `deno task test`        | Unit tests (in-memory KV)                                       |
+| `deno task check`       | `deno fmt --check`, `deno lint`, `deno check` on the whole repo |
+| `deno task verify`      | `check` + `test`: **run this before every commit or PR**        |
+| `deno task seed`        | Seed `.kv/seed.sqlite3` with test data (run with `KV_PATH`)     |
+| `deno task smoke <url>` | Read-only smoke test of a running site                          |
+| `deno task e2e`         | Build, seed a fresh `.kv/e2e.sqlite3`, run Playwright on :8123  |
+| `deno task e2e:remote`  | Playwright against `BASE_URL` (e.g. a branch preview)           |
+| `deno task e2e:install` | One-time: download the Chromium build Playwright uses           |
 
 ## Architecture
 
