@@ -56,8 +56,12 @@ architecture map and environment variables.
   mode), never real user data. Sign in there with `/auth/test-login`.
 - Local test data: `deno task seed`, then run with `KV_PATH=.kv/seed.sqlite3`.
   Never seed the developer's default local database or any production one.
-- Merging to `main` deploys test.weewoo.study **and** weewoo.study. Do not merge
-  or push to `main` without the human's explicit go-ahead.
+- Merging to `main` deploys test.weewoo.study only; weewoo.study deploys the
+  `production` branch. Do not merge or push to `main` without the human's
+  explicit go-ahead, and release to prod only with the `release` skill when the
+  human asks for a release. Never push to `production` any other way.
+- CI (`.github/workflows/ci.yml`) must be green before merging: `verify`, `e2e`
+  (local) and `preview-e2e` (against the branch preview).
 
 ## Debugging
 

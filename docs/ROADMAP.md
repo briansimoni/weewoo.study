@@ -166,20 +166,30 @@ have to seed themselves.
 
 ### 0.4 CI and the release gate
 
-- [ ] **Add a GitHub Actions `ci.yml`** for PRs and `main`: `deno task verify`,
-      a production build, and E2E against a local server with seeded KV. Upload
-      the Playwright report on failure.
-- [ ] **Add a post-deploy E2E job** that runs smoke specs against the preview
-      URL once Deno Deploy reports the build as successful.
-- [ ] **Separate test and prod.** Right now a merge to `main` ships to both.
-      Proposal: `test-weewoo-study` keeps deploying `main`, and `weewoo-study`'s
-      production branch changes to `production`. Releasing means fast-forwarding
-      `production` to a `main` commit the human has approved on
-      test.weewoo.study (scripted by the `release` skill). Configure this in the
-      Deno Deploy console.
-- [ ] **Add a `release` skill** (`.claude/skills/release`) that promotes an
-      approved `main` commit to prod and smoke-tests weewoo.study afterwards.
-- [ ] **Enable branch protection** on `main` (CI required) once CI is stable.
+- [x] **Add GitHub Actions CI** (`.github/workflows/ci.yml`) on PRs and `main`:
+      `verify` (fmt, lint, type check, unit tests), `e2e` (production build,
+      fresh seeded database, Playwright; artifacts on failure). Passed first
+      time on PR #5.
+- [x] **Add preview E2E.** The `preview-e2e` job waits for Deno Deploy's
+      test-app build of the PR branch, then runs the smoke test and the full E2E
+      suite against the self-seeding preview. It's part of `ci.yml` rather than
+      a separate `status`-triggered workflow, so its result shows on the PR.
+- [ ] **Add the `STRIPE_TEST_API_KEY` secret (human).** It holds a Stripe
+      test-mode key so the local `e2e` job runs the shop spec (skipped until
+      then): `gh secret set STRIPE_TEST_API_KEY`.
+- [ ] **Separate test and prod.** Decided: `weewoo-study` deploys the
+      `production` branch, which was created at `e0f819e` (prod's commit at the
+      time). **Human step:** in the Deno console, set weewoo-study's production
+      branch to `production` (the CLI can't change it). Then do a first release
+      to prove the flow.
+- [x] **Add a `release` skill** (`.claude/skills/release`). It merges `main`
+      into `production` with `--no-ff` (always a new commit, so Deploy always
+      builds; tree identical to `main`), in a temporary worktree, after checking
+      CI and test.weewoo.study and asking the human. Then it waits for the prod
+      build and runs a smoke test.
+- [ ] **Enable branch protection** on `main`. Decided: require the `verify`,
+      `e2e` and `preview-e2e` checks and a PR. Applied once this PR's CI is on
+      `main`.
 
 ### 0.5 Commerce environments (Stripe, Printful)
 

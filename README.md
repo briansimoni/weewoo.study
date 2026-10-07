@@ -67,13 +67,19 @@ Pages render on the server; only `islands/` ship JavaScript.
 
 ## Deployment
 
-Deno Deploy builds every push through the GitHub integration (no GitHub
-Actions):
+Deno Deploy builds every push through its GitHub integration. GitHub Actions
+runs CI (`.github/workflows/ci.yml`) but doesn't deploy.
 
 | Deno Deploy app     | Production domain | Deploys from |
 | ------------------- | ----------------- | ------------ |
 | `test-weewoo-study` | test.weewoo.study | `main`       |
-| `weewoo-study`      | weewoo.study      | `main`       |
+| `weewoo-study`      | weewoo.study      | `production` |
+
+The flow is: PR → CI (verify, local E2E, E2E against the branch preview) → merge
+to `main` → test on test.weewoo.study → **release**. A release merges `main`
+into `production` (`--no-ff`, identical tree). Agents do it with the `release`
+skill (`.claude/skills/release`) when you ask. To roll back, use the previous
+deployment in the Deno Deploy console.
 
 Every branch also gets previews at
 `https://<app>--<branch>.briansimoni.deno.net` (`<branch>` with `/` removed,
@@ -81,8 +87,11 @@ e.g. `feat/x` → `featx`). Each branch gets its **own empty KV database**, whic
 seeds itself with test data (`lib/seed.ts`) on startup because
 `SEED_ON_EMPTY=true` is set on both Deploy apps.
 
-Merging to `main` currently ships to test **and** prod at once. ROADMAP Phase
-0.4 separates them.
+### CI secrets
+
+- `STRIPE_TEST_API_KEY`: a Stripe **test-mode** secret key for the shop E2E spec
+  in the local CI job. Without it that spec is skipped. A live key makes the run
+  fail.
 
 ## Environment variables
 
