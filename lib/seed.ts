@@ -312,10 +312,12 @@ async function seedProducts(kv: Deno.Kv) {
  * wiped and reseeded by {@link ensureSeeded}.
  * 2: the shop catalog comes from the TEST database (lib/seed_catalog.json).
  * 3: leaderboard entries include display names.
+ * 4: interrupted seeds are detected and redone (forces a reseed everywhere).
  */
-export const SEED_VERSION = 3;
+export const SEED_VERSION = 4;
 const VERSION_KEY = ["seed", "version"];
 const LOCK_KEY = ["seed", "lock"];
+const STARTED_KEY = ["seed", "started"];
 /** Present in every seeded database, including those seeded before versioning. */
 const MARKER_USER = SEED_USERS[SEED_USERS.length - 1].user_id;
 
@@ -340,24 +342,23 @@ export async function seed(
 /**
  * Make sure a branch preview database holds current seed data:
  * - empty database (fresh preview): seed it;
- * - database holding seed data from an older {@link SEED_VERSION}: wipe it and
- *   reseed;
+ * - database holding seed data from an older {@link SEED_VERSION}, or an
+ *   interrupted seed: wipe it and reseed;
  * - anything else (real data, or current seed data): leave it alone.
  *
- * A database counts as seed-owned only if it has the seed version key or the
- * seed marker user, so real databases are never wiped. A KV lock stops
- * concurrent isolates from seeding twice. Returns null when nothing was done.
+ * A database counts as seed-owned only if it carries a seed marker (version
+ * key, "started" key, seed marker user, or `[Seed]` questions), so real
+ * databases are never wiped. A KV lock stops concurrent isolates from seeding
+ * twice. Returns null when nothing was done.
  */
 export async function ensureSeeded(
   kv: Deno.Kv,
   options: { now?: Date; stage?: string } = {},
 ): Promise<SeedSummary | null> {
   assertSeedAllowed(options.stage ?? Deno.env.get("STAGE"));
-  const version = (await kv.get<number>(VERSION_KEY)).value;
-  if (version === SEED_VERSION) return null;
+  if ((await kv.get<number>(VERSION_KEY)).value === SEED_VERSION) return null;
 
-  const seedOwned = version !== null ||
-    (await kv.get(["users", MARKER_USER])).value !== null;
+  const seedOwned = await isSeedOwned(kv);
   const empty = await (await QuestionStore.make(kv, "emt")).size() === 0;
   if (!seedOwned && !empty) return null; // real data: never touch
 
@@ -373,6 +374,11 @@ export async function ensureSeeded(
   }
 
   try {
+    // Another isolate may have finished between our check and the lock.
+    if ((await kv.get<number>(VERSION_KEY)).value === SEED_VERSION) return null;
+    // Mark the database seed-owned before touching anything, so an isolate
+    // killed mid-wipe or mid-seed leaves a database the next startup redoes.
+    await kv.set(STARTED_KEY, new Date().toISOString());
     if (seedOwned) await wipe(kv);
     return await seed(kv, options);
   } finally {
@@ -380,10 +386,24 @@ export async function ensureSeeded(
   }
 }
 
-/** Delete every key except the seed lock. Only called on seed-owned databases. */
+async function isSeedOwned(kv: Deno.Kv) {
+  if ((await kv.get(VERSION_KEY)).value !== null) return true;
+  if ((await kv.get(STARTED_KEY)).value !== null) return true;
+  if ((await kv.get(["users", MARKER_USER])).value !== null) return true;
+  // Seeds interrupted before the "started" key existed left only questions.
+  const emt = await QuestionStore.make(kv, "emt");
+  const questions = await emt.listQuestions(CATEGORIES[0]);
+  return questions.some((q) => q.question.startsWith("[Seed]"));
+}
+
+/**
+ * Delete every key except the seed lock and "started" marker. Only called on
+ * seed-owned databases.
+ */
 async function wipe(kv: Deno.Kv) {
   for await (const entry of kv.list({ prefix: [] })) {
-    if (entry.key[0] === LOCK_KEY[0] && entry.key[1] === LOCK_KEY[1]) continue;
+    const [a, b] = entry.key;
+    if (a === "seed" && (b === LOCK_KEY[1] || b === STARTED_KEY[1])) continue;
     await kv.delete(entry.key);
   }
 }
