@@ -11,7 +11,16 @@ const serverDependencies: Record<string, string> = {
   "winston": imports.winston,
   "winston-cloudwatch": imports["winston-cloudwatch"],
   "sharp": imports.sharp,
+  "dayjs": imports.dayjs,
 };
+
+// Matches a dependency and its subpaths ("dayjs/plugin/duration.js").
+function serverDependency(id: string) {
+  const name = Object.keys(serverDependencies).find((dep) =>
+    id === dep || id.startsWith(`${dep}/`)
+  );
+  return name && { name, subpath: id.slice(name.length) };
+}
 
 export default defineConfig(({ command }) => ({
   plugins: [
@@ -21,9 +30,12 @@ export default defineConfig(({ command }) => ({
       applyToEnvironment: (environment) =>
         environment.config.consumer === "server",
       resolveId(id) {
-        if (!Object.hasOwn(serverDependencies, id)) return;
+        const dependency = serverDependency(id);
+        if (!dependency) return;
         return {
-          id: command === "serve" ? id : serverDependencies[id],
+          id: command === "serve"
+            ? id
+            : serverDependencies[dependency.name] + dependency.subpath,
           external: true,
         };
       },
