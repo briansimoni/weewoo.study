@@ -1,11 +1,12 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { ProductStore } from "./product_store.ts";
 import {
   assertStripeKeyMatchesStage,
   fulfillmentMode,
   handleStripeWebhook,
   type PrintfulOrder,
+  type StripeCheckoutApi,
   type StripeEventRecord,
   stripeKeyMode,
   type StripeWebhookDeps,
@@ -80,37 +81,51 @@ const lineItem = (id: string, product: string, quantity: number) => ({
   price: { id: `price_${product}`, object: "price", product },
 });
 
-/** A Stripe client whose API calls are answered locally. */
-function fakeStripe(calls: Calls, options: { failApi?: boolean } = {}) {
-  const fetchFn: typeof fetch = (input, init) => {
-    const url = new URL(input instanceof Request ? input.url : String(input));
-    calls.stripe.push(`${init?.method ?? "GET"} ${url.pathname}`);
-    const json = (body: unknown, status = 200) =>
-      Promise.resolve(Response.json(body, { status }));
-    if (options.failApi) {
-      return json({ error: { type: "api_error", message: "boom" } }, 500);
-    }
-    if (url.pathname === `/v1/checkout/sessions/${SESSION_ID}`) {
-      return json(session);
-    }
-    if (url.pathname === `/v1/checkout/sessions/${SESSION_ID}/line_items`) {
-      return json({
-        object: "list",
-        url: url.pathname,
-        has_more: false,
-        data: [
-          lineItem("li_1", "prod_shirt", 2),
-          lineItem("li_2", "prod_unknown", 1),
-        ],
-      });
-    }
-    return json({ error: { message: `unexpected ${url.pathname}` } }, 404);
+/** Stand-in for the Stripe client's checkout calls. */
+function fakeStripe(
+  calls: Calls,
+  options: { failApi?: boolean } = {},
+): StripeCheckoutApi {
+  const call = (name: string, id: string) => {
+    calls.stripe.push(`${name} ${id}`);
+    if (options.failApi) throw new Error("Stripe API error");
+    if (id !== SESSION_ID) throw new Error(`unexpected session ${id}`);
   };
-  return new Stripe("sk_test_fake", {
-    httpClient: Stripe.createFetchHttpClient(fetchFn),
-    maxNetworkRetries: 0,
-  });
+  return {
+    checkout: {
+      sessions: {
+        retrieve(id) {
+          try {
+            call("retrieve", id);
+          } catch (error) {
+            return Promise.reject(error);
+          }
+          return Promise.resolve(
+            session as unknown as Stripe.Checkout.Session,
+          );
+        },
+        async *listLineItems(id) {
+          call("listLineItems", id);
+          yield lineItem("li_1", "prod_shirt", 2) as Stripe.LineItem;
+          yield lineItem("li_2", "prod_unknown", 1) as Stripe.LineItem;
+        },
+      },
+    },
+  };
 }
+
+/**
+ * Stand-in for `Stripe.webhooks.constructEventAsync`. Real signature checking
+ * is Stripe's code; here a request is "signed" with `signed:<secret>`.
+ */
+const fakeVerifyEvent: StripeWebhookDeps["verifyEvent"] = (
+  body,
+  signature,
+  secret,
+) =>
+  signature === `signed:${secret}`
+    ? Promise.resolve(JSON.parse(body) as Stripe.Event)
+    : Promise.reject(new Error("No signatures found matching the payload"));
 
 async function withDeps(
   overrides: Partial<StripeWebhookDeps> & { failApi?: boolean },
@@ -142,6 +157,7 @@ async function withDeps(
     const deps: StripeWebhookDeps = {
       log: { info: record, warn: record, error: record },
       signingSecret: SIGNING_SECRET,
+      verifyEvent: fakeVerifyEvent,
       stripe: fakeStripe(calls, { failApi: overrides.failApi }),
       printfulSecret: "printful_secret",
       stage: "PROD",
@@ -171,7 +187,7 @@ async function withDeps(
   }
 }
 
-async function signedRequest(
+function signedRequest(
   event: { id: string; type: string; data?: unknown },
   secret = SIGNING_SECRET,
 ) {
@@ -180,17 +196,13 @@ async function signedRequest(
     data: { object: { id: SESSION_ID, object: "checkout.session" } },
     ...event,
   });
-  // The SDK types mark every option required; the rest default at runtime.
-  const header = await Stripe.webhooks.generateTestHeaderStringAsync(
-    { payload, secret } as Parameters<
-      typeof Stripe.webhooks.generateTestHeaderStringAsync
-    >[0],
+  return Promise.resolve(
+    new Request("http://localhost/api/stripe_webhook", {
+      method: "POST",
+      headers: { "stripe-signature": `signed:${secret}` },
+      body: payload,
+    }),
   );
-  return new Request("http://localhost/api/stripe_webhook", {
-    method: "POST",
-    headers: { "stripe-signature": header },
-    body: payload,
-  });
 }
 
 const completed = { id: "evt_1", type: "checkout.session.completed" };

@@ -223,13 +223,13 @@ webhook handler submits a **real Printful order** and sends emails on
       when `STAGE` and the `STRIPE_API_KEY` mode disagree (a live key outside
       PROD, or a test key in PROD).
 - [x] **Unit-test the webhook handler.** The logic moved to
-      `lib/stripe_webhook.ts` with injected dependencies; 16 tests use signed
-      events (`generateTestHeaderStringAsync`) and a fake Stripe API. It's
-      idempotent (`["stripe_events", eventId]` in KV), returns 400 for bad
-      signatures, 200 for unrelated event types whatever the Stripe/Printful
-      config, and 500 (releasing the event for Stripe's retry) when fulfillment
-      fails. Unit tests now also allow the Stripe SDK's agent-detection env vars
-      and `--allow-sys=osRelease`.
+      `lib/stripe_webhook.ts` with injected dependencies (signature check,
+      Stripe checkout calls, KV, Printful fetch, email, logger); 16 tests use
+      fakes, so they never import the Stripe SDK (it reads AI-agent env vars on
+      import, which the test allowlist doesn't permit). It's idempotent
+      (`["stripe_events", eventId]` in KV), returns 400 for bad signatures, 200
+      for unrelated event types whatever the Stripe/Printful config, and 500
+      (releasing the event for Stripe's retry) when fulfillment fails.
 - [ ] **Webhooks as code.** Write `scripts/setup_stripe_webhooks.ts`, an
       idempotent script that creates or updates one endpoint per environment
       (weewoo.study live, test.weewoo.study test) with the event list and prints

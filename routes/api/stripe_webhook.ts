@@ -12,6 +12,8 @@ export const handler: AppHandlers = {
     handleStripeWebhook(ctx.req, {
       log,
       signingSecret: Deno.env.get("STRIPE_SIGNING_SECRET")?.trim(),
+      verifyEvent: (body, signature, secret) =>
+        Stripe.webhooks.constructEventAsync(body, signature, secret),
       stripe: stripeAPIKey ? new Stripe(stripeAPIKey) : undefined,
       printfulSecret: Deno.env.get("PRINTFUL_SECRET")?.trim(),
       stage: Deno.env.get("STAGE"),

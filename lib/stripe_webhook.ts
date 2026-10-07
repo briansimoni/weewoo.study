@@ -1,4 +1,6 @@
-import Stripe from "stripe";
+// Types only: importing the Stripe SDK reads env vars (AI-agent detection) at
+// load time, which unit tests don't allow. The route injects the real SDK.
+import type Stripe from "stripe";
 import type { EmailService } from "./email_service.ts";
 import { ProductStore, type ProductVariant } from "./product_store.ts";
 
@@ -59,12 +61,28 @@ export interface WebhookLogger {
   error(message: string, meta?: object): void;
 }
 
+/** The part of the Stripe client the webhook uses; `new Stripe(key)` fits. */
+export interface StripeCheckoutApi {
+  checkout: {
+    sessions: {
+      retrieve(id: string): Promise<Stripe.Checkout.Session>;
+      listLineItems(id: string): AsyncIterable<Stripe.LineItem>;
+    };
+  };
+}
+
 export interface StripeWebhookDeps {
   log: WebhookLogger;
   /** STRIPE_SIGNING_SECRET; every event is verified with it. */
   signingSecret?: string;
+  /** `Stripe.webhooks.constructEventAsync`: throws on a bad signature. */
+  verifyEvent: (
+    body: string,
+    signature: string,
+    secret: string,
+  ) => Promise<Stripe.Event>;
   /** Client for Stripe API calls; undefined when STRIPE_API_KEY is unset. */
-  stripe?: Stripe;
+  stripe?: StripeCheckoutApi;
   /** PRINTFUL_SECRET; needed unless the mode is `dry_run`. */
   printfulSecret?: string;
   stage?: string;
@@ -107,7 +125,7 @@ export async function handleStripeWebhook(
   const body = await req.text();
   let event: Stripe.Event;
   try {
-    event = await Stripe.webhooks.constructEventAsync(
+    event = await deps.verifyEvent(
       body,
       req.headers.get("stripe-signature") ?? "",
       deps.signingSecret,
