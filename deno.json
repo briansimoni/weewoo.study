@@ -13,7 +13,7 @@
     "build": "vite build",
     "preview": "deno task start",
     "update": "deno run -A -r jsr:@fresh/update@2.3.3 .",
-    "test": "deno test --allow-env=DENO_DEPLOYMENT_ID,GITHUB_SHA,CI_COMMIT_SHA,STAGE --ignore=image-converter,node_modules,.deno_cache",
+    "test": "deno test --allow-sys=osRelease --allow-env=DENO_DEPLOYMENT_ID,GITHUB_SHA,CI_COMMIT_SHA,STAGE,ANTIGRAVITY_CLI_ALIAS,CLAUDECODE,CLINE_ACTIVE,CODEX_SANDBOX,CODEX_THREAD_ID,CODEX_SANDBOX_NETWORK_DISABLED,CODEX_CI,CURSOR_AGENT,GEMINI_CLI,OPENCLAW_SHELL,OPENCODE --ignore=image-converter,node_modules,.deno_cache",
     "e2e:serve": "rm -f .kv/e2e.sqlite3 .kv/e2e.sqlite3-shm .kv/e2e.sqlite3-wal && deno run --allow-read --allow-write --allow-env=STAGE --unstable-kv scripts/seed.ts .kv/e2e.sqlite3 && KV_PATH=.kv/e2e.sqlite3 STAGE=DEV deno serve -A --unstable-kv --unstable-cron --port 8123 _fresh/server.js",
     "e2e": "deno task build && deno run -A npm:@playwright/test@1.63.0 test -c e2e/playwright.config.ts",
     "e2e:remote": "deno run -A npm:@playwright/test@1.63.0 test -c e2e/playwright.config.ts",

@@ -15,6 +15,14 @@ import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
 import { asyncLocalStorage, log } from "./lib/logger.ts";
 import { getKv } from "./lib/kv.ts";
 import { ensureSeeded } from "./lib/seed.ts";
+import { assertStripeKeyMatchesStage } from "./lib/stripe_webhook.ts";
+
+// Fail the deployment rather than take live payments outside PROD (or test
+// payments in PROD).
+assertStripeKeyMatchesStage(
+  Deno.env.get("STAGE"),
+  Deno.env.get("STRIPE_API_KEY"),
+);
 
 /**
  * Wrap a cron job in a request ID and logging context

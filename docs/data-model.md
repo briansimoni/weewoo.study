@@ -21,32 +21,33 @@ theme and trial preferences (`preferences` cookie, base64 JSON, parsed in
 `<scope>` is the question scope: `"emt" | "advanced" | "medic"` (default
 `"emt"`).
 
-| Key                                                             | Value              | Owner           | Notes                                                                                 |
-| --------------------------------------------------------------- | ------------------ | --------------- | ------------------------------------------------------------------------------------- |
-| `[<scope>, "question_content", questionId]`                     | `Question`         | `QuestionStore` | Primary record. `questionId` is a hash of the question text.                          |
-| `[<scope>, "global_question_index", n]`                         | `questionId`       | `QuestionStore` | Dense array `0..count-1` for O(1) random picks.                                       |
-| `[<scope>, "global_question_map", questionId]`                  | `n`                | `QuestionStore` | Reverse of the index. Deletes swap the last entry into the hole.                      |
-| `[<scope>, "global_question_count"]`                            | `number`           | `QuestionStore` |                                                                                       |
-| `[<scope>, "category_question_index", category, n]`             | `questionId`       | `QuestionStore` | Same array/map scheme per category.                                                   |
-| `[<scope>, "category_question_map", category, questionId]`      | `n`                | `QuestionStore` |                                                                                       |
-| `[<scope>, "category_question_count", category]`                | `number`           | `QuestionStore` |                                                                                       |
-| `[<scope>, "category_question_content", category, questionId]`  | `Question`         | `QuestionStore` | Denormalized copy for listing by category. Keep in sync with `question_content`.      |
-| `[<scope>, "question_reports", questionId, reportId]`           | `QuestionReport`   | `QuestionStore` | Thumbs up/down feedback. Moved to the new ID when a question's text changes.          |
-| `["users", userId]`                                             | `User`             | `UserStore`     | `userId` is the OIDC subject, e.g. `auth0\|…`. Includes aggregate and category stats. |
-| `["leaderboard", "questions_correct", correctCount, userId]`    | `LeaderBoardEntry` | `UserStore`     | Sorted index, updated atomically with the user. The old entry is deleted on change.   |
-| `["attempts", "by_attempt_id", userId, attemptId]`              | `Attempt`          | `AttemptStore`  | Every answered question.                                                              |
-| `["attempts", "by_question_id", userId, questionId, attemptId]` | `Attempt`          | `AttemptStore`  | Secondary index for per-question history.                                             |
-| `["streaks", userId]`                                           | `Streak`           | `StreakStore`   | Purged on read once `expires_on` passes.                                              |
-| `["sessions", sessionId]`                                       | `Session`          | `SessionStore`  | `expireIn` 30 days. Holds the OAuth access token and profile fields.                  |
-| `["products", printfulId]`                                      | `Product`          | `ProductStore`  |                                                                                       |
-| `["variants", printfulProductId, variantId]`                    | `ProductVariant`   | `ProductStore`  |                                                                                       |
-| `["stripe_variants", stripeProductId, variantId]`               | `ProductVariant`   | `ProductStore`  | Lookup by Stripe product (used by the webhook).                                       |
+| Key                                                             | Value               | Owner           | Notes                                                                                                                                                                         |
+| --------------------------------------------------------------- | ------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[<scope>, "question_content", questionId]`                     | `Question`          | `QuestionStore` | Primary record. `questionId` is a hash of the question text.                                                                                                                  |
+| `[<scope>, "global_question_index", n]`                         | `questionId`        | `QuestionStore` | Dense array `0..count-1` for O(1) random picks.                                                                                                                               |
+| `[<scope>, "global_question_map", questionId]`                  | `n`                 | `QuestionStore` | Reverse of the index. Deletes swap the last entry into the hole.                                                                                                              |
+| `[<scope>, "global_question_count"]`                            | `number`            | `QuestionStore` |                                                                                                                                                                               |
+| `[<scope>, "category_question_index", category, n]`             | `questionId`        | `QuestionStore` | Same array/map scheme per category.                                                                                                                                           |
+| `[<scope>, "category_question_map", category, questionId]`      | `n`                 | `QuestionStore` |                                                                                                                                                                               |
+| `[<scope>, "category_question_count", category]`                | `number`            | `QuestionStore` |                                                                                                                                                                               |
+| `[<scope>, "category_question_content", category, questionId]`  | `Question`          | `QuestionStore` | Denormalized copy for listing by category. Keep in sync with `question_content`.                                                                                              |
+| `[<scope>, "question_reports", questionId, reportId]`           | `QuestionReport`    | `QuestionStore` | Thumbs up/down feedback. Moved to the new ID when a question's text changes.                                                                                                  |
+| `["users", userId]`                                             | `User`              | `UserStore`     | `userId` is the OIDC subject, e.g. `auth0\|…`. Includes aggregate and category stats.                                                                                         |
+| `["leaderboard", "questions_correct", correctCount, userId]`    | `LeaderBoardEntry`  | `UserStore`     | Sorted index, updated atomically with the user. The old entry is deleted on change.                                                                                           |
+| `["attempts", "by_attempt_id", userId, attemptId]`              | `Attempt`           | `AttemptStore`  | Every answered question.                                                                                                                                                      |
+| `["attempts", "by_question_id", userId, questionId, attemptId]` | `Attempt`           | `AttemptStore`  | Secondary index for per-question history.                                                                                                                                     |
+| `["streaks", userId]`                                           | `Streak`            | `StreakStore`   | Purged on read once `expires_on` passes.                                                                                                                                      |
+| `["sessions", sessionId]`                                       | `Session`           | `SessionStore`  | `expireIn` 30 days. Holds the OAuth access token and profile fields.                                                                                                          |
+| `["products", printfulId]`                                      | `Product`           | `ProductStore`  |                                                                                                                                                                               |
+| `["variants", printfulProductId, variantId]`                    | `ProductVariant`    | `ProductStore`  |                                                                                                                                                                               |
+| `["stripe_variants", stripeProductId, variantId]`               | `ProductVariant`    | `ProductStore`  | Lookup by Stripe product (used by the webhook).                                                                                                                               |
+| `["stripe_events", eventId]`                                    | `StripeEventRecord` | Stripe webhook  | Idempotency for `checkout.session.completed`: `processing` (`expireIn` 10 min) while fulfilling, then `done` (`expireIn` 30 days). Deleted on failure so Stripe's retry runs. |
 
 Types are defined in the owning store module: `Question` and `QuestionReport` in
 `lib/question_store.ts`, `User` in `lib/user_store.ts`, `Attempt` in
 `lib/attempt_store.ts`, `Streak` in `lib/streak_store.ts`, `Session` in
-`lib/session_store.ts`, and `Product` and `ProductVariant` in
-`lib/product_store.ts`.
+`lib/session_store.ts`, `Product` and `ProductVariant` in
+`lib/product_store.ts`, and `StripeEventRecord` in `lib/stripe_webhook.ts`.
 
 ## Admin and backup tooling
 
