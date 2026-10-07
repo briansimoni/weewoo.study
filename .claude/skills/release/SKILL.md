@@ -5,10 +5,13 @@ description: Release to production (weewoo.study) by promoting the main commit t
 
 # Release to weewoo.study
 
-`main` deploys test.weewoo.study. Production (the `weewoo-study` Deno Deploy
-app) deploys the `production` branch. A release merges `main` into `production`
-with `--no-ff`. That creates a new commit, so Deno Deploy always builds it, and
-its tree is identical to the tested `main`.
+`main` deploys test.weewoo.study through Deno Deploy's GitHub integration.
+Production (the `weewoo-study` app) is **not** linked to GitHub. The
+`Deploy production` workflow (`.github/workflows/deploy-production.yml`) deploys
+it with the Deno Deploy CLI whenever the `production` branch moves. A release
+merges `main` into `production` with `--no-ff`. That gives a release commit
+whose tree is identical to the tested `main`, and the push triggers the
+workflow.
 
 **Only release when the human has explicitly asked for it in this
 conversation.** Approval of a PR or a merge to main is not approval to release.
@@ -49,16 +52,21 @@ conversation.** Approval of a PR or a merge to main is not approval to release.
    If the merge reports conflicts, someone committed to `production` directly.
    Stop and tell the human; don't resolve them yourself.
 
-4. Wait for the prod build of the new `production` commit
-   (`deploy/briansimoni/weewoo-study` status `success`, polling as in the
-   verify-preview skill), then confirm it's routed:
+4. Watch the `Deploy production` workflow run for the release commit. It deploys
+   with `--prod` and then smoke-tests weewoo.study:
 
    ```sh
-   cd ~ && deno run -A jsr:@deno/deploy deployments list --org briansimoni --app weewoo-study --json --non-interactive
+   gh run list --workflow "Deploy production" -L 1 --json databaseId,headSha,status
+   gh run watch <databaseId> --exit-status
    ```
 
-   The newest deployment must have that build's ID and `"status":"routed"`. Run
-   the Deploy CLI outside the repo, because it rewrites `deno.lock`.
+   The run's `headSha` must be the release commit. Then confirm the newest prod
+   deployment is routed (run the Deploy CLI outside the repo, because it
+   rewrites `deno.lock`):
+
+   ```sh
+   cd ~ && deno run -A jsr:@deno/deploy@0.0.9908 deployments list --org briansimoni --app weewoo-study --json --non-interactive
+   ```
 
 5. Smoke-test production (read-only; never run E2E against prod):
    `deno task smoke https://weewoo.study`.

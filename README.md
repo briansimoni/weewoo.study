@@ -67,13 +67,18 @@ Pages render on the server; only `islands/` ship JavaScript.
 
 ## Deployment
 
-Deno Deploy builds every push through its GitHub integration. GitHub Actions
-runs CI (`.github/workflows/ci.yml`) but doesn't deploy.
+The test app (`test-weewoo-study`) is linked to GitHub: Deno Deploy builds every
+push, deploys `main` to test.weewoo.study, and builds a preview of every branch.
+The prod app (`weewoo-study`) is **not** linked: the `Deploy production`
+workflow (`.github/workflows/deploy-production.yml`) deploys it with the Deno
+Deploy CLI when the `production` branch moves. Deno Deploy only ever puts an
+app's _default_ git branch into production, so a per-app production branch isn't
+possible through the GitHub integration.
 
-| Deno Deploy app     | Production domain | Deploys from |
-| ------------------- | ----------------- | ------------ |
-| `test-weewoo-study` | test.weewoo.study | `main`       |
-| `weewoo-study`      | weewoo.study      | `production` |
+| Deno Deploy app     | Production domain | Deploys from                      |
+| ------------------- | ----------------- | --------------------------------- |
+| `test-weewoo-study` | test.weewoo.study | `main`                            |
+| `weewoo-study`      | weewoo.study      | `production` (via GitHub Actions) |
 
 The flow is: PR → CI (verify, local E2E, E2E against the branch preview) → merge
 to `main` → test on test.weewoo.study → **release**. A release merges `main`
@@ -81,14 +86,16 @@ into `production` (`--no-ff`, identical tree). Agents do it with the `release`
 skill (`.claude/skills/release`) when you ask. To roll back, use the previous
 deployment in the Deno Deploy console.
 
-Every branch also gets previews at
-`https://<app>--<branch>.briansimoni.deno.net` (`<branch>` with `/` removed,
-e.g. `feat/x` → `featx`). Each branch gets its **own empty KV database**, which
-seeds itself with test data (`lib/seed.ts`) on startup because
+Every branch also gets a test-app preview at
+`https://test-weewoo-study--<branch>.briansimoni.deno.net` (`<branch>` with `/`
+removed, e.g. `feat/x` → `featx`). Each branch gets its **own empty KV
+database**, which seeds itself with test data (`lib/seed.ts`) on startup because
 `SEED_ON_EMPTY=true` is set on both Deploy apps.
 
 ### CI secrets
 
+- `DENO_DEPLOY_TOKEN`: Deno Deploy access token used by the `Deploy production`
+  workflow (ideally an org-scoped token).
 - `STRIPE_TEST_API_KEY`: a Stripe **test-mode** secret key for the shop E2E spec
   in the local CI job. Without it that spec is skipped. A live key makes the run
   fail.

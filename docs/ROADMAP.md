@@ -177,16 +177,21 @@ have to seed themselves.
 - [ ] **Add the `STRIPE_TEST_API_KEY` secret (human).** It holds a Stripe
       test-mode key so the local `e2e` job runs the shop spec (skipped until
       then): `gh secret set STRIPE_TEST_API_KEY`.
-- [ ] **Separate test and prod.** Decided: `weewoo-study` deploys the
-      `production` branch, which was created at `e0f819e` (prod's commit at the
-      time). **Human step:** in the Deno console, set weewoo-study's production
-      branch to `production` (the CLI can't change it). Then do a first release
-      to prove the flow.
+- [ ] **Separate test and prod.** Deno Deploy only ever puts an app's _default_
+      git branch into production; there's no per-app production branch. So the
+      prod app `weewoo-study` is deployed by the `Deploy production` workflow
+      (`deno deploy --prod` via the CLI, run outside the repo so it never writes
+      `deno.lock`) when the `production` branch moves. The branch was created at
+      `e0f819e`, prod's commit at the time. CLI builds were verified with
+      preview deploys to `weewoo-study`. **Human steps, in order:** (1) add the
+      `DENO_DEPLOY_TOKEN` repo secret (ideally an org-scoped token); (2) merge
+      PR #5; (3) in the Deno console, disconnect `weewoo-study` from GitHub; (4)
+      ask for a first release to prove the flow.
 - [x] **Add a `release` skill** (`.claude/skills/release`). It merges `main`
-      into `production` with `--no-ff` (always a new commit, so Deploy always
-      builds; tree identical to `main`), in a temporary worktree, after checking
-      CI and test.weewoo.study and asking the human. Then it waits for the prod
-      build and runs a smoke test.
+      into `production` with `--no-ff` (a new commit with a tree identical to
+      `main`, which triggers the deploy workflow), in a temporary worktree,
+      after checking CI and test.weewoo.study and asking the human. Then it
+      watches the deploy workflow and confirms the prod deployment is routed.
 - [ ] **Enable branch protection** on `main`. Decided: require the `verify`,
       `e2e` and `preview-e2e` checks and a PR. Applied once this PR's CI is on
       `main`.
