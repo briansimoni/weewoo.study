@@ -174,9 +174,8 @@ have to seed themselves.
       test-app build of the PR branch, then runs the smoke test and the full E2E
       suite against the self-seeding preview. It's part of `ci.yml` rather than
       a separate `status`-triggered workflow, so its result shows on the PR.
-- [ ] **Add the `STRIPE_TEST_API_KEY` secret (human).** It holds a Stripe
-      test-mode key so the local `e2e` job runs the shop spec (skipped until
-      then): `gh secret set STRIPE_TEST_API_KEY`.
+- [x] **Add the `STRIPE_TEST_API_KEY` secret (human).** Added 2026-10-07. It
+      holds a Stripe test-mode key so the local `e2e` job runs the shop spec.
 - [ ] **Separate test and prod.** Deno Deploy only ever puts an app's _default_
       git branch into production; there's no per-app production branch. So the
       prod app `weewoo-study` is deployed by the `Deploy production` workflow
@@ -217,15 +216,20 @@ webhook handler submits a **real Printful order** and sends emails on
       `cs_test_` session. Still to confirm: test.weewoo.study (Production
       context of `test-weewoo-study`) is test mode, weewoo.study is live, and
       which webhook endpoints exist in each Stripe mode.
-- [ ] **Guard side effects by stage.** Only `STAGE=PROD` submits real Printful
-      orders and customer emails. Elsewhere, run a dry run that logs the
-      Printful payload (optionally creating an unconfirmed Printful draft behind
-      a flag). Refuse to start if `STAGE` and the Stripe key mode disagree (a
-      `sk_live` key outside PROD, or a test key in PROD).
-- [ ] **Unit-test the webhook handler** with signed fixture events
-      (`stripe.webhooks.generateTestHeaderString`). Make it idempotent (record
-      processed event IDs in KV), and stop throwing 500s for missing
-      configuration on unrelated event types.
+- [x] **Guard side effects by stage.** Only `STAGE=PROD` submits Printful orders
+      and sends customer and admin emails. Elsewhere the webhook logs the
+      Printful payload (a dry run), or with `PRINTFUL_DRAFT_ORDERS=true` submits
+      an unconfirmed Printful draft without emails. `main.ts` refuses to start
+      when `STAGE` and the `STRIPE_API_KEY` mode disagree (a live key outside
+      PROD, or a test key in PROD).
+- [x] **Unit-test the webhook handler.** The logic moved to
+      `lib/stripe_webhook.ts` with injected dependencies (signature check,
+      Stripe checkout calls, KV, Printful fetch, email, logger); 16 tests use
+      fakes, so they never import the Stripe SDK (it reads AI-agent env vars on
+      import, which the test allowlist doesn't permit). It's idempotent
+      (`["stripe_events", eventId]` in KV), returns 400 for bad signatures, 200
+      for unrelated event types whatever the Stripe/Printful config, and 500
+      (releasing the event for Stripe's retry) when fulfillment fails.
 - [ ] **Webhooks as code.** Write `scripts/setup_stripe_webhooks.ts`, an
       idempotent script that creates or updates one endpoint per environment
       (weewoo.study live, test.weewoo.study test) with the event list and prints

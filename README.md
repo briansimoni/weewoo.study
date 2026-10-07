@@ -114,8 +114,9 @@ This application uses various environment variables for configuration. Create a
   (or the Deploy-attached one).
 - `SEED_ON_EMPTY`: `true` seeds an empty database at startup (never when
   `STAGE=PROD`). Set on both Deploy apps (all contexts; see data-model.md).
-- `STAGE`: Environment identifier. `PROD` enables cron jobs and affects some app
-  behavior. Non-`PROD` values skip production-only cron work.
+- `STAGE`: Environment identifier. `PROD` enables cron jobs, real Printful
+  orders and order emails. Non-`PROD` values skip production-only cron work, and
+  the Stripe webhook only logs the order it would place (a dry run).
 - `LOG_LEVEL`: Optional logger level. Defaults to `debug`.
 
 ### Email and support
@@ -136,11 +137,17 @@ This application uses various environment variables for configuration. Create a
 ### Commerce
 
 - `STRIPE_API_KEY`: Stripe secret API key used by checkout, webhooks, and admin
-  scripts.
+  scripts. Its mode must match `STAGE`: the app refuses to start with a live key
+  (`sk_live_`/`rk_live_`) outside `PROD`, or a test key in `PROD`.
 - `STRIPE_SIGNING_SECRET`: Stripe webhook signing secret used by
-  `routes/api/stripe_webhook.ts`.
+  `routes/api/stripe_webhook.ts` (logic in `lib/stripe_webhook.ts`).
 - `PRINTFUL_SECRET`: Printful API token used for product sync and order
-  submission.
+  submission. Not needed by the webhook outside `PROD` unless
+  `PRINTFUL_DRAFT_ORDERS` is set.
+- `PRINTFUL_DRAFT_ORDERS`: `true` makes the webhook outside `PROD` submit the
+  order to Printful (which holds it as an unconfirmed draft) instead of only
+  logging it. No customer or admin emails are sent outside `PROD`. Ignored in
+  `PROD`.
 
 ### Question generation and content scripts
 
