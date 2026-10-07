@@ -45,7 +45,10 @@ const logger = winston.createLogger({
   level: Deno.env.get("LOG_LEVEL") || "debug",
   format: isRunningInDenoDeploy() ? jsonFormat : consoleFormat,
   transports: [
-    new winston.transports.Console({}),
+    // forceConsole: without it winston writes to console._stdout (which Deno
+    // defines) instead of calling console.*, and Deno Deploy only collects
+    // console calls, so the app's logs never showed up in the Deploy console.
+    new winston.transports.Console({ forceConsole: true }),
   ],
 });
 
