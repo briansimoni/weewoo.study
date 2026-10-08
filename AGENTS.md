@@ -48,11 +48,15 @@ architecture map and environment variables.
 
 - The test app is linked to GitHub: Deno Deploy builds every push and serves a
   branch preview at `https://test-weewoo-study--<branch>.briansimoni.deno.net`,
-  where `<branch>` is the git branch with `/` removed (`feat/x` → `featx`). Each
-  branch gets its own KV database, which seeds itself from `lib/seed.ts` on
-  startup (`SEED_ON_EMPTY=true` on both Deploy apps). Previews therefore show
-  `[Seed]` questions, `seed|…` users and the TEST shop catalog (Stripe test
-  mode), never real user data. Sign in there with `/auth/test-login`.
+  where `<branch>` is the git branch with `/` removed (`feat/x` → `featx`).
+  Deploy doesn't always create that alias; every build is also served at
+  `https://test-weewoo-study-<build id>.briansimoni.deno.net` (the build ID ends
+  the commit's `deploy/briansimoni/test-weewoo-study` status URL), which CI and
+  the `verify-preview` skill use. Each branch gets its own KV database, which
+  seeds itself from `lib/seed.ts` on startup (`SEED_ON_EMPTY=true` on both
+  Deploy apps). Previews therefore show `[Seed]` questions, `seed|…` users and
+  the TEST shop catalog (Stripe test mode), never real user data. Sign in there
+  with `/auth/test-login`.
 - Local test data: `deno task seed`, then run with `KV_PATH=.kv/seed.sqlite3`.
   Never seed the developer's default local database or any production one.
 - Merging to `main` deploys test.weewoo.study only. weewoo.study is deployed

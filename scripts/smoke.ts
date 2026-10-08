@@ -47,7 +47,9 @@ const probe = await get("/");
 if (probe.status === 404 && probe.body.includes("DEPLOYMENT_NOT_FOUND")) {
   console.log(
     `FAIL no deployment at ${base}. Preview URLs use the branch name with ` +
-      "'/' removed, e.g. feat/x -> https://test-weewoo-study--featx.briansimoni.deno.net",
+      "'/' removed, e.g. feat/x -> https://test-weewoo-study--featx.briansimoni.deno.net. " +
+      "If the branch alias is missing, use the build's revision URL: " +
+      "https://test-weewoo-study-<build id>.briansimoni.deno.net (build ID from the deploy commit status).",
   );
   Deno.exit(1);
 }
