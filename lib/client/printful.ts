@@ -85,12 +85,14 @@ export interface PrintfulResponse<T> {
   };
 }
 
-export interface PrintfulWebhook {
-  id: number;
-  url: string;
+/**
+ * A store's webhook configuration. The v1 API has exactly one per store (one
+ * URL for all event types); there are no webhook IDs.
+ */
+export interface PrintfulWebhookConfig {
+  url: string | null;
   types: string[];
-  created: string;
-  updated: string;
+  params?: unknown;
 }
 
 export interface PrintfulRecipient {
@@ -315,47 +317,39 @@ export class PrintfulApiClient {
     return await response.json();
   }
 
+  /** The store's webhook configuration (GET /webhooks). */
+  async getWebhookConfig(): Promise<PrintfulResponse<PrintfulWebhookConfig>> {
+    const response = await this.fetch(`${this.baseURL}/webhooks`, {
+      headers: {
+        Authorization: `Bearer ${this.printfulToken}`,
+      },
+    });
+    return await response.json();
+  }
+
   /**
-   * Create a new webhook subscription
-   * @param url The URL where Printful will send webhook events
-   * @param types Array of event types to subscribe to (e.g., ["package_shipped", "order_created"])
+   * Set the store's webhook configuration (POST /webhooks). This replaces the
+   * existing URL and event types for every environment sharing the store.
+   * @param types e.g. ["package_shipped"]
    */
-  async createWebhook(
+  async setWebhookConfig(
     url: string,
     types: string[],
-  ): Promise<PrintfulResponse<PrintfulWebhook>> {
+  ): Promise<PrintfulResponse<PrintfulWebhookConfig>> {
     const response = await this.fetch(`${this.baseURL}/webhooks`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${this.printfulToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        url,
-        types,
-      }),
+      body: JSON.stringify({ url, types }),
     });
     return await response.json();
   }
 
-  /**
-   * List all active webhook subscriptions
-   */
-  async listWebhooks(): Promise<PrintfulResponse<PrintfulWebhook[]>> {
+  /** Turn off the store's webhooks (DELETE /webhooks). */
+  async disableWebhooks(): Promise<PrintfulResponse<PrintfulWebhookConfig>> {
     const response = await this.fetch(`${this.baseURL}/webhooks`, {
-      headers: {
-        Authorization: `Bearer ${this.printfulToken}`,
-      },
-    });
-    return await response.json();
-  }
-
-  /**
-   * Delete a webhook subscription by ID
-   * @param webhookId The ID of the webhook to delete
-   */
-  async deleteWebhook(webhookId: number): Promise<PrintfulResponse<null>> {
-    const response = await this.fetch(`${this.baseURL}/webhooks/${webhookId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${this.printfulToken}`,

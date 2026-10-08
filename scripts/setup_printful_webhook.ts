@@ -1,76 +1,58 @@
-// This script sets up a Printful webhook for package_shipped events
-import { PrintfulApiClient } from "../lib/client/printful.ts";
-import { log } from "../lib/logger.ts";
-import "@std/dotenv/load";
-
-// URL where Printful will send webhook events
-const WEBHOOK_URL = "https://weewoo.study/api/printful_webhook";
-// Event type to subscribe to
-const EVENT_TYPE = "package_shipped";
-
 /**
- * Main function to set up the Printful webhook
+ * Point the Printful store's webhook at one environment (idempotent):
+ *
+ *   deno run -A scripts/setup_printful_webhook.ts <prod|test> [--replace]
+ *
+ * Printful's v1 API has ONE webhook URL per store, and test.weewoo.study uses
+ * the same store as weewoo.study. Pointing it at test therefore stops shipping
+ * emails on prod, so the script refuses to replace a different URL unless
+ * --replace is passed. Uses PRINTFUL_SECRET.
  */
-async function setupPrintfulWebhook() {
-  try {
-    // Initialize the Printful API client
-    const printfulClient = new PrintfulApiClient();
+import "@std/dotenv/load";
+import { PrintfulApiClient } from "../lib/client/printful.ts";
 
-    // Check for existing webhooks and delete any that might conflict
-    console.log("Checking for existing webhooks...");
-    const existingWebhooks = await printfulClient.listWebhooks();
+const ENVIRONMENTS = {
+  prod: "https://weewoo.study/api/printful_webhook",
+  test: "https://test.weewoo.study/api/printful_webhook",
+} as const;
 
-    // Log existing webhooks if any
-    if (existingWebhooks.result && existingWebhooks.result.length > 0) {
-      console.log(`Found ${existingWebhooks.result.length} existing webhooks:`);
+/** Events routes/api/printful_webhook.ts acts on. */
+const TYPES = ["package_shipped"];
 
-      for (const webhook of existingWebhooks.result) {
-        console.log(
-          `- ID: ${webhook.id}, URL: ${webhook.url}, Types: ${
-            webhook.types.join(", ")
-          }`,
-        );
+const name = Deno.args[0] ?? "";
+if (!(name in ENVIRONMENTS)) {
+  console.error("Usage: setup_printful_webhook.ts <prod|test> [--replace]");
+  Deno.exit(2);
+}
+const url = ENVIRONMENTS[name as keyof typeof ENVIRONMENTS];
+const replace = Deno.args.includes("--replace");
 
-        // Delete if it has the same URL (to avoid duplicates)
-        if (webhook.url === WEBHOOK_URL) {
-          console.log(
-            `Deleting existing webhook with ID ${webhook.id} that points to the same URL...`,
-          );
-          await printfulClient.deleteWebhook(webhook.id);
-        }
-      }
-    } else {
-      console.log("No existing webhooks found.");
-    }
+const printful = new PrintfulApiClient();
+const current = await printful.getWebhookConfig();
+if (current.code !== 200) {
+  console.error("Could not read the webhook configuration:", current);
+  Deno.exit(1);
+}
+const { url: currentUrl, types: currentTypes = [] } = current.result;
+console.log(
+  `Current: ${currentUrl ?? "(none)"} [${currentTypes.join(", ")}]`,
+);
 
-    // Create the new webhook using the PrintfulApiClient method
-    console.log(`Creating new webhook for ${EVENT_TYPE} events...`);
-    const result = await printfulClient.createWebhook(WEBHOOK_URL, [
-      EVENT_TYPE,
-    ]);
-
-    if (result.code !== 200) {
-      log.error("Failed to set up Printful webhook:", { result });
-      console.error("Failed to set up Printful webhook:", { result });
-      Deno.exit(1);
-    }
-
-    log.info("Successfully set up Printful webhook:", { result });
-    console.log("✅ Successfully set up Printful webhook");
-    console.log("URL:", WEBHOOK_URL);
-    console.log("Event type:", EVENT_TYPE);
-    console.log("Webhook ID:", result.result.id);
-
-    // Return the result
-    return result;
-  } catch (error) {
-    log.error("Error setting up Printful webhook:", { error });
-    console.error("Error setting up Printful webhook:", { error });
-    Deno.exit(1);
-  }
+if (currentUrl === url && TYPES.every((t) => currentTypes.includes(t))) {
+  console.log("Already up to date.");
+  Deno.exit(0);
+}
+if (currentUrl && currentUrl !== url && !replace) {
+  console.error(
+    `Refusing to replace ${currentUrl}: Printful allows one webhook URL per ` +
+      "store, shared by every environment. Pass --replace to do it anyway.",
+  );
+  Deno.exit(1);
 }
 
-// Check if the script is being run directly
-if (import.meta.main) {
-  await setupPrintfulWebhook();
+const result = await printful.setWebhookConfig(url, TYPES);
+if (result.code !== 200) {
+  console.error("Failed to set the webhook configuration:", result);
+  Deno.exit(1);
 }
+console.log(`Set: ${result.result.url} [${result.result.types.join(", ")}]`);
