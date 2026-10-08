@@ -65,6 +65,7 @@ for (
 ) {
   Deno.test(`${name} rejects anonymous and non-admin users and admits the admin`, async () => {
     await withSessionStore(async (kv) => {
+      using _env = stub(Deno.env, "get", () => undefined);
       await kv.set(["sessions", "user"], {
         session_id: "user",
         user_id: "other",
@@ -103,6 +104,44 @@ for (
     });
   });
 }
+
+Deno.test("admin API admits ADMIN_API_TOKEN bearers; admin pages don't", async () => {
+  const token = "t".repeat(40);
+  const cases: [string | undefined, string, AppHandler[], number][] = [
+    [token, `Bearer ${token}`, adminApiMiddleware, 200],
+    [token, `Bearer ${token}x`, adminApiMiddleware, 401],
+    [token, token, adminApiMiddleware, 401],
+    [token, `Bearer ${token}`, adminPageMiddleware, 401],
+    // Token auth is off when the variable is unset or too short.
+    [undefined, "Bearer undefined", adminApiMiddleware, 401],
+    ["short", "Bearer short", adminApiMiddleware, 401],
+  ];
+  await withSessionStore(async () => {
+    for (const [configured, authorization, gate, expectedStatus] of cases) {
+      using _env = stub(
+        Deno.env,
+        "get",
+        (key: string) => key === "ADMIN_API_TOKEN" ? configured : undefined,
+      );
+      let reachedRoute = false;
+      const response = await run(
+        context(
+          new Request("https://example.test/api/admin/product/1", {
+            headers: { authorization },
+          }),
+        ),
+        [...modules.middleware.handler, ...gate],
+        () => {
+          reachedRoute = true;
+          return Promise.resolve(new Response("protected"));
+        },
+      );
+      assertEquals(response.status, expectedStatus, authorization);
+      assertEquals(reachedRoute, expectedStatus === 200);
+      await response.text();
+    }
+  });
+});
 
 Deno.test("EMT redirects anonymous requests using ctx.req and admits sessions", async () => {
   await withSessionStore(async (kv) => {

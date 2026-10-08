@@ -63,6 +63,20 @@ architecture map and environment variables.
 - CI (`.github/workflows/ci.yml`) must be green before merging: `verify`, `e2e`
   (local) and `preview-e2e` (against the branch preview).
 
+## Admin tasks on deployed sites
+
+- Use
+  `deno task admin <test|prod|preview-url> <METHOD> api/admin/... [json|@file]`
+  (no leading slash: Git Bash rewrites `/api/…` into a Windows path) to read or
+  change data through the admin API (product fields, questions, KV export…);
+  routes are under `routes/api/admin/`. It authenticates with the tokens in the
+  local `.env` (see README). Run it from the main checkout, since worktrees
+  don't have `.env`.
+- Do the job yourself instead of handing the human console snippets. Changes on
+  test.weewoo.study are fine when the task calls for them. Never change
+  weewoo.study (the script needs `--confirm-prod`) without the human's explicit
+  go-ahead for that specific change, and read the record back afterwards.
+
 ## Debugging
 
 - Server debugging uses the `Start And Debug Deno Server` launch configuration.
