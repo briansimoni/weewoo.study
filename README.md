@@ -246,9 +246,18 @@ https://docs.google.com/spreadsheets/d/1Tzcpc9YNc6sHVZK_6PAjQCBgEfKiQr9mZAZdaG4N
 
 ## Printful API token
 
-Remeber to rotate!
+Private tokens expire; rotate before then at
+https://developers.printful.com/tokens. Last rotated 2026-10-07 (the expiry date
+is shown in the Developer Portal).
 
-expires May 16, 2027
+- Limit the token to the **weewoo.study store only**. With an all-stores token,
+  Printful requires a `store_id` the client doesn't send: product and webhook
+  calls fail, and orders could go to the wrong store.
+- Scopes: orders (view and manage), store products (view), webhooks (manage),
+  shipping rates.
+- Update `PRINTFUL_SECRET` in `.env` and on both Deploy apps (`weewoo-study`,
+  `test-weewoo-study`). Prod picks it up at its next deployment, so revoke the
+  old token after that.
 
 ## NREMT information about the real exam
 

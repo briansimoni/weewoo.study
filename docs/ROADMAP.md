@@ -275,10 +275,12 @@ us-east-1). Fixed with `forceConsole: true` in `lib/logger.ts`.
       (`lib/printful_webhook.ts`, 10 tests) it re-reads the order from Printful
       and uses only that copy's recipient and shipment, accepts only a
       `YYYY-MM-DD` delivery date from the payload, and emails only in PROD.
-- [ ] **Rotate the local `PRINTFUL_SECRET` (human).** The token in the
-      developer's `.env` is rejected by Printful ("The access token provided is
-      invalid", 2026-10-07), so local Printful scripts fail. The README says the
-      current token expires May 16, 2027, so `.env` probably holds an old one.
+- [x] **Rotate `PRINTFUL_SECRET`.** The token in `.env` was rejected by
+      Printful. Rotated 2026-10-07 in `.env` and on both Deploy apps. The token
+      must be limited to the **weewoo.study store only**: an all-stores token
+      makes Printful require a `store_id` the client doesn't send (product and
+      webhook calls fail, and orders could land in the wrong store). Checked:
+      the products, orders and webhooks calls all return 200.
 
 **Exit criteria:** an agent can take a task from branch to preview with green CI
 and E2E, the human tests on a preview with real-looking data, and prod deploys
