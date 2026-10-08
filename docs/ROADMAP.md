@@ -208,7 +208,13 @@ non-prod one targets `weewoo-study--local` (Deno Deploy's _Local_ context
 tunnel). `weewoo-study` keeps separate Stripe keys for Production and for
 Preview/Local. `test-weewoo-study` uses one set of values for every context. The
 webhook handler submits a **real Printful order** and sends emails on
-`checkout.session.completed` in every environment.
+`checkout.session.completed` in every environment. (Since PR #8, only PROD
+places orders and sends emails; see below.)
+
+Found 2026-10-07: the app's winston logs never reached the Deno Deploy console
+(winston wrote to `console._stdout`, which Deploy doesn't collect); they only
+went to CloudWatch (`/weewoo-study/test`, `/weewoo-study/production`, region
+us-east-1). Fixed with `forceConsole: true` in `lib/logger.ts`.
 
 - [ ] **Audit Stripe modes (human, partly done).** Verified 2026-10-06: the
       Preview contexts of **both** apps use test-mode keys from the same Stripe
@@ -230,12 +236,19 @@ webhook handler submits a **real Printful order** and sends emails on
       (`["stripe_events", eventId]` in KV), returns 400 for bad signatures, 200
       for unrelated event types whatever the Stripe/Printful config, and 500
       (releasing the event for Stripe's retry) when fulfillment fails.
-- [ ] **Webhooks as code.** Write `scripts/setup_stripe_webhooks.ts`, an
-      idempotent script that creates or updates one endpoint per environment
-      (weewoo.study live, test.weewoo.study test) with the event list and prints
-      the signing secret to store in Deploy. Parameterize
+- [ ] **Webhooks as code (Stripe done).**
+      `scripts/setup_stripe_webhooks.ts
+      <test|prod> [--secret-out <file>] [--recreate]`
+      creates or updates the endpoint for one environment, refusing a key of the
+      wrong mode, and writes a new endpoint's signing secret to a file. Ran
+      `test` on 2026-10-07: created `we_1UO2cVIkTHoHiwfEA83cMLun` for
+      test.weewoo.study (until then the only test-mode endpoint was the
+      `weewoo-study--local` tunnel, so test.weewoo.study never received
+      webhooks). **Human:** set its secret as `STRIPE_SIGNING_SECRET` on
+      `test-weewoo-study`. `prod` hasn't been run: weewoo.study's live endpoint
+      already exists by hand. Remaining: parameterize
       `scripts/setup_printful_webhook.ts` the same way (its prod URL is
-      currently hard-coded).
+      hard-coded).
 - [ ] **Give the test app per-context config** like the prod app: test Stripe
       keys and the test.weewoo.study signing secret in Production, test keys in
       Preview.

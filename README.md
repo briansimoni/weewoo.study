@@ -140,7 +140,9 @@ This application uses various environment variables for configuration. Create a
   scripts. Its mode must match `STAGE`: the app refuses to start with a live key
   (`sk_live_`/`rk_live_`) outside `PROD`, or a test key in `PROD`.
 - `STRIPE_SIGNING_SECRET`: Stripe webhook signing secret used by
-  `routes/api/stripe_webhook.ts` (logic in `lib/stripe_webhook.ts`).
+  `routes/api/stripe_webhook.ts` (logic in `lib/stripe_webhook.ts`). Endpoints
+  are managed with `scripts/setup_stripe_webhooks.ts <test|prod>`, which writes
+  a new endpoint's secret to `--secret-out <file>`.
 - `PRINTFUL_SECRET`: Printful API token used for product sync and order
   submission. Not needed by the webhook outside `PROD` unless
   `PRINTFUL_DRAFT_ORDERS` is set.
