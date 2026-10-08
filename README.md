@@ -178,10 +178,39 @@ This application uses various environment variables for configuration. Create a
 Cool sounds here:
 https://freesound.org/search/?q=correct&f=grouping_pack%3A%2230761_feedback-correct%22
 
-To run the stripe CLI webhook tests
-`stripe listen --forward-to localhost:8000/api/stripe_webhook`
+## Testing webhooks
 
-`stripe trigger checkout.session.completed`
+Outside `STAGE=PROD` both webhook handlers are dry runs: the Stripe one logs the
+Printful order it would place and the Printful one logs the shipping email it
+would send. Most coverage is unit tests (`lib/stripe_webhook.test.ts`,
+`lib/printful_webhook.test.ts`) with fakes for Stripe, Printful and email.
+
+**Stripe**
+
+- **test.weewoo.study** has its own test-mode endpoint (created with
+  `scripts/setup_stripe_webhooks.ts test`). Buy something with card
+  `4242 4242 4242 4242`, or replay an earlier checkout without buying again:
+  `deno run -A scripts/resend_stripe_event.ts <cs_test_… | evt_…>`. Then check
+  the Deno Deploy logs (or CloudWatch `/weewoo-study/test`) for
+  `Received Stripe event` and `Dry run: would submit Printful order`. Already
+  processed events log `Skipping duplicate Stripe event`.
+- **Locally**, forward events with the Stripe CLI and use the `whsec_…` it
+  prints as `STRIPE_SIGNING_SECRET`:
+  `stripe listen --forward-to localhost:8000/api/stripe_webhook`, then check out
+  in the app or `stripe trigger checkout.session.completed`.
+- **Branch previews** get no Stripe endpoint (one per branch isn't worth it).
+  Rely on the unit tests, or the Stripe CLI against a local run.
+
+**Printful**
+
+Printful's v1 API has one webhook URL per store, and test.weewoo.study shares
+weewoo.study's store, so only prod receives Printful webhooks
+(`scripts/setup_printful_webhook.ts prod`; `test` refuses to take the URL over
+without `--replace`). Printful webhooks are unsigned: the handler re-reads the
+order from Printful and only trusts that copy. To try it locally with
+`STAGE=DEV`, POST a `package_shipped` payload with a real order ID to
+`/api/printful_webhook` (needs a valid `PRINTFUL_SECRET`) and look for
+`Dry run: would send shipping notification`.
 
 ## Uploading new products
 
@@ -217,9 +246,18 @@ https://docs.google.com/spreadsheets/d/1Tzcpc9YNc6sHVZK_6PAjQCBgEfKiQr9mZAZdaG4N
 
 ## Printful API token
 
-Remeber to rotate!
+Private tokens expire; rotate before then at
+https://developers.printful.com/tokens. Last rotated 2026-10-07 (the expiry date
+is shown in the Developer Portal).
 
-expires May 16, 2027
+- Limit the token to the **weewoo.study store only**. With an all-stores token,
+  Printful requires a `store_id` the client doesn't send: product and webhook
+  calls fail, and orders could go to the wrong store.
+- Scopes: orders (view and manage), store products (view), webhooks (manage),
+  shipping rates.
+- Update `PRINTFUL_SECRET` in `.env` and on both Deploy apps (`weewoo-study`,
+  `test-weewoo-study`). Prod picks it up at its next deployment, so revoke the
+  old token after that.
 
 ## NREMT information about the real exam
 
