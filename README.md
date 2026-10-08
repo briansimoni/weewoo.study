@@ -141,6 +141,17 @@ This application uses various environment variables for configuration. Create a
   the Stripe webhook only logs the order it would place (a dry run).
 - `LOG_LEVEL`: Optional logger level. Defaults to `debug`.
 
+### Admin API access from a workstation
+
+- `ADMIN_API_TOKEN` (Deploy apps): lets `/api/admin/*` accept
+  `Authorization: Bearer <token>` besides the admin's browser session. Use a
+  different random value per app (`openssl rand -hex 32`); unset or shorter than
+  32 characters disables token auth. Rotate it by changing the variable.
+- `WEEWOO_ADMIN_TOKEN_TEST`, `WEEWOO_ADMIN_TOKEN_PROD` (local `.env` only): the
+  test and prod apps' tokens, used by
+  `deno task admin <test|prod|preview-url> <METHOD> <path> [json|@file]`
+  (`scripts/admin_api.ts`). Branch previews use the test app's token.
+
 ### Email and support
 
 - `ADMIN_EMAIL`: Destination for support emails, question report emails, SES/SQS

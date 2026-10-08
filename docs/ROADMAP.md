@@ -163,11 +163,11 @@ have to seed themselves.
       try.
 - [ ] **Fix UI bugs the snapshots show.** (1) The profile page overflows on
       mobile: the page is 413px wide at a 390px viewport (the streak stat), and
-      the profile image shows its alt text. (2) The shop shows a broken image
-      (alt text) for products with no `thumbnail_url` ("WeeWoo Recycled Swim
-      Trunks" and "weewoo mug" are `null` in `lib/seed_catalog.json`, which was
-      exported from real data). It needs a fallback image, or the data needs
-      thumbnails. Good first tasks for the Phase 1 design work.
+      the profile image shows its alt text. ~~(2) The shop shows a broken image
+      for products with no `thumbnail_url`~~: done 2026-10-08, the seed catalog
+      thumbnails are CloudFront images (the TEST database still needs the same
+      fix through `deno task admin`). A fallback image for missing thumbnails
+      would still help. Good first tasks for the Phase 1 design work.
 - [ ] **Give agents eyes.** Claude in Chrome is already available to agents in
       this setup. Optionally add the Playwright MCP (`.mcp.json`) so agents can
       drive a headless browser against `deno task e2e:serve` without the human's

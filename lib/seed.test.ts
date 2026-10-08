@@ -114,6 +114,20 @@ Deno.test("seed is safe to re-run", async () => {
   }
 });
 
+Deno.test("seed catalog shop images are served from CloudFront", () => {
+  // Printful preview URLs expire (403), which breaks the shop on previews.
+  const cdn = "d3leqxp227sjlw.cloudfront.net";
+  for (const product of catalog.products) {
+    if (!product.active) continue;
+    assertEquals(new URL(product.thumbnail_url).host, cdn, product.name);
+  }
+  for (const variant of catalog.variants) {
+    for (const image of variant.images) {
+      assertEquals(new URL(image).host, cdn, variant.variant_id);
+    }
+  }
+});
+
 Deno.test("seed refuses to run in production", async () => {
   const kv = await Deno.openKv(":memory:");
   try {

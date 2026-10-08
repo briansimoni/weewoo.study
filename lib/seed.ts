@@ -313,8 +313,9 @@ async function seedProducts(kv: Deno.Kv) {
  * 2: the shop catalog comes from the TEST database (lib/seed_catalog.json).
  * 3: leaderboard entries include display names.
  * 4: interrupted seeds are detected and redone (forces a reseed everywhere).
+ * 5: product thumbnails point at CloudFront instead of expiring Printful URLs.
  */
-export const SEED_VERSION = 4;
+export const SEED_VERSION = 5;
 const VERSION_KEY = ["seed", "version"];
 const LOCK_KEY = ["seed", "lock"];
 const STARTED_KEY = ["seed", "started"];

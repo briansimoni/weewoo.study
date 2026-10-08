@@ -28,13 +28,18 @@ integration and reports commit statuses.
    yet. Keep waiting. A `failure` links to the build log in the Deno console.
    Report the link, because logs need a Deploy login.
 
-3. Smoke-test the preview of the **test** app (test configuration). The branch
-   name in the URL is the git branch with every `/` **removed** (Deno Deploy
-   slugging, e.g. `feat/phase-0-1` → `featphase-0-1`). Compute it with
-   `git branch --show-current | tr -d /`:
+3. Smoke-test the preview of the **test** app (test configuration). Use this
+   commit's revision URL,
+   `https://test-weewoo-study-<build id>.briansimoni.deno.net`, where the build
+   ID ends the `deploy/briansimoni/test-weewoo-study` status's `target_url`
+   (`…/builds/<build id>`). CI does the same. The branch alias
+   (`test-weewoo-study--<branch>`, the branch with `/` removed) is what humans
+   use, but Deploy doesn't always create it (seen 2026-10-08 for
+   `fix/seed-cloudfront-thumbnails`: `DEPLOYMENT_NOT_FOUND` while the revision
+   URL served):
 
    ```sh
-   deno task smoke https://test-weewoo-study--<branch>.briansimoni.deno.net
+   deno task smoke https://test-weewoo-study-<build id>.briansimoni.deno.net
    ```
 
    Each branch has its own KV database, which seeds itself on startup
@@ -49,7 +54,7 @@ integration and reports commit statuses.
    Stripe test mode all work there):
 
    ```sh
-   BASE_URL=https://test-weewoo-study--<branch>.briansimoni.deno.net deno task e2e:remote
+   BASE_URL=https://test-weewoo-study-<build id>.briansimoni.deno.net deno task e2e:remote
    ```
 
    The tests tolerate re-runs (they only add attempts). Failures leave

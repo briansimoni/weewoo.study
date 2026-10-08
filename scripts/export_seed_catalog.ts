@@ -59,6 +59,22 @@ const variants = entries
     a.variant_id.localeCompare(b.variant_id)
   );
 
+// Printful preview URLs expire, so a product thumbnail that isn't on our
+// CloudFront CDN falls back to its first CloudFront color or variant image.
+const isCdn = (url?: string) =>
+  !!url && new URL(url).host === "d3leqxp227sjlw.cloudfront.net";
+for (const product of products) {
+  if (isCdn(product.thumbnail_url)) continue;
+  const replacement = [
+    ...(product.colors ?? []).map((c) => c.thumbnail_url),
+    ...variants
+      .filter((v) => v.printful_product_id === product.printful_id)
+      .flatMap((v) => v.images),
+  ].find(isCdn);
+  if (replacement) product.thumbnail_url = replacement;
+  else console.warn(`No CloudFront image for ${product.name}`);
+}
+
 await Deno.writeTextFile(
   OUT,
   JSON.stringify({ products, variants }, null, 2) + "\n",

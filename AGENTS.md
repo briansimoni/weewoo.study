@@ -51,11 +51,15 @@ architecture map and environment variables.
 
 - The test app is linked to GitHub: Deno Deploy builds every push and serves a
   branch preview at `https://test-weewoo-study--<branch>.briansimoni.deno.net`,
-  where `<branch>` is the git branch with `/` removed (`feat/x` → `featx`). Each
-  branch gets its own KV database, which seeds itself from `lib/seed.ts` on
-  startup (`SEED_ON_EMPTY=true` on both Deploy apps). Previews therefore show
-  `[Seed]` questions, `seed|…` users and the TEST shop catalog (Stripe test
-  mode), never real user data. Sign in there with `/auth/test-login`.
+  where `<branch>` is the git branch with `/` removed (`feat/x` → `featx`).
+  Deploy doesn't always create that alias; every build is also served at
+  `https://test-weewoo-study-<build id>.briansimoni.deno.net` (the build ID ends
+  the commit's `deploy/briansimoni/test-weewoo-study` status URL), which CI and
+  the `verify-preview` skill use. Each branch gets its own KV database, which
+  seeds itself from `lib/seed.ts` on startup (`SEED_ON_EMPTY=true` on both
+  Deploy apps). Previews therefore show `[Seed]` questions, `seed|…` users and
+  the TEST shop catalog (Stripe test mode), never real user data. Sign in there
+  with `/auth/test-login`.
 - Local test data: `deno task seed`, then run with `KV_PATH=.kv/seed.sqlite3`.
   Never seed the developer's default local database or any production one.
 - Merging to `main` deploys test.weewoo.study only. weewoo.study is deployed
@@ -65,6 +69,20 @@ architecture map and environment variables.
   human asks for a release. Never push to `production` any other way.
 - CI (`.github/workflows/ci.yml`) must be green before merging: `verify`, `e2e`
   (local) and `preview-e2e` (against the branch preview).
+
+## Admin tasks on deployed sites
+
+- Use
+  `deno task admin <test|prod|preview-url> <METHOD> api/admin/... [json|@file]`
+  (no leading slash: Git Bash rewrites `/api/…` into a Windows path) to read or
+  change data through the admin API (product fields, questions, KV export…);
+  routes are under `routes/api/admin/`. It authenticates with the tokens in the
+  local `.env` (see README). Run it from the main checkout, since worktrees
+  don't have `.env`.
+- Do the job yourself instead of handing the human console snippets. Changes on
+  test.weewoo.study are fine when the task calls for them. Never change
+  weewoo.study (the script needs `--confirm-prod`) without the human's explicit
+  go-ahead for that specific change, and read the record back afterwards.
 
 ## Debugging
 
