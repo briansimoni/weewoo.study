@@ -64,6 +64,19 @@ them:
 When CI's `e2e` job fails on a snapshot, the `e2e-local` artifact has the
 expected, actual and diff images.
 
+To see screenshots on your own machine, opt in with `VISUAL_LOCAL=1`. It keeps
+separate per-OS baselines (`*-win32.png`, `*-darwin.png`, gitignored) next to
+the Linux ones:
+
+```sh
+VISUAL_LOCAL=1 deno task e2e visual.spec.ts   # PowerShell: $env:VISUAL_LOCAL="1"; deno task e2e visual.spec.ts
+```
+
+The first run writes your local baselines and reports them as missing (that
+counts as a failure); later runs compare against them. Open the PNGs in
+`e2e/tests/visual.spec.ts-snapshots/`, or the HTML report in `.e2e/report/` for
+diffs. Delete your `*-win32.png`/`*-darwin.png` files to start over.
+
 ## Architecture
 
 ```

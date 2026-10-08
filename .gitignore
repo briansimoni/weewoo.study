@@ -39,3 +39,7 @@ image-converter-lambda.zip
 
 # Playwright output
 .e2e/
+
+# Local (non-Linux) visual baselines from VISUAL_LOCAL=1; only Linux ones are committed
+e2e/tests/visual.spec.ts-snapshots/*-win32.png
+e2e/tests/visual.spec.ts-snapshots/*-darwin.png
