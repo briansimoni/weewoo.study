@@ -42,6 +42,28 @@ payments, or email.
 | `deno task e2e:remote`  | Playwright against `BASE_URL` (e.g. a branch preview)           |
 | `deno task e2e:install` | One-time: download the Chromium build Playwright uses           |
 
+### Visual snapshots
+
+`e2e/tests/visual.spec.ts` compares full-page screenshots of key pages at 390px
+and 1280px against baselines in `e2e/tests/visual.spec.ts-snapshots/`. Font
+rendering differs by OS, so the baselines are Linux-only: the tests run in CI's
+`e2e` job and are skipped on Windows/macOS and against deployments. To keep them
+stable, the spec blocks third-party requests, replaces remote images with a grey
+placeholder, serves a fixed question from `/api/question`, and masks the
+profile's streak countdown and chart.
+
+When a UI change is intentional, regenerate the baselines on Linux and commit
+them:
+
+1. Add the `update-snapshots` label to the PR (or, once on `main`,
+   `gh workflow run update-snapshots.yml --ref <branch>`).
+2. When the "Update visual snapshots" run finishes:
+   `gh run download <run-id> -n visual-snapshots -D e2e/tests/visual.spec.ts-snapshots`
+3. Look at the changed images, commit them, and remove the label.
+
+When CI's `e2e` job fails on a snapshot, the `e2e-local` artifact has the
+expected, actual and diff images.
+
 ## Architecture
 
 ```

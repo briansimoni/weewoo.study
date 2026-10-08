@@ -5,7 +5,8 @@ import { gotoReady, loginAs } from "./helpers.ts";
  * Visual snapshots of key pages at mobile and desktop widths.
  *
  * Baselines are Linux-only (font rendering differs by OS) and are generated in
- * CI by the "Update visual snapshots" workflow; see e2e/README.md. Locally on
+ * CI by the "Update visual snapshots" workflow; see README.md, "Visual
+ * snapshots". Locally on
  * Windows/macOS, and against deployments (BASE_URL), these tests are skipped.
  */
 test.skip(

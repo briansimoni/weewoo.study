@@ -14,6 +14,9 @@ architecture map and environment variables.
   `deno task e2e` passes (it builds, seeds a fresh database, and runs Playwright
   against the production build). Sign in with `loginAs()` from
   `e2e/tests/helpers.ts`, which uses the test-only `/auth/test-login`.
+- Visual changes to a page in `e2e/tests/visual.spec.ts` need new baselines,
+  generated in CI on Linux (README, "Visual snapshots"). Look at the images
+  before committing them; never regenerate to silence an unexplained diff.
 - New store logic has unit tests using `Deno.openKv(":memory:")`.
 - Docs are updated in the same change: data model changes go in
   `docs/data-model.md`, and completed roadmap items get checked off in
