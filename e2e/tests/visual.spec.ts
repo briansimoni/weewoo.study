@@ -10,8 +10,10 @@ import { gotoReady, loginAs } from "./helpers.ts";
  * Windows/macOS, and against deployments (BASE_URL), these tests are skipped.
  */
 test.skip(
-  process.platform !== "linux" || !!process.env.BASE_URL,
-  "Visual baselines are Linux-only and run against the local seeded build",
+  !!process.env.BASE_URL ||
+    (process.platform !== "linux" && process.env.VISUAL_LOCAL !== "1"),
+  "Visual baselines are Linux-only (VISUAL_LOCAL=1 runs them on this OS " +
+    "against local, gitignored baselines) and need the local seeded build",
 );
 
 const VIEWPORTS = {
