@@ -14,17 +14,28 @@ interface CardProps {
   actions?: ComponentChildren;
   /** Extra classes on the card, e.g. width or margins. */
   class?: string;
+  /** Alias of `class`, for React-style callers. */
+  className?: string;
   /** Extra classes on the body, e.g. `items-center text-center`. */
   bodyClass?: string;
   children?: ComponentChildren;
 }
 
 export function Card(
-  { tone = "raised", title, actions, class: extra, bodyClass, children }:
-    CardProps,
+  {
+    tone = "raised",
+    title,
+    actions,
+    class: extra,
+    className,
+    bodyClass,
+    children,
+  }: CardProps,
 ) {
   return (
-    <div class={["card", TONES[tone], extra].filter(Boolean).join(" ")}>
+    <div
+      class={["card", TONES[tone], extra, className].filter(Boolean).join(" ")}
+    >
       <div class={["card-body", bodyClass].filter(Boolean).join(" ")}>
         {title && <h2 class="card-title">{title}</h2>}
         {children}

@@ -24,7 +24,8 @@ export function Stat(
 ) {
   return (
     // min-w-0 lets a stat shrink inside a grid instead of widening the page.
-    <div class="stat bg-base-200 rounded-box border-none min-w-0 p-4">
+    // border-none! beats DaisyUI's dashed divider between stats in a row.
+    <div class="stat bg-base-200 rounded-box border-none! min-w-0 p-4">
       <div class="stat-title whitespace-normal">{title}</div>
       <div
         class={[
@@ -41,10 +42,19 @@ export function Stat(
 
 /** Two stats per row from the smallest screens up. */
 export function StatGrid(
-  { class: extra, children }: { class?: string; children?: ComponentChildren },
+  { class: extra, className, children }: {
+    class?: string;
+    /** Alias of `class`, for React-style callers. */
+    className?: string;
+    children?: ComponentChildren;
+  },
 ) {
   return (
-    <div class={["grid grid-cols-2 gap-3", extra].filter(Boolean).join(" ")}>
+    <div
+      class={["grid grid-cols-2 gap-3", extra, className].filter(Boolean).join(
+        " ",
+      )}
+    >
       {children}
     </div>
   );

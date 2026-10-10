@@ -17,15 +17,22 @@ interface ProgressBarProps {
   /** What's progressing, for screen readers, e.g. "Daily goal". */
   label: string;
   class?: string;
+  /** Alias of `class`, for React-style callers. */
+  className?: string;
 }
 
 export function ProgressBar(
-  { value, max = 100, tone = "primary", label, class: extra }: ProgressBarProps,
+  { value, max = 100, tone = "primary", label, class: extra, className }:
+    ProgressBarProps,
 ) {
   return (
     <progress
-      class={["progress", TONES[tone], extra ?? "w-full"].filter(Boolean)
-        .join(" ")}
+      class={[
+        "progress",
+        TONES[tone],
+        extra ?? className ?? "w-full",
+        extra && className,
+      ].filter(Boolean).join(" ")}
       value={value}
       max={max}
       aria-label={label}

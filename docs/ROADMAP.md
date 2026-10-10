@@ -351,8 +351,15 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       product page has 28 `alert()`s in 1,776 lines. The landing page's 6
       feature cards and promo cards are hand-copied (a `FeatureCard`), best done
       with the landing redesign.
-- [ ] Create the Claude Design design-system project and do the first
-      `/design-sync` push.
+- [x] Create the Claude Design design-system project and do the first
+      `/design-sync` push. Done 2026-10-10: project
+      [weewoo.study](https://claude.ai/design/p/158f915d-3eee-4812-9214-1f225e3f3481)
+      with 11 components (Button, LinkButton, Card, Stat, StatGrid, Avatar,
+      Alert, Badge, CountBadge, ProgressBar, Modal), the Night/Day Shift CSS,
+      fonts and a conventions header for the design agent; every preview
+      authored and graded. The app is Preact, so `.design-sync/build-pkg.mjs`
+      compiles `components/ui` against React for the sync (see
+      `.design-sync/NOTES.md`). Page and the Toaster stay out (Fresh/signals).
 - [x] Define the brand direction: a playful EMS identity (mascot? ambulance
       "WeeWoo" character?), sound and motion guidelines, tone of voice. This is
       the human's call. Decided 2026-10-10 from three options on the
