@@ -49,7 +49,7 @@ export default function Catalog(props: { products: Product[] }) {
       {/* Main content */}
       <div class="drawer-content">
         {/* Products content */}
-        <div class="p-4 mr-10 ml-10 lg:mr-30 lg:ml-30 xl:ml-50 xl:mr-50">
+        <div>
           {/* Header with filter button */}
           <div class="bg-base-100 border-b border-base-300 mb-8 p-4">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

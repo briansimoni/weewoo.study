@@ -5,6 +5,7 @@ import type { Handlers } from "fresh/compat";
 import { StreakStore } from "../../lib/streak_store.ts";
 import { UserStore } from "../../lib/user_store.ts";
 import type { AppState } from "../_middleware.ts";
+import { Page } from "../../components/ui/Page.tsx";
 
 type UserPageData = ComponentProps<typeof UserPage> & { user_id: string };
 
@@ -23,5 +24,9 @@ export const handler: Handlers<UserPageData, AppState> = {
 };
 
 export default function (props: PageProps<UserPageData, AppState>) {
-  return <UserPage user={props.data.user} streak={props.data.streak} />;
+  return (
+    <Page title={props.data.user.display_name}>
+      <UserPage user={props.data.user} streak={props.data.streak} />
+    </Page>
+  );
 }

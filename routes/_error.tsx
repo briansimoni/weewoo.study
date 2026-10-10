@@ -2,6 +2,7 @@ import { HttpError, type PageProps } from "fresh";
 import { Head } from "fresh/runtime";
 import { LinkButton } from "../components/ui/Button.tsx";
 import { Card } from "../components/ui/Card.tsx";
+import { pageTitle } from "../components/ui/Page.tsx";
 
 export default function ErrorPage({ error }: PageProps) {
   const status = error instanceof HttpError ? error.status : 500;
@@ -9,7 +10,7 @@ export default function ErrorPage({ error }: PageProps) {
   return (
     <>
       <Head>
-        <title>{status} - {title}</title>
+        <title>{pageTitle(title)}</title>
       </Head>
       <div class="flex items-center justify-center px-4">
         <Card class="max-w-lg" bodyClass="items-center text-center p-10">

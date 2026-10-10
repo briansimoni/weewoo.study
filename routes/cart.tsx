@@ -1,16 +1,10 @@
-import { Head } from "fresh/runtime";
 import CartPageIsland from "../islands/CartPageIsland.tsx";
+import { Page } from "../components/ui/Page.tsx";
 
 export default function CartPage() {
   return (
-    <>
-      <Head>
-        <title>Shopping Cart</title>
-      </Head>
-      <div className="container mx-auto p-4 max-w-4xl">
-        <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
-        <CartPageIsland />
-      </div>
-    </>
+    <Page title="Shopping Cart" heading="Shopping Cart">
+      <CartPageIsland />
+    </Page>
   );
 }
