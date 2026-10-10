@@ -42,6 +42,41 @@ payments, or email.
 | `deno task e2e:remote`  | Playwright against `BASE_URL` (e.g. a branch preview)           |
 | `deno task e2e:install` | One-time: download the Chromium build Playwright uses           |
 
+### Visual snapshots
+
+`e2e/tests/visual.spec.ts` compares full-page screenshots of key pages at 390px
+and 1280px against baselines in `e2e/tests/visual.spec.ts-snapshots/`. Font
+rendering differs by OS, so the baselines are Linux-only: the tests run in CI's
+`e2e` job and are skipped on Windows/macOS and against deployments. To keep them
+stable, the spec blocks third-party requests, replaces remote images with a grey
+placeholder, serves a fixed question from `/api/question`, and masks the
+profile's streak countdown and chart.
+
+When a UI change is intentional, regenerate the baselines on Linux and commit
+them:
+
+1. Add the `update-snapshots` label to the PR (or, once on `main`,
+   `gh workflow run update-snapshots.yml --ref <branch>`).
+2. When the "Update visual snapshots" run finishes:
+   `gh run download <run-id> -n visual-snapshots -D e2e/tests/visual.spec.ts-snapshots`
+3. Look at the changed images, commit them, and remove the label.
+
+When CI's `e2e` job fails on a snapshot, the `e2e-local` artifact has the
+expected, actual and diff images.
+
+To see screenshots on your own machine, opt in with `VISUAL_LOCAL=1`. It keeps
+separate per-OS baselines (`*-win32.png`, `*-darwin.png`, gitignored) next to
+the Linux ones:
+
+```sh
+VISUAL_LOCAL=1 deno task e2e visual.spec.ts   # PowerShell: $env:VISUAL_LOCAL="1"; deno task e2e visual.spec.ts
+```
+
+The first run writes your local baselines and reports them as missing (that
+counts as a failure); later runs compare against them. Open the PNGs in
+`e2e/tests/visual.spec.ts-snapshots/`, or the HTML report in `.e2e/report/` for
+diffs. Delete your `*-win32.png`/`*-darwin.png` files to start over.
+
 ## Architecture
 
 ```
@@ -118,6 +153,17 @@ This application uses various environment variables for configuration. Create a
   orders and order emails. Non-`PROD` values skip production-only cron work, and
   the Stripe webhook only logs the order it would place (a dry run).
 - `LOG_LEVEL`: Optional logger level. Defaults to `debug`.
+
+### Admin API access from a workstation
+
+- `ADMIN_API_TOKEN` (Deploy apps): lets `/api/admin/*` accept
+  `Authorization: Bearer <token>` besides the admin's browser session. Use a
+  different random value per app (`openssl rand -hex 32`); unset or shorter than
+  32 characters disables token auth. Rotate it by changing the variable.
+- `WEEWOO_ADMIN_TOKEN_TEST`, `WEEWOO_ADMIN_TOKEN_PROD` (local `.env` only): the
+  test and prod apps' tokens, used by
+  `deno task admin <test|prod|preview-url> <METHOD> <path> [json|@file]`
+  (`scripts/admin_api.ts`). Branch previews use the test app's token.
 
 ### Email and support
 

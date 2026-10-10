@@ -2,6 +2,13 @@ import Stripe from "stripe";
 import { z } from "zod";
 import { ProductStore, ProductVariant } from "../../lib/product_store.ts";
 import { Handlers } from "fresh/compat";
+import {
+  QUOTED_PRINTFUL_SHIPPING_KEY,
+  quoteShipping,
+  type ShippingItem,
+  stripeShippingOption,
+} from "../../lib/shipping.ts";
+import { shippingRateSource } from "../../lib/shipping_rate_source.ts";
 
 // Initialize Stripe with your secret key
 const stripeAPIKey = Deno.env.get("STRIPE_API_KEY") || "";
@@ -76,6 +83,8 @@ export const handler: Handlers = {
 
       // Verify each variant
       const verifiedLineItems = [];
+      const shippingItems: ShippingItem[] = [];
+      let subtotalCents = 0;
 
       for (const item of cartItems) {
         try {
@@ -112,6 +121,7 @@ export const handler: Handlers = {
           // Retrieve the Stripe product to get its default price
           const stripeProduct = await stripe.products.retrieve(
             item.variant.stripe_product_id!,
+            { expand: ["default_price"] },
           );
 
           // Check if default_price exists
@@ -121,15 +131,22 @@ export const handler: Handlers = {
             );
           }
 
-          // Convert default_price to string if it's not already
-          // This handles the type issue with default_price potentially being a Price object or string
-          const priceId = typeof stripeProduct.default_price === "string"
-            ? stripeProduct.default_price
-            : stripeProduct.default_price.id;
+          // Expanded above, so this is a Price object
+          const price = stripeProduct.default_price;
+          if (typeof price === "string" || price.unit_amount === null) {
+            throw new Error(
+              `Product ${item.variant.printful_product_id} has no unit amount`,
+            );
+          }
 
           // Use the default price from Stripe
           verifiedLineItems.push({
-            price: priceId,
+            price: price.id,
+            quantity: item.quantity,
+          });
+          subtotalCents += price.unit_amount * item.quantity;
+          shippingItems.push({
+            variant_id: verifiedVariant.variant_id,
             quantity: item.quantity,
           });
         } catch (error) {
@@ -147,6 +164,12 @@ export const handler: Handlers = {
         }
       }
 
+      const shipping = await quoteShipping(
+        shippingItems,
+        subtotalCents,
+        shippingRateSource(),
+      );
+
       // Create a Stripe checkout session
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -154,6 +177,11 @@ export const handler: Handlers = {
         mode: "payment",
         shipping_address_collection: {
           allowed_countries: ["US"],
+        },
+        shipping_options: [stripeShippingOption(shipping)],
+        // Lets the webhook check Printful's order against this quote
+        metadata: {
+          [QUOTED_PRINTFUL_SHIPPING_KEY]: String(shipping.printfulCents),
         },
         // Also collect billing address for tax calculations
         billing_address_collection: "required",
@@ -165,7 +193,11 @@ export const handler: Handlers = {
 
       // Return the session ID to the client
       return new Response(
-        JSON.stringify({ sessionId: session.id, url: session.url }),
+        JSON.stringify({
+          sessionId: session.id,
+          url: session.url,
+          shippingCents: shipping.amountCents,
+        }),
         {
           status: 200,
           headers: { "Content-Type": "application/json" },

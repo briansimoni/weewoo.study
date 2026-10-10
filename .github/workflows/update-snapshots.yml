@@ -1,0 +1,52 @@
+name: Update visual snapshots
+
+# Regenerates the Linux visual baselines (e2e/tests/visual.spec.ts) for a
+# branch and uploads them as an artifact. Trigger it by adding the
+# `update-snapshots` label to the PR (or `gh workflow run update-snapshots.yml
+# --ref <branch>` once this file is on main), then download and commit:
+#
+#   gh run download <run-id> -n visual-snapshots -D e2e/tests/visual.spec.ts-snapshots
+#
+# Committing from your machine (not from this workflow) means CI runs on the
+# commit as usual.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+env:
+  PLAYWRIGHT_VERSION: "1.63.0"
+
+jobs:
+  update:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'update-snapshots'
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno install
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}
+      - run: deno run -A npm:playwright@${{ env.PLAYWRIGHT_VERSION }} install --with-deps chromium
+      - run: deno task e2e visual.spec.ts --update-snapshots=all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: visual-snapshots
+          path: e2e/tests/visual.spec.ts-snapshots/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-update-snapshots
+          path: .e2e/
+          retention-days: 7

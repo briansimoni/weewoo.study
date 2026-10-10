@@ -7,6 +7,16 @@ import {
 import { useSignal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
 
+type ShippingQuote =
+  | { status: "loading" }
+  | { status: "error" }
+  | {
+    status: "ok";
+    shippingCents: number;
+    free: boolean;
+    freeThresholdCents: number;
+  };
+
 export default function CartPageIsland() {
   const cart = useSignal(cartItems.value);
   const total = useSignal(getCartTotal());
@@ -26,6 +36,39 @@ export default function CartPageIsland() {
 
     return () => unsubscribe();
   }, []);
+
+  const shipping = useSignal<ShippingQuote>({ status: "loading" });
+
+  // Re-quote shipping whenever the cart changes; ignore stale responses
+  useEffect(() => {
+    if (cart.value.length === 0) return;
+    let current = true;
+    shipping.value = { status: "loading" };
+    fetch("/api/shipping_quote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: cart.value.map((item) => ({
+          stripe_product_id: item.variant.stripe_product_id,
+          quantity: item.quantity,
+        })),
+      }),
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(await response.text());
+        return response.json();
+      })
+      .then((quote) => {
+        if (current) shipping.value = { status: "ok", ...quote };
+      })
+      .catch((error) => {
+        console.error("Shipping quote error:", error);
+        if (current) shipping.value = { status: "error" };
+      });
+    return () => {
+      current = false;
+    };
+  }, [cart.value]);
 
   const handleQuantityChange = (variantId: string, newQuantity: number) => {
     updateCartItemQuantity(variantId, newQuantity);
@@ -206,14 +249,33 @@ export default function CartPageIsland() {
             <span className="font-semibold">Subtotal:</span>
             <span>${total.value.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between gap-4 mb-2">
             <span className="font-semibold">Shipping:</span>
-            <span>Free!</span>
+            <span data-testid="shipping-amount">
+              {shipping.value.status === "loading"
+                ? "Calculating..."
+                : shipping.value.status === "error"
+                ? "Calculated at checkout"
+                : shipping.value.free
+                ? "Free"
+                : `$${(shipping.value.shippingCents / 100).toFixed(2)}`}
+            </span>
           </div>
+          {shipping.value.status === "ok" && !shipping.value.free && (
+            <p className="text-sm opacity-70 mb-2">
+              Free shipping on orders over $
+              {(shipping.value.freeThresholdCents / 100).toFixed(0)}
+            </p>
+          )}
           <div className="divider my-2"></div>
           <div className="flex justify-between mb-4">
             <span className="font-bold text-lg">Total:</span>
-            <span className="font-bold text-lg">${total.value.toFixed(2)}</span>
+            <span className="font-bold text-lg">
+              ${(total.value +
+                (shipping.value.status === "ok"
+                  ? shipping.value.shippingCents / 100
+                  : 0)).toFixed(2)}
+            </span>
           </div>
           <button
             type="button"

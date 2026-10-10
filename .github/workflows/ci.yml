@@ -86,9 +86,15 @@ jobs:
           echo "::error::Timed out waiting for the Deno Deploy build"; exit 1
       - name: Compute preview URL
         run: |
-          # Deno Deploy removes "/" from branch names in preview hostnames.
-          slug=$(echo "${{ github.head_ref }}" | tr -d /)
-          echo "BASE_URL=https://test-weewoo-study--${slug}.briansimoni.deno.net" >> "$GITHUB_ENV"
+          # Test this commit's own build at its revision URL
+          # (<app>-<build id>.<org>.deno.net). The branch alias
+          # (test-weewoo-study--<branch>) isn't always created, and can lag
+          # behind the commit under test.
+          build=$(gh api "repos/${{ github.repository }}/commits/$SHA/statuses" \
+            --jq "[.[] | select(.context == \"$CONTEXT\" and .state == \"success\")][0].target_url" \
+            | sed 's|.*/builds/||')
+          if [ -z "$build" ]; then echo "::error::No build ID in the $CONTEXT status"; exit 1; fi
+          echo "BASE_URL=https://test-weewoo-study-${build}.briansimoni.deno.net" >> "$GITHUB_ENV"
       - run: deno install
       - run: deno task smoke "$BASE_URL"
       - uses: actions/cache@v4

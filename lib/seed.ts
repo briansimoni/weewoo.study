@@ -229,21 +229,43 @@ async function seedUsers(
       });
     }
 
-    if (profile.streak > 0) {
-      // StreakStore only advances streaks in real time, so write the record
-      // directly (same key and shape as StreakStore).
-      const day = 24 * 60 * 60 * 1000;
-      const streak: Streak = {
-        days: profile.streak,
-        start_date: new Date(now.getTime() - (profile.streak - 1) * day)
-          .toISOString(),
-        last_activity: now.toISOString(),
-        expires_on: new Date(now.getTime() + 2 * day).toISOString(),
-      };
-      await kv.set(["streaks", profile.user_id], streak, { expireIn: 2 * day });
-    }
+    await writeSeedStreak(kv, profile, now);
   }
   return { users, attempts };
+}
+
+type SeedUser = (typeof SEED_USERS)[number];
+
+async function writeSeedStreak(kv: Deno.Kv, profile: SeedUser, now: Date) {
+  if (profile.streak <= 0) return;
+  // StreakStore only advances streaks in real time, so write the record
+  // directly (same key and shape as StreakStore).
+  const day = 24 * 60 * 60 * 1000;
+  const streak: Streak = {
+    days: profile.streak,
+    start_date: new Date(now.getTime() - (profile.streak - 1) * day)
+      .toISOString(),
+    last_activity: now.toISOString(),
+    expires_on: new Date(now.getTime() + 2 * day).toISOString(),
+  };
+  await kv.set(["streaks", profile.user_id], streak, { expireIn: 2 * day });
+}
+
+/**
+ * Restore a seed user's streak once it has expired. Seeded streaks last two
+ * days, but preview databases live much longer, so the test login calls this
+ * to keep a seed user's profile as seeded. A live streak is left alone.
+ */
+export async function refreshSeedStreak(
+  kv: Deno.Kv,
+  userId: string,
+  now = new Date(),
+) {
+  const profile = SEED_USERS.find((u) => u.user_id === userId);
+  if (!profile) return;
+  const current = (await kv.get<Streak>(["streaks", userId])).value;
+  if (current && new Date(current.expires_on) > now) return;
+  await writeSeedStreak(kv, profile, now);
 }
 
 async function seedReports(
@@ -313,8 +335,9 @@ async function seedProducts(kv: Deno.Kv) {
  * 2: the shop catalog comes from the TEST database (lib/seed_catalog.json).
  * 3: leaderboard entries include display names.
  * 4: interrupted seeds are detected and redone (forces a reseed everywhere).
+ * 5: product thumbnails point at CloudFront instead of expiring Printful URLs.
  */
-export const SEED_VERSION = 4;
+export const SEED_VERSION = 5;
 const VERSION_KEY = ["seed", "version"];
 const LOCK_KEY = ["seed", "lock"];
 const STARTED_KEY = ["seed", "started"];
