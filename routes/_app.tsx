@@ -5,7 +5,7 @@ export default function App(props: AppProps) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>NREMT practice questions</title>
+        <title>WeeWoo.study | Free NREMT practice questions</title>
 
         {/* PWA Related Tags */}
         <meta name="theme-color" content="#ffffff" />

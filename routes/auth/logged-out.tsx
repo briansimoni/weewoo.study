@@ -2,6 +2,9 @@ import { page } from "fresh";
 import { SessionStore } from "../../lib/session_store.ts";
 import { AppHandlers } from "../_middleware.ts";
 import * as http from "@std/http";
+import { Page } from "../../components/ui/Page.tsx";
+import { Card } from "../../components/ui/Card.tsx";
+import { LinkButton } from "../../components/ui/Button.tsx";
 
 export const handler: AppHandlers = {
   async GET(ctx) {
@@ -20,12 +23,12 @@ export const handler: AppHandlers = {
 
 export default function () {
   return (
-    <div class="flex justify-center">
-      <div class="card shadow-xl p-6 max-w-md">
-        <h1 class="text-3xl text-center">Logged Out</h1>
-        <p class="mb-6 text-center">You have successfully logged out.</p>
-        <a href="/" class="btn btn-primary">Return to Home</a>
-      </div>
-    </div>
+    <Page title="Logged Out" width="narrow">
+      <Card bodyClass="items-center text-center">
+        <h1 class="text-3xl font-bold">Logged Out</h1>
+        <p class="mb-4">You have successfully logged out.</p>
+        <LinkButton href="/">Return to Home</LinkButton>
+      </Card>
+    </Page>
   );
 }

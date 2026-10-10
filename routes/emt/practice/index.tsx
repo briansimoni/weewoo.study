@@ -2,6 +2,7 @@ import { page } from "fresh";
 import QuestionPage from "../../../islands/Question.tsx";
 import type { Handlers } from "fresh/compat";
 import type { AppState } from "../../_middleware.ts";
+import { Page } from "../../../components/ui/Page.tsx";
 
 export const handler: Handlers<undefined, AppState> = {
   GET(ctx) {
@@ -13,5 +14,9 @@ export const handler: Handlers<undefined, AppState> = {
 };
 
 export default function PracticePage() {
-  return <QuestionPage />;
+  return (
+    <Page title="Practice" width="narrow">
+      <QuestionPage />
+    </Page>
+  );
 }

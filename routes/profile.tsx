@@ -7,6 +7,7 @@ import { UserStore } from "../lib/user_store.ts";
 import type { AppState } from "./_middleware.ts";
 import type { ComponentProps } from "preact";
 import type { Handlers } from "fresh/compat";
+import { Page } from "../components/ui/Page.tsx";
 
 type ProfileData = ComponentProps<typeof Profile>;
 
@@ -38,11 +39,13 @@ export const handler: Handlers<ProfileData, AppState> = {
 
 export default function (props: PageProps<ProfileData, AppState>) {
   return (
-    <Profile
-      user={props.data.user}
-      session={props.data.session}
-      streak={props.data.streak}
-      attempts={props.data.attempts}
-    />
+    <Page title="Profile">
+      <Profile
+        user={props.data.user}
+        session={props.data.session}
+        streak={props.data.streak}
+        attempts={props.data.attempts}
+      />
+    </Page>
   );
 }

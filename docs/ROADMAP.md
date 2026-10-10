@@ -334,18 +334,23 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       Page/PageHeader and FeatureCard to the primitive list, and found bugs: the
       cart shows the Printful ID as the product name, desktop nav has no
       Practice link, and most pages have no `<title>`.
-- [ ] Extract `components/ui/` primitives (Button, Card, Badge, Modal,
-      ProgressBar, Stat) and replace the duplicated markup with them. Batch 1
-      (2026-10-10): `Button`/`LinkButton`, `Card`, `Stat`/`StatGrid` and
-      `Avatar`, plus a shared `components/UserStats.tsx`, used on the profile,
-      public user page, practice screen and error page. That fixed the profile's
-      mobile overflow and broken image, and the user page, practice screen and
-      error page no longer break in dark mode. Batch 2: `Alert`, `Modal` (native
-      `<dialog>`), and toasts (`showToast()` + `islands/Toaster.tsx` in the
-      layout), replacing `alert()`/`confirm()` and hand-managed modals
-      everywhere except the admin product page (28 alerts, left for its own
-      refactor). Next: the page shell, Badge and ProgressBar (order in
-      [docs/ui-audit.md](ui-audit.md)).
+- [x] Extract `components/ui/` primitives (Button, Card, Badge, Modal,
+      ProgressBar, Stat) and replace the duplicated markup with them. Done
+      2026-10-10 in three PRs (#17, #18, and the page-shell PR):
+      `Button`/`LinkButton`, `Card`, `Stat`/`StatGrid`, `Avatar`, `Alert`,
+      `Modal` (native `<dialog>`), toasts (`showToast()` +
+      `islands/Toaster.tsx`), `Page` (tab title, standard widths, heading),
+      `Badge`/`CountBadge` and `ProgressBar`, plus `components/UserStats.tsx`.
+      Every public page now renders in `Page` and has a `<title>`; the navbar is
+      built from one link list, has Practice on desktop and no longer wraps.
+      Fixed on the way: profile overflow and broken image, dark mode on the user
+      page, practice screen and error page, `alert()`s outside the admin product
+      page.
+- [ ] **Finish moving to the primitives.** Admin pages still use raw DaisyUI
+      markup (header band copied into 6 pages, badges, tables), and the admin
+      product page has 28 `alert()`s in 1,776 lines. The landing page's 6
+      feature cards and promo cards are hand-copied (a `FeatureCard`), best done
+      with the landing redesign.
 - [ ] Create the Claude Design design-system project and do the first
       `/design-sync` push.
 - [ ] Define the brand direction: a playful EMS identity (mascot? ambulance
