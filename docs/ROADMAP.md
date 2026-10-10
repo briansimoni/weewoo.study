@@ -331,9 +331,9 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       design tokens yet (DaisyUI defaults), 34 raw palette classes that break
       dark mode, the stat block and admin header copied by hand, 38 browser
       `alert()`s, no shared page shell. It adds Alert/Toast, Avatar,
-      Page/PageHeader and FeatureCard to the primitive list, and found bugs: the
-      cart shows the Printful ID as the product name, desktop nav has no
-      Practice link, and most pages have no `<title>`.
+      Page/PageHeader and FeatureCard to the primitive list, and found bugs, all
+      fixed since: the cart showed the Printful ID as the product name, desktop
+      nav had no Practice link, and most pages had no `<title>`.
 - [x] Extract `components/ui/` primitives (Button, Card, Badge, Modal,
       ProgressBar, Stat) and replace the duplicated markup with them. Done
       2026-10-10 in three PRs (#17, #18, and the page-shell PR):

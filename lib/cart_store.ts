@@ -86,3 +86,15 @@ export const getCartItemCount = (): number => {
     0,
   );
 };
+
+/**
+ * The name to show for a cart item. Saved carts hold only the variant, which
+ * has the Printful product ID but not the product's name, so the cart page
+ * passes the catalog's names (`printful_id` → name).
+ */
+export const cartItemName = (
+  item: CartItem,
+  productNames: Record<string, string>,
+): string =>
+  productNames[item.variant.printful_product_id] ?? item.variant.name ??
+    "WeeWoo merch";
