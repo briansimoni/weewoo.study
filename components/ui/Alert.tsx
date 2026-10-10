@@ -19,9 +19,11 @@ const ICONS = {
 
 /** An inline message, e.g. a form's success or error. */
 export function Alert(
-  { tone = "info", class: extra, children }: {
+  { tone = "info", class: extra, className, children }: {
     tone?: ToastTone;
     class?: string;
+    /** Alias of `class`, for React-style callers. */
+    className?: string;
     children?: ComponentChildren;
   },
 ) {
@@ -30,7 +32,8 @@ export function Alert(
     <div
       // Errors interrupt screen readers; other tones wait their turn.
       role={tone === "error" ? "alert" : "status"}
-      class={["alert", ALERT_TONES[tone], extra].filter(Boolean).join(" ")}
+      class={["alert", ALERT_TONES[tone], extra, className].filter(Boolean)
+        .join(" ")}
     >
       <Icon class="shrink-0 h-6 w-6" aria-hidden="true" />
       <span>{children}</span>

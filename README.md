@@ -87,7 +87,8 @@ routes/            File-system routes (pages + API). _middleware.ts loads the
   api/             JSON APIs: question, attempt, profile, checkout, webhooks
   auth/            OIDC login, callback, logout
 islands/           Interactive Preact components hydrated on the client
-components/        Server-rendered components
+components/        Server-rendered components; ui/ holds the shared primitives
+                   (Button, Card, Stat, Modal, Page...), see docs/ui-audit.md
 lib/               Business logic: *_store.ts wrap Deno KV (one store per entity),
                    plus email, logging, cron tasks, the Printful client
 scripts/           One-off and admin scripts (products, Stripe, question generation)
@@ -99,6 +100,18 @@ vite.config.ts     Vite + Fresh + Tailwind; externalizes server-only deps
 
 Request flow: `routes/_middleware.ts` → route handler → `lib/*_store.ts` → KV.
 Pages render on the server; only `islands/` ship JavaScript.
+
+### Design system (Claude Design)
+
+The brand theme (`static/styles.css`) and `components/ui/` are synced to the
+Claude Design project
+[weewoo.study](https://claude.ai/design/p/158f915d-3eee-4812-9214-1f225e3f3481),
+so designs made there use the real components. Run `/design-sync` in Claude Code
+after changing them. The sync inputs live in `.design-sync/` (config,
+React-typed contracts in `types/index.d.ts`, previews, the conventions the
+design agent reads); `.design-sync/NOTES.md` explains how this Preact app is
+packaged for it. A prop added to a `components/ui/` component also belongs in
+`.design-sync/types/index.d.ts`.
 
 ## Deployment
 

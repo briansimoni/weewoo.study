@@ -30,13 +30,27 @@ export interface ButtonStyle {
   shape?: keyof typeof SHAPES;
   /** Extra classes, e.g. margins. */
   class?: string;
+  /** Alias of `class`, for React-style callers. */
+  className?: string;
 }
 
 export function buttonClass(
-  { variant = "primary", size = "md", shape = "default", class: extra }:
-    ButtonStyle,
+  {
+    variant = "primary",
+    size = "md",
+    shape = "default",
+    class: extra,
+    className,
+  }: ButtonStyle,
 ): string {
-  return ["btn", VARIANTS[variant], SIZES[size], SHAPES[shape], extra]
+  return [
+    "btn",
+    VARIANTS[variant],
+    SIZES[size],
+    SHAPES[shape],
+    extra,
+    className,
+  ]
     .filter(Boolean).join(" ");
 }
 
@@ -55,6 +69,7 @@ export function Button(
     size,
     shape,
     class: extra,
+    className,
     loading,
     disabled,
     type = "button",
@@ -66,7 +81,7 @@ export function Button(
     <button
       {...rest}
       type={type}
-      class={buttonClass({ variant, size, shape, class: extra })}
+      class={buttonClass({ variant, size, shape, class: extra, className })}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
     >
@@ -83,10 +98,14 @@ type LinkButtonProps =
 
 /** A link styled as a button. */
 export function LinkButton(
-  { variant, size, shape, class: extra, children, ...rest }: LinkButtonProps,
+  { variant, size, shape, class: extra, className, children, ...rest }:
+    LinkButtonProps,
 ) {
   return (
-    <a {...rest} class={buttonClass({ variant, size, shape, class: extra })}>
+    <a
+      {...rest}
+      class={buttonClass({ variant, size, shape, class: extra, className })}
+    >
       {children}
     </a>
   );

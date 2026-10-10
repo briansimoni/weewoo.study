@@ -1,0 +1,30 @@
+{
+  "projectId": "158f915d-3eee-4812-9214-1f225e3f3481",
+  "shape": "package",
+  "pkg": "weewoo-ui",
+  "globalName": "WeeWooUI",
+  "buildCmd": "node .design-sync/build-pkg.mjs",
+  "srcDir": "../../../components/ui",
+  "cssEntry": "dist/styles.css",
+  "extraFonts": [
+    "../../../node_modules/@fontsource/ibm-plex-sans/latin-400.css",
+    "../../../node_modules/@fontsource/ibm-plex-sans/latin-500.css",
+    "../../../node_modules/@fontsource/ibm-plex-sans/latin-600.css",
+    "../../../node_modules/@fontsource/ibm-plex-mono/latin-500.css",
+    "../../../node_modules/@fontsource/space-grotesk/latin-500.css",
+    "../../../node_modules/@fontsource/space-grotesk/latin-700.css"
+  ],
+  "overrides": {
+    "Modal": {
+      "cardMode": "single",
+      "viewport": "720x420"
+    },
+    "Button": {
+      "cardMode": "column"
+    },
+    "ProgressBar": {
+      "cardMode": "column"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

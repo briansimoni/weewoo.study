@@ -32,7 +32,10 @@
     "**/_fresh/*",
     "image-converter/**/*",
     "vite.config.ts.timestamp-*.mjs",
-    ".deno_cache/"
+    ".deno_cache/",
+    ".ds-sync/",
+    "ds-bundle/",
+    ".design-sync/"
   ],
   "nodeModulesDir": "auto",
   "imports": {

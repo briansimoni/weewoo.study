@@ -10,6 +10,8 @@ interface ModalProps {
   actions?: ComponentChildren;
   /** Extra classes on the box, e.g. `max-w-3xl`. */
   class?: string;
+  /** Alias of `class`, for React-style callers. */
+  className?: string;
   children?: ComponentChildren;
 }
 
@@ -18,7 +20,8 @@ interface ModalProps {
  * focus, Escape and the backdrop, rather than toggling `modal-open` by hand.
  */
 export function Modal(
-  { open, onClose, title, actions, class: extra, children }: ModalProps,
+  { open, onClose, title, actions, class: extra, className, children }:
+    ModalProps,
 ) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -37,7 +40,7 @@ export function Modal(
       onClose={onClose}
       aria-labelledby={title ? titleId : undefined}
     >
-      <div class={["modal-box", extra].filter(Boolean).join(" ")}>
+      <div class={["modal-box", extra, className].filter(Boolean).join(" ")}>
         {title && <h3 id={titleId} class="font-bold text-lg">{title}</h3>}
         {children}
         {actions && <div class="modal-action">{actions}</div>}

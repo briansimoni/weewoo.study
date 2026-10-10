@@ -27,18 +27,29 @@ interface BadgeProps {
   tone?: BadgeTone;
   size?: keyof typeof SIZES;
   class?: string;
+  /** Alias of `class`, for React-style callers. */
+  className?: string;
   children?: ComponentChildren;
 }
 
 export function Badge(
-  { tone = "neutral", size = "md", class: extra, children, ...rest }:
+  {
+    tone = "neutral",
+    size = "md",
+    class: extra,
+    className,
+    children,
+    ...rest
+  }:
     & BadgeProps
     & { "data-testid"?: string },
 ) {
   return (
     <span
       {...rest}
-      class={["badge", TONES[tone], SIZES[size], extra].filter(Boolean).join(
+      class={["badge", TONES[tone], SIZES[size], extra, className].filter(
+        Boolean,
+      ).join(
         " ",
       )}
     >
