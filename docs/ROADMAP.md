@@ -340,9 +340,12 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       `Avatar`, plus a shared `components/UserStats.tsx`, used on the profile,
       public user page, practice screen and error page. That fixed the profile's
       mobile overflow and broken image, and the user page, practice screen and
-      error page no longer break in dark mode. Next: Alert/Toast and Modal
-      (replacing `alert()`), then the page shell, Badge and ProgressBar (order
-      in [docs/ui-audit.md](ui-audit.md)).
+      error page no longer break in dark mode. Batch 2: `Alert`, `Modal` (native
+      `<dialog>`), and toasts (`showToast()` + `islands/Toaster.tsx` in the
+      layout), replacing `alert()`/`confirm()` and hand-managed modals
+      everywhere except the admin product page (28 alerts, left for its own
+      refactor). Next: the page shell, Badge and ProgressBar (order in
+      [docs/ui-audit.md](ui-audit.md)).
 - [ ] Create the Claude Design design-system project and do the first
       `/design-sync` push.
 - [ ] Define the brand direction: a playful EMS identity (mascot? ambulance

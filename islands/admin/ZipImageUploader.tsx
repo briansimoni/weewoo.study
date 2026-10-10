@@ -1,5 +1,6 @@
 import { useState } from "preact/hooks";
 import { JSX } from "preact";
+import { showToast } from "../../components/ui/toast.ts";
 
 interface ZipImageUploaderProps {
   productId: string;
@@ -22,7 +23,7 @@ export default function ZipImageUploader(
     const _file = fileInput.files?.[0];
 
     if (!_file || !_file.name.toLowerCase().endsWith(".zip")) {
-      alert("Please select a valid ZIP file.");
+      showToast("Please select a valid ZIP file.", { tone: "warning" });
       return;
     }
 
@@ -73,7 +74,9 @@ export default function ZipImageUploader(
         setUploadProgress(100);
 
         // Show success message but don't display PNG images
-        alert(data.message + " " + (data.note || ""));
+        showToast(data.message + " " + (data.note || ""), {
+          tone: "success",
+        });
 
         // Clear any previous images since we uploaded PNG but want to show WebP
         setExtractedImages([]);
@@ -93,7 +96,9 @@ export default function ZipImageUploader(
       const errorMessage = error instanceof Error
         ? error.message
         : "Unknown error";
-      alert(`Error processing ZIP file: ${errorMessage}`);
+      showToast(`Error processing ZIP file: ${errorMessage}`, {
+        tone: "error",
+      });
       setUploadProgress(0);
     } finally {
       setIsUploading(false);
@@ -121,14 +126,18 @@ export default function ZipImageUploader(
         setExtractedImages(data.images);
         setShowPreview(true);
       } else {
-        alert("No images found in S3 bucket for this product.");
+        showToast("No images found in S3 bucket for this product.", {
+          tone: "warning",
+        });
       }
     } catch (error: unknown) {
       console.error("Error fetching S3 images:", error);
       const errorMessage = error instanceof Error
         ? error.message
         : "Unknown error";
-      alert(`Error fetching S3 images: ${errorMessage}`);
+      showToast(`Error fetching S3 images: ${errorMessage}`, {
+        tone: "error",
+      });
     } finally {
       setIsUploading(false);
     }

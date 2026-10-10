@@ -1,5 +1,6 @@
 import { useState } from "preact/hooks";
 import { Product, ProductVariant } from "../../lib/product_store.ts";
+import { showToast } from "../../components/ui/toast.ts";
 import { addToCart } from "../../lib/cart_store.ts";
 
 interface ProductDetailsProps {
@@ -57,14 +58,10 @@ export default function ProductDetails(
   const handleAddToCart = () => {
     if (selectedVariant) {
       addToCart(selectedVariant);
-      // Show a toast or notification that item was added
-      const toast = document.getElementById("cart-toast");
-      if (toast) {
-        toast.classList.remove("hidden");
-        setTimeout(() => {
-          toast.classList.add("hidden");
-        }, 3000);
-      }
+      showToast("Added to cart!", {
+        tone: "success",
+        action: { label: "Go to cart", href: "/cart" },
+      });
     }
   };
 
@@ -245,21 +242,6 @@ export default function ProductDetails(
           >
             Add to Cart
           </button>
-        </div>
-
-        {/* Toast notification */}
-        <div id="cart-toast" className="toast toast-top toast-end hidden">
-          <div className="alert alert-success">
-            <div className="flex flex-col gap-1">
-              <span>Added to cart!</span>
-              <a
-                href="/cart"
-                className="text-sm underline hover:text-white transition-colors"
-              >
-                Go to cart
-              </a>
-            </div>
-          </div>
         </div>
 
         {/* Additional information */}
