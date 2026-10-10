@@ -199,6 +199,9 @@ export default function BasicLine(props: { attempts: Attempt[] }) {
       },
       options: {
         responsive: true,
+        // The wrapper sets the height, so a late resize (hydration, scrollbar)
+        // changes only the width and never the page's height.
+        maintainAspectRatio: false,
         plugins: {
           title: {
             display: true,
@@ -249,7 +252,9 @@ export default function BasicLine(props: { attempts: Attempt[] }) {
 
   return (
     <>
-      <canvas ref={ref}></canvas>
+      <div class="relative h-64 sm:h-80">
+        <canvas ref={ref}></canvas>
+      </div>
       <div role="tablist" className="tabs">
         {durations.map((duration, i) => {
           const tabActive = selectedDuration === duration && "tab-active" || "";
