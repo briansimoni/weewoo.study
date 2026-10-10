@@ -12,7 +12,10 @@ test("a shopper adds a product to the cart and reaches Stripe test checkout", as
   // Capture the checkout API response: the page navigates to Stripe as soon
   // as it arrives, after which the body is no longer readable.
   let checkout:
-    | { status: number; body: { sessionId?: string; url?: string } }
+    | {
+      status: number;
+      body: { sessionId?: string; url?: string; shippingCents?: number };
+    }
     | undefined;
   await page.route("**/api/checkout", async (route) => {
     const response = await route.fetch();
@@ -28,6 +31,9 @@ test("a shopper adds a product to the cart and reaches Stripe test checkout", as
   await expect(page.getByText("Added to cart!")).toBeVisible();
 
   await gotoReady(page, "/cart");
+  const shipping = page.getByTestId("shipping-amount");
+  await expect(shipping).toHaveText(/^(\$\d+\.\d{2}|Free)$/);
+  const shippingText = await shipping.textContent();
   await page.getByRole("button", { name: "Proceed to Checkout" }).click();
   await expect.poll(() => checkout?.status).toBeDefined();
 
@@ -35,4 +41,31 @@ test("a shopper adds a product to the cart and reaches Stripe test checkout", as
   // Test mode only: a live-mode session must never be created by tests.
   expect(checkout!.body.sessionId).toMatch(/^cs_test_/);
   expect(new URL(checkout!.body.url!).host).toBe("checkout.stripe.com");
+  // The session charges the shipping the cart showed
+  const shownCents = shippingText === "Free"
+    ? 0
+    : Math.round(Number(shippingText!.slice(1)) * 100);
+  expect(checkout!.body.shippingCents).toBe(shownCents);
+});
+
+test("shipping is quoted per cart and free from $50", async ({ request }) => {
+  // Seed catalog: a $39.99 hoodie variant
+  const quote = async (quantity: number) => {
+    const response = await request.post("/api/shipping_quote", {
+      data: { items: [{ stripe_product_id: "prod_RyV6nkK3nukdtx", quantity }] },
+    });
+    expect(response.status()).toBe(200);
+    return await response.json();
+  };
+  const one = await quote(1);
+  expect(one.free).toBe(false);
+  expect(one.shippingCents).toBeGreaterThan(0);
+  expect(one.freeThresholdCents).toBe(5000);
+  const two = await quote(2);
+  expect(two).toMatchObject({ free: true, shippingCents: 0 });
+
+  const unknown = await request.post("/api/shipping_quote", {
+    data: { items: [{ stripe_product_id: "prod_nope", quantity: 1 }] },
+  });
+  expect(unknown.status()).toBe(400);
 });

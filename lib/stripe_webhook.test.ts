@@ -59,6 +59,8 @@ const session = {
   id: SESSION_ID,
   object: "checkout.session",
   customer_details: { email: "buyer@example.com" },
+  // Set by routes/api/checkout.ts from the Printful shipping quote
+  metadata: { printful_shipping_cents: "495" },
   collected_information: {
     shipping_details: {
       name: "Pat Medic",
@@ -273,6 +275,37 @@ Deno.test("PROD submits one Printful order, emails, and records the event", asyn
     assertEquals(record.value?.status, "done");
     assertEquals(record.value?.mode, "live");
   });
+});
+
+Deno.test("a Printful shipping charge that differs from the quote logs a warning", async () => {
+  for (
+    const [shipping, warned] of [["4.95", false], ["12.40", true]] as const
+  ) {
+    await withDeps({
+      fetch: () =>
+        Promise.resolve(
+          Response.json({
+            code: 200,
+            result: { id: 555, costs: { shipping } },
+          }),
+        ),
+    }, async (deps, calls) => {
+      const res = await handleStripeWebhook(
+        await signedRequest(completed),
+        deps,
+      );
+      assertEquals(res.status, 200);
+      const warning = calls.logs.find((l) =>
+        l.message.startsWith("Printful charged")
+      );
+      assertEquals(
+        warning?.message,
+        warned
+          ? "Printful charged 1240 cents for shipping; checkout quoted 495"
+          : undefined,
+      );
+    });
+  }
 });
 
 Deno.test("a redelivered event is not fulfilled twice", async () => {
