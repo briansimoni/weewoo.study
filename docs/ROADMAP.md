@@ -167,7 +167,8 @@ have to seed themselves.
       for products with no `thumbnail_url`~~: done 2026-10-08, the seed catalog
       thumbnails are CloudFront images (the TEST database still needs the same
       fix through `deno task admin`). A fallback image for missing thumbnails
-      would still help. Good first tasks for the Phase 1 design work.
+      would still help. Good first tasks for the Phase 1 design work. Deferred
+      (2026-10-10): the profile page is being redesigned in Phase 1.
 - [ ] **Give agents eyes.** Claude in Chrome is already available to agents in
       this setup. Optionally add the Playwright MCP (`.mcp.json`) so agents can
       drive a headless browser against `deno task e2e:serve` without the human's
@@ -324,8 +325,14 @@ than inventing them. That's essential before the Duolingo-style overhaul.
 
 **Tasks**
 
-- [ ] Audit the current UI: list every page and island, and the ad-hoc styles
-      that are repeated.
+- [x] Audit the current UI: list every page and island, and the ad-hoc styles
+      that are repeated. Done 2026-10-10 in [docs/ui-audit.md](ui-audit.md): no
+      design tokens yet (DaisyUI defaults), 34 raw palette classes that break
+      dark mode, the stat block and admin header copied by hand, 38 browser
+      `alert()`s, no shared page shell. It adds Alert/Toast, Avatar,
+      Page/PageHeader and FeatureCard to the primitive list, and found bugs: the
+      cart shows the Printful ID as the product name, desktop nav has no
+      Practice link, and most pages have no `<title>`.
 - [ ] Extract `components/ui/` primitives (Button, Card, Badge, Modal,
       ProgressBar, Stat) and replace the duplicated markup with them.
 - [ ] Create the Claude Design design-system project and do the first
