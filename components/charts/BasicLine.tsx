@@ -2,8 +2,14 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 // todo: import and register just the things that we need
 import Chart from "chart.js/auto";
-import { Attempt } from "../../lib/attempt_store.ts";
-import dayjs from "dayjs";
+import type { Attempt } from "../../lib/attempt_store.ts";
+// Not dayjs: islands can't load it under the dev server (see lib/dates.ts).
+import {
+  addDays,
+  addMonths,
+  formatMonthDay,
+  formatMonthYear,
+} from "../../lib/dates.ts";
 
 export function toDataSet(params: {
   attempts: Attempt[];
@@ -15,7 +21,7 @@ export function toDataSet(params: {
   const { attempts, duration } = params;
   if (duration === "1W") {
     const last7Days = new Array(7).fill(null).map((_, i) =>
-      dayjs().subtract(i, "day").format("MM/DD")
+      formatMonthDay(addDays(new Date(), -i))
     ).reverse();
 
     const grouping = last7Days.reduce((prev, date) => {
@@ -24,7 +30,7 @@ export function toDataSet(params: {
     }, {} as Record<string, Attempt[]>);
 
     attempts.forEach((attempt) => {
-      const day = dayjs(attempt.timestamp_submitted).format("MM/DD");
+      const day = formatMonthDay(new Date(attempt.timestamp_submitted));
       if (day in grouping) {
         grouping[day].push(attempt);
       }
@@ -38,12 +44,12 @@ export function toDataSet(params: {
 
   if (duration === "1M") {
     const dates = new Array(6).fill(null).map((_, i) => {
-      return dayjs().subtract((i + 1) * 5, "day").toISOString();
+      return addDays(new Date(), -(i + 1) * 5).toISOString();
     }).reverse();
 
     const grouping = dates.reduce((prev, date) => {
       prev[date] = {
-        date: dayjs(date).format("MM/DD"),
+        date: formatMonthDay(new Date(date)),
         attempts: [],
       };
       return prev;
@@ -51,13 +57,11 @@ export function toDataSet(params: {
 
     attempts.forEach((attempt) => {
       const targetGroup = Object.keys(grouping).find((entry) => {
-        const start = dayjs(entry);
-        const end = start.add(5, "day");
-        const attempt_submitted = dayjs(attempt.timestamp_submitted);
+        const start = new Date(entry).getTime();
+        const end = addDays(new Date(entry), 5).getTime();
+        const submitted = new Date(attempt.timestamp_submitted).getTime();
 
-        return (attempt_submitted.isAfter(start) ||
-          attempt_submitted.isSame(start)) &&
-          (attempt_submitted.isBefore(end) || attempt_submitted.isSame(end));
+        return submitted >= start && submitted <= end;
       });
 
       if (targetGroup) {
@@ -77,12 +81,12 @@ export function toDataSet(params: {
 
   if (duration === "1Y") {
     const dates = new Array(12).fill(null).map((_, i) => {
-      return dayjs().subtract(i, "month").toISOString();
+      return addMonths(new Date(), -i).toISOString();
     }).reverse();
 
     const grouping = dates.reduce((prev, date) => {
       prev[date] = {
-        date: dayjs(date).format("MM/YY"),
+        date: formatMonthYear(new Date(date)),
         attempts: [],
       };
       return prev;
@@ -90,13 +94,11 @@ export function toDataSet(params: {
 
     attempts.forEach((attempt) => {
       const targetGroup = Object.keys(grouping).find((entry) => {
-        const start = dayjs(entry);
-        const end = start.add(1, "month");
-        const attempt_submitted = dayjs(attempt.timestamp_submitted);
+        const start = new Date(entry).getTime();
+        const end = addMonths(new Date(entry), 1).getTime();
+        const submitted = new Date(attempt.timestamp_submitted).getTime();
 
-        return (attempt_submitted.isAfter(start) ||
-          attempt_submitted.isSame(start)) &&
-          attempt_submitted.isBefore(end);
+        return submitted >= start && submitted < end;
       });
       if (targetGroup) {
         grouping[targetGroup].attempts.push(attempt);
