@@ -123,7 +123,44 @@ export function toDataSet(params: {
   };
 }
 
-function getChartData(attempts: Attempt[], selectedDuration: Duration) {
+/** Chart colors from the active DaisyUI theme (hex, see static/styles.css). */
+interface ChartColors {
+  success: string;
+  error: string;
+  total: string;
+  text: string;
+  grid: string;
+}
+
+const FALLBACK_COLORS: ChartColors = {
+  success: "#10b981",
+  error: "#ef4444",
+  total: "#3b82f6",
+  text: "#666666",
+  grid: "#0000001a",
+};
+
+function themeColors(): ChartColors {
+  const style = getComputedStyle(document.documentElement);
+  const read = (name: string, fallback: string) =>
+    style.getPropertyValue(name).trim() || fallback;
+  return {
+    success: read("--color-success", FALLBACK_COLORS.success),
+    error: read("--color-error", FALLBACK_COLORS.error),
+    total: read("--color-info", FALLBACK_COLORS.total),
+    text: read("--color-base-content", FALLBACK_COLORS.text),
+    grid: read("--color-base-300", FALLBACK_COLORS.grid),
+  };
+}
+
+/** A hex color at about 10% opacity, for the area under a line. */
+const tint = (hex: string) => /^#[0-9a-f]{6}$/i.test(hex) ? `${hex}1a` : hex;
+
+function getChartData(
+  attempts: Attempt[],
+  selectedDuration: Duration,
+  colors: ChartColors = FALLBACK_COLORS,
+) {
   const totalAttemptsData = toDataSet({
     attempts,
     duration: selectedDuration,
@@ -144,8 +181,8 @@ function getChartData(attempts: Attempt[], selectedDuration: Duration) {
       {
         label: "successful",
         data: successfulAttemptsData.dataset,
-        borderColor: "rgb(16, 185, 129)",
-        backgroundColor: "rgba(16, 185, 129, 0.1)",
+        borderColor: colors.success,
+        backgroundColor: tint(colors.success),
         borderWidth: 2,
 
         tension: 0.4,
@@ -153,8 +190,8 @@ function getChartData(attempts: Attempt[], selectedDuration: Duration) {
       {
         label: "failed",
         data: failedAttemptsData.dataset,
-        borderColor: "rgb(239, 68, 68)",
-        backgroundColor: "rgba(239, 68, 68, 0.1)",
+        borderColor: colors.error,
+        backgroundColor: tint(colors.error),
         borderWidth: 2,
 
         tension: 0.4,
@@ -162,8 +199,8 @@ function getChartData(attempts: Attempt[], selectedDuration: Duration) {
       {
         label: "total",
         data: totalAttemptsData?.dataset,
-        borderColor: "rgb(59, 130, 246)",
-        backgroundColor: "rgba(59, 130, 246, 0.1)",
+        borderColor: colors.total,
+        backgroundColor: tint(colors.total),
         borderWidth: 2,
 
         tension: 0.4,
@@ -189,7 +226,8 @@ export default function BasicLine(props: { attempts: Attempt[] }) {
       return;
     }
 
-    const chartData = getChartData(attempts, selectedDuration);
+    const colors = themeColors();
+    const chartData = getChartData(attempts, selectedDuration, colors);
 
     const chart = new Chart(ref.current, {
       type: "line",
@@ -202,27 +240,28 @@ export default function BasicLine(props: { attempts: Attempt[] }) {
         // The wrapper sets the height, so a late resize (hydration, scrollbar)
         // changes only the width and never the page's height.
         maintainAspectRatio: false,
+        color: colors.text,
         plugins: {
           title: {
             display: true,
             text: "Questions answered over time",
+            color: colors.text,
           },
           legend: {
             display: true,
             position: "top",
+            labels: { color: colors.text },
           },
         },
         scales: {
           y: {
             beginAtZero: true,
-            grid: {
-              color: "rgba(0, 0, 0, 0.1)",
-            },
+            grid: { color: colors.grid },
+            ticks: { color: colors.text },
           },
           x: {
-            grid: {
-              color: "rgba(0, 0, 0, 0.1)",
-            },
+            grid: { color: colors.grid },
+            ticks: { color: colors.text },
           },
         },
         interaction: {
@@ -244,7 +283,7 @@ export default function BasicLine(props: { attempts: Attempt[] }) {
       return;
     }
 
-    const chartData = getChartData(attempts, selectedDuration);
+    const chartData = getChartData(attempts, selectedDuration, themeColors());
     chart.data.labels = chartData.labels;
     chart.data.datasets = chartData.datasets;
     chart.update();
