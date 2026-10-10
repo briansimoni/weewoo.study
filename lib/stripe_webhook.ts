@@ -3,6 +3,10 @@
 import type Stripe from "stripe";
 import type { EmailService } from "./email_service.ts";
 import { ProductStore, type ProductVariant } from "./product_store.ts";
+import {
+  QUOTED_PRINTFUL_SHIPPING_KEY,
+  shippingCostMismatch,
+} from "./shipping.ts";
 
 export type StripeKeyMode = "live" | "test" | "unknown";
 
@@ -248,6 +252,13 @@ async function fulfillCheckout(
   }
 
   const result = await submitPrintfulOrder(order, deps);
+  const mismatch = shippingCostMismatch(
+    session.metadata?.[QUOTED_PRINTFUL_SHIPPING_KEY],
+    result.result?.costs?.shipping,
+  );
+  if (mismatch) {
+    log.warn(mismatch, { sessionId: session.id, orderId: result.result?.id });
+  }
   if (mode !== "live") {
     log.info("Submitted Printful draft order; no emails outside PROD", {
       orderId: result.result?.id,
@@ -322,7 +333,7 @@ export function buildPrintfulOrder(
 async function submitPrintfulOrder(
   order: PrintfulOrder,
   deps: StripeWebhookDeps,
-): Promise<{ result?: { id?: number } }> {
+): Promise<{ result?: { id?: number; costs?: { shipping?: string } } }> {
   const { log } = deps;
   log.info(`Submitting order to Printful with ${order.items.length} items`);
   const response = await (deps.fetch ?? fetch)(

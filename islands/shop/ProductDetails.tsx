@@ -270,6 +270,7 @@ export default function ProductDetails(
             </summary>
             <div className="collapse-content">
               <p>Estimated delivery: 7-14 business days</p>
+              <p>Free standard shipping on orders over $50 (US only).</p>
             </div>
           </details>
 

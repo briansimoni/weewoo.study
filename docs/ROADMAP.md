@@ -441,18 +441,20 @@ up front for the trial, and the free-tier limits.
 
 ## Phase 6: Shop
 
-- [ ] **Dynamic shipping (good pilot task for the loop).** Get rates from
-      Printful's shipping rates API (`POST /shipping/rates`) for the cart items
-      and destination. Two options:
-  - (a) Collect the destination ZIP/state on the cart page, fetch rates, and
-    pass them as `shipping_options` when creating the Checkout Session.
-  - (b) Use Stripe Checkout's dynamic shipping-options callback to recalculate
-    rates when the customer enters their address inside Checkout. This gives
-    better UX but has more moving parts.
-
-  Recommendation: start with (a). Add a mocked Printful client in tests (the
-  client already accepts an injectable `fetch`). Then retire
-  `scripts/update_shipping_config.ts`.
+- [x] **Dynamic shipping (good pilot task for the loop).** Checkout charges
+      Printful's `STANDARD` rate for the cart (`POST /shipping/rates`), free
+      from a $50 subtotal, on the Stripe-hosted page (`lib/shipping.ts`). We
+      first chose Stripe's dynamic shipping callback (b), but it needs the
+      embedded form (`ui_mode: "form"`), and Apple Pay/Google Pay bypass it.
+      Quoting showed Printful's US rates depend only on the items (identical for
+      CA, NY, TX, FL, AK and HI, 2026-10-10), so the checkout quotes a fixed US
+      address up front and wallets keep working. The cart shows the quote
+      (`/api/shipping_quote`). The webhook logs a warning if Printful's order
+      charges a different shipping cost than the session's
+      `printful_shipping_cents` metadata, which would mean rates now vary by
+      address. Without `PRINTFUL_SECRET` (CI), non-PROD stages use a stub rate.
+      `scripts/update_shipping_config.ts` is retired. Standard only: the
+      carbon-offset option (+$0.09–0.27) isn't offered.
 - [ ] **Tax:** decide on Stripe Tax and confirm nexus obligations.
 - [ ] **Order status page** for customers, fed by the existing Printful webhook.
 - [ ] **Catalog scalability:** collections and categories, variant images, and
@@ -501,4 +503,4 @@ up front for the trial, and the free-tier limits.
 | Medical reviewer for question approval           | 2     | Human |
 | KV vs. Postgres for analytics                    | 3     | Both  |
 | Pricing, trial length, free-tier limits          | 5     | Human |
-| Shipping approach (a) vs. (b)                    | 6     | Both  |
+| ~~Shipping approach (a) vs. (b)~~ quote up front | 6     | Both  |

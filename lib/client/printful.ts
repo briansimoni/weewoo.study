@@ -230,6 +230,24 @@ export interface PrintfulOrder {
   packing_slip?: PrintfulPackingSlip;
 }
 
+export interface PrintfulShippingRatesRequest {
+  recipient: { country_code: string; state_code?: string; zip?: string };
+  /** `variant_id` is the Printful catalog variant, as on `ProductVariant`. */
+  items: Array<{ variant_id: string; quantity: number }>;
+  currency?: string;
+}
+
+export interface PrintfulShippingRate {
+  /** Shipping method, e.g. `STANDARD`; an order's `shipping` field. */
+  id: string;
+  name: string;
+  /** Decimal string in `currency`, e.g. "4.95". */
+  rate: string;
+  currency: string;
+  minDeliveryDays?: number;
+  maxDeliveryDays?: number;
+}
+
 export class PrintfulApiClient {
   baseURL: string;
   printfulToken: string;
@@ -355,6 +373,26 @@ export class PrintfulApiClient {
         Authorization: `Bearer ${this.printfulToken}`,
       },
     });
+    return await response.json();
+  }
+
+  async getShippingRates(
+    request: PrintfulShippingRatesRequest,
+  ): Promise<PrintfulResponse<PrintfulShippingRate[]>> {
+    const response = await this.fetch(`${this.baseURL}/shipping/rates`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.printfulToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Printful shipping rates failed: ${response.status} ${await response
+          .text()}`,
+      );
+    }
     return await response.json();
   }
 

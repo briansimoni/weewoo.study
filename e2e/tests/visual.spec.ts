@@ -110,6 +110,8 @@ test("visual: product and cart", async ({ page, baseURL }) => {
   await page.getByRole("button", { name: "Add to Cart" }).click();
   await expect(page.getByText("Added to cart!")).toBeVisible();
   await gotoReady(page, "/cart");
+  // CI has no PRINTFUL_SECRET, so this is the stub rate ($4.95)
+  await expect(page.getByTestId("shipping-amount")).toHaveText(/^\$\d/);
   await snapshot(page, "cart");
 });
 
