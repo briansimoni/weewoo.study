@@ -52,6 +52,7 @@
     "dayjs-plugin-utc": "npm:dayjs-plugin-utc@^0.1.2",
     "jszip": "npm:jszip@^3.10.1",
     "preact": "npm:preact@^10.29.1",
+    "preact-render-to-string": "npm:preact-render-to-string@^6.7.0",
     "lucide-preact": "npm:lucide-preact@^0.477.0",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
     "microdiff": "npm:microdiff@^1.0.0",

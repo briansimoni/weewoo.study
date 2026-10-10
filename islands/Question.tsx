@@ -4,6 +4,8 @@ import { IS_BROWSER } from "fresh/runtime";
 import { setDisplayedStreak } from "./StreakIndicator.tsx";
 import { QuestionPostResponse } from "../routes/api/question.ts";
 import { ThumbsDown, ThumbsUp } from "lucide-preact";
+import { Button } from "../components/ui/Button.tsx";
+import { Card } from "../components/ui/Card.tsx";
 
 interface QuestionPageProps {
   onQuestionCompleted?: () => unknown;
@@ -92,43 +94,39 @@ export default function QuestionPage(props: QuestionPageProps) {
 
   if (!question) {
     return (
-      <div>
-        <div class="flex justify-center max-w-md mx-auto p-6 border border-gray-300 rounded-lg font-sans">
-          <div className="loading loading-spinner"></div>
-        </div>
-      </div>
+      <Card class="max-w-md mx-auto" bodyClass="items-center">
+        <div class="loading loading-spinner"></div>
+      </Card>
     );
   }
 
   return (
-    <div>
-      <div class="max-w-md mx-auto p-6 border border-gray-300 rounded-lg font-sans">
-        <h1 class="text-blue-500 text-2xl font-bold mb-4">
-          {correct === undefined
-            ? "Practice Question"
-            : correct
-            ? "✅ Correct!"
-            : "❌ Wrong!"}
-        </h1>
+    <Card class="max-w-md mx-auto">
+      <h1 class="text-primary text-2xl font-bold mb-4">
+        {correct === undefined
+          ? "Practice Question"
+          : correct
+          ? "✅ Correct!"
+          : "❌ Wrong!"}
+      </h1>
 
-        <QuestionForm
-          question={question}
-          selectedAnswer={selectedAnswer}
-          answered={answered}
-          submit={submit}
-          submitted={submitted}
+      <QuestionForm
+        question={question}
+        selectedAnswer={selectedAnswer}
+        answered={answered}
+        submit={submit}
+        submitted={submitted}
+      />
+
+      {answered && (
+        <Feedback
+          questionId={question.id}
+          correct={correct}
+          explanation={question.explanation}
+          nextQuestion={nextQuestion}
         />
-
-        {answered && (
-          <Feedback
-            questionId={question.id}
-            correct={correct}
-            explanation={question.explanation}
-            nextQuestion={nextQuestion}
-          />
-        )}
-      </div>
-    </div>
+      )}
+    </Card>
   );
 }
 
@@ -171,11 +169,7 @@ function QuestionForm(
         })}
       </div>
 
-      {!answered && (
-        <button disabled={submitted} type="submit" class="btn btn-primary">
-          {submitted ? <div class="loading loading-spinner"></div> : "Submit"}
-        </button>
-      )}
+      {!answered && <Button type="submit" loading={submitted}>Submit</Button>}
     </form>
   );
 }
@@ -188,7 +182,7 @@ function Feedback(
     nextQuestion: () => void;
   },
 ) {
-  const color = correct ? "text-green-600" : "text-red-600";
+  const color = correct ? "text-success" : "text-error";
   const [feedbackGiven, setFeedbackGiven] = useState(false);
   const [showReasonModal, setShowReasonModal] = useState(false);
   const [feedbackType, setFeedbackType] = useState<"up" | "down" | null>(null);
@@ -259,31 +253,29 @@ function Feedback(
         {/* Question Rating */}
         <div class="flex items-center gap-4 my-4">
           <div class="flex gap-3">
-            <button
-              type="button"
+            <Button
+              variant="neutral"
+              size="sm"
+              shape="circle"
               onClick={() => handleFeedback("up")}
               disabled={feedbackGiven}
-              class={`btn btn-circle btn-sm ${
-                feedbackGiven ? "btn-disabled" : ""
-              }`}
               aria-label="Thumbs up"
             >
               <ThumbsUp class="h-5 w-5" />
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="neutral"
+              size="sm"
+              shape="circle"
               onClick={() => handleFeedback("down")}
               disabled={feedbackGiven}
-              class={`btn btn-circle btn-sm ${
-                feedbackGiven ? "btn-disabled" : ""
-              }`}
               aria-label="Thumbs down"
             >
               <ThumbsDown class="h-5 w-5" />
-            </button>
+            </Button>
           </div>
           {feedbackGiven && (
-            <span class="text-sm text-green-600">
+            <span class="text-sm text-success">
               Thanks for your feedback!
             </span>
           )}
@@ -310,22 +302,12 @@ function Feedback(
             >
             </textarea>
             <div class="modal-action">
-              <button
-                type="button"
-                class="btn btn-outline"
-                onClick={closeModal}
-              >
+              <Button variant="outline" onClick={closeModal}>
                 Cancel
-              </button>
-              <button
-                type="button"
-                class="btn btn-primary"
-                onClick={submitFeedback}
-              >
-                {loading
-                  ? <span className="loading loading-spinner loading-xs"></span>
-                  : "Submit"}
-              </button>
+              </Button>
+              <Button loading={loading} onClick={submitFeedback}>
+                Submit
+              </Button>
             </div>
           </div>
           <form method="dialog" class="modal-backdrop">
@@ -333,13 +315,9 @@ function Feedback(
           </form>
         </dialog>
 
-        <button
-          type="button"
-          onClick={nextQuestion}
-          class="py-3 px-6 bg-blue-700 text-white rounded-lg hover:bg-blue-800 text-xl"
-        >
+        <Button size="lg" onClick={nextQuestion}>
           Next Question →
-        </button>
+        </Button>
       </div>
     </div>
   );

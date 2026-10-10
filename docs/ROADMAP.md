@@ -161,14 +161,15 @@ have to seed themselves.
       "Update visual snapshots" workflow (PR label `update-snapshots`); see
       README "Visual snapshots". A separate CI run matched all 20 on the first
       try.
-- [ ] **Fix UI bugs the snapshots show.** (1) The profile page overflows on
+- [ ] **Fix UI bugs the snapshots show.** (1) ~~The profile page overflows on
       mobile: the page is 413px wide at a 390px viewport (the streak stat), and
-      the profile image shows its alt text. ~~(2) The shop shows a broken image
-      for products with no `thumbnail_url`~~: done 2026-10-08, the seed catalog
-      thumbnails are CloudFront images (the TEST database still needs the same
-      fix through `deno task admin`). A fallback image for missing thumbnails
-      would still help. Good first tasks for the Phase 1 design work. Deferred
-      (2026-10-10): the profile page is being redesigned in Phase 1.
+      the profile image shows its alt text~~: fixed by the Phase 1 primitives
+      (2026-10-10). ~~(2) The shop shows a broken image for products with no
+      `thumbnail_url`~~: done 2026-10-08, the seed catalog thumbnails are
+      CloudFront images (the TEST database still needs the same fix through
+      `deno task admin`). A fallback image for missing thumbnails would still
+      help. Good first tasks for the Phase 1 design work. Deferred (2026-10-10):
+      the profile page is being redesigned in Phase 1.
 - [ ] **Give agents eyes.** Claude in Chrome is already available to agents in
       this setup. Optionally add the Playwright MCP (`.mcp.json`) so agents can
       drive a headless browser against `deno task e2e:serve` without the human's
@@ -334,7 +335,14 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       cart shows the Printful ID as the product name, desktop nav has no
       Practice link, and most pages have no `<title>`.
 - [ ] Extract `components/ui/` primitives (Button, Card, Badge, Modal,
-      ProgressBar, Stat) and replace the duplicated markup with them.
+      ProgressBar, Stat) and replace the duplicated markup with them. Batch 1
+      (2026-10-10): `Button`/`LinkButton`, `Card`, `Stat`/`StatGrid` and
+      `Avatar`, plus a shared `components/UserStats.tsx`, used on the profile,
+      public user page, practice screen and error page. That fixed the profile's
+      mobile overflow and broken image, and the user page, practice screen and
+      error page no longer break in dark mode. Next: Alert/Toast and Modal
+      (replacing `alert()`), then the page shell, Badge and ProgressBar (order
+      in [docs/ui-audit.md](ui-audit.md)).
 - [ ] Create the Claude Design design-system project and do the first
       `/design-sync` push.
 - [ ] Define the brand direction: a playful EMS identity (mascot? ambulance
