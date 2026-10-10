@@ -69,3 +69,20 @@ test("shipping is quoted per cart and free from $50", async ({ request }) => {
   });
   expect(unknown.status()).toBe(400);
 });
+
+test("the cart shows the product's name, not its Printful ID", async ({ page }) => {
+  await gotoReady(page, "/shop");
+  await page.locator('a[href^="/shop/"]').first().click();
+  await page.waitForURL(/\/shop\/(\d+)/);
+  const printfulId = new URL(page.url()).pathname.split("/").pop()!;
+  await page.waitForLoadState("networkidle");
+  const name = (await page.getByRole("heading", { level: 1 }).textContent())!
+    .trim();
+  await page.getByRole("button", { name: "Add to Cart" }).click();
+  await expect(page.getByText("Added to cart!")).toBeVisible();
+
+  await gotoReady(page, "/cart");
+  const row = page.locator("tbody tr").first();
+  await expect(row.getByText(name, { exact: true })).toBeVisible();
+  await expect(row).not.toContainText(printfulId);
+});
