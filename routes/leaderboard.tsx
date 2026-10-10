@@ -1,6 +1,8 @@
 import { page } from "fresh";
 import { LeaderBoardEntry, UserStore } from "../lib/user_store.ts";
 import { AppHandlers, AppProps } from "./_middleware.ts";
+import { Page } from "../components/ui/Page.tsx";
+import { Card } from "../components/ui/Card.tsx";
 
 export const handler: AppHandlers = {
   async GET() {
@@ -19,9 +21,8 @@ interface LeaderboardProps extends AppProps {
 export default function (props: LeaderboardProps) {
   const { leaderboard } = props.data;
   return (
-    <div className="max-w-xl mx-auto p-6 bg-base-100 shadow-xl rounded-xl">
-      <h2 className="text-3xl font-bold mb-6 text-center">Leaderboard</h2>
-      <div className="overflow-x-auto">
+    <Page title="Leaderboard" heading="Leaderboard" width="narrow">
+      <Card bodyClass="p-0 sm:p-4 overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
             <tr className="bg-primary text-primary-content">
@@ -59,7 +60,7 @@ export default function (props: LeaderboardProps) {
               )}
           </tbody>
         </table>
-      </div>
-    </div>
+      </Card>
+    </Page>
   );
 }

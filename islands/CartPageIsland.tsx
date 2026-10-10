@@ -1,4 +1,5 @@
 import {
+  cartItemName,
   cartItems,
   getCartTotal,
   removeFromCart,
@@ -17,7 +18,12 @@ type ShippingQuote =
     freeThresholdCents: number;
   };
 
-export default function CartPageIsland() {
+export default function CartPageIsland(
+  { productNames }: {
+    /** The catalog's product names by Printful product ID. */
+    productNames: Record<string, string>;
+  },
+) {
   const cart = useSignal(cartItems.value);
   const total = useSignal(getCartTotal());
   console.log(cart);
@@ -150,7 +156,7 @@ export default function CartPageIsland() {
                       <div className="mask mask-squircle w-16 h-16">
                         <img
                           src={item.variant.images[0] || ""}
-                          alt={`${
+                          alt={`${cartItemName(item, productNames)}, ${
                             item.variant.color?.name ?? item.variant.name
                           } ${item.variant.size}`}
                         />
@@ -158,7 +164,7 @@ export default function CartPageIsland() {
                     </div>
                     <div>
                       <div className="font-bold">
-                        {item.variant.printful_product_id}
+                        {cartItemName(item, productNames)}
                       </div>
                     </div>
                   </div>
@@ -244,7 +250,7 @@ export default function CartPageIsland() {
           Continue Shopping
         </a>
 
-        <div className="card bg-base-200 p-4 w-full md:w-auto">
+        <div className="card bg-base-100 p-4 w-full md:w-auto">
           <div className="flex justify-between mb-2">
             <span className="font-semibold">Subtotal:</span>
             <span>${total.value.toFixed(2)}</span>

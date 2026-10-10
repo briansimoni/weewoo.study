@@ -1,16 +1,17 @@
-import { Head } from "fresh/runtime";
+import { defineRoute } from "fresh/compat";
 import CartPageIsland from "../islands/CartPageIsland.tsx";
+import { Page } from "../components/ui/Page.tsx";
+import { ProductStore } from "../lib/product_store.ts";
 
-export default function CartPage() {
-  return (
-    <>
-      <Head>
-        <title>Shopping Cart</title>
-      </Head>
-      <div className="container mx-auto p-4 max-w-4xl">
-        <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
-        <CartPageIsland />
-      </div>
-    </>
+export default defineRoute(async () => {
+  // The cart lives in the browser; product names come from the catalog.
+  const products = await (await ProductStore.make()).listProducts();
+  const productNames = Object.fromEntries(
+    products.map((product) => [product.printful_id, product.name]),
   );
-}
+  return (
+    <Page title="Shopping Cart" heading="Shopping Cart">
+      <CartPageIsland productNames={productNames} />
+    </Page>
+  );
+});

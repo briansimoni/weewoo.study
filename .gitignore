@@ -43,3 +43,12 @@ image-converter-lambda.zip
 # Local (non-Linux) visual baselines from VISUAL_LOCAL=1; only Linux ones are committed
 e2e/tests/visual.spec.ts-snapshots/*-win32.png
 e2e/tests/visual.spec.ts-snapshots/*-darwin.png
+
+# Claude Design sync (design-sync skill): staged converter, build output, machine state.
+# The durable set under .design-sync/ (config.json, NOTES.md, conventions.md,
+# previews/, build-pkg.mjs, types/) is committed.
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules

@@ -1,7 +1,9 @@
+import { Page } from "../components/ui/Page.tsx";
+
 export default function About() {
   return (
-    <div className="min-h-screen bg-base-200 flex flex-col items-center p-6">
-      <div className="max-w-xl w-full text-center">
+    <Page title="About" width="narrow">
+      <div className="text-center">
         <h1 className="text-4xl font-bold mb-6 text-primary">
           🚨 About WeeWoo.study 🚑
         </h1>
@@ -134,6 +136,6 @@ export default function About() {
         </a> */
         }
       </div>
-    </div>
+    </Page>
   );
 }

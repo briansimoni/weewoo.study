@@ -1,11 +1,16 @@
 import { useEffect, useState } from "preact/hooks";
-import { User } from "../lib/user_store.ts";
-import { SessionData } from "../routes/_middleware.ts";
-import { Streak } from "../lib/streak_store.ts";
+import type { User } from "../lib/user_store.ts";
+import type { SessionData } from "../routes/_middleware.ts";
+import type { Streak } from "../lib/streak_store.ts";
 import { CATEGORIES } from "../lib/categories.ts";
-import dayjs from "dayjs";
+// Not dayjs: islands can't load it under the dev server (see lib/dates.ts).
+import { timeUntil } from "../lib/dates.ts";
 import BasicLine from "../components/charts/BasicLine.tsx";
-import { Attempt } from "../lib/attempt_store.ts";
+import type { Attempt } from "../lib/attempt_store.ts";
+import { UserStats } from "../components/UserStats.tsx";
+import { Avatar } from "../components/ui/Avatar.tsx";
+import { Button } from "../components/ui/Button.tsx";
+import { Card } from "../components/ui/Card.tsx";
 
 interface Props {
   user: User;
@@ -23,24 +28,18 @@ export default function Profile(props: Props) {
     minutes: 0,
     seconds: 0,
   });
-  const [timerColor, setTimerColor] = useState<string | undefined>();
+  const [timerTone, setTimerTone] = useState("");
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;
     function updateTimer() {
-      const hours = dayjs(streak?.expires_on).diff(dayjs(), "hours");
-      const minutes = dayjs(streak?.expires_on).diff(dayjs(), "minutes") % 60;
-      const seconds = dayjs(streak?.expires_on).diff(dayjs(), "seconds") % 60;
+      const { hours, minutes, seconds } = timeUntil(
+        new Date(streak!.expires_on),
+      );
       setStreakTimer({ hours, minutes, seconds });
-      if (hours > 24) {
-        setTimerColor("green");
-      }
-      if (hours <= 24 && hours > 1) {
-        setTimerColor("orange");
-      }
-      if (hours <= 1) {
-        setTimerColor("red");
-      }
+      setTimerTone(
+        hours > 24 ? "text-success" : hours > 1 ? "text-warning" : "text-error",
+      );
     }
     if (streak) {
       updateTimer();
@@ -70,11 +69,6 @@ export default function Profile(props: Props) {
     setEditing(false);
   };
 
-  let accuracy = user.stats.questions_correct / user.stats.questions_answered;
-  if (isNaN(accuracy)) {
-    accuracy = 0;
-  }
-  accuracy = Math.round(accuracy * 100);
   const streakDays = streak?.days ?? 0;
 
   // Calculate category stats for display, including all available categories
@@ -112,62 +106,36 @@ export default function Profile(props: Props) {
 
   return (
     <div class="flex flex-col items-center justify-center">
-      <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6 bg-base-100 mb-6">
+      <Card class="w-full max-w-3xl mb-6">
         <div class="flex flex-col md:flex-row items-center gap-6">
           <div class="flex flex-col items-center">
-            {session && (
-              <div class="avatar">
-                <div class="w-32 rounded-full ring-3 ring-primary ring-offset-base-100 ring-offset-2">
-                  <img
-                    src={session.picture ?? "placeholder-image-url"}
-                    alt="Profile Image"
-                  />
-                </div>
-              </div>
-            )}
-
-            {!session && (
-              <div class="avatar placeholder">
-                <div class="bg-neutral text-neutral-content w-24 rounded-full">
-                  <span class="text-3xl">{name[0]}</span>
-                </div>
-              </div>
-            )}
+            <Avatar name={name} src={session?.picture} ring={!!session} />
 
             {!editing
               ? (
-                <button
-                  type="button"
-                  class="btn btn-primary mt-4"
-                  onClick={() => setEditing(true)}
-                >
+                <Button class="mt-4" onClick={() => setEditing(true)}>
                   Edit Display Name
-                </button>
+                </Button>
               )
               : (
                 <div class="flex gap-2 mt-4">
-                  <button
-                    type="button"
-                    class="btn btn-success"
-                    onClick={handleSave}
-                  >
+                  <Button variant="success" onClick={handleSave}>
                     Save
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
+                  </Button>
+                  <Button
+                    variant="secondary"
                     onClick={() => {
                       setName(user.display_name);
                       setEditing(false);
                     }}
                   >
                     Cancel
-                  </button>
+                  </Button>
                 </div>
               )}
           </div>
 
-          <div class="flex-1">
+          <div class="flex-1 min-w-0 w-full">
             {editing
               ? (
                 <input
@@ -177,78 +145,47 @@ export default function Profile(props: Props) {
                 />
               )
               : <h2 class="text-2xl font-bold mb-4">{name}</h2>}
-            <div class="grid grid-cols-2 gap-4">
-              <div class="stat bg-base-200 p-4 rounded-lg">
-                <div class="stat-title">Questions Answered</div>
-                <div class="stat-value text-primary">
-                  {user.stats.questions_answered} 📖
-                </div>
-              </div>
-              <div class="stat bg-base-200 p-4 rounded-lg">
-                <div class="stat-title">Correct Answers</div>
-                <div class="stat-value text-success">
-                  {user.stats.questions_correct} ✅
-                </div>
-              </div>
-              <div class="stat bg-base-200 p-4 rounded-lg">
-                <div class="stat-title">Accuracy</div>
-                <div class="stat-value text-accent">
-                  {accuracy}% 🎯
-                </div>
-              </div>
-              <div class="stat bg-base-200 p-4 rounded-lg">
-                <div class="stat-title">Streak</div>
-                <div class="stat-value text-secondary">
-                  {streakDays}
-                  {streakDays > 1 && " Days 🔥"}
-                  {streakDays <= 1 && " Day 🔥"}
-                </div>
-              </div>
-              {streak &&
-                (
-                  <div class="col-span-2 flex flex-col md:flex-row items-center gap-5 text-center">
-                    <h2 class="text-2xl font-semibold content-center">
-                      Streak Expires In
-                    </h2>
-                    <div
-                      class="flex gap-5"
-                      style={{ color: timerColor }}
-                    >
-                      <div>
-                        <span class="countdown font-mono text-4xl">
-                          <span style={{ "--value": streakTimer.hours }}></span>
+            <UserStats stats={user.stats} streakDays={streakDays} />
+            {streak &&
+              (
+                <div class="mt-4 flex flex-col md:flex-row items-center gap-5 text-center">
+                  <h2 class="text-2xl font-semibold content-center">
+                    Streak Expires In
+                  </h2>
+                  <div class={`flex gap-5 ${timerTone}`}>
+                    <div>
+                      <span class="countdown font-mono text-4xl">
+                        <span style={{ "--value": streakTimer.hours }}></span>
+                      </span>
+                      hours
+                    </div>
+                    <div>
+                      <span class="countdown font-mono text-4xl">
+                        <span style={{ "--value": streakTimer.minutes }}>
                         </span>
-                        hours
-                      </div>
-                      <div>
-                        <span class="countdown font-mono text-4xl">
-                          <span style={{ "--value": streakTimer.minutes }}>
-                          </span>
+                      </span>
+                      min
+                    </div>
+                    <div>
+                      <span class="countdown font-mono text-4xl">
+                        <span style={{ "--value": streakTimer.seconds }}>
                         </span>
-                        min
-                      </div>
-                      <div>
-                        <span class="countdown font-mono text-4xl">
-                          <span style={{ "--value": streakTimer.seconds }}>
-                          </span>
-                        </span>
-                        sec
-                      </div>
+                      </span>
+                      sec
                     </div>
                   </div>
-                )}
-            </div>
+                </div>
+              )}
           </div>
         </div>
-      </div>
+      </Card>
 
-      <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6 bg-base-100 mb-6">
+      <Card class="w-full max-w-3xl mb-6">
         <BasicLine attempts={attempts} />
-      </div>
+      </Card>
       {/* Category Stats Section */}
       {categoriesWithStats.length > 0 && (
-        <div class="card card-bordered w-full max-w-3xl shadow-xl rounded-xl p-6 bg-base-100">
-          <h3 class="text-xl font-semibold mb-4">Performance by Category</h3>
+        <Card class="w-full max-w-3xl" title="Performance by Category">
           <div class="overflow-x-auto">
             <table class="table table-compact w-full">
               <thead>
@@ -283,7 +220,7 @@ export default function Profile(props: Props) {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

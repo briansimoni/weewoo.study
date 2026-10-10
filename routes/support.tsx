@@ -1,8 +1,10 @@
 import { Head } from "fresh/runtime";
 import { page, type PageProps } from "fresh";
-import { CheckCircle, XCircle } from "lucide-preact";
+import { Alert } from "../components/ui/Alert.tsx";
 import SupportForm from "../islands/SupportForm.tsx";
 import { Handlers } from "fresh/compat";
+import { Page } from "../components/ui/Page.tsx";
+import { Card } from "../components/ui/Card.tsx";
 
 interface SupportPageData {
   success?: boolean;
@@ -13,12 +15,11 @@ export default function Support({ data }: PageProps<SupportPageData>) {
   return (
     <>
       <Head>
-        <title>Contact Support - WeeWoo.study</title>
         <script src="https://www.google.com/recaptcha/api.js?render=6Lc2v3crAAAAAJjzdpnvxKxk_qIAZZ-AewWvWY7X">
         </script>
       </Head>
-      <div className="min-h-screen bg-base-200 flex flex-col items-center p-6">
-        <div className="max-w-xl w-full bg-base-100 shadow-xl rounded-lg p-8">
+      <Page title="Contact Support" width="narrow">
+        <Card bodyClass="p-8">
           <h1 className="text-3xl font-bold mb-6 text-primary text-center">
             Contact Support
           </h1>
@@ -30,25 +31,17 @@ export default function Support({ data }: PageProps<SupportPageData>) {
           </p>
 
           {data?.success && (
-            <div className="alert alert-success mb-6">
-              <CheckCircle class="stroke-current shrink-0 h-6 w-6" />
-              <span>
-                Your message has been sent successfully! I'll get back to you
-                soon.
-              </span>
-            </div>
+            <Alert tone="success" class="mb-6">
+              Your message has been sent successfully! I'll get back to you
+              soon.
+            </Alert>
           )}
 
-          {data?.error && (
-            <div className="alert alert-error mb-6">
-              <XCircle class="stroke-current shrink-0 h-6 w-6" />
-              <span>{data.error}</span>
-            </div>
-          )}
+          {data?.error && <Alert tone="error" class="mb-6">{data.error}</Alert>}
 
           <SupportForm />
-        </div>
-      </div>
+        </Card>
+      </Page>
     </>
   );
 }

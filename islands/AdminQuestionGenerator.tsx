@@ -1,5 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { AdminCreateQuestionResponse } from "../routes/api/admin/question.ts";
+import { showToast } from "../components/ui/toast.ts";
 
 interface Chapter {
   id: string;
@@ -138,7 +139,9 @@ export default function AdminQuestionGenerator() {
       });
       if (!response.ok) throw new Error("Failed to save question");
       const data = await response.json() as AdminCreateQuestionResponse;
-      alert("Question saved successfully: " + JSON.stringify(data));
+      showToast("Question saved: " + JSON.stringify(data), {
+        tone: "success",
+      });
       setQuestion("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");

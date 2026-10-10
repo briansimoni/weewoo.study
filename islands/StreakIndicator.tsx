@@ -1,5 +1,6 @@
 import { useEffect } from "preact/hooks";
 import { signal } from "@preact/signals";
+import { CountBadge } from "../components/ui/Badge.tsx";
 
 export const streakDays = signal(0);
 
@@ -20,16 +21,12 @@ export default function StreakDisplay(props: { initialStreak?: number }) {
   return (
     <a
       href="/profile"
-      className="btn btn-ghost btn-circle relative"
+      class="btn btn-ghost btn-circle indicator"
+      aria-label={`Streak: ${streakDays.value} days`}
       data-testid="streak-indicator"
     >
-      <span className="text-lg">🔥</span>
-      <div
-        className="absolute -top-1 -right-1 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-        data-testid="streak-days"
-      >
-        {streakDays.value > 99 ? "99+" : streakDays.value}
-      </div>
+      <CountBadge count={streakDays.value} data-testid="streak-days" />
+      <span class="text-lg" aria-hidden="true">🔥</span>
     </a>
   );
 }

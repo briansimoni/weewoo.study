@@ -161,13 +161,15 @@ have to seed themselves.
       "Update visual snapshots" workflow (PR label `update-snapshots`); see
       README "Visual snapshots". A separate CI run matched all 20 on the first
       try.
-- [ ] **Fix UI bugs the snapshots show.** (1) The profile page overflows on
+- [ ] **Fix UI bugs the snapshots show.** (1) ~~The profile page overflows on
       mobile: the page is 413px wide at a 390px viewport (the streak stat), and
-      the profile image shows its alt text. ~~(2) The shop shows a broken image
-      for products with no `thumbnail_url`~~: done 2026-10-08, the seed catalog
-      thumbnails are CloudFront images (the TEST database still needs the same
-      fix through `deno task admin`). A fallback image for missing thumbnails
-      would still help. Good first tasks for the Phase 1 design work.
+      the profile image shows its alt text~~: fixed by the Phase 1 primitives
+      (2026-10-10). ~~(2) The shop shows a broken image for products with no
+      `thumbnail_url`~~: done 2026-10-08, the seed catalog thumbnails are
+      CloudFront images (the TEST database still needs the same fix through
+      `deno task admin`). A fallback image for missing thumbnails would still
+      help. Good first tasks for the Phase 1 design work. Deferred (2026-10-10):
+      the profile page is being redesigned in Phase 1.
 - [ ] **Give agents eyes.** Claude in Chrome is already available to agents in
       this setup. Optionally add the Playwright MCP (`.mcp.json`) so agents can
       drive a headless browser against `deno task e2e:serve` without the human's
@@ -324,15 +326,53 @@ than inventing them. That's essential before the Duolingo-style overhaul.
 
 **Tasks**
 
-- [ ] Audit the current UI: list every page and island, and the ad-hoc styles
-      that are repeated.
-- [ ] Extract `components/ui/` primitives (Button, Card, Badge, Modal,
-      ProgressBar, Stat) and replace the duplicated markup with them.
-- [ ] Create the Claude Design design-system project and do the first
-      `/design-sync` push.
-- [ ] Define the brand direction: a playful EMS identity (mascot? ambulance
+- [x] Audit the current UI: list every page and island, and the ad-hoc styles
+      that are repeated. Done 2026-10-10 in [docs/ui-audit.md](ui-audit.md): no
+      design tokens yet (DaisyUI defaults), 34 raw palette classes that break
+      dark mode, the stat block and admin header copied by hand, 38 browser
+      `alert()`s, no shared page shell. It adds Alert/Toast, Avatar,
+      Page/PageHeader and FeatureCard to the primitive list, and found bugs, all
+      fixed since: the cart showed the Printful ID as the product name, desktop
+      nav had no Practice link, and most pages had no `<title>`.
+- [x] Extract `components/ui/` primitives (Button, Card, Badge, Modal,
+      ProgressBar, Stat) and replace the duplicated markup with them. Done
+      2026-10-10 in three PRs (#17, #18, and the page-shell PR):
+      `Button`/`LinkButton`, `Card`, `Stat`/`StatGrid`, `Avatar`, `Alert`,
+      `Modal` (native `<dialog>`), toasts (`showToast()` +
+      `islands/Toaster.tsx`), `Page` (tab title, standard widths, heading),
+      `Badge`/`CountBadge` and `ProgressBar`, plus `components/UserStats.tsx`.
+      Every public page now renders in `Page` and has a `<title>`; the navbar is
+      built from one link list, has Practice on desktop and no longer wraps.
+      Fixed on the way: profile overflow and broken image, dark mode on the user
+      page, practice screen and error page, `alert()`s outside the admin product
+      page.
+- [ ] **Finish moving to the primitives.** Admin pages still use raw DaisyUI
+      markup (header band copied into 6 pages, badges, tables), and the admin
+      product page has 28 `alert()`s in 1,776 lines. The landing page's 6
+      feature cards and promo cards are hand-copied (a `FeatureCard`), best done
+      with the landing redesign.
+- [x] Create the Claude Design design-system project and do the first
+      `/design-sync` push. Done 2026-10-10: project
+      [weewoo.study](https://claude.ai/design/p/158f915d-3eee-4812-9214-1f225e3f3481)
+      with 11 components (Button, LinkButton, Card, Stat, StatGrid, Avatar,
+      Alert, Badge, CountBadge, ProgressBar, Modal), the Night/Day Shift CSS,
+      fonts and a conventions header for the design agent; every preview
+      authored and graded. The app is Preact, so `.design-sync/build-pkg.mjs`
+      compiles `components/ui` against React for the sync (see
+      `.design-sync/NOTES.md`). Page and the Toaster stay out (Fresh/signals).
+- [x] Define the brand direction: a playful EMS identity (mascot? ambulance
       "WeeWoo" character?), sound and motion guidelines, tone of voice. This is
-      the human's call.
+      the human's call. Decided 2026-10-10 from three options on the
+      [brand canvas](https://claude.ai/artifact/EdsnXrmLF5qBGm4ydpKDnJ): **Night
+      Shift**. Dark-first (navy, hi-vis lime `#D4F25A`, monitor teal, flare
+      orange), with a **Day Shift** light variant behind the toggle where lime
+      is a fill only and text uses olive `#4F6B00`. Space Grotesk display, IBM
+      Plex Sans body, IBM Plex Mono for data. No mascot: a beacon-and- heartbeat
+      mark. Voice: dry EMS humor ("Clean call."). Implemented as the DaisyUI
+      themes `nightshift` (default) and `dayshift` in `static/styles.css`. Still
+      open: sound and motion guidelines, the mark as real artwork (logo,
+      favicon, app icon), and the landing page's made-up stats and celebrity
+      section.
 
 **Exit criteria:** a design-system project exists, the code primitives match it,
 and one real screen has gone through the full design → implement → review loop.
@@ -498,7 +538,7 @@ up front for the trial, and the free-tier limits.
 | ------------------------------------------------ | ----- | ----- |
 | Preview KV strategy (dedicated DB vs. auto-seed) | 0     | Human |
 | Prod promotion via a `production` branch         | 0     | Human |
-| Brand direction and mascot                       | 1     | Human |
+| ~~Brand direction and mascot~~ Night Shift       | 1     | Human |
 | Question generation model (OpenAI vs. Claude)    | 2     | Both  |
 | Medical reviewer for question approval           | 2     | Human |
 | KV vs. Postgres for analytics                    | 3     | Both  |

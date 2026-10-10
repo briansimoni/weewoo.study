@@ -1,9 +1,11 @@
 import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
 import CartIcon from "../islands/CartIcon.tsx";
+import Toaster from "../islands/Toaster.tsx";
 import { StreakStore } from "../lib/streak_store.ts";
 import { AppState } from "./_middleware.ts";
-import { BarChart, Dumbbell, ShoppingBag, Trophy } from "lucide-preact";
+import { BarChart, Dumbbell, Menu, ShoppingBag, Trophy } from "lucide-preact";
+import { Badge } from "../components/ui/Badge.tsx";
 import type { PageProps } from "fresh";
 
 const stage = Deno.env.get("STAGE") ?? "DEV";
@@ -18,119 +20,63 @@ export default async function Layout(ctx: PageProps<unknown, AppState>) {
       initialStreak = streak.days;
     }
   }
+  const links = [
+    { href: "/emt/practice", label: "Practice" },
+    { href: "/leaderboard", label: "Leaderboard" },
+    { href: "/shop", label: "Shop" },
+    { href: "/about", label: "About" },
+    ...(state.session
+      ? [
+        { href: "/profile", label: "Profile" },
+        { href: "/auth/logout", label: "Logout" },
+      ]
+      : [{ href: "/auth/login", label: "Login" }]),
+  ];
+  const linkItems = links.map(({ href, label }) => (
+    <li key={href}>
+      <a href={href} aria-current={ctx.route === href ? "page" : undefined}>
+        {label}
+      </a>
+    </li>
+  ));
+  const themeController = (
+    <ThemeController initial_theme={state.preferences?.theme} />
+  );
+
   return (
     <>
-      <div className="navbar bg-base-100">
-        {/* Logo */}
-        <div className="navbar-start">
-          <a href="/" className="btn btn-ghost text-xl">WeeWoo🚑</a>
-          {stage !== "PROD" && (
-            <span className="badge badge-warning">{stage}</span>
-          )}
+      <div className="navbar bg-base-100 gap-2">
+        <div className="navbar-start gap-2">
+          <a href="/" className="btn btn-ghost text-xl px-2">WeeWoo🚑</a>
+          {stage !== "PROD" && <Badge tone="warning">{stage}</Badge>}
         </div>
 
-        {/* Right Side: Streak, Cart and Menus */}
-        <div className="navbar-end flex items-center gap-4">
-          {/* Cart Icon */}
+        <div className="navbar-end flex-nowrap gap-1">
           <CartIcon />
-
-          {/* Streak - Always Visible */}
           {state.session && <StreakIndicator initialStreak={initialStreak} />}
 
-          {/* Hamburger Menu for Mobile */}
-          <div className="md:hidden">
-            <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-ghost">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                </svg>
-              </label>
-              <ul
-                tabIndex={0}
-                className="menu dropdown-content bg-base-300 rounded-box z-10 mt-3 w-52 p-2 shadow"
-              >
-                <li>
-                  <a href="/about">About</a>
-                </li>
-                <li>
-                  <a href="/leaderboard">Leaderboard</a>
-                </li>
-                <li>
-                  <a href="/cart">Cart</a>
-                </li>
-                <li>
-                  <a href="/shop">Shop</a>
-                </li>
-                {state.session && (
-                  <>
-                    <li>
-                      <a href="/profile">Profile</a>
-                    </li>
-                    <li>
-                      <a href="/auth/logout">Logout</a>
-                    </li>
-                  </>
-                )}
-                {!state.session && (
-                  <li>
-                    <a href="/auth/login">Login</a>
-                  </li>
-                )}
-                <li>
-                  <ThemeController
-                    initial_theme={state.preferences?.theme}
-                  />
-                </li>
-              </ul>
-            </div>
-          </div>
+          {/* Desktop: links and theme toggle in one row */}
+          <ul className="menu menu-horizontal flex-nowrap px-1 hidden lg:flex">
+            {linkItems}
+          </ul>
+          <div className="hidden lg:block">{themeController}</div>
 
-          {/* Full Menu for Desktop */}
-          <div className="hidden md:flex">
-            <ul className="menu menu-horizontal px-1">
-              <li>
-                <a href="/about">About</a>
-              </li>
-              <li>
-                <a href="/leaderboard">Leaderboard</a>
-              </li>
-              <li>
-                <a href="/shop">Shop</a>
-              </li>
-              <li>
-                <a href="/cart">Cart</a>
-              </li>
-              {state.session && (
-                <>
-                  <li>
-                    <a href="/profile">Profile</a>
-                  </li>
-                  <li>
-                    <a href="/auth/logout">Logout</a>
-                  </li>
-                </>
-              )}
-              {!state.session && (
-                <li>
-                  <a href="/auth/login">Login</a>
-                </li>
-              )}
-              <li>
-                <ThemeController
-                  initial_theme={state.preferences?.theme}
-                />
-              </li>
+          {/* Mobile and tablet: the same links in a dropdown */}
+          <div className="dropdown dropdown-end lg:hidden">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle"
+              aria-label="Menu"
+            >
+              <Menu className="h-6 w-6" />
+            </div>
+            <ul
+              tabIndex={0}
+              className="menu dropdown-content bg-base-300 rounded-box z-10 mt-3 w-52 p-2 shadow"
+            >
+              {linkItems}
+              <li>{themeController}</li>
             </ul>
           </div>
         </div>
@@ -140,6 +86,8 @@ export default async function Layout(ctx: PageProps<unknown, AppState>) {
       <main className="pb-16 md:pb-0">
         <Component />
       </main>
+
+      <Toaster />
 
       {/* Dock - Hidden on md and larger screens */}
       <div className="dock md:hidden">
