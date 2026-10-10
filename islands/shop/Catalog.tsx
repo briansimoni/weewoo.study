@@ -113,7 +113,7 @@ export default function Catalog(props: { products: Product[] }) {
           class="drawer-overlay"
         >
         </label>
-        <aside class="min-h-full w-80 bg-base-200 p-4">
+        <aside class="min-h-full w-80 bg-base-100 p-4">
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold text-base-content">Filter Products</h2>
             <label for="filter-drawer" class="btn btn-sm btn-circle btn-ghost">

@@ -1,2 +1,138 @@
 @import "tailwindcss";
-@plugin "daisyui";
+
+/*
+ * Brand: "Night Shift" (dark, default) and "Day Shift" (light), approved
+ * 2026-10-10 on the brand canvas (docs/ROADMAP.md, Phase 1). Colors are hex so
+ * scripts (the profile chart) can read them from CSS variables.
+ */
+@plugin "daisyui" {
+  themes: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "nightshift";
+  default: true;
+  color-scheme: dark;
+  /* Cards sit one step above the page: base-100 is the card, base-200 the page. */
+  --color-base-100: #172338;
+  --color-base-200: #0e1726;
+  --color-base-300: #2a3954;
+  --color-base-content: #e8edf5;
+  --color-primary: #d4f25a;
+  --color-primary-content: #0e1726;
+  --color-secondary: #3cc9b4;
+  --color-secondary-content: #0e1726;
+  --color-accent: #ff8a4c;
+  --color-accent-content: #0e1726;
+  --color-neutral: #2a3954;
+  --color-neutral-content: #e8edf5;
+  --color-info: #6cb4f5;
+  --color-info-content: #0e1726;
+  --color-success: #5bd68a;
+  --color-success-content: #0e1726;
+  --color-warning: #f5c451;
+  --color-warning-content: #0e1726;
+  --color-error: #ff6b5e;
+  --color-error-content: #0e1726;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.625rem;
+  --radius-box: 0.875rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+  /* Primary as text, links and lines (lime reads fine on dark). */
+  --color-primary-ink: #d4f25a;
+}
+
+@plugin "daisyui/theme" {
+  name: "dayshift";
+  color-scheme: light;
+  --color-base-100: #ffffff;
+  --color-base-200: #e9edf3;
+  --color-base-300: #c9d1dd;
+  --color-base-content: #0e1726;
+  /* Lime stays the fill under dark text; see --color-primary-ink for text. */
+  --color-primary: #d4f25a;
+  --color-primary-content: #0e1726;
+  --color-secondary: #0b7a6c;
+  --color-secondary-content: #ffffff;
+  --color-accent: #c2410c;
+  --color-accent-content: #ffffff;
+  --color-neutral: #0e1726;
+  --color-neutral-content: #e8edf5;
+  --color-info: #1d4ed8;
+  --color-info-content: #ffffff;
+  --color-success: #1e7b45;
+  --color-success-content: #ffffff;
+  --color-warning: #b45309;
+  --color-warning-content: #ffffff;
+  --color-error: #c62828;
+  --color-error-content: #ffffff;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.625rem;
+  --radius-box: 0.875rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+  /* Lime fails 4.5:1 as text on white; text, links and lines use olive. */
+  --color-primary-ink: #4f6b00;
+}
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Space Grotesk", "IBM Plex Sans", ui-sans-serif, sans-serif;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  .card-title,
+  .btn {
+    font-family: var(--font-display);
+  }
+}
+
+/*
+ * Primary used as text or a thin line takes the theme's ink color: lime on
+ * Night Shift, olive on Day Shift. Fills (btn-primary, badges) keep lime.
+ */
+@layer utilities {
+  .text-primary,
+  .link-primary {
+    color: var(--color-primary-ink);
+  }
+  .border-primary {
+    border-color: var(--color-primary-ink);
+  }
+  .ring-primary {
+    --tw-ring-color: var(--color-primary-ink);
+  }
+  .progress-primary {
+    color: var(--color-primary-ink);
+  }
+}
+
+/*
+ * Overrides of DaisyUI's own rules. Unlayered on purpose: DaisyUI's styles win
+ * over anything in Tailwind's base layer (checked in the built page).
+ */
+
+/*
+ * The page is base-200; cards (base-100) sit above it in both themes. DaisyUI
+ * paints the root with base-100, or --root-bg behind an open modal (kept).
+ */
+:root,
+[data-theme] {
+  background-color: var(--root-bg, var(--color-base-200));
+}
+
+/* Unchecked radios are too faint at DaisyUI's default on the dark theme. */
+.radio:not(:checked) {
+  border-color: color-mix(in srgb, currentColor 45%, transparent);
+}

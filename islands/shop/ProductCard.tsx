@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="card border-info-content shadow-2xl hover:shadow-3xl hover:border-primary">
+    <div className="card bg-base-100 border-info-content shadow-2xl hover:border-primary">
       <a href={`/shop/${product.printful_id}`}>
         <figure className="relative">
           {!imageLoaded && <div className="skeleton w-full absolute inset-0" />}

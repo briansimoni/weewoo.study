@@ -353,9 +353,19 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       with the landing redesign.
 - [ ] Create the Claude Design design-system project and do the first
       `/design-sync` push.
-- [ ] Define the brand direction: a playful EMS identity (mascot? ambulance
+- [x] Define the brand direction: a playful EMS identity (mascot? ambulance
       "WeeWoo" character?), sound and motion guidelines, tone of voice. This is
-      the human's call.
+      the human's call. Decided 2026-10-10 from three options on the
+      [brand canvas](https://claude.ai/artifact/EdsnXrmLF5qBGm4ydpKDnJ): **Night
+      Shift**. Dark-first (navy, hi-vis lime `#D4F25A`, monitor teal, flare
+      orange), with a **Day Shift** light variant behind the toggle where lime
+      is a fill only and text uses olive `#4F6B00`. Space Grotesk display, IBM
+      Plex Sans body, IBM Plex Mono for data. No mascot: a beacon-and- heartbeat
+      mark. Voice: dry EMS humor ("Clean call."). Implemented as the DaisyUI
+      themes `nightshift` (default) and `dayshift` in `static/styles.css`. Still
+      open: sound and motion guidelines, the mark as real artwork (logo,
+      favicon, app icon), and the landing page's made-up stats and celebrity
+      section.
 
 **Exit criteria:** a design-system project exists, the code primitives match it,
 and one real screen has gone through the full design → implement → review loop.
@@ -521,7 +531,7 @@ up front for the trial, and the free-tier limits.
 | ------------------------------------------------ | ----- | ----- |
 | Preview KV strategy (dedicated DB vs. auto-seed) | 0     | Human |
 | Prod promotion via a `production` branch         | 0     | Human |
-| Brand direction and mascot                       | 1     | Human |
+| ~~Brand direction and mascot~~ Night Shift       | 1     | Human |
 | Question generation model (OpenAI vs. Claude)    | 2     | Both  |
 | Medical reviewer for question approval           | 2     | Human |
 | KV vs. Postgres for analytics                    | 3     | Both  |

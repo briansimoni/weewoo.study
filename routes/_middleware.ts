@@ -4,6 +4,7 @@ import { Session, SessionStore } from "../lib/session_store.ts";
 import { decodeBase64 } from "jsr:@std/encoding@^1.0.7/base64";
 import type { Middleware, PageProps } from "fresh";
 import * as http from "@std/http";
+import type { ThemePreference } from "../lib/theme.ts";
 import type { Handlers } from "fresh/compat";
 
 export interface SessionData {
@@ -29,7 +30,7 @@ export interface AppProps extends PageProps {
 export interface AppState extends Record<string, unknown> {
   session?: SessionData;
   preferences?: {
-    theme?: "light" | "dark";
+    theme?: ThemePreference;
     trial_questions_completed?: boolean;
   };
 }

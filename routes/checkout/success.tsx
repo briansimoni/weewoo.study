@@ -13,7 +13,7 @@ export default function CheckoutSuccessPage(props: PageProps) {
         </p>
         <div className="mb-4 max-w-md mx-auto">
           <p className="font-semibold mb-1">Order Reference:</p>
-          <p className="break-all bg-base-200 p-2 rounded-md">
+          <p className="break-all bg-base-100 p-2 rounded-md">
             {props.url.searchParams.get("session_id")}
           </p>
         </div>

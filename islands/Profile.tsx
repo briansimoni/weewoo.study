@@ -1,11 +1,12 @@
 import { useEffect, useState } from "preact/hooks";
-import { User } from "../lib/user_store.ts";
-import { SessionData } from "../routes/_middleware.ts";
-import { Streak } from "../lib/streak_store.ts";
+import type { User } from "../lib/user_store.ts";
+import type { SessionData } from "../routes/_middleware.ts";
+import type { Streak } from "../lib/streak_store.ts";
 import { CATEGORIES } from "../lib/categories.ts";
-import dayjs from "dayjs";
+// Not dayjs: islands can't load it under the dev server (see lib/dates.ts).
+import { timeUntil } from "../lib/dates.ts";
 import BasicLine from "../components/charts/BasicLine.tsx";
-import { Attempt } from "../lib/attempt_store.ts";
+import type { Attempt } from "../lib/attempt_store.ts";
 import { UserStats } from "../components/UserStats.tsx";
 import { Avatar } from "../components/ui/Avatar.tsx";
 import { Button } from "../components/ui/Button.tsx";
@@ -32,9 +33,9 @@ export default function Profile(props: Props) {
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;
     function updateTimer() {
-      const hours = dayjs(streak?.expires_on).diff(dayjs(), "hours");
-      const minutes = dayjs(streak?.expires_on).diff(dayjs(), "minutes") % 60;
-      const seconds = dayjs(streak?.expires_on).diff(dayjs(), "seconds") % 60;
+      const { hours, minutes, seconds } = timeUntil(
+        new Date(streak!.expires_on),
+      );
       setStreakTimer({ hours, minutes, seconds });
       setTimerTone(
         hours > 24 ? "text-success" : hours > 1 ? "text-warning" : "text-error",

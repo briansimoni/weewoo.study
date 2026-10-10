@@ -161,32 +161,33 @@ export default function ProductDetail(
   };
 
   const getThemeExtension = () => {
-    const appTheme = document.documentElement.getAttribute("data-theme") ||
-      "light";
-    if (appTheme === "dark") {
+    const appTheme = document.documentElement.getAttribute("data-theme");
+    if (appTheme === "nightshift") {
       return oneDark;
     }
     return EditorView.theme({
       "&": {
-        backgroundColor: "hsl(var(--b1))",
-        color: "hsl(var(--bc))",
+        backgroundColor: "var(--color-base-100)",
+        color: "var(--color-base-content)",
       },
       ".cm-gutters": {
-        backgroundColor: "hsl(var(--b2))",
-        color: "hsl(var(--bc) / 0.6)",
-        borderRight: "1px solid hsl(var(--b3))",
+        backgroundColor: "var(--color-base-200)",
+        color:
+          "color-mix(in oklab, var(--color-base-content) 60%, transparent)",
+        borderRight: "1px solid var(--color-base-300)",
       },
       ".cm-activeLine": {
-        backgroundColor: "hsl(var(--b2))",
+        backgroundColor: "var(--color-base-200)",
       },
       ".cm-activeLineGutter": {
-        backgroundColor: "hsl(var(--b2))",
+        backgroundColor: "var(--color-base-200)",
       },
       ".cm-cursor": {
-        borderLeftColor: "hsl(var(--bc))",
+        borderLeftColor: "var(--color-base-content)",
       },
       ".cm-selectionBackground": {
-        backgroundColor: "hsl(var(--p) / 0.2)",
+        backgroundColor:
+          "color-mix(in oklab, var(--color-primary) 20%, transparent)",
       },
     });
   };

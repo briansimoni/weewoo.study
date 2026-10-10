@@ -1,24 +1,28 @@
 import { useEffect, useState } from "preact/hooks";
 import { Moon, Sun } from "lucide-preact";
+import { THEME_COLOR, themeName, type ThemePreference } from "../lib/theme.ts";
 
 export default function ThemeController(
-  { initial_theme }: { initial_theme?: string },
+  { initial_theme }: { initial_theme?: ThemePreference },
 ) {
-  const [theme, setTheme] = useState(initial_theme);
+  const [preference, setPreference] = useState(initial_theme);
+  const dark = preference !== "light";
 
   useEffect(() => {
-    if (theme) {
-      document.documentElement.setAttribute("data-theme", theme);
-    }
-  }, [theme]);
+    if (!preference) return;
+    const theme = themeName(preference);
+    document.documentElement.setAttribute("data-theme", theme);
+    document.querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", THEME_COLOR[theme]);
+  }, [preference]);
 
   const handleThemeToggle = async (e: Event) => {
     const isChecked = (e.target as HTMLInputElement).checked;
-    const newTheme = isChecked ? "dark" : "light";
-    setTheme(newTheme);
+    const newPreference: ThemePreference = isChecked ? "dark" : "light";
+    setPreference(newPreference);
     await fetch("/api/preferences", {
       method: "POST",
-      body: JSON.stringify({ theme: newTheme }),
+      body: JSON.stringify({ theme: newPreference }),
     });
   };
 
@@ -28,8 +32,9 @@ export default function ThemeController(
       <input
         onChange={handleThemeToggle}
         type="checkbox"
-        className="toggle theme-controller"
-        checked={theme === "dark"}
+        className="toggle"
+        checked={dark}
+        aria-label="Dark mode"
       />
       <Moon className="w-5 h-5" />
     </label>

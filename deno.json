@@ -38,6 +38,9 @@
   "imports": {
     "@aws-sdk/client-ses": "npm:@aws-sdk/client-ses@3.863.0",
     "@deno-library/logger": "jsr:@deno-library/logger@^1.1.9",
+    "@fontsource/ibm-plex-mono": "npm:@fontsource/ibm-plex-mono@^5.3.0",
+    "@fontsource/ibm-plex-sans": "npm:@fontsource/ibm-plex-sans@^5.3.0",
+    "@fontsource/space-grotesk": "npm:@fontsource/space-grotesk@^5.3.0",
     "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@1.1.2",
     "@openai/openai": "jsr:@openai/openai@^4.102.0",
     "@std/assert": "jsr:@std/assert@^1.0.13",
