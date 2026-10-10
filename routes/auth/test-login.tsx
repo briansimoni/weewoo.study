@@ -1,5 +1,6 @@
 import { HttpError, page } from "fresh";
-import { SEED_USERS } from "../../lib/seed.ts";
+import { getKv } from "../../lib/kv.ts";
+import { refreshSeedStreak, SEED_USERS } from "../../lib/seed.ts";
 import { StreakStore } from "../../lib/streak_store.ts";
 import { UserStore } from "../../lib/user_store.ts";
 import { AppHandlers, AppProps } from "../_middleware.ts";
@@ -52,6 +53,8 @@ export const handler: AppHandlers = {
     const user = await (await UserStore.make()).getUser(userId);
     if (!user) throw new HttpError(404);
 
+    // Seeded streaks expire after two days; previews outlive them.
+    await refreshSeedStreak(await getKv(), user.user_id);
     const streak = await (await StreakStore.make()).get(user.user_id);
     ctx.state.session = {
       session_id: crypto.randomUUID(),
