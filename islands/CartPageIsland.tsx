@@ -250,7 +250,7 @@ export default function CartPageIsland(
           Continue Shopping
         </a>
 
-        <div className="card bg-base-200 p-4 w-full md:w-auto">
+        <div className="card bg-base-100 p-4 w-full md:w-auto">
           <div className="flex justify-between mb-2">
             <span className="font-semibold">Subtotal:</span>
             <span>${total.value.toFixed(2)}</span>

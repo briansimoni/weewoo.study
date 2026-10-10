@@ -246,7 +246,7 @@ export default function ProductDetails(
 
         {/* Additional information */}
         <div className="mt-8 space-y-4">
-          <details className="collapse bg-base-200">
+          <details className="collapse bg-base-100">
             <summary className="collapse-title text-lg font-semibold">
               Shipping Information
             </summary>
@@ -257,7 +257,7 @@ export default function ProductDetails(
           </details>
 
           {product.size_guide && (
-            <details className="collapse bg-base-200 overflow-x-scroll">
+            <details className="collapse bg-base-100 overflow-x-scroll">
               <summary className="collapse-title text-lg font-semibold">
                 Size Guide
               </summary>
@@ -286,7 +286,7 @@ export default function ProductDetails(
             </details>
           )}
 
-          <details className="collapse bg-base-200">
+          <details className="collapse bg-base-100">
             <summary className="collapse-title text-lg font-semibold">
               Return Policy
             </summary>

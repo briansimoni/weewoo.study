@@ -549,7 +549,7 @@ export default function Home(props: AppProps) {
       </div>
 
       {/* Footer */}
-      <footer className="footer footer-center p-10 bg-base-200 text-base-content">
+      <footer className="footer footer-center p-10 bg-base-100 text-base-content">
         {
           /* <div>
           <div className="avatar mb-4">
