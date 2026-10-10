@@ -1,6 +1,6 @@
 import { Head } from "fresh/runtime";
 import { page, type PageProps } from "fresh";
-import { CheckCircle, XCircle } from "lucide-preact";
+import { Alert } from "../components/ui/Alert.tsx";
 import SupportForm from "../islands/SupportForm.tsx";
 import { Handlers } from "fresh/compat";
 
@@ -30,21 +30,13 @@ export default function Support({ data }: PageProps<SupportPageData>) {
           </p>
 
           {data?.success && (
-            <div className="alert alert-success mb-6">
-              <CheckCircle class="stroke-current shrink-0 h-6 w-6" />
-              <span>
-                Your message has been sent successfully! I'll get back to you
-                soon.
-              </span>
-            </div>
+            <Alert tone="success" class="mb-6">
+              Your message has been sent successfully! I'll get back to you
+              soon.
+            </Alert>
           )}
 
-          {data?.error && (
-            <div className="alert alert-error mb-6">
-              <XCircle class="stroke-current shrink-0 h-6 w-6" />
-              <span>{data.error}</span>
-            </div>
-          )}
+          {data?.error && <Alert tone="error" class="mb-6">{data.error}</Alert>}
 
           <SupportForm />
         </div>

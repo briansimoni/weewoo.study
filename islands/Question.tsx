@@ -6,6 +6,8 @@ import { QuestionPostResponse } from "../routes/api/question.ts";
 import { ThumbsDown, ThumbsUp } from "lucide-preact";
 import { Button } from "../components/ui/Button.tsx";
 import { Card } from "../components/ui/Card.tsx";
+import { Modal } from "../components/ui/Modal.tsx";
+import { showToast } from "../components/ui/toast.ts";
 
 interface QuestionPageProps {
   onQuestionCompleted?: () => unknown;
@@ -200,13 +202,8 @@ function Feedback(
   };
 
   const submitFeedback = async () => {
-    // Don't submit if we don't have a feedback type or if the reason is empty
-    if (!feedbackType || !feedbackReason.trim()) {
-      alert("Please provide a reason for your feedback");
-      return;
-    }
-
-    if (loading) {
+    // Submit stays disabled until there's a reason
+    if (!feedbackType || !feedbackReason.trim() || loading) {
       return;
     }
 
@@ -236,7 +233,9 @@ function Feedback(
     } catch (error) {
       setLoading(false);
       console.error("Failed to submit feedback:", error);
-      alert("Failed to submit feedback. Please try again later.");
+      showToast("Couldn't send your feedback. Please try again later.", {
+        tone: "error",
+      });
     }
   };
 
@@ -281,39 +280,36 @@ function Feedback(
           )}
         </div>
 
-        {/* Feedback Modal using DaisyUI */}
-        <dialog
-          id="question_feedback_modal"
-          class={`modal ${showReasonModal ? "modal-open" : ""}`}
-        >
-          <div class="modal-box">
-            <h3 class="font-bold text-lg">
-              {feedbackType === "up"
-                ? "What did you like about this question?"
-                : "What issues did you find with this question?"}
-            </h3>
-            <textarea
-              id="feedback_reason"
-              class="textarea textarea-bordered w-full h-32 my-4"
-              placeholder="Please provide details..."
-              value={feedbackReason}
-              onChange={(e) =>
-                setFeedbackReason((e.target as HTMLTextAreaElement).value)}
-            >
-            </textarea>
-            <div class="modal-action">
+        <Modal
+          open={showReasonModal}
+          onClose={closeModal}
+          title={feedbackType === "up"
+            ? "What did you like about this question?"
+            : "What issues did you find with this question?"}
+          actions={
+            <>
               <Button variant="outline" onClick={closeModal}>
                 Cancel
               </Button>
-              <Button loading={loading} onClick={submitFeedback}>
+              <Button
+                loading={loading}
+                disabled={!feedbackReason.trim()}
+                onClick={submitFeedback}
+              >
                 Submit
               </Button>
-            </div>
-          </div>
-          <form method="dialog" class="modal-backdrop">
-            <button type="button" onClick={closeModal}>Close</button>
-          </form>
-        </dialog>
+            </>
+          }
+        >
+          <textarea
+            class="textarea textarea-bordered w-full h-32 my-4"
+            aria-label="Feedback"
+            placeholder="Please provide details..."
+            value={feedbackReason}
+            onInput={(e) => setFeedbackReason(e.currentTarget.value)}
+          >
+          </textarea>
+        </Modal>
 
         <Button size="lg" onClick={nextQuestion}>
           Next Question →

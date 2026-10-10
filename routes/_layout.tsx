@@ -1,6 +1,7 @@
 import StreakIndicator from "../islands/StreakIndicator.tsx";
 import ThemeController from "../islands/ThemeController.tsx";
 import CartIcon from "../islands/CartIcon.tsx";
+import Toaster from "../islands/Toaster.tsx";
 import { StreakStore } from "../lib/streak_store.ts";
 import { AppState } from "./_middleware.ts";
 import { BarChart, Dumbbell, ShoppingBag, Trophy } from "lucide-preact";
@@ -140,6 +141,8 @@ export default async function Layout(ctx: PageProps<unknown, AppState>) {
       <main className="pb-16 md:pb-0">
         <Component />
       </main>
+
+      <Toaster />
 
       {/* Dock - Hidden on md and larger screens */}
       <div className="dock md:hidden">

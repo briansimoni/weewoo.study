@@ -2,6 +2,8 @@ import { useSignal } from "@preact/signals";
 import { Question } from "../lib/question_store.ts";
 import { useEffect } from "preact/hooks";
 import { AlertCircle, CheckCircle, Edit } from "lucide-preact";
+import { Button } from "../components/ui/Button.tsx";
+import { Modal } from "../components/ui/Modal.tsx";
 
 interface QuestionEditorProps {
   question: Question;
@@ -123,152 +125,145 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
   return (
     <>
       {/* Edit Question Modal */}
-      {showEditModal.value && (
-        <div class="modal modal-open">
-          <div class="modal-box max-w-3xl">
-            <h3 class="font-bold text-lg flex items-center gap-2">
-              <Edit className="w-5 h-5" />
-              Edit Question
-            </h3>
-
-            {updateSuccess.value
-              ? (
-                <div class="alert alert-success mt-4">
-                  <CheckCircle className="w-5 h-5" />
-                  <span>Question updated successfully! Refreshing...</span>
+      <Modal
+        open={showEditModal.value}
+        onClose={closeModal}
+        class="max-w-3xl"
+        title={
+          <span class="flex items-center gap-2">
+            <Edit className="w-5 h-5" />
+            Edit Question
+          </span>
+        }
+      >
+        {updateSuccess.value
+          ? (
+            <div class="alert alert-success mt-4">
+              <CheckCircle className="w-5 h-5" />
+              <span>Question updated successfully! Refreshing...</span>
+            </div>
+          )
+          : (
+            <form onSubmit={handleSubmit} class="mt-4">
+              {updateError.value && (
+                <div class="alert alert-error mb-4">
+                  <AlertCircle className="w-5 h-5" />
+                  <span>{updateError.value}</span>
                 </div>
-              )
-              : (
-                <form onSubmit={handleSubmit} class="mt-4">
-                  {updateError.value && (
-                    <div class="alert alert-error mb-4">
-                      <AlertCircle className="w-5 h-5" />
-                      <span>{updateError.value}</span>
+              )}
+
+              {/* Question Text */}
+              <div class="form-control mb-4">
+                <label class="label">
+                  <span class="label-text font-medium">Question Text</span>
+                </label>
+                <textarea
+                  class="textarea textarea-bordered h-24"
+                  value={formData.value.question}
+                  onInput={(e) =>
+                    updateFormField(
+                      "question",
+                      (e.target as HTMLTextAreaElement).value,
+                    )}
+                  required
+                />
+              </div>
+
+              {/* Category */}
+              <div class="form-control mb-4">
+                <label class="label">
+                  <span class="label-text font-medium">Category</span>
+                </label>
+                <input
+                  type="text"
+                  class="input input-bordered"
+                  value={formData.value.category}
+                  onInput={(e) =>
+                    updateFormField(
+                      "category",
+                      (e.target as HTMLInputElement).value,
+                    )}
+                  required
+                />
+              </div>
+
+              {/* Answer Choices */}
+              <div class="mb-4">
+                <label class="label">
+                  <span class="label-text font-medium">Answer Choices</span>
+                </label>
+
+                {formData.value.choices.map((
+                  choice: string,
+                  index: number,
+                ) => (
+                  <div key={index} class="flex items-center gap-2 mb-2">
+                    <div class="form-control">
+                      <label class="label cursor-pointer">
+                        <input
+                          type="radio"
+                          class="radio radio-primary"
+                          name="correct_answer"
+                          checked={formData.value.correct_answer === index}
+                          onChange={() =>
+                            updateFormField("correct_answer", index)}
+                        />
+                      </label>
                     </div>
-                  )}
-
-                  {/* Question Text */}
-                  <div class="form-control mb-4">
-                    <label class="label">
-                      <span class="label-text font-medium">Question Text</span>
-                    </label>
-                    <textarea
-                      class="textarea textarea-bordered h-24"
-                      value={formData.value.question}
-                      onInput={(e) =>
-                        updateFormField(
-                          "question",
-                          (e.target as HTMLTextAreaElement).value,
-                        )}
-                      required
-                    />
-                  </div>
-
-                  {/* Category */}
-                  <div class="form-control mb-4">
-                    <label class="label">
-                      <span class="label-text font-medium">Category</span>
-                    </label>
+                    <div class="badge badge-lg badge-outline">
+                      {String.fromCharCode(65 + index)}
+                    </div>
                     <input
                       type="text"
-                      class="input input-bordered"
-                      value={formData.value.category}
+                      class="input input-bordered flex-1"
+                      value={choice}
                       onInput={(e) =>
-                        updateFormField(
-                          "category",
+                        updateChoice(
+                          index,
                           (e.target as HTMLInputElement).value,
                         )}
                       required
                     />
                   </div>
+                ))}
 
-                  {/* Answer Choices */}
-                  <div class="mb-4">
-                    <label class="label">
-                      <span class="label-text font-medium">Answer Choices</span>
-                    </label>
+                <div class="text-xs text-base-content/70 mt-1">
+                  Select the radio button next to the correct answer.
+                </div>
+              </div>
 
-                    {formData.value.choices.map((
-                      choice: string,
-                      index: number,
-                    ) => (
-                      <div key={index} class="flex items-center gap-2 mb-2">
-                        <div class="form-control">
-                          <label class="label cursor-pointer">
-                            <input
-                              type="radio"
-                              class="radio radio-primary"
-                              name="correct_answer"
-                              checked={formData.value.correct_answer === index}
-                              onChange={() =>
-                                updateFormField("correct_answer", index)}
-                            />
-                          </label>
-                        </div>
-                        <div class="badge badge-lg badge-outline">
-                          {String.fromCharCode(65 + index)}
-                        </div>
-                        <input
-                          type="text"
-                          class="input input-bordered flex-1"
-                          value={choice}
-                          onInput={(e) =>
-                            updateChoice(
-                              index,
-                              (e.target as HTMLInputElement).value,
-                            )}
-                          required
-                        />
-                      </div>
-                    ))}
+              {/* Explanation */}
+              <div class="form-control mb-4">
+                <label class="label">
+                  <span class="label-text font-medium">Explanation</span>
+                </label>
+                <textarea
+                  class="textarea textarea-bordered h-24"
+                  value={formData.value.explanation}
+                  onInput={(e) =>
+                    updateFormField(
+                      "explanation",
+                      (e.target as HTMLTextAreaElement).value,
+                    )}
+                  required
+                />
+              </div>
 
-                    <div class="text-xs text-base-content/70 mt-1">
-                      Select the radio button next to the correct answer.
-                    </div>
-                  </div>
-
-                  {/* Explanation */}
-                  <div class="form-control mb-4">
-                    <label class="label">
-                      <span class="label-text font-medium">Explanation</span>
-                    </label>
-                    <textarea
-                      class="textarea textarea-bordered h-24"
-                      value={formData.value.explanation}
-                      onInput={(e) =>
-                        updateFormField(
-                          "explanation",
-                          (e.target as HTMLTextAreaElement).value,
-                        )}
-                      required
-                    />
-                  </div>
-
-                  <div class="modal-action">
-                    <button
-                      type="button"
-                      class="btn btn-ghost"
-                      onClick={closeModal}
-                      disabled={isLoading.value}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      class={`btn btn-primary ${
-                        isLoading.value ? "loading" : ""
-                      }`}
-                      disabled={isLoading.value}
-                    >
-                      {isLoading.value ? "Saving..." : "Save Changes"}
-                    </button>
-                  </div>
-                </form>
-              )}
-          </div>
-          <div class="modal-backdrop" onClick={closeModal}></div>
-        </div>
-      )}
+              <div class="modal-action">
+                <Button
+                  variant="ghost"
+                  onClick={closeModal}
+                  disabled={isLoading.value}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" loading={isLoading.value}>
+                  Save Changes
+                </Button>
+              </div>
+            </form>
+          )}
+      </Modal>
     </>
   );
 }
