@@ -1,11 +1,17 @@
 import { assert, assertEquals, assertRejects } from "@std/assert";
 import { CATEGORIES } from "./categories.ts";
-import { ensureSeeded, seed, SEED_USERS, SEED_VERSION } from "./seed.ts";
+import {
+  ensureSeeded,
+  refreshSeedStreak,
+  seed,
+  SEED_USERS,
+  SEED_VERSION,
+} from "./seed.ts";
 import { QuestionStore } from "./question_store.ts";
 import { UserStore } from "./user_store.ts";
 import { AttemptStore } from "./attempt_store.ts";
 import { ProductStore } from "./product_store.ts";
-import { StreakStore } from "./streak_store.ts";
+import { type Streak, StreakStore } from "./streak_store.ts";
 import catalog from "./seed_catalog.json" with { type: "json" };
 
 const now = new Date("2026-10-01T12:00:00Z");
@@ -268,6 +274,42 @@ Deno.test("ensureSeeded redoes legacy partial seeds that only have [Seed] questi
     const summary = await ensureSeeded(kv, { now, stage: "TEST" });
     assert(summary, "legacy partial seed should be redone");
     assertEquals(summary.users, SEED_USERS.length);
+  } finally {
+    kv.close();
+  }
+});
+
+Deno.test("refreshSeedStreak restores an expired seed streak only", async () => {
+  const kv = await Deno.openKv(":memory:");
+  try {
+    const now = new Date("2026-10-10T12:00:00Z"); // shadows the file-level date
+    const key = ["streaks", "seed|expert"];
+    const stored = async () => (await kv.get<Streak>(key)).value;
+
+    // Missing (KV's TTL removed it): restored as seeded.
+    await refreshSeedStreak(kv, "seed|expert", now);
+    assertEquals((await stored())?.days, 45);
+    assertEquals((await stored())?.expires_on, "2026-10-12T12:00:00.000Z");
+
+    // Expired but not yet purged: restored.
+    await kv.set(key, {
+      ...(await stored())!,
+      days: 3,
+      expires_on: "2026-10-09T00:00:00.000Z",
+    });
+    await refreshSeedStreak(kv, "seed|expert", now);
+    assertEquals((await stored())?.days, 45);
+
+    // Live (e.g. advanced by practicing): left alone.
+    await kv.set(key, { ...(await stored())!, days: 46 });
+    await refreshSeedStreak(kv, "seed|expert", now);
+    assertEquals((await stored())?.days, 46);
+
+    // Seed users without a streak and non-seed users get nothing.
+    await refreshSeedStreak(kv, "seed|new-user", now);
+    await refreshSeedStreak(kv, "auth0|someone", now);
+    assertEquals((await kv.get(["streaks", "seed|new-user"])).value, null);
+    assertEquals((await kv.get(["streaks", "auth0|someone"])).value, null);
   } finally {
     kv.close();
   }
