@@ -94,6 +94,18 @@ export interface CardProps extends ClassProps {
 /** A card: the standard content surface, one step above the page. */
 export declare function Card(props: CardProps): React.JSX.Element;
 
+export interface FeatureCardProps extends ClassProps {
+  /** An icon, e.g. a lucide icon at size-5; it's decorative. */
+  icon: React.ReactNode;
+  title: React.ReactNode;
+  /** The color of the icon tile. Default "primary". */
+  tone?: "primary" | "secondary" | "accent" | "info" | "success" | "warning";
+  children?: React.ReactNode;
+}
+
+/** A selling point: an icon tile, a title and a sentence or two. */
+export declare function FeatureCard(props: FeatureCardProps): React.JSX.Element;
+
 export interface StatProps {
   title: React.ReactNode;
   value: React.ReactNode;

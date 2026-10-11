@@ -3,6 +3,7 @@ import { render } from "preact-render-to-string";
 import { Avatar } from "./Avatar.tsx";
 import { Button, buttonClass, LinkButton } from "./Button.tsx";
 import { Card } from "./Card.tsx";
+import { FeatureCard } from "./FeatureCard.tsx";
 import { Stat } from "./Stat.tsx";
 
 Deno.test("buttonClass composes full DaisyUI class names", () => {
@@ -69,4 +70,16 @@ Deno.test("Avatar shows the image, or the name's initial without one", () => {
   assertStringIncludes(initials, ">S<");
   assertStringIncludes(initials, '<span class="sr-only"> seed expert</span>');
   assert(!initials.includes("<img"));
+});
+
+Deno.test("FeatureCard tints a decorative icon tile and renders the copy", () => {
+  const html = render(
+    <FeatureCard icon={<svg />} title="No Ads" tone="secondary">
+      Just focused learning.
+    </FeatureCard>,
+  );
+  assertStringIncludes(html, "bg-secondary/15 text-secondary");
+  assertStringIncludes(html, 'aria-hidden="true"');
+  assertStringIncludes(html, ">No Ads</h3>");
+  assertStringIncludes(html, "Just focused learning.");
 });

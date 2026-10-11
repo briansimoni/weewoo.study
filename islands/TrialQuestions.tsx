@@ -1,5 +1,8 @@
 import { useEffect, useState } from "preact/hooks";
 import QuestionPage from "./Question.tsx";
+import { ProgressBar } from "../components/ui/ProgressBar.tsx";
+
+const TRIAL_LENGTH = 5;
 
 interface TrialQuestionsProps {
   trial_questions_completed: boolean;
@@ -11,7 +14,7 @@ export default function TrialQuestions(props: TrialQuestionsProps) {
     props.trial_questions_completed,
   );
   useEffect(() => {
-    if (questionsCompleted >= 5) {
+    if (questionsCompleted >= TRIAL_LENGTH) {
       fetch("/api/preferences", {
         method: "POST",
         body: JSON.stringify({
@@ -49,8 +52,22 @@ export default function TrialQuestions(props: TrialQuestionsProps) {
     );
   }
   return (
-    <QuestionPage
-      onQuestionCompleted={() => setQuestionsCompleted(questionsCompleted + 1)}
-    />
+    <div class="flex flex-col gap-3">
+      <div class="mx-auto flex w-full max-w-md flex-col gap-2">
+        <div class="flex justify-between font-mono text-xs uppercase tracking-wider text-base-content/60">
+          <span>Free trial</span>
+          <span>{questionsCompleted} / {TRIAL_LENGTH} answered</span>
+        </div>
+        <ProgressBar
+          value={questionsCompleted}
+          max={TRIAL_LENGTH}
+          label="Free trial questions answered"
+        />
+      </div>
+      <QuestionPage
+        onQuestionCompleted={() =>
+          setQuestionsCompleted(questionsCompleted + 1)}
+      />
+    </div>
   );
 }
