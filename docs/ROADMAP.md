@@ -349,7 +349,7 @@ than inventing them. That's essential before the Duolingo-style overhaul.
 - [ ] **Finish moving to the primitives.** ~~Admin pages still use raw DaisyUI
       markup (header band copied into 6 pages, badges, tables)~~: every admin
       page renders in `components/admin/AdminPage.tsx` (section tabs, heading),
-      and the questions and reports pages were reworked (2026-10-11, PR #24):
+      and the questions and reports pages were reworked (2026-10-11, PR #25):
       working scope tabs and filters, search, resolve from the reports list,
       scope passed to the admin question APIs. Tests and previews reach the
       admin pages as the seed admin (`seed|admin`, test login only). Still open:
