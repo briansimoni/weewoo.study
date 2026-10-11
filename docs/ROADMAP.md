@@ -351,12 +351,12 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       product page has 28 `alert()`s in 1,776 lines. ~~The landing page's 6
       feature cards and promo cards are hand-copied~~: done with the landing
       redesign below (`FeatureCard`).
-- [ ] **Redesign the landing page** (the first screen through the full design →
-      implement → review loop). Design approved 2026-10-11 on the
-      [landing canvas](https://claude.ai/artifact/4rcpjQgA7pKJfyU7ej62hr). The
-      joke content stays (the human's call: it's a conversation starter); only
-      the presentation changed. The trial questions moved into the hero with a
-      "n / 5 answered" bar; the stats became a Night Shift monitor
+- [x] **Redesign the landing page** (the first screen through the full design →
+      implement → review loop). Done 2026-10-11 in PR #23; design approved on
+      the [landing canvas](https://claude.ai/artifact/4rcpjQgA7pKJfyU7ej62hr).
+      The joke content stays (the human's call: it's a conversation starter);
+      only the presentation changed. The trial questions moved into the hero
+      with a "n / 5 answered" bar; the stats became a Night Shift monitor
       (`components/landing/VitalsMonitor.tsx`) and the celebrity clips a
       play/pause island (`islands/AudioClip.tsx`); new `FeatureCard` primitive
       (added to `.design-sync/entry.ts`, not yet pushed to Claude Design); lime
