@@ -1,10 +1,8 @@
 import { page, type PageProps } from "fresh";
 import { AdminPage } from "../../../../components/admin/AdminPage.tsx";
 import { Alert } from "../../../../components/ui/Alert.tsx";
-import {
-  PrintfulApiClient,
-  PrintfulProductVariant,
-} from "../../../../lib/client/printful.ts";
+import type { PrintfulProductVariant } from "../../../../lib/client/printful.ts";
+import { printfulCatalog } from "../../../../lib/printful_catalog.ts";
 import { Product, ProductStore } from "../../../../lib/product_store.ts";
 import ProductDetail from "../../../../islands/admin/ProductDetail.tsx";
 import { Handlers } from "fresh/compat";
@@ -36,12 +34,11 @@ export const handler: Handlers<ProductDetailData> = {
       const storedProduct = await productStore.getProduct(productId);
 
       // Get product details from Printful
-      const printfulClient = new PrintfulApiClient();
-      const response = await printfulClient.listProductVariants(productId);
+      const printful = await printfulCatalog().getProduct(productId);
       const productDetails = {
-        sync_product: response.result.sync_product,
+        sync_product: printful.sync_product,
         // the first id isn't the one that you actually use for creating orders which is annoying
-        sync_variants: response.result.sync_variants.map((variant) => ({
+        sync_variants: printful.sync_variants.map((variant) => ({
           ...variant,
           id: variant.product.variant_id,
         })),
@@ -127,76 +124,6 @@ export default function ProductDetailPage(
       section="products"
       back={{ href: "/admin/product-manager", label: "Products" }}
     >
-      {storedProduct && (
-        <div className="bg-surface p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-2xl font-semibold mb-4">
-            Stored Product Information
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <p>
-                <span className="font-medium">Name:</span> {storedProduct.name}
-              </p>
-              <p>
-                <span className="font-medium">ID:</span>{" "}
-                {storedProduct.printful_id}
-              </p>
-              <p>
-                <span className="font-medium">Template ID:</span>{" "}
-                {storedProduct.product_template_id || "N/A"}
-              </p>
-              <p>
-                <span className="font-medium">Price:</span>{" "}
-                ${storedProduct.price.toFixed(2)}
-              </p>
-              <p>
-                <span className="font-medium">Status:</span>{" "}
-                <span
-                  className={`px-2 py-1 text-xs rounded-full ${
-                    storedProduct.active
-                      ? "bg-success/20 text-success"
-                      : "bg-warning/20 text-warning"
-                  }`}
-                >
-                  {storedProduct.active ? "Active" : "Inactive"}
-                </span>
-              </p>
-            </div>
-            <div>
-              <p>
-                <span className="font-medium">Description:</span>
-              </p>
-              <p className="text-secondary mb-4">
-                {storedProduct.description || "No description available."}
-              </p>
-              {storedProduct.colors && storedProduct.colors.length > 0
-                ? (
-                  <>
-                    <p>
-                      <span className="font-medium">Colors:</span>
-                    </p>
-                    <div className="flex space-x-2 mt-2">
-                      {storedProduct.colors.map((color) => (
-                        <div
-                          key={color.name}
-                          className="w-6 h-6 rounded-full border border-outline"
-                          style={{ backgroundColor: color.hex }}
-                          title={color.name}
-                        />
-                      ))}
-                    </div>
-                  </>
-                )
-                : (
-                  <p>
-                    <span className="font-medium">Colors:</span>{" "}
-                    No color options available
-                  </p>
-                )}
-            </div>
-          </div>
-        </div>
-      )}
       <ProductDetail
         productDetails={productDetails}
         storedProduct={storedProduct}

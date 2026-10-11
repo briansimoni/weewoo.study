@@ -1,59 +1,47 @@
 import { page, type PageProps } from "fresh";
+import { Handlers } from "fresh/compat";
 import { AdminPage } from "../../components/admin/AdminPage.tsx";
 import ProductManager from "../../components/ProductManager.tsx";
+import type { PrintfulProduct } from "../../lib/client/printful.ts";
+import { printfulCatalog } from "../../lib/printful_catalog.ts";
 import { Product, ProductStore } from "../../lib/product_store.ts";
-import { PrintfulApiClient } from "../../lib/client/printful.ts";
-import { Handlers } from "fresh/compat";
-
-interface PrintfulProduct {
-  id: number;
-  external_id: string;
-  name: string;
-  variants: number;
-  synced: number;
-  thumbnail_url: string;
-}
 
 interface ProductManagerData {
   appProducts: Product[];
   printfulProducts: PrintfulProduct[];
+  /** Why Printful's list is missing, if it is. */
+  printfulError?: string;
+  /** The name of a product that was just deleted. */
+  deleted?: string;
 }
 
 export const handler: Handlers<ProductManagerData> = {
-  async GET() {
+  async GET(ctx) {
+    const appProducts = await (await ProductStore.make()).listProducts();
+    let printfulProducts: PrintfulProduct[] = [];
+    let printfulError: string | undefined;
     try {
-      // Fetch products from our database
-      const productStore = await ProductStore.make();
-      const appProducts = await productStore.listProducts();
-
-      // Fetch products from Printful
-      const printfulClient = new PrintfulApiClient();
-      const printfulResponse = await printfulClient.listProducts();
-      const printfulProducts = printfulResponse.result;
-
-      return page({ appProducts, printfulProducts });
+      printfulProducts = await printfulCatalog().listProducts();
     } catch (error) {
-      console.error("Error fetching products:", error);
-      return page({ appProducts: [], printfulProducts: [] });
+      console.error("Error fetching Printful products:", error);
+      printfulError = error instanceof Error ? error.message : String(error);
     }
+    const deleted = new URL(ctx.req.url).searchParams.get("deleted") ??
+      undefined;
+    return page({ appProducts, printfulProducts, printfulError, deleted });
   },
 };
 
 export default function ProductManagerPage(
   { data }: PageProps<ProductManagerData>,
 ) {
-  const { appProducts, printfulProducts } = data;
-
   return (
     <AdminPage
       title="Products"
       section="products"
-      description="Printful products and the ones imported into the shop."
+      description="The shop's products, and the Printful products not imported yet."
     >
-      <ProductManager
-        appProducts={appProducts}
-        printfulProducts={printfulProducts}
-      />
+      <ProductManager {...data} />
     </AdminPage>
   );
 }

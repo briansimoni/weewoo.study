@@ -1,137 +1,169 @@
-import { Product } from "../lib/product_store.ts";
-import { PrintfulProduct } from "../lib/client/printful.ts";
+import type { Product } from "../lib/product_store.ts";
+import type { PrintfulProduct } from "../lib/client/printful.ts";
+import { Alert } from "./ui/Alert.tsx";
+import { Badge } from "./ui/Badge.tsx";
+import { LinkButton } from "./ui/Button.tsx";
 
 interface ProductManagerProps {
   appProducts: Product[];
   printfulProducts: PrintfulProduct[];
+  printfulError?: string;
+  deleted?: string;
 }
 
+const detailHref = (id: string | number) =>
+  `/admin/product-manager/product/${id}`;
+
+/** The shop's products, and Printful's products that aren't imported yet. */
 export default function ProductManager(
-  { appProducts, printfulProducts }: ProductManagerProps,
+  { appProducts, printfulProducts, printfulError, deleted }:
+    ProductManagerProps,
 ) {
-  // Filter out Printful products that are already in our database
-  const availablePrintfulProducts = printfulProducts.filter(
-    (printfulProduct) =>
-      !appProducts.some(
-        (appProduct) =>
-          appProduct.printful_id === printfulProduct.id.toString(),
-      ),
+  const imported = new Set(appProducts.map((p) => p.printful_id));
+  const available = printfulProducts.filter((p) => !imported.has(String(p.id)));
+  const products = [...appProducts].sort((a, b) =>
+    Number(b.active) - Number(a.active) || a.name.localeCompare(b.name)
   );
+  const active = appProducts.filter((p) => p.active).length;
 
   return (
-    <div>
-      <div className="mb-10">
-        <h2 className="text-2xl font-semibold mb-4">
-          Your Products ({appProducts.length})
-        </h2>
-        {appProducts.length === 0
-          ? <p className="text-gray-500">No products in your database yet.</p>
-          : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {appProducts.map((product) => (
-                <div
-                  key={product.printful_id}
-                  className="border rounded-lg overflow-hidden shadow-md"
-                >
-                  <div className="h-48 overflow-hidden">
-                    <img
-                      src={product.thumbnail_url}
-                      alt={product.name}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-1">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-600 mb-2">
-                      ${product.price.toFixed(2)}
-                    </p>
-                    <p className="text-sm text-gray-500 mb-3">
-                      ID: {product.printful_id}
-                    </p>
-                    {product.colors && product.colors.length > 0 && (
-                      <div className="flex space-x-2 mb-3">
-                        {product.colors.map((color) => (
-                          <div
-                            key={color.name}
-                            className="w-6 h-6 rounded-full border border-gray-300"
-                            style={{ backgroundColor: color.hex }}
-                            title={color.name}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    <div className="flex justify-between items-center">
-                      <span
-                        className={`px-2 py-1 text-xs rounded-full ${
-                          product.active
-                            ? "bg-green-100 text-green-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}
-                      >
-                        {product.active ? "Active" : "Inactive"}
-                      </span>
-                      <a
-                        href={`/admin/product-manager/product/${product.printful_id}`}
-                        className="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors"
-                      >
-                        View Details
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-      </div>
+    <div class="flex flex-col gap-8">
+      {deleted && <Alert tone="success">Deleted {deleted}.</Alert>}
 
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">
-          Available Printful Products ({availablePrintfulProducts.length})
+      <section aria-labelledby="shop-products">
+        <h2 id="shop-products" class="mb-3 text-xl font-bold">
+          In the shop{" "}
+          <span class="text-base font-normal text-base-content/60">
+            {active} active of {appProducts.length}
+          </span>
         </h2>
-        {availablePrintfulProducts.length === 0
+        {products.length === 0
           ? (
-            <p className="text-gray-500">
-              No additional Printful products available.
+            <p class="rounded-box bg-base-100 p-8 text-center text-base-content/70">
+              No products yet. Import one from Printful below.
             </p>
           )
           : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {availablePrintfulProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="border rounded-lg overflow-hidden shadow-md"
-                >
-                  <div className="h-48 overflow-hidden">
-                    <img
-                      src={product.thumbnail_url}
-                      alt={product.name}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-1">
-                      {product.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-3">
-                      ID: {product.id}
-                    </p>
-                    <p className="text-sm text-gray-500 mb-3">
-                      Variants: {product.variants}
-                    </p>
-                    <a
-                      href={`/admin/product-manager/product/${product.id}`}
-                      className="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors"
-                    >
-                      View Details
-                    </a>
-                  </div>
-                </div>
-              ))}
+            <div class="overflow-x-auto rounded-box bg-base-100">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Colors</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr key={product.printful_id}>
+                      <td>
+                        <a
+                          href={detailHref(product.printful_id)}
+                          class="flex items-center gap-3"
+                        >
+                          <Thumbnail src={product.thumbnail_url} />
+                          <span>
+                            <span class="link link-hover font-medium">
+                              {product.name}
+                            </span>
+                            <span class="block font-mono text-xs text-base-content/60">
+                              {product.printful_id}
+                            </span>
+                          </span>
+                        </a>
+                      </td>
+                      <td>${product.price.toFixed(2)}</td>
+                      <td>
+                        {product.colors?.length
+                          ? (
+                            <span class="flex flex-wrap gap-1">
+                              {product.colors.map((color) => (
+                                <span
+                                  key={color.name}
+                                  class="size-4 rounded-full border border-base-content/20"
+                                  style={{ backgroundColor: color.hex }}
+                                  title={color.name}
+                                />
+                              ))}
+                            </span>
+                          )
+                          : <span class="text-base-content/50">—</span>}
+                      </td>
+                      <td>
+                        <Badge tone={product.active ? "success" : "warning"}>
+                          {product.active ? "Active" : "Inactive"}
+                        </Badge>
+                        {!product.product_template_id && (
+                          <Badge tone="error" class="ml-1">No template</Badge>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
-      </div>
+      </section>
+
+      <section aria-labelledby="printful-products">
+        <h2 id="printful-products" class="mb-3 text-xl font-bold">
+          On Printful, not imported{" "}
+          <span class="text-base font-normal text-base-content/60">
+            {available.length}
+          </span>
+        </h2>
+        {printfulError
+          ? (
+            <Alert tone="warning">
+              Couldn't load Printful's products: {printfulError}
+            </Alert>
+          )
+          : available.length === 0
+          ? (
+            <p class="text-base-content/70">
+              Every Printful product is in the shop.
+            </p>
+          )
+          : (
+            <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {available.map((product) => (
+                <li
+                  key={product.id}
+                  class="flex items-center gap-3 rounded-box bg-base-100 p-3"
+                >
+                  <Thumbnail src={product.thumbnail_url} />
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate font-medium">{product.name}</p>
+                    <p class="text-xs text-base-content/60">
+                      {product.variants} variants
+                    </p>
+                  </div>
+                  <LinkButton
+                    size="sm"
+                    variant="outline"
+                    href={detailHref(product.id)}
+                    aria-label={`Review ${product.name}`}
+                  >
+                    Review
+                  </LinkButton>
+                </li>
+              ))}
+            </ul>
+          )}
+      </section>
     </div>
   );
+}
+
+function Thumbnail({ src }: { src: string }) {
+  return src
+    ? (
+      <img
+        src={src}
+        alt=""
+        class="size-12 shrink-0 rounded-field bg-base-200 object-contain"
+      />
+    )
+    : <span class="size-12 shrink-0 rounded-field bg-base-200" />;
 }
