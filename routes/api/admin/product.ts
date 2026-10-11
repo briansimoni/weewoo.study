@@ -1,5 +1,5 @@
 import { Product, ProductStore } from "../../../lib/product_store.ts";
-import { PrintfulApiClient } from "../../../lib/client/printful.ts";
+import { printfulCatalog } from "../../../lib/printful_catalog.ts";
 import { Handlers } from "fresh/compat";
 
 export const handler: Handlers = {
@@ -25,11 +25,8 @@ export const handler: Handlers = {
       }
 
       // Get product details from Printful
-      const printfulClient = new PrintfulApiClient();
-      const productResponse = await printfulClient.listProductVariants(
-        printful_id,
-      );
-      const productDetails = productResponse.result;
+      const productDetails = await printfulCatalog().getProduct(printful_id)
+        .catch(() => undefined);
 
       if (!productDetails) {
         return new Response(
