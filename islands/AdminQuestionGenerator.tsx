@@ -151,11 +151,7 @@ export default function AdminQuestionGenerator() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-5xl mb-25">
-      <h1 className="text-4xl font-bold mb-8 text-center text-primary">
-        Admin Question Generator
-      </h1>
-
+    <div className="mb-25">
       <div className="grid gap-6 grid-cols-1">
         {/* Chapter Selection */}
         <div className="form-control">

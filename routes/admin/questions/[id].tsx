@@ -1,284 +1,159 @@
 import { page, type PageProps } from "fresh";
+import { Handlers } from "fresh/compat";
 import {
-  Question,
-  QuestionReport,
+  parseScope,
+  type Question,
+  type QuestionReport,
   QuestionStore,
+  type Scope,
 } from "../../../lib/question_store.ts";
+import { AdminPage } from "../../../components/admin/AdminPage.tsx";
+import { SCOPE_LABELS } from "../../../components/admin/ScopeTabs.tsx";
+import { Badge } from "../../../components/ui/Badge.tsx";
+import { Card } from "../../../components/ui/Card.tsx";
 import QuestionEditor from "../../../islands/QuestionEditor.tsx";
 import DeleteQuestionButton from "../../../islands/DeleteQuestionButton.tsx";
-import {
-  Edit,
-  FileText,
-  Info,
-  LayoutDashboard,
-  LogOut,
-  ThumbsUp,
-} from "lucide-preact";
 import ReportCard from "../../../islands/admin/ReportCard.tsx";
-import { Handlers } from "fresh/compat";
 
 interface Data {
   question: Question | null;
   reports: QuestionReport[];
-  error?: string;
+  scope: Scope;
 }
 
 export const handler: Handlers<Data> = {
   async GET(ctx) {
-    try {
-      const questionId = ctx.params.id;
-      const store = await QuestionStore.make();
-
-      const question = await store.getQuestionById(questionId);
-
-      // Get all reports and filter for this specific question
-      const allReports = await store.getQuestionReports();
-      const questionReports = allReports.filter((report) =>
-        report.question_id === questionId
-      );
-      // sort questionReports by resolved_at
-      // this basically puts all of the resolved questions at the bottom
-      questionReports.sort((a, b) => {
-        if (!a.resolved_at || !b.resolved_at) {
-          return Number(!!a.resolved_at) - Number(!!b.resolved_at);
-        }
-        return new Date(a.resolved_at).getTime() -
-          new Date(b.resolved_at).getTime();
-      });
-
-      return page({ question, reports: questionReports });
-    } catch (error) {
-      const errorMessage = error instanceof Error
-        ? error.message
-        : String(error);
-      return page({ question: null, reports: [], error: errorMessage });
-    }
+    const scope = parseScope(new URL(ctx.req.url).searchParams.get("scope")) ??
+      "emt";
+    const store = await QuestionStore.make(undefined, scope);
+    const question = await store.getQuestionById(ctx.params.id).catch(() =>
+      null
+    );
+    // Open reports first, newest first within each group.
+    const reports = question
+      ? (await store.getQuestionReports(question.id)).sort((a, b) =>
+        Number(!!a.resolved_at) - Number(!!b.resolved_at)
+      )
+      : [];
+    return page({ question, reports, scope }, {
+      status: question ? 200 : 404,
+    });
   },
 };
 
 export default function QuestionDetailsPage({ data }: PageProps<Data>) {
-  const { question, reports, error } = data;
+  const { question, reports, scope } = data;
+  const back = { href: `/admin/questions?scope=${scope}`, label: "Questions" };
+
+  if (!question) {
+    return (
+      <AdminPage
+        title="Question not found"
+        section="questions"
+        back={back}
+        width="narrow"
+        description={`No ${
+          SCOPE_LABELS[scope]
+        } question has this ID. It may have been edited (which changes the ID) or deleted.`}
+      />
+    );
+  }
+
+  const open = reports.filter((r) => !r.resolved_at).length;
 
   return (
-    <div class="bg-base-100 min-h-screen">
-      <header class="bg-primary text-primary-content shadow-md py-4">
-        <div class="container mx-auto px-4">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center gap-2">
-              <FileText className="w-6 h-6" />
-              <h1 class="text-xl font-bold">Question Details</h1>
-            </div>
-            <div class="flex gap-4">
-              <a href="/admin" class="btn btn-ghost btn-sm">
-                <LayoutDashboard className="w-4 h-4 mr-1" />
-                Dashboard
-              </a>
-              <a href="/admin/questions" class="btn btn-ghost btn-sm">
-                <LogOut className="w-4 h-4 mr-1" />
-                Back to Questions
-              </a>
-            </div>
+    <AdminPage
+      title="Question"
+      section="questions"
+      back={back}
+      width="narrow"
+      actions={
+        <>
+          <QuestionEditor question={question} scope={scope} />
+          <DeleteQuestionButton questionId={question.id} scope={scope} />
+        </>
+      }
+    >
+      <div class="flex flex-col gap-6">
+        <Card bodyClass="gap-5">
+          <div class="flex flex-wrap items-center gap-2">
+            <Badge tone="primary">{SCOPE_LABELS[scope]}</Badge>
+            <Badge tone="ghost">{question.category}</Badge>
+            <span class="text-sm text-base-content/60">
+              Created {new Date(question.created_at).toLocaleString()}
+              {question.updated_at !== question.created_at &&
+                ` · updated ${new Date(question.updated_at).toLocaleString()}`}
+            </span>
           </div>
-        </div>
-      </header>
 
-      <div class="container mx-auto p-4 max-w-3xl">
-        <div class="flex flex-col items-center mb-8 mt-4">
-          <h1 class="text-3xl font-bold mb-2">Question Details</h1>
-          <p class="text-base-content/70">
-            View all details for this question
-          </p>
-        </div>
+          <p class="text-lg font-medium">{question.question}</p>
 
-        {error && (
-          <div class="alert alert-error mb-6">
-            <Info className="w-5 h-5" />
-            <span>{error}</span>
+          <ol class="flex flex-col gap-2" aria-label="Answer choices">
+            {question.choices.map((choice, index) => {
+              const correct = index === question.correct_answer;
+              return (
+                <li
+                  key={index}
+                  class={`flex items-start gap-3 rounded-field border p-3 ${
+                    correct ? "border-success bg-success/10" : "border-base-300"
+                  }`}
+                >
+                  <span
+                    class={`badge shrink-0 font-mono ${
+                      correct ? "badge-success" : "badge-outline"
+                    }`}
+                  >
+                    {String.fromCharCode(65 + index)}
+                  </span>
+                  <span class="flex-1">{choice}</span>
+                  {correct && (
+                    <span class="text-sm font-medium text-success">
+                      Correct
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+
+          <div>
+            <h2 class="mb-1 text-sm font-semibold uppercase tracking-wide text-base-content/60">
+              Explanation
+            </h2>
+            <p>{question.explanation}</p>
           </div>
-        )}
 
-        {question
-          ? (
-            <div class="card bg-base-200 shadow-lg">
-              <div class="card-body">
-                <div class="grid grid-cols-1 gap-6">
-                  {/* Question ID */}
-                  <div>
-                    <h2 class="text-sm font-medium text-base-content/70">
-                      Question ID
-                    </h2>
-                    <p class="font-mono text-sm">{question.id}</p>
-                  </div>
+          <details class="text-sm">
+            <summary class="cursor-pointer text-base-content/70">
+              ID and raw JSON
+            </summary>
+            <p class="mt-2 font-mono break-all">{question.id}</p>
+            <pre class="mt-2 overflow-x-auto rounded-field bg-base-200 p-3 text-xs">
+              {JSON.stringify(question, null, 2)}
+            </pre>
+          </details>
+        </Card>
 
-                  {/* Metadata Row */}
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <h2 class="text-sm font-medium text-base-content/70">
-                        Category
-                      </h2>
-                      <p class="font-medium">
-                        <span class="badge badge-ghost">
-                          {question.category}
-                        </span>
-                      </p>
-                    </div>
-                    <div>
-                      <h2 class="text-sm font-medium text-base-content/70">
-                        Scope
-                      </h2>
-                      <p class="font-medium">
-                        <span class="badge badge-primary">
-                          {question.scope}
-                        </span>
-                      </p>
-                    </div>
-                    <div>
-                      <h2 class="text-sm font-medium text-base-content/70">
-                        Created
-                      </h2>
-                      <p class="text-sm">
-                        {new Date(question.created_at).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Raw JSON View */}
-                  <div>
-                    <details class="collapse collapse-arrow bg-base-100">
-                      <summary class="collapse-title font-medium">
-                        <div class="flex items-center gap-2">
-                          <FileText className="w-4 h-4" />
-                          Raw JSON Data
-                        </div>
-                      </summary>
-                      <div class="collapse-content">
-                        <pre class="bg-base-300 p-4 rounded-lg overflow-x-auto text-xs">
-                          {JSON.stringify(question, null, 2)}
-                        </pre>
-                      </div>
-                    </details>
-                  </div>
-
-                  <div class="divider"></div>
-
-                  {/* Question Text */}
-                  <div>
-                    <h2 class="text-lg font-bold mb-2">Question</h2>
-                    <div class="bg-base-100 p-4 rounded-lg">
-                      <p class="text-lg">{question.question}</p>
-                    </div>
-                  </div>
-
-                  {/* Answer Choices */}
-                  <div>
-                    <h2 class="text-lg font-bold mb-2">Answer Choices</h2>
-                    <div class="space-y-2">
-                      {question.choices.map((choice, index) => (
-                        <div
-                          key={index}
-                          class={`p-3 rounded-lg flex items-start gap-3 ${
-                            index === question.correct_answer
-                              ? "bg-success/20 border border-success"
-                              : "bg-base-100"
-                          }`}
-                        >
-                          <div
-                            class={`badge badge-lg ${
-                              index === question.correct_answer
-                                ? "badge-success"
-                                : "badge-outline"
-                            }`}
-                          >
-                            {String.fromCharCode(65 + index)}
-                          </div>
-                          <div class="flex-1">
-                            <p
-                              class={index === question.correct_answer
-                                ? "font-medium"
-                                : ""}
-                            >
-                              {choice}
-                            </p>
-                            {index === question.correct_answer && (
-                              <div class="flex items-center gap-1 text-success mt-1">
-                                <ThumbsUp className="w-4 h-4" />
-                                <span class="text-sm font-medium">
-                                  Correct Answer
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Explanation */}
-                  <div>
-                    <h2 class="text-lg font-bold mb-2">Explanation</h2>
-                    <div class="bg-base-100 p-4 rounded-lg">
-                      <p>{question.explanation}</p>
-                    </div>
-                  </div>
-
-                  {/* Question Reports */}
-                  {reports.length === 0 && (
-                    <div>
-                      <h2 class="text-lg font-bold mb-2">User Reports (0)</h2>
-                      <div class="space-y-4">
-                        <p>No reports found for this question.</p>
-                      </div>
-                    </div>
-                  )}
-                  {reports.length > 0 && (
-                    <div>
-                      <h2 class="text-lg font-bold mb-2">
-                        User Reports ({reports.length})
-                      </h2>
-                      <div class="space-y-4">
-                        {reports.map((report, index) => (
-                          <ReportCard key={index} report={report} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Actions */}
-                  <div class="flex justify-end gap-2 mt-4">
-                    <a
-                      href="/admin/questions"
-                      class="btn btn-ghost"
-                    >
-                      Back to List
-                    </a>
-                    <button
-                      type="button"
-                      class="btn btn-primary"
-                      id="openEditModalBtn"
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit Question
-                    </button>
-                    {question && (
-                      <DeleteQuestionButton questionId={question.id} />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-          : (
-            <div class="text-center p-12">
-              <p class="text-xl text-base-content/60">Question not found</p>
-              <a href="/admin/questions" class="btn btn-primary mt-4">
-                Back to Questions
-              </a>
-            </div>
-          )}
+        <section aria-labelledby="reports-heading">
+          <h2 id="reports-heading" class="mb-3 text-xl font-bold">
+            Reports{" "}
+            <span class="text-base font-normal text-base-content/60">
+              {reports.length === 0
+                ? "none yet"
+                : `${open} open of ${reports.length}`}
+            </span>
+          </h2>
+          <div class="flex flex-col gap-3">
+            {reports.map((report) => (
+              <ReportCard
+                key={report.report_id}
+                report={report}
+                scope={scope}
+              />
+            ))}
+          </div>
+        </section>
       </div>
-
-      {/* Question Editor island */}
-      {question && <QuestionEditor question={question} />}
-    </div>
+    </AdminPage>
   );
 }

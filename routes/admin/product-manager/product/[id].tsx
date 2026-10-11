@@ -1,4 +1,6 @@
 import { page, type PageProps } from "fresh";
+import { AdminPage } from "../../../../components/admin/AdminPage.tsx";
+import { Alert } from "../../../../components/ui/Alert.tsx";
 import {
   PrintfulApiClient,
   PrintfulProductVariant,
@@ -93,58 +95,38 @@ export default function ProductDetailPage(
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div
-          className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6"
-          role="alert"
-        >
-          <p className="font-bold">Error</p>
-          <p>{error}</p>
-          <p className="mt-2">
-            <a
-              href="/admin/product-manager"
-              className="text-blue-500 hover:underline"
-            >
-              &larr; Back to Product Manager
-            </a>
-          </p>
-        </div>
-      </div>
+      <AdminPage
+        title="Product"
+        section="products"
+        back={{ href: "/admin/product-manager", label: "Products" }}
+        width="narrow"
+      >
+        <Alert tone="error">{error}</Alert>
+      </AdminPage>
     );
   }
 
   if (!productDetails) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div
-          className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6"
-          role="alert"
-        >
-          <p className="font-bold">Product Not Found</p>
-          <p>Could not find product with ID: {productId}</p>
-          <p className="mt-2">
-            <a
-              href="/admin/product-manager"
-              className="text-blue-500 hover:underline"
-            >
-              &larr; Back to Product Manager
-            </a>
-          </p>
-        </div>
-      </div>
+      <AdminPage
+        title="Product not found"
+        section="products"
+        back={{ href: "/admin/product-manager", label: "Products" }}
+        width="narrow"
+      >
+        <Alert tone="warning">
+          No Printful product has the ID {productId}.
+        </Alert>
+      </AdminPage>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-4">
-        <a
-          href="/admin/product-manager"
-          className="text-blue-500 hover:underline"
-        >
-          &larr; Back to Product Manager
-        </a>
-      </div>
+    <AdminPage
+      title={storedProduct?.name ?? productDetails.sync_product.name}
+      section="products"
+      back={{ href: "/admin/product-manager", label: "Products" }}
+    >
       {storedProduct && (
         <div className="bg-surface p-6 rounded-lg shadow-md mb-6">
           <h2 className="text-2xl font-semibold mb-4">
@@ -219,6 +201,6 @@ export default function ProductDetailPage(
         productDetails={productDetails}
         storedProduct={storedProduct}
       />
-    </div>
+    </AdminPage>
   );
 }

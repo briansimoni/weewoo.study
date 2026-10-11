@@ -3,6 +3,7 @@ import { getKv } from "../../lib/kv.ts";
 import { refreshSeedStreak, SEED_USERS } from "../../lib/seed.ts";
 import { StreakStore } from "../../lib/streak_store.ts";
 import { UserStore } from "../../lib/user_store.ts";
+import { testLoginEnabled } from "../../lib/test_login.ts";
 import { AppHandlers, AppProps } from "../_middleware.ts";
 
 /**
@@ -15,9 +16,7 @@ import { AppHandlers, AppProps } from "../_middleware.ts";
  * test.weewoo.study runs STAGE=TEST with real accounts, but it is never seeded,
  * so no account there can be signed into this way.
  */
-export function testLoginEnabled(stage = Deno.env.get("STAGE")): boolean {
-  return stage === "DEV" || stage === "TEST";
-}
+export { testLoginEnabled };
 
 const SEED_USER_IDS = new Set<string>(SEED_USERS.map((u) => u.user_id));
 

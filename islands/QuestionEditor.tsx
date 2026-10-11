@@ -1,15 +1,19 @@
 import { useSignal } from "@preact/signals";
-import { Question } from "../lib/question_store.ts";
-import { useEffect } from "preact/hooks";
+import type { Question, Scope } from "../lib/question_store.ts";
+import { CATEGORIES } from "../lib/categories.ts";
 import { AlertCircle, CheckCircle, Edit } from "lucide-preact";
 import { Button } from "../components/ui/Button.tsx";
 import { Modal } from "../components/ui/Modal.tsx";
 
 interface QuestionEditorProps {
   question: Question;
+  scope: Scope;
 }
 
-export default function QuestionEditor({ question }: QuestionEditorProps) {
+/** The Edit Question button and its form, in a modal. */
+export default function QuestionEditor(
+  { question, scope }: QuestionEditorProps,
+) {
   const showEditModal = useSignal(false);
   const isLoading = useSignal(false);
   const updateError = useSignal<string | null>(null);
@@ -29,6 +33,13 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
     explanation: question.explanation,
     category: question.category,
   });
+
+  // Keep a legacy category selectable instead of silently changing it.
+  const categoryOptions: string[] = CATEGORIES.includes(
+      question.category as typeof CATEGORIES[number],
+    )
+    ? [...CATEGORIES]
+    : [question.category, ...CATEGORIES];
 
   // Close modal and reset states
   const closeModal = () => {
@@ -64,19 +75,22 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
       updateError.value = null;
       updateSuccess.value = false;
 
-      const response = await fetch(`/api/admin/questions/${question.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/admin/questions/${question.id}?scope=${scope}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            question: formData.value.question,
+            choices: formData.value.choices,
+            correct_answer: formData.value.correct_answer,
+            explanation: formData.value.explanation,
+            category: formData.value.category,
+          }),
         },
-        body: JSON.stringify({
-          question: formData.value.question,
-          choices: formData.value.choices,
-          correct_answer: formData.value.correct_answer,
-          explanation: formData.value.explanation,
-          category: formData.value.category,
-        }),
-      });
+      );
 
       const result = await response.json();
 
@@ -93,7 +107,8 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
       // Redirect to the new question page after a short delay
       // This handles cases where the question ID changes due to text modifications
       setTimeout(() => {
-        globalThis.location.href = `/admin/questions/${updatedQuestionId}`;
+        globalThis.location.href =
+          `/admin/questions/${updatedQuestionId}?scope=${scope}`;
       }, 1500);
     } catch (err) {
       updateError.value = err instanceof Error
@@ -104,26 +119,12 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
     }
   };
 
-  // Initialize event listener for the edit button
-  useEffect(() => {
-    const openEditModalBtn = document.getElementById("openEditModalBtn");
-    if (openEditModalBtn) {
-      openEditModalBtn.addEventListener("click", () => {
-        showEditModal.value = true;
-      });
-    }
-
-    return () => {
-      if (openEditModalBtn) {
-        openEditModalBtn.removeEventListener("click", () => {
-          showEditModal.value = true;
-        });
-      }
-    };
-  }, []);
-
   return (
     <>
+      <Button onClick={() => (showEditModal.value = true)}>
+        <Edit className="w-4 h-4" />
+        Edit Question
+      </Button>
       {/* Edit Question Modal */}
       <Modal
         open={showEditModal.value}
@@ -154,10 +155,11 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
 
               {/* Question Text */}
               <div class="form-control mb-4">
-                <label class="label">
+                <label class="label" for="edit-question-text">
                   <span class="label-text font-medium">Question Text</span>
                 </label>
                 <textarea
+                  id="edit-question-text"
                   class="textarea textarea-bordered h-24"
                   value={formData.value.question}
                   onInput={(e) =>
@@ -171,27 +173,31 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
 
               {/* Category */}
               <div class="form-control mb-4">
-                <label class="label">
+                <label class="label" for="edit-question-category">
                   <span class="label-text font-medium">Category</span>
                 </label>
-                <input
-                  type="text"
-                  class="input input-bordered"
+                <select
+                  id="edit-question-category"
+                  class="select w-full"
                   value={formData.value.category}
-                  onInput={(e) =>
+                  onChange={(e) =>
                     updateFormField(
                       "category",
-                      (e.target as HTMLInputElement).value,
+                      (e.target as HTMLSelectElement).value,
                     )}
                   required
-                />
+                >
+                  {categoryOptions.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Answer Choices */}
               <div class="mb-4">
-                <label class="label">
+                <p class="label">
                   <span class="label-text font-medium">Answer Choices</span>
-                </label>
+                </p>
 
                 {formData.value.choices.map((
                   choice: string,
@@ -204,6 +210,9 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
                           type="radio"
                           class="radio radio-primary"
                           name="correct_answer"
+                          aria-label={`Choice ${
+                            String.fromCharCode(65 + index)
+                          } is correct`}
                           checked={formData.value.correct_answer === index}
                           onChange={() =>
                             updateFormField("correct_answer", index)}
@@ -216,6 +225,7 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
                     <input
                       type="text"
                       class="input input-bordered flex-1"
+                      aria-label={`Choice ${String.fromCharCode(65 + index)}`}
                       value={choice}
                       onInput={(e) =>
                         updateChoice(
@@ -234,10 +244,11 @@ export default function QuestionEditor({ question }: QuestionEditorProps) {
 
               {/* Explanation */}
               <div class="form-control mb-4">
-                <label class="label">
+                <label class="label" for="edit-question-explanation">
                   <span class="label-text font-medium">Explanation</span>
                 </label>
                 <textarea
+                  id="edit-question-explanation"
                   class="textarea textarea-bordered h-24"
                   value={formData.value.explanation}
                   onInput={(e) =>

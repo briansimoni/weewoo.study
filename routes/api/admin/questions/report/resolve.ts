@@ -1,5 +1,5 @@
 import { AppHandlers } from "../../../../_middleware.ts";
-import { QuestionStore } from "../../../../../lib/question_store.ts";
+import { QuestionStore, SCOPES } from "../../../../../lib/question_store.ts";
 import Zod from "zod";
 
 export const handler: AppHandlers = {
@@ -9,14 +9,15 @@ export const handler: AppHandlers = {
     const resolveQuestionSchema = Zod.object({
       questionId: Zod.string().min(1),
       reportId: Zod.string().min(1),
+      scope: Zod.enum(SCOPES).default("emt"),
     });
 
-    const { questionId, reportId } = resolveQuestionSchema.parse(
+    const { questionId, reportId, scope } = resolveQuestionSchema.parse(
       await req.json(),
     );
 
     try {
-      const store = await QuestionStore.make();
+      const store = await QuestionStore.make(undefined, scope);
 
       await store.resolveReport({ questionId, reportId });
 

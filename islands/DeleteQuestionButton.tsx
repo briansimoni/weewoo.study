@@ -3,9 +3,10 @@ import { Trash } from "lucide-preact";
 import { Button } from "../components/ui/Button.tsx";
 import { Modal } from "../components/ui/Modal.tsx";
 import { showToast } from "../components/ui/toast.ts";
+import type { Scope } from "../lib/question_store.ts";
 
 export default function DeleteQuestionButton(
-  { questionId }: { questionId: string },
+  { questionId, scope }: { questionId: string; scope: Scope },
 ) {
   const [confirming, setConfirming] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -13,20 +14,25 @@ export default function DeleteQuestionButton(
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      const response = await fetch(`/api/admin/questions/${questionId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/admin/questions/${questionId}?scope=${scope}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (response.ok) {
-        globalThis.location.href = "/admin/questions?deleted=true";
+        globalThis.location.href = `/admin/questions?scope=${scope}&deleted=1`;
         return;
       }
       const error = await response.json().catch(() => ({}));
       showToast(
-        `Failed to delete question: ${error.message || "Unknown error"}`,
+        `Failed to delete question: ${
+          error.error || error.message || "Unknown error"
+        }`,
         { tone: "error" },
       );
     } catch (error) {
@@ -60,7 +66,9 @@ export default function DeleteQuestionButton(
           </>
         }
       >
-        <p class="py-4">This can't be undone.</p>
+        <p class="py-4">
+          This deletes the question and its reports. It can't be undone.
+        </p>
       </Modal>
     </>
   );

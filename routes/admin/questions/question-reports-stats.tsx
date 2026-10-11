@@ -1,14 +1,11 @@
 import { page, type PageProps } from "fresh";
 import { QuestionReport, QuestionStore } from "../../../lib/question_store.ts";
 import { User, UserStore } from "../../../lib/user_store.ts";
-import { ArrowLeft, BarChart3, FileText, FileX, Users } from "lucide-preact";
 import { Handlers } from "fresh/compat";
-
-interface Thing {
-  user_id: string;
-  user: User;
-  reports: QuestionReport[];
-}
+import { AdminPage } from "../../../components/admin/AdminPage.tsx";
+import { Badge } from "../../../components/ui/Badge.tsx";
+import { Card } from "../../../components/ui/Card.tsx";
+import { Stat, StatGrid } from "../../../components/ui/Stat.tsx";
 
 export const handler: Handlers<PropItem[]> = {
   GET: async () => {
@@ -70,104 +67,63 @@ export default function ({ data }: PageProps<PropItem[]>) {
   );
 
   return (
-    <div class="container mx-auto p-6 max-w-7xl">
-      {/* Navigation */}
-      <div class="breadcrumbs text-sm mb-6">
-        <ul>
-          <li>
-            <a href="/admin" class="flex items-center gap-2 hover:text-primary">
-              <ArrowLeft size={16} />
-              Admin Dashboard
-            </a>
-          </li>
-          <li>Question Reports Stats</li>
-        </ul>
-      </div>
+    <AdminPage
+      title="Reporters"
+      section="reports"
+      back={{ href: "/admin/question-reports", label: "Question reports" }}
+      description="Users who have reported EMT questions, most active first."
+    >
+      <Card class="mb-6">
+        <StatGrid class="sm:grid-cols-3">
+          <Stat title="Reporters" value={totalUsers} tone="primary" />
+          <Stat title="Reports" value={totalReports} tone="secondary" />
+          <Stat
+            title="Average per user"
+            value={averageReportsPerUser}
+            tone="accent"
+          />
+        </StatGrid>
+      </Card>
 
-      {/* Header */}
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold mb-2">Question Reports Dashboard</h1>
-        <p class="text-base-content/70">
-          Overview of users who have submitted question reports
-        </p>
-      </div>
-
-      {/* Summary Stats using DaisyUI stats */}
-      <div class="stats stats-vertical lg:stats-horizontal shadow mb-8 w-full">
-        <div class="stat">
-          <div class="stat-figure text-primary">
-            <Users size={32} />
+      {totalUsers === 0
+        ? (
+          <div class="rounded-box bg-base-100 p-10 text-center text-base-content/70">
+            No signed-in user has reported a question yet.
           </div>
-          <div class="stat-title">Total Users</div>
-          <div class="stat-value text-primary">{totalUsers}</div>
-          <div class="stat-desc">Users who submitted reports</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-figure text-secondary">
-            <FileText size={32} />
-          </div>
-          <div class="stat-title">Total Reports</div>
-          <div class="stat-value text-secondary">{totalReports}</div>
-          <div class="stat-desc">Reports submitted</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-figure text-accent">
-            <BarChart3 size={32} />
-          </div>
-          <div class="stat-title">Average per User</div>
-          <div class="stat-value text-accent">{averageReportsPerUser}</div>
-          <div class="stat-desc">Reports per user</div>
-        </div>
-      </div>
-
-      {/* Users Table using DaisyUI table */}
-      <div class="card bg-base-100 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title mb-4">Users by Report Activity</h2>
-          <p class="text-base-content/70 mb-4">
-            Sorted by number of reports submitted
-          </p>
-
-          <div class="overflow-x-auto">
-            <table class="table table-zebra">
+        )
+        : (
+          <div class="overflow-x-auto rounded-box bg-base-100">
+            <table class="table">
               <thead>
                 <tr>
                   <th>User</th>
-                  <th>User ID</th>
                   <th>Reports</th>
-                  <th>Activity Level</th>
+                  <th>Activity</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedData.map(({ user, reports }) => {
-                  const activityLevel = reports.length >= 10
-                    ? "High"
+                  const [activity, tone] = reports.length >= 10
+                    ? ["High", "error"] as const
                     : reports.length >= 5
-                    ? "Medium"
-                    : "Low";
-                  const badgeClass = reports.length >= 10
-                    ? "badge-error"
-                    : reports.length >= 5
-                    ? "badge-warning"
-                    : "badge-success";
-
+                    ? ["Medium", "warning"] as const
+                    : ["Low", "success"] as const;
                   return (
                     <tr key={user.user_id}>
                       <td>
-                        <div class="font-bold">{user.display_name}</div>
-                      </td>
-                      <td>
-                        <div class="text-sm opacity-50">{user.user_id}</div>
-                      </td>
-                      <td>
-                        <div class="font-bold">{reports.length}</div>
-                      </td>
-                      <td>
-                        <div class={`badge ${badgeClass}`}>
-                          {activityLevel}
+                        <a
+                          href={`/user/${encodeURIComponent(user.user_id)}`}
+                          class="link link-hover font-medium"
+                        >
+                          {user.display_name}
+                        </a>
+                        <div class="font-mono text-xs text-base-content/60">
+                          {user.user_id}
                         </div>
+                      </td>
+                      <td class="font-bold">{reports.length}</td>
+                      <td>
+                        <Badge tone={tone}>{activity}</Badge>
                       </td>
                     </tr>
                   );
@@ -175,25 +131,7 @@ export default function ({ data }: PageProps<PropItem[]>) {
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
-
-      {/* Empty state */}
-      {totalUsers === 0 && (
-        <div class="hero min-h-[400px]">
-          <div class="hero-content text-center">
-            <div class="max-w-md">
-              <div class="mx-auto mb-4 text-base-content/30">
-                <FileX size={48} />
-              </div>
-              <h1 class="text-2xl font-bold">No reports yet</h1>
-              <p class="py-6 text-base-content/70">
-                No users have submitted question reports yet.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+    </AdminPage>
   );
 }
