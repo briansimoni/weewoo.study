@@ -1,229 +1,160 @@
 import { page, type PageProps } from "fresh";
-import { FileText, Info, LayoutDashboard, PanelRight } from "lucide-preact";
-import { Question, QuestionStore } from "../../lib/question_store.ts";
 import { Handlers } from "fresh/compat";
+import {
+  parseScope,
+  Question,
+  QuestionStore,
+  type Scope,
+} from "../../lib/question_store.ts";
+import { AdminPage } from "../../components/admin/AdminPage.tsx";
+import { ScopeTabs } from "../../components/admin/ScopeTabs.tsx";
+import { Alert } from "../../components/ui/Alert.tsx";
+import { Badge } from "../../components/ui/Badge.tsx";
+import { Button, LinkButton } from "../../components/ui/Button.tsx";
+import { filterQuestions } from "../../lib/question_filter.ts";
 
 interface Data {
   questions: Question[];
-  scope: string;
-  error?: string;
+  /** Every category in this bank, for the filter. */
+  categories: string[];
+  /** Questions in the bank before filtering. */
+  total: number;
+  scope: Scope;
+  category: string;
+  search: string;
+  deleted: boolean;
 }
-
-const allowedScopes = ["emt", "advanced", "medic"] as const;
-type Scope = (typeof allowedScopes)[number];
 
 export const handler: Handlers<Data> = {
   async GET(ctx) {
-    const req = ctx.req;
+    const params = new URL(ctx.req.url).searchParams;
+    const scope = parseScope(params.get("scope")) ?? "emt";
+    const category = params.get("category") ?? "";
+    const search = (params.get("q") ?? "").trim();
 
-    try {
-      const url = new URL(req.url);
+    const store = await QuestionStore.make(undefined, scope);
+    const all = await store.listQuestions();
+    const questions = filterQuestions(all, { category, search })
+      .sort((a, b) => b.created_at.localeCompare(a.created_at));
+    const categories = [...new Set(all.map((q) => q.category))].sort();
 
-      // Get scope from query param, defaulting to "emt"
-      const scope = (url.searchParams.get("scope") as Scope) || "emt";
-      if (!allowedScopes.includes(scope)) {
-        throw new Error("Invalid scope");
-      }
-
-      const store = await QuestionStore.make();
-
-      let questions: Question[] = [];
-
-      // Get optional category filter
-      const category = url.searchParams.get("category");
-      if (category) {
-        questions = await store.listQuestions(category);
-      } else {
-        questions = await store.listQuestions();
-      }
-
-      // Sort questions by creation date (newest first)
-      questions.sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      );
-
-      return page({ questions, scope });
-    } catch (error) {
-      const errorMessage = error instanceof Error
-        ? error.message
-        : String(error);
-      return page({ questions: [], scope: "emt", error: errorMessage });
-    }
+    return page({
+      questions,
+      categories,
+      total: all.length,
+      scope,
+      category,
+      search,
+      deleted: params.has("deleted"),
+    });
   },
 };
 
 export default function QuestionsPage({ data }: PageProps<Data>) {
-  const { questions, scope, error } = data;
-
-  // Get unique categories for filter dropdown
-  const categories = [...new Set(questions.map((q) => q.category))].sort();
+  const { questions, categories, total, scope, category, search, deleted } =
+    data;
+  const filtered = Boolean(category || search);
 
   return (
-    <div class="bg-base-100 min-h-screen">
-      <header class="bg-primary text-primary-content shadow-md py-4">
-        <div class="container mx-auto px-4">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center gap-2">
-              <FileText className="w-6 h-6" />
-              <h1 class="text-xl font-bold">Question Library</h1>
-            </div>
-            <div class="flex gap-4">
-              <a href="/admin" class="btn btn-ghost btn-sm">
-                <LayoutDashboard className="w-4 h-4 mr-1" />
-                Dashboard
-              </a>
-            </div>
+    <AdminPage
+      title="Questions"
+      section="questions"
+      description="Every question in the bank. Open one to edit it, delete it or resolve its reports."
+      actions={
+        <LinkButton href="/admin/question-generator" variant="outline">
+          Generate questions
+        </LinkButton>
+      }
+    >
+      {deleted && <Alert tone="success" class="mb-4">Question deleted.</Alert>}
+
+      <div class="mb-4 flex flex-wrap items-center gap-3">
+        <ScopeTabs path="/admin/questions" current={scope} />
+        <form
+          method="get"
+          class="flex flex-1 flex-wrap items-center gap-2"
+          role="search"
+        >
+          <input type="hidden" name="scope" value={scope} />
+          <select
+            name="category"
+            class="select select-sm w-auto"
+            aria-label="Category"
+          >
+            <option value="">All categories</option>
+            {categories.map((c) => (
+              <option key={c} value={c} selected={c === category}>{c}</option>
+            ))}
+          </select>
+          <input
+            type="search"
+            name="q"
+            value={search}
+            placeholder="Search text, choices or ID"
+            aria-label="Search questions"
+            class="input input-sm min-w-48 flex-1"
+          />
+          <Button type="submit" size="sm">Filter</Button>
+          {filtered && (
+            <a href={`/admin/questions?scope=${scope}`} class="link text-sm">
+              Clear
+            </a>
+          )}
+        </form>
+      </div>
+
+      <p class="mb-2 text-sm text-base-content/70" data-testid="question-count">
+        {filtered
+          ? `${questions.length} of ${total} questions`
+          : `${total} questions`}
+      </p>
+
+      {questions.length === 0
+        ? (
+          <div class="rounded-box bg-base-100 p-10 text-center text-base-content/70">
+            {total === 0
+              ? "This bank has no questions yet."
+              : "No questions match these filters."}
           </div>
-        </div>
-      </header>
-
-      <div class="container mx-auto p-4 max-w-6xl">
-        <div class="flex flex-col items-center mb-8 mt-4">
-          <h1 class="text-3xl font-bold mb-2">Question Library</h1>
-          <p class="text-base-content/70">
-            View and manage all questions in the database
-          </p>
-        </div>
-
-        {error && (
-          <div class="alert alert-error mb-6">
-            <Info className="w-5 h-5" />
-            <span>{error}</span>
+        )
+        : (
+          <div class="overflow-x-auto rounded-box bg-base-100">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Category</th>
+                  <th class="whitespace-nowrap">Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                {questions.map((q) => (
+                  <tr key={q.id} class="hover:bg-base-200/60">
+                    <td class="min-w-72">
+                      <a
+                        href={`/admin/questions/${q.id}?scope=${scope}`}
+                        class="link link-hover font-medium"
+                      >
+                        {q.question}
+                      </a>
+                      <p class="mt-1 text-sm text-success">
+                        ✓ {q.choices[q.correct_answer]}
+                      </p>
+                    </td>
+                    <td>
+                      <Badge tone="ghost" class="h-auto py-1">
+                        {q.category}
+                      </Badge>
+                    </td>
+                    <td class="whitespace-nowrap text-sm text-base-content/70">
+                      {new Date(q.created_at).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
-
-        <div class="mb-6 flex flex-wrap gap-4 justify-between items-center">
-          <div class="flex flex-wrap gap-3">
-            <div class="join">
-              <a
-                href={`/admin/questions?scope=emt`}
-                class={`btn join-item ${scope === "emt" ? "btn-primary" : ""}`}
-              >
-                EMT
-              </a>
-              <a
-                href={`/admin/questions?scope=advanced`}
-                class={`btn join-item ${
-                  scope === "advanced" ? "btn-primary" : ""
-                }`}
-              >
-                Advanced
-              </a>
-              <a
-                href={`/admin/questions?scope=medic`}
-                class={`btn join-item ${
-                  scope === "medic" ? "btn-primary" : ""
-                }`}
-              >
-                Medic
-              </a>
-            </div>
-
-            {categories.length > 0 && (
-              <div class="dropdown dropdown-bottom">
-                <div tabIndex={0} role="button" class="btn">
-                  Filter by Category
-                  <PanelRight className="w-4 h-4" />
-                </div>
-                <ul
-                  tabIndex={0}
-                  class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52 max-h-96 overflow-y-auto"
-                >
-                  <li>
-                    <a href={`/admin/questions?scope=${scope}`}>
-                      All Categories
-                    </a>
-                  </li>
-                  {categories.map((cat) => (
-                    <li>
-                      <a
-                        href={`/admin/questions?scope=${scope}&category=${
-                          encodeURIComponent(
-                            cat,
-                          )
-                        }`}
-                      >
-                        {cat}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <span class="badge badge-lg">{questions.length} Questions</span>
-          </div>
-        </div>
-
-        {questions.length === 0
-          ? (
-            <div class="text-center p-12">
-              <p class="text-xl text-base-content/60">No questions found</p>
-            </div>
-          )
-          : (
-            <div class="overflow-x-auto">
-              <table class="table table-zebra w-full">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Question</th>
-                    <th>Category</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {questions.map((question) => (
-                    <tr key={question.id}>
-                      <td class="font-mono text-sm">
-                        {question.id.substring(0, 8)}...
-                      </td>
-                      <td class="max-w-md">
-                        <div class="font-medium">{question.question}</div>
-                        <div class="text-sm text-base-content/70">
-                          {question.choices.map((choice, i) => (
-                            <span
-                              class={`mr-2 ${
-                                i === question.correct_answer
-                                  ? "font-bold text-success"
-                                  : ""
-                              }`}
-                            >
-                              {String.fromCharCode(65 + i)}: {choice}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td>
-                        <span class="badge badge-ghost">
-                          {question.category}
-                        </span>
-                      </td>
-                      <td class="text-sm">
-                        {new Date(question.created_at).toLocaleDateString()}
-                      </td>
-                      <td>
-                        <div class="flex gap-2">
-                          <a
-                            href={`/admin/questions/${question.id}`}
-                            class="btn btn-square btn-ghost btn-xs"
-                            title="View Details"
-                          >
-                            <Info className="w-4 h-4" />
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-      </div>
-    </div>
+    </AdminPage>
   );
 }

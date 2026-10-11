@@ -3,6 +3,7 @@ import { assertSpyCalls, stub } from "@std/testing/mock";
 import type { Context } from "fresh";
 import type { AppHandler, AppState } from "../routes/_middleware.ts";
 import { SessionStore } from "./session_store.ts";
+import { isAdmin, SEED_ADMIN_ID } from "./admin_only_middleware.ts";
 import { handler as adminPageMiddleware } from "../routes/admin/_middleware.ts";
 import { handler as adminApiMiddleware } from "../routes/api/admin/_middleware.ts";
 import { handler as emtMiddleware } from "../routes/emt/_middleware.ts";
@@ -258,4 +259,61 @@ Deno.test("logging reads info.remoteAddr and preferences read ctx.req", async ()
   assertEquals(invalidResponse.status, 200);
   assertSpyCalls(_error, 1);
   await invalidResponse.text();
+});
+
+Deno.test("isAdmin admits the seed admin only through the test login in DEV/TEST", () => {
+  const seedAdmin = {
+    session_id: "s",
+    user_id: SEED_ADMIN_ID,
+    test_login: true,
+  };
+  assertEquals(isAdmin(seedAdmin, "DEV"), true);
+  assertEquals(isAdmin(seedAdmin, "TEST"), true);
+  assertEquals(isAdmin(seedAdmin, "PROD"), false);
+  assertEquals(isAdmin(seedAdmin, undefined), false);
+  // A session that didn't come from the test login.
+  assertEquals(isAdmin({ ...seedAdmin, test_login: undefined }, "DEV"), false);
+  // Other seed users stay non-admin.
+  assertEquals(
+    isAdmin({ ...seedAdmin, user_id: "seed|expert" }, "DEV"),
+    false,
+  );
+  assertEquals(isAdmin(undefined, "DEV"), false);
+  // The real admin, in any stage.
+  assertEquals(
+    isAdmin(
+      { session_id: "s", user_id: "auth0|67b28845f4ba32d0be58bc46" },
+      "PROD",
+    ),
+    true,
+  );
+});
+
+Deno.test("admin pages and API admit a test-login seed admin when STAGE=TEST", async () => {
+  await withSessionStore(async (kv) => {
+    using _env = stub(
+      Deno.env,
+      "get",
+      (name: string) => name === "STAGE" ? "TEST" : undefined,
+    );
+    await kv.set(["sessions", "seed-admin"], {
+      session_id: "seed-admin",
+      user_id: SEED_ADMIN_ID,
+      test_login: true,
+    });
+    for (
+      const [gate, path] of [
+        [adminPageMiddleware, "/admin"],
+        [adminApiMiddleware, "/api/admin/kv/export"],
+      ] as const
+    ) {
+      const ctx = context(
+        new Request(`https://example.test${path}`, {
+          headers: { cookie: "app_session=seed-admin" },
+        }),
+      );
+      const response = await run(ctx, [...modules.middleware.handler, ...gate]);
+      assertEquals(response.status, 200);
+    }
+  });
 });

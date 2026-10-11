@@ -70,6 +70,14 @@ export const SEED_USERS = [
     accuracy: 0.9,
     streak: 45,
   },
+  {
+    // Admin only through the test login in DEV/TEST (lib/admin_only_middleware.ts).
+    user_id: "seed|admin",
+    display_name: "Seed Admin",
+    attempts: 0,
+    accuracy: 0,
+    streak: 0,
+  },
 ] as const;
 
 /** Throws unless the current environment may receive seed data. */
@@ -336,8 +344,9 @@ async function seedProducts(kv: Deno.Kv) {
  * 3: leaderboard entries include display names.
  * 4: interrupted seeds are detected and redone (forces a reseed everywhere).
  * 5: product thumbnails point at CloudFront instead of expiring Printful URLs.
+ * 6: a seed admin user (seed|admin) for the admin pages.
  */
-export const SEED_VERSION = 5;
+export const SEED_VERSION = 6;
 const VERSION_KEY = ["seed", "version"];
 const LOCK_KEY = ["seed", "lock"];
 const STARTED_KEY = ["seed", "started"];

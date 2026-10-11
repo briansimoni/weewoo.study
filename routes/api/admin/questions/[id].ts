@@ -1,6 +1,12 @@
 import Zod from "zod";
 import { AppHandlers } from "../../../_middleware.ts";
-import { QuestionStore } from "../../../../lib/question_store.ts";
+import { parseScope, QuestionStore } from "../../../../lib/question_store.ts";
+
+/** The question's bank, from `?scope=` (default EMT). */
+function storeFor(req: Request) {
+  const param = new URL(req.url).searchParams.get("scope");
+  return QuestionStore.make(undefined, parseScope(param) ?? "emt");
+}
 
 const updateQuestionSchema = Zod.object({
   question: Zod.string().min(1),
@@ -22,7 +28,7 @@ export const handler: AppHandlers = {
     }
 
     try {
-      const questionStore = await QuestionStore.make();
+      const questionStore = await storeFor(ctx.req);
       const question = await questionStore.getQuestionById(questionId);
 
       return new Response(JSON.stringify(question), {
@@ -64,7 +70,7 @@ export const handler: AppHandlers = {
         );
       }
 
-      const questionStore = await QuestionStore.make();
+      const questionStore = await storeFor(ctx.req);
 
       // First get the existing question
       const existingQuestion = await questionStore.getQuestionById(questionId);
@@ -101,7 +107,7 @@ export const handler: AppHandlers = {
     }
 
     try {
-      const questionStore = await QuestionStore.make();
+      const questionStore = await storeFor(ctx.req);
 
       // Verify the question exists before attempting to delete it
       await questionStore.getQuestionById(questionId);

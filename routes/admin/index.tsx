@@ -1,184 +1,133 @@
-import { PageProps } from "fresh";
+import { page, type PageProps } from "fresh";
+import { Handlers } from "fresh/compat";
 import {
-  BarChart3,
   Bug,
   Database,
   FileQuestion,
-  Home,
-  LayoutDashboard,
   Library,
-  LogOut,
-  LucideIcon,
-  MessageCircle,
+  type LucideIcon,
   ShoppingBag,
-  ThumbsUp,
+  ThumbsDown,
   Users,
 } from "lucide-preact";
+import { QuestionStore, type Scope, SCOPES } from "../../lib/question_store.ts";
+import { AdminPage } from "../../components/admin/AdminPage.tsx";
+import { SCOPE_LABELS } from "../../components/admin/ScopeTabs.tsx";
+import { Card } from "../../components/ui/Card.tsx";
+import { Stat, StatGrid } from "../../components/ui/Stat.tsx";
 
-interface AdminToolCard {
-  title: string;
-  description: string;
-  url: string;
-  icon: LucideIcon;
+interface Data {
+  questions: Record<Scope, number>;
+  openReports: number;
 }
 
-// The admin middleware will automatically handle authentication
-// We don't need a custom handler since middleware will reject unauthorized users
+const TOOLS: {
+  title: string;
+  description: string;
+  href: string;
+  icon: LucideIcon;
+}[] = [
+  {
+    title: "Questions",
+    description: "Search, edit and delete questions in each bank.",
+    href: "/admin/questions",
+    icon: Library,
+  },
+  {
+    title: "Question reports",
+    description: "Read and resolve users' thumbs up and down.",
+    href: "/admin/question-reports",
+    icon: ThumbsDown,
+  },
+  {
+    title: "Question generator",
+    description: "Draft new questions from textbook chapters.",
+    href: "/admin/question-generator",
+    icon: FileQuestion,
+  },
+  {
+    title: "Products",
+    description: "Import products from Printful and edit the shop.",
+    href: "/admin/product-manager",
+    icon: ShoppingBag,
+  },
+  {
+    title: "Users",
+    description: "Accounts and their practice statistics.",
+    href: "/admin/users",
+    icon: Users,
+  },
+  {
+    title: "Database",
+    description: "Download a backup or restore one.",
+    href: "/admin/database",
+    icon: Database,
+  },
+  {
+    title: "Debug",
+    description: "Environment and system diagnostics.",
+    href: "/admin/debug",
+    icon: Bug,
+  },
+];
 
-export default function AdminIndex(_props: PageProps) {
-  const tools: AdminToolCard[] = [
-    {
-      title: "Product Manager",
-      description: "Create, edit, and manage products in the store",
-      url: "/admin/product-manager",
-      icon: ShoppingBag,
-    },
-    {
-      title: "Question Generator",
-      description: "Create and manage quiz questions",
-      url: "/admin/question-generator",
-      icon: FileQuestion,
-    },
-    {
-      title: "Question Library",
-      description: "View and manage all questions in the database",
-      url: "/admin/questions",
-      icon: Library,
-    },
-    {
-      title: "Debug Tools",
-      description: "Debug tools and system diagnostics",
-      url: "/admin/debug",
-      icon: Bug,
-    },
-    {
-      title: "Database Tools",
-      description: "Download backups and upload full database restores",
-      url: "/admin/database",
-      icon: Database,
-    },
-    {
-      title: "User Management",
-      description: "View and manage user accounts and statistics",
-      url: "/admin/users",
-      icon: Users,
-    },
-  ];
+export const handler: Handlers<Data> = {
+  async GET() {
+    const counts = await Promise.all(
+      SCOPES.map(async (scope) =>
+        (await QuestionStore.make(undefined, scope)).size()
+      ),
+    );
+    const reports = await (await QuestionStore.make()).getQuestionReports();
+    return page({
+      questions: Object.fromEntries(
+        SCOPES.map((scope, i) => [scope, counts[i]]),
+      ) as Record<Scope, number>,
+      openReports: reports.filter((r) => !r.resolved_at).length,
+    });
+  },
+};
 
+export default function AdminIndex({ data }: PageProps<Data>) {
   return (
-    <div class="bg-base-100 min-h-screen">
-      <header class="bg-primary text-primary-content shadow-md py-4">
-        <div class="container mx-auto px-4">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center gap-2">
-              <LayoutDashboard className="w-6 h-6" />
-              <h1 class="text-xl font-bold">Admin Portal</h1>
-            </div>
-            <div class="flex gap-4">
-              <a href="/" class="btn btn-ghost btn-sm">
-                <Home className="w-4 h-4 mr-1" />
-                Website
-              </a>
-              <a href="/logout" class="btn btn-ghost btn-sm">
-                <LogOut className="w-4 h-4 mr-1" />
-                Logout
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div class="container mx-auto p-4 max-w-5xl">
-        <div class="flex flex-col items-center mb-8 mt-4">
-          <h1 class="text-3xl font-bold mb-2">Admin Dashboard</h1>
-          <p class="text-base-content/70">
-            Manage your site content and settings
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tools.map((tool) => (
-            <a
-              href={tool.url}
-              class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
-            >
-              <div class="card-body">
-                <div class="flex items-center gap-3 mb-2">
-                  <div className="text-primary">
-                    <tool.icon className="w-6 h-6" />
-                  </div>
-                  <h2 class="card-title">{tool.title}</h2>
-                </div>
-                <p class="text-base-content/70">{tool.description}</p>
-              </div>
+    <AdminPage title="Dashboard" section="dashboard">
+      <Card class="mb-8">
+        <StatGrid class="sm:grid-cols-4">
+          {SCOPES.map((scope) => (
+            <a key={scope} href={`/admin/questions?scope=${scope}`}>
+              <Stat
+                title={`${SCOPE_LABELS[scope]} questions`}
+                value={data.questions[scope]}
+              />
             </a>
           ))}
-        </div>
+          <a href="/admin/question-reports">
+            <Stat
+              title="Open reports (EMT)"
+              value={data.openReports}
+              tone={data.openReports > 0 ? "warning" : "default"}
+            />
+          </a>
+        </StatGrid>
+      </Card>
 
-        <div class="divider my-10">Reports & Analytics</div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
-            <div class="card-body">
-              <h2 class="card-title flex items-center gap-2">
-                <ThumbsUp className="w-5 h-5 text-primary" />
-                Question Reports
-              </h2>
-              <p class="text-base-content/70">
-                View user feedback and improvement suggestions for questions
-              </p>
-              <div class="card-actions justify-end mt-4">
-                <a href="/admin/question-reports" class="btn btn-primary">
-                  View Reports
-                </a>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {TOOLS.map(({ title, description, href, icon: Icon }) => (
+          <a
+            key={href}
+            href={href}
+            class="card bg-base-100 transition-colors hover:bg-base-300/40"
+          >
+            <div class="card-body flex-row items-start gap-4">
+              <Icon class="mt-1 size-5 shrink-0 text-primary" />
+              <div>
+                <h2 class="card-title text-lg">{title}</h2>
+                <p class="text-sm text-base-content/70">{description}</p>
               </div>
             </div>
-          </div>
-
-          <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
-            <div class="card-body">
-              <h2 class="card-title flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-primary" />
-                Question Reports Stats
-              </h2>
-              <p class="text-base-content/70">
-                Analytics dashboard showing user report activity and statistics
-              </p>
-              <div class="card-actions justify-end mt-4">
-                <a
-                  href="/admin/questions/question-reports-stats"
-                  class="btn btn-primary"
-                >
-                  View Stats
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="card bg-base-200 shadow-lg">
-            <div class="card-body">
-              <h2 class="card-title flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-primary" />
-                Support Tickets
-              </h2>
-              <p class="text-base-content/70">
-                Manage customer support requests
-              </p>
-              <div class="card-actions justify-end mt-4">
-                <a href="#" class="btn btn-primary">
-                  Coming Soon
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <footer class="mt-20 pb-10 text-center">
-          <p class="text-base-content/60 text-sm">
-            &copy; {new Date().getFullYear()} weewoo.study Admin Portal
-          </p>
-        </footer>
+          </a>
+        ))}
       </div>
-    </div>
+    </AdminPage>
   );
 }

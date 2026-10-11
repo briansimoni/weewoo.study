@@ -1,211 +1,154 @@
 import { page, type PageProps } from "fresh";
-import {
-  FileText,
-  Info,
-  LayoutDashboard,
-  ThumbsDown,
-  ThumbsUp,
-} from "lucide-preact";
-import { QuestionReport, QuestionStore } from "../../lib/question_store.ts";
-import { Question } from "../../lib/question_store.ts";
 import { Handlers } from "fresh/compat";
+import {
+  parseScope,
+  type Question,
+  type QuestionReport,
+  QuestionStore,
+  type Scope,
+} from "../../lib/question_store.ts";
+import { AdminPage } from "../../components/admin/AdminPage.tsx";
+import {
+  ScopeTabs,
+  SegmentedLinks,
+} from "../../components/admin/ScopeTabs.tsx";
+import { LinkButton } from "../../components/ui/Button.tsx";
+import { Card } from "../../components/ui/Card.tsx";
+import { Stat, StatGrid } from "../../components/ui/Stat.tsx";
+import ReportCard from "../../islands/admin/ReportCard.tsx";
 
-interface PageData {
-  reports: (QuestionReport & { question?: Question | null })[];
+const STATUSES = { open: "Open", resolved: "Resolved", all: "All" } as const;
+const KINDS = { all: "All", down: "Negative", up: "Positive" } as const;
+type Status = keyof typeof STATUSES;
+type Kind = keyof typeof KINDS;
+
+interface Data {
+  reports: (QuestionReport & { question?: Question })[];
+  counts: {
+    open: number;
+    negative: number;
+    positive: number;
+    resolved: number;
+  };
+  scope: Scope;
+  status: Status;
+  kind: Kind;
 }
 
-export const handler: Handlers<PageData> = {
-  async GET() {
-    const store = await QuestionStore.make();
-    const reports = (await store.getQuestionReports()).filter((report) =>
-      !report.resolved_at
-    );
+function oneOf<T extends string>(
+  options: Record<T, string>,
+  value: string | null,
+  fallback: T,
+): T {
+  return value !== null && value in options ? value as T : fallback;
+}
 
-    // Fetch the question details for each report
-    const reportsWithQuestions = await Promise.all(
-      reports.map(async (report: QuestionReport) => {
-        try {
-          const question = await store.getQuestionById(report.question_id);
-          return { ...report, question };
-        } catch (error) {
-          console.error(
-            `Error fetching question ${report.question_id}:`,
-            error,
-          );
-          return report;
-        }
-      }),
-    );
+export const handler: Handlers<Data> = {
+  async GET(ctx) {
+    const params = new URL(ctx.req.url).searchParams;
+    const scope = parseScope(params.get("scope")) ?? "emt";
+    const status = oneOf<Status>(STATUSES, params.get("status"), "open");
+    const kind = oneOf<Kind>(KINDS, params.get("kind"), "all");
 
-    return page({ reports: reportsWithQuestions });
+    const store = await QuestionStore.make(undefined, scope);
+    const all = await store.getQuestionReports();
+    const open = all.filter((r) => !r.resolved_at);
+    const counts = {
+      open: open.length,
+      negative: open.filter((r) => r.thumbs === "down").length,
+      positive: open.filter((r) => r.thumbs === "up").length,
+      resolved: all.length - open.length,
+    };
+
+    const shown = all.filter((r) =>
+      (status === "all" || (status === "open") === !r.resolved_at) &&
+      (kind === "all" || r.thumbs === kind)
+    );
+    // One lookup per question, not per report.
+    const questions = new Map<string, Question | undefined>();
+    for (const id of new Set(shown.map((r) => r.question_id))) {
+      questions.set(id, await store.getQuestionById(id).catch(() => undefined));
+    }
+    const reports = shown.map((r) => ({
+      ...r,
+      question: questions.get(r.question_id),
+    }));
+
+    return page({ reports, counts, scope, status, kind });
   },
 };
 
-export default function QuestionReports({ data }: PageProps<PageData>) {
-  const { reports } = data;
+export default function QuestionReports({ data }: PageProps<Data>) {
+  const { reports, counts, scope, status, kind } = data;
+  const href = (next: { status?: Status; kind?: Kind }) =>
+    `/admin/question-reports?scope=${scope}&status=${
+      next.status ?? status
+    }&kind=${next.kind ?? kind}`;
 
   return (
-    <div class="bg-base-100 min-h-screen">
-      <header class="bg-primary text-primary-content shadow-md py-4">
-        <div class="container mx-auto px-4">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center gap-2">
-              <ThumbsUp className="w-6 h-6" />
-              <h1 class="text-xl font-bold">Question Reports</h1>
-            </div>
-            <div class="flex gap-4">
-              <a href="/admin" class="btn btn-ghost btn-sm">
-                <LayoutDashboard className="w-4 h-4 mr-1" />
-                Dashboard
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+    <AdminPage
+      title="Question reports"
+      section="reports"
+      description="Thumbs up and down from practice, with the reason the user gave."
+      actions={
+        <LinkButton
+          href="/admin/questions/question-reports-stats"
+          variant="outline"
+        >
+          Reporters
+        </LinkButton>
+      }
+    >
+      <Card class="mb-6">
+        <StatGrid class="sm:grid-cols-4">
+          <Stat title="Open" value={counts.open} />
+          <Stat title="Open, negative" value={counts.negative} tone="error" />
+          <Stat title="Open, positive" value={counts.positive} tone="success" />
+          <Stat title="Resolved" value={counts.resolved} />
+        </StatGrid>
+      </Card>
 
-      <div class="container mx-auto p-4 max-w-5xl">
-        <div class="flex flex-col items-center mb-8 mt-4">
-          <h1 class="text-3xl font-bold mb-2">Question Feedback Reports</h1>
-          <p class="text-base-content/70">
-            View feedback submitted by users for questions
-          </p>
-        </div>
-
-        <div class="stats shadow mb-6 w-full">
-          <div class="stat">
-            <div class="stat-figure text-primary">
-              <ThumbsUp className="w-7 h-7" />
-            </div>
-            <div class="stat-title">Positive Feedback</div>
-            <div class="stat-value text-primary">
-              {reports.filter((r) => r.thumbs === "up").length}
-            </div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-figure text-error">
-              <ThumbsDown className="w-7 h-7" />
-            </div>
-            <div class="stat-title">Issues Reported</div>
-            <div class="stat-value text-error">
-              {reports.filter((r) => r.thumbs === "down").length}
-            </div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-figure text-secondary">
-              <FileText className="w-7 h-7" />
-            </div>
-            <div class="stat-title">Total Reports</div>
-            <div class="stat-value">{reports.length}</div>
-          </div>
-        </div>
-
-        <div class="flex justify-end mb-4">
-          <div class="join">
-            <button class="btn join-item" type="button">All</button>
-            <button class="btn join-item btn-primary" type="button">
-              <ThumbsUp className="w-4 h-4 mr-1" />
-              Positive
-            </button>
-            <button class="btn join-item" type="button">
-              <ThumbsDown className="w-4 h-4 mr-1" />
-              Negative
-            </button>
-          </div>
-        </div>
-
-        {reports.length === 0
-          ? (
-            <div class="bg-base-200 p-8 rounded-lg text-center">
-              <Info className="w-16 h-16 mx-auto mb-4 text-base-content/60" />
-              <h3 class="text-xl font-bold mb-2">No Reports Yet</h3>
-              <p class="text-base-content/70">
-                Users haven't submitted any feedback for questions yet.
-              </p>
-            </div>
-          )
-          : (
-            <div class="grid gap-6">
-              {reports.map((report) => (
-                <div
-                  key={`${report.question_id}-${report.reported_at}`}
-                  class="card bg-base-200 shadow-lg"
-                >
-                  <div class="card-body">
-                    <div class="flex items-center gap-2 mb-4">
-                      <div
-                        class={`flex justify-center ${
-                          report.thumbs === "up" ? "text-success" : "text-error"
-                        }`}
-                      >
-                        <div class="w-12 h-12 rounded-full bg-base-300 flex items-center justify-center">
-                          {report.thumbs === "up"
-                            ? <ThumbsUp className="w-6 h-6" />
-                            : <ThumbsDown className="w-6 h-6" />}
-                        </div>
-                      </div>
-                      <div>
-                        <h3 class="card-title">
-                          {report.question?.question ||
-                            `Question #${report.question_id}`}
-                        </h3>
-                        <div class="text-sm text-base-content/60">
-                          Reported:{" "}
-                          {new Date(report.reported_at).toLocaleString()}
-                          {report.user_id && (
-                            <span class="ml-2">
-                              by User:{" "}
-                              <span class="font-mono text-secondary">
-                                {report.user_id}
-                              </span>
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="divider my-2">Feedback</div>
-
-                    <div class="bg-base-300 p-4 rounded-lg my-2">
-                      <p class="whitespace-pre-wrap">{report.reason}</p>
-                    </div>
-
-                    {report.question && (
-                      <>
-                        <div class="divider my-2">Question Details</div>
-                        <div class="bg-base-300 p-4 rounded-lg my-2">
-                          <div class="mb-2">
-                            <span class="font-bold">Question:</span>{" "}
-                            {report.question.question}
-                          </div>
-                          <div class="mb-2">
-                            <span class="font-bold">Correct Answer:</span>{" "}
-                            {report.question.correct_answer}
-                          </div>
-                          <div class="mb-2">
-                            <span class="font-bold">Explanation:</span>{" "}
-                            {report.question.explanation}
-                          </div>
-                        </div>
-
-                        <div class="card-actions justify-end mt-2">
-                          <a
-                            href={`/admin/questions/${report.question_id}`}
-                            class="btn btn-primary btn-sm"
-                          >
-                            <FileText className="w-4 h-4 mr-1" />
-                            View Details
-                          </a>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+      <div class="mb-4 flex flex-wrap items-center gap-3">
+        <ScopeTabs path="/admin/question-reports" current={scope} />
+        <SegmentedLinks
+          label="Status"
+          options={STATUSES}
+          current={status}
+          href={(s) => href({ status: s })}
+        />
+        <SegmentedLinks
+          label="Type"
+          options={KINDS}
+          current={kind}
+          href={(k) => href({ kind: k })}
+        />
       </div>
-    </div>
+
+      {reports.length === 0
+        ? (
+          <div class="rounded-box bg-base-100 p-10 text-center text-base-content/70">
+            {status === "open" && kind === "all"
+              ? "No open reports. Clean call."
+              : "No reports match these filters."}
+          </div>
+        )
+        : (
+          <div class="grid gap-3 lg:grid-cols-2">
+            {reports.map((report) => (
+              <ReportCard
+                key={report.report_id}
+                report={report}
+                scope={scope}
+                question={{
+                  text: report.question?.question ??
+                    `Missing question ${report.question_id}`,
+                  correctAnswer: report.question
+                    ?.choices[report.question.correct_answer],
+                }}
+              />
+            ))}
+          </div>
+        )}
+    </AdminPage>
   );
 }

@@ -1,5 +1,4 @@
 import { page, type PageProps } from "fresh";
-import { ArrowLeft, Database } from "lucide-preact";
 import {
   assertKvImportAllowed,
   exportKv,
@@ -10,6 +9,7 @@ import {
 import { getKv } from "../../lib/kv.ts";
 import KvBackupUploader from "../../islands/admin/KvBackupUploader.tsx";
 import { Handlers } from "fresh/compat";
+import { AdminPage } from "../../components/admin/AdminPage.tsx";
 
 interface DatabasePageData {
   stage?: string;
@@ -162,67 +162,48 @@ export const handler: Handlers<DatabasePageData> = {
 
 export default function DatabasePage({ data }: PageProps<DatabasePageData>) {
   return (
-    <div class="bg-base-100 min-h-screen">
-      <header class="bg-primary text-primary-content shadow-md py-4">
-        <div class="container mx-auto px-4">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center gap-2">
-              <Database className="w-6 h-6" />
-              <h1 class="text-xl font-bold">Database Tools</h1>
-            </div>
-            <a href="/admin" class="btn btn-ghost btn-sm">
-              <ArrowLeft className="w-4 h-4 mr-1" />
-              Back to Admin
-            </a>
-          </div>
-        </div>
-      </header>
-
-      <div class="container mx-auto p-4 max-w-3xl">
-        <div class="flex flex-col items-center mb-8 mt-4">
-          <h1 class="text-3xl font-bold mb-2">Database Backup & Restore</h1>
-          <p class="text-base-content/70">
-            Download a JSON backup or restore from a backup file.
-          </p>
-        </div>
-
-        <div class="alert alert-info mb-6">
-          <span>
-            Current STAGE: <strong>{data.stage}</strong>
-          </span>
-        </div>
-
-        {data.success && (
-          <div class="alert alert-success mb-6">
-            <span>{data.success}</span>
-          </div>
-        )}
-
-        {data.error && (
-          <div class="alert alert-error mb-6">
-            <span>{data.error}</span>
-          </div>
-        )}
-
-        <div class="card bg-base-200 shadow-md p-6 mb-6">
-          <h2 class="text-xl font-semibold mb-2">Download Backup</h2>
-          <p class="text-base-content/70 mb-4">
-            Export the entire KV database as a JSON file.
-          </p>
-          <form method="POST">
-            <button
-              type="submit"
-              name="action"
-              value="download"
-              class="btn btn-primary"
-            >
-              Download JSON Backup
-            </button>
-          </form>
-        </div>
-
-        <KvBackupUploader stage={data.stage} chunkSize={250} />
+    <AdminPage
+      title="Database"
+      section="database"
+      width="narrow"
+      description="Download a JSON backup of the KV database, or restore one."
+    >
+      <div class="alert alert-info mb-6">
+        <span>
+          Current STAGE: <strong>{data.stage}</strong>
+        </span>
       </div>
-    </div>
+
+      {data.success && (
+        <div class="alert alert-success mb-6">
+          <span>{data.success}</span>
+        </div>
+      )}
+
+      {data.error && (
+        <div class="alert alert-error mb-6">
+          <span>{data.error}</span>
+        </div>
+      )}
+
+      <div class="card bg-base-200 shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-2">Download Backup</h2>
+        <p class="text-base-content/70 mb-4">
+          Export the entire KV database as a JSON file.
+        </p>
+        <form method="POST">
+          <button
+            type="submit"
+            name="action"
+            value="download"
+            class="btn btn-primary"
+          >
+            Download JSON Backup
+          </button>
+        </form>
+      </div>
+
+      <KvBackupUploader stage={data.stage} chunkSize={250} />
+    </AdminPage>
   );
 }
