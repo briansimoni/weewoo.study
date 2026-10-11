@@ -204,7 +204,9 @@ This application uses various environment variables for configuration. Create a
   a new endpoint's secret to `--secret-out <file>`.
 - `PRINTFUL_SECRET`: Printful API token used for product sync and order
   submission. Not needed by the webhook outside `PROD` unless
-  `PRINTFUL_DRAFT_ORDERS` is set.
+  `PRINTFUL_DRAFT_ORDERS` is set. Without it, non-PROD stages read a stub
+  Printful catalog built from `lib/seed_catalog.json` (admin product pages) and
+  a stub shipping rate.
 - `PRINTFUL_DRAFT_ORDERS`: `true` makes the webhook outside `PROD` submit the
   order to Printful (which holds it as an unconfirmed draft) instead of only
   logging it. No customer or admin emails are sent outside `PROD`. Ignored in
