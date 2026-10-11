@@ -3,6 +3,7 @@
 // showToast (Preact signals) are app-runtime pieces and stay out.
 export { Button, buttonClass, LinkButton } from "../components/ui/Button.tsx";
 export { Card } from "../components/ui/Card.tsx";
+export { FeatureCard } from "../components/ui/FeatureCard.tsx";
 export { Stat, StatGrid } from "../components/ui/Stat.tsx";
 export { Avatar } from "../components/ui/Avatar.tsx";
 export { Alert } from "../components/ui/Alert.tsx";

@@ -346,11 +346,32 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       Fixed on the way: profile overflow and broken image, dark mode on the user
       page, practice screen and error page, `alert()`s outside the admin product
       page.
-- [ ] **Finish moving to the primitives.** Admin pages still use raw DaisyUI
-      markup (header band copied into 6 pages, badges, tables), and the admin
-      product page has 28 `alert()`s in 1,776 lines. The landing page's 6
-      feature cards and promo cards are hand-copied (a `FeatureCard`), best done
-      with the landing redesign.
+- [ ] **Finish moving to the primitives.** ~~Admin pages still use raw DaisyUI
+      markup (header band copied into 6 pages, badges, tables)~~: every admin
+      page renders in `components/admin/AdminPage.tsx` (section tabs, heading),
+      and the questions and reports pages were reworked (2026-10-11, PR #25):
+      working scope tabs and filters, search, resolve from the reports list,
+      scope passed to the admin question APIs. Tests and previews reach the
+      admin pages as the seed admin (`seed|admin`, test login only). Still open:
+      the admin product page has 28 `alert()`s in 1,776 lines (next PR), and the
+      users and database page bodies are unchanged. Follow-up: `/admin/debug`
+      renders sessions with their OAuth access tokens. ~~The landing page's 6
+      feature cards and promo cards are hand-copied~~: done with the landing
+      redesign below (`FeatureCard`).
+- [x] **Redesign the landing page** (the first screen through the full design →
+      implement → review loop). Done 2026-10-11 in PR #23; design approved on
+      the [landing canvas](https://claude.ai/artifact/4rcpjQgA7pKJfyU7ej62hr).
+      The joke content stays (the human's call: it's a conversation starter);
+      only the presentation changed. The trial questions moved into the hero
+      with a "n / 5 answered" bar; the stats became a Night Shift monitor
+      (`components/landing/VitalsMonitor.tsx`) and the celebrity clips a
+      play/pause island (`islands/AudioClip.tsx`); new `FeatureCard` primitive
+      (added to `.design-sync/entry.ts`, not yet pushed to Claude Design); lime
+      closing band and a footer. Follow-ups: the navbar still shows "WeeWoo🚑"
+      rather than the beacon mark (it's on every page, so it's a separate change
+      with the mark artwork); the question card inside the trial is the shared
+      practice card, restyling it (lettered choices, inline feedback) belongs to
+      the practice screen's design.
 - [x] Create the Claude Design design-system project and do the first
       `/design-sync` push. Done 2026-10-10: project
       [weewoo.study](https://claude.ai/design/p/158f915d-3eee-4812-9214-1f225e3f3481)
@@ -371,8 +392,8 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       mark. Voice: dry EMS humor ("Clean call."). Implemented as the DaisyUI
       themes `nightshift` (default) and `dayshift` in `static/styles.css`. Still
       open: sound and motion guidelines, the mark as real artwork (logo,
-      favicon, app icon), and the landing page's made-up stats and celebrity
-      section.
+      favicon, app icon), and the mark in the navbar. (The landing page's joke
+      stats and celebrity section stay, decided 2026-10-11.)
 
 **Exit criteria:** a design-system project exists, the code primitives match it,
 and one real screen has gone through the full design → implement → review loop.

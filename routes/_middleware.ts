@@ -16,6 +16,8 @@ export interface SessionData {
   picture?: string;
   display_name?: string;
   streakDays?: number;
+  /** Set by the test login (routes/auth/test-login.tsx). */
+  test_login?: boolean;
   [key: string]: unknown;
 }
 

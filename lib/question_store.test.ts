@@ -5,7 +5,7 @@ import {
   assertRejects,
   assertStrictEquals,
 } from "@std/assert";
-import { QuestionStore } from "./question_store.ts";
+import { parseScope, QuestionStore } from "./question_store.ts";
 
 type QuestionInput = {
   question: string;
@@ -712,4 +712,13 @@ Deno.test("when the question id changes the report ids also change", async () =>
   assertEquals(upReport.user_id, "user456");
 
   kv.close();
+});
+
+Deno.test("parseScope accepts only the three scopes", () => {
+  assertEquals(parseScope("emt"), "emt");
+  assertEquals(parseScope("advanced"), "advanced");
+  assertEquals(parseScope("medic"), "medic");
+  assertEquals(parseScope("EMT"), undefined);
+  assertEquals(parseScope(null), undefined);
+  assertEquals(parseScope(["emt"]), undefined);
 });

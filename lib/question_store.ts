@@ -1,5 +1,14 @@
 import { getKv } from "./kv.ts";
 
+/** Question banks: EMT, advanced (AEMT) and medic (paramedic). */
+export const SCOPES = ["emt", "advanced", "medic"] as const;
+export type Scope = (typeof SCOPES)[number];
+
+/** A scope from a query parameter or request body; anything else is undefined. */
+export function parseScope(value: unknown): Scope | undefined {
+  return SCOPES.find((scope) => scope === value);
+}
+
 export interface Question {
   id: string;
   created_at: string;
@@ -9,7 +18,7 @@ export interface Question {
   correct_answer: number;
   explanation: string;
   category: string;
-  scope: "emt" | "advanced" | "medic";
+  scope: Scope;
 }
 
 export interface QuestionReport {
@@ -36,10 +45,10 @@ export class QuestionStore {
 
   constructor(
     private kv: Deno.Kv,
-    private scope: "emt" | "advanced" | "medic" = "emt",
+    private scope: Scope = "emt",
   ) {}
 
-  static async make(kv?: Deno.Kv, scope: "emt" | "advanced" | "medic" = "emt") {
+  static async make(kv?: Deno.Kv, scope: Scope = "emt") {
     if (!kv) {
       kv = await getKv();
     }

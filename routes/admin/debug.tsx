@@ -1,5 +1,17 @@
 import { page } from "fresh";
+import { AdminPage } from "../../components/admin/AdminPage.tsx";
 import { getKv } from "../../lib/kv.ts";
+import { ADMIN_USER_ID } from "../../lib/admin_only_middleware.ts";
+
+/**
+ * Raw KV edits and everyone's sessions (with access tokens): the real admin
+ * only, not the seed admin of test environments.
+ */
+function realAdminOnly() {
+  return new Response("The debug page is for the real admin account only.", {
+    status: 403,
+  });
+}
 import { AppHandlers, AppProps, AppState } from "../_middleware.ts";
 
 async function list(prefix: string) {
@@ -16,9 +28,7 @@ export const handler: AppHandlers = {
   async GET(ctx) {
     const req = ctx.req;
 
-    if (ctx.state.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
-      throw new Error("Unauthorized access.");
-    }
+    if (ctx.state.session?.user_id !== ADMIN_USER_ID) return realAdminOnly();
     if (new URL(req.url).searchParams.get("throw")) {
       throw new Error("Test error");
     }
@@ -44,9 +54,7 @@ export const handler: AppHandlers = {
   async POST(ctx) {
     const req = ctx.req;
 
-    if (ctx.state.session?.user_id !== "auth0|67b28845f4ba32d0be58bc46") {
-      throw new Error("Unauthorized access.");
-    }
+    if (ctx.state.session?.user_id !== ADMIN_USER_ID) return realAdminOnly();
     const kv = await getKv();
     const form = await req.formData();
     const action = form.get("action");
@@ -162,8 +170,11 @@ export default function Debug(props: DebugProps) {
   }
 
   return (
-    <div class="container mx-auto p-4">
-      <h1 class="text-2xl font-bold mb-4">Debug Page</h1>
+    <AdminPage
+      title="Debug"
+      section="debug"
+      description="Raw KV entries. Update and Delete write straight to the database."
+    >
       <h4>session</h4>
       <pre>
         {JSON.stringify(props.data.session, null, 2)}
@@ -175,6 +186,6 @@ export default function Debug(props: DebugProps) {
       {renderTable("EMT Data", emt)}
       {renderTable("Products", products)}
       {renderTable("Variants", variants)}
-    </div>
+    </AdminPage>
   );
 }

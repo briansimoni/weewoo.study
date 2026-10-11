@@ -1,4 +1,5 @@
 import { page, type PageProps } from "fresh";
+import { AdminPage } from "../../components/admin/AdminPage.tsx";
 import ProductManager from "../../components/ProductManager.tsx";
 import { Product, ProductStore } from "../../lib/product_store.ts";
 import { PrintfulApiClient } from "../../lib/client/printful.ts";
@@ -44,12 +45,15 @@ export default function ProductManagerPage(
   const { appProducts, printfulProducts } = data;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Product Manager</h1>
+    <AdminPage
+      title="Products"
+      section="products"
+      description="Printful products and the ones imported into the shop."
+    >
       <ProductManager
         appProducts={appProducts}
         printfulProducts={printfulProducts}
       />
-    </div>
+    </AdminPage>
   );
 }

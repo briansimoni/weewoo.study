@@ -1,12 +1,31 @@
-import { AppHandler } from "../routes/_middleware.ts";
+import { AppHandler, AppState } from "../routes/_middleware.ts";
+import { testLoginEnabled } from "./test_login.ts";
 
-const ADMIN_USER_ID = "auth0|67b28845f4ba32d0be58bc46";
+export const ADMIN_USER_ID = "auth0|67b28845f4ba32d0be58bc46";
+
+/** The seed user that E2E tests and previews use for the admin pages. */
+export const SEED_ADMIN_ID = "seed|admin";
+
+/**
+ * The real admin, or the seed admin in a test environment. The seed admin
+ * needs all of: STAGE DEV or TEST, and a session made by the test login (only
+ * seeded databases have the user, and Auth0 never issues `seed|` IDs).
+ */
+export function isAdmin(
+  session: AppState["session"],
+  stage = Deno.env.get("STAGE"),
+): boolean {
+  if (!session) return false;
+  if (session.user_id === ADMIN_USER_ID) return true;
+  return session.user_id === SEED_ADMIN_ID && session.test_login === true &&
+    testLoginEnabled(stage);
+}
 
 /** Shorter tokens are ignored, so a placeholder value can't enable token auth. */
 export const MIN_ADMIN_API_TOKEN_LENGTH = 32;
 
 export const adminsOnlyMiddleware: AppHandler = (ctx) => {
-  if (ctx.state.session?.user_id !== ADMIN_USER_ID) {
+  if (!isAdmin(ctx.state.session)) {
     return new Response("Unauthorized", { status: 401 });
   }
   return ctx.next();
@@ -20,7 +39,7 @@ export const adminsOnlyMiddleware: AppHandler = (ctx) => {
  * {@link MIN_ADMIN_API_TOKEN_LENGTH} characters.
  */
 export const adminApiMiddleware: AppHandler = async (ctx) => {
-  if (ctx.state.session?.user_id === ADMIN_USER_ID) return ctx.next();
+  if (isAdmin(ctx.state.session)) return ctx.next();
   if (await hasAdminApiToken(ctx.req, Deno.env.get("ADMIN_API_TOKEN"))) {
     return ctx.next();
   }
