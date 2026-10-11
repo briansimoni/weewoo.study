@@ -416,8 +416,58 @@ schema is done.
 - [ ] **Hit coverage targets:** at least N questions per category per scope,
       tracked on an admin dashboard. Proposal: 50 per EMT category to start
       (about 2,000 total).
-- [ ] **Add new formats** (later): image-based questions, multi-select, and
-      scenario chains (a case with three linked questions).
+- [ ] **Make the review process visible to learners.** Show users how each
+      question was made and checked, so AI-generated content earns trust.
+  - Why: it sets us apart from Pocket Prep. Generated questions will meet
+    skepticism, and showing the review process answers it.
+  - Done when: each question (after answering) shows its `references`, a
+    "Reviewed by <credential>" badge from `reviewed_by`, and a last-reviewed
+    date; a public "How we write questions" page explains the pipeline, the
+    human review, and how reports feed back in.
+  - Test: E2E that an answered seed question shows its references and review
+    badge; the page renders in visual snapshots.
+  - Design: needs a design (badge and references on the answer screen).
+  - Notes: depends on the schema fields above and on the "Medical reviewer"
+    decision. Show credentials, not personal details, unless the reviewer
+    agrees.
+- [ ] **Tell reporters when their report improved a question.** When an admin
+      resolves a report by editing or retiring the question, the person who
+      filed it hears about it.
+  - Why: users who see their reports fixed keep reporting, which raises question
+    quality for free.
+  - Done when: resolving a report in admin can record what changed (a short,
+    user-facing note); the reporter sees "Your report on '<question>' was fixed:
+    <note>. Thanks!" on their next visit (an in-app inbox or banner), and it
+    shows on their profile as a count ("You've improved N questions"). Reports
+    resolved as "no change" can send a short explanation or nothing (decide).
+  - Test: unit tests for the store (resolution note, unread notifications per
+    user); E2E: a seed user's report is resolved in admin, and that user sees
+    the notice once.
+  - Notes: `QuestionReport` already has `user_id` and `resolved_at`; add
+    `resolution` (`fixed | retired | no_change`) and `resolution_note`, plus a
+    per-user notifications key (update `docs/data-model.md`). Reports move to
+    the new ID when question text changes, so the link back to the reporter
+    survives edits. Email and push come later with Phase 4 "Notifications".
+- [ ] **Patient-call scenarios.** Multi-step cases that play out like a call:
+      "Dispatch: 54-year-old male, chest pain" → scene size-up → primary
+      assessment → history → interventions → transport decision, where each
+      choice changes the patient's state and what comes next.
+  - Why: it matches how the job and the NREMT's clinical-judgment questions
+    actually work, it fits the Night Shift brand, and Pocket Prep's
+    single-question format can't do it.
+  - Done when: a scenario model (a graph of steps, choices, patient-state
+    changes and debrief notes) exists; an admin can author or import scenarios
+    and they go through the same review queue; a player runs a scenario start to
+    finish and gets a debrief scoring each decision, with the critical fails
+    (for example, skipping scene safety) called out.
+  - Test: unit tests for the scenario engine (state transitions, scoring); E2E
+    playing one seed scenario through both a good and a critical-fail path.
+  - Design: needs a design (the call screen, vitals/patient-state panel,
+    debrief).
+  - Notes: start with about 10 hand-reviewed EMT scenarios before considering AI
+    generation; medical review matters even more here. Scenario attempts should
+    feed mastery (Phase 3). Supersedes "scenario chains" below.
+- [ ] **Add new formats** (later): image-based questions and multi-select.
 
 **Risks.** Medical accuracy: a credentialed human must review before a question
 is published. Copyright: generated questions must be original and not paraphrase
@@ -438,7 +488,31 @@ that in mind.
 - [ ] **Build a personal analytics dashboard:** accuracy over time, category
       radar or heatmap, response-time trends, streak calendar, and "questions
       you keep missing".
-- [ ] **Add a timed mock exam mode** that mirrors NREMT length and distribution.
+- [ ] **Simulate the NREMT exam (adaptive mock exam).** A mock exam that behaves
+      like the real computer-adaptive test: difficulty moves with the learner's
+      answers, the exam stops early once the result is clear, and it follows the
+      real category distribution and time limit.
+  - Why: "Will I pass?" is the question learners pay to answer, and fixed-length
+    mock exams from generic prep apps don't feel like the real exam. This is our
+    strongest differentiator.
+  - Done when: a learner takes a timed, adaptive exam that ends within the real
+    item range when a pass/fail decision is reached (or the time or item limit
+    runs out); the results screen shows the outcome, an ability estimate against
+    the passing standard, a per-category breakdown, and a plain explanation of
+    why it stopped where it did; past mock exams are listed on the profile and
+    feed the readiness score.
+  - Test: unit tests for item selection, ability estimation, and stopping rules
+    (simulated strong, weak, and borderline test-takers); E2E running a short
+    seeded exam to the results screen.
+  - Design: needs a design (exam mode and results screen); exam mode should feel
+    stark and test-like, unlike regular practice.
+  - Notes: check the NREMT's current published rules (item range, time limit,
+    category weights, unscored pilot items) when building, because they change.
+    Needs `difficulty` from Phase 2, and the AI estimates should be recalibrated
+    from real attempt data (an IRT-style item calibration) before we claim pass
+    predictions; until then, label the result an estimate. Start with a
+    fixed-length timed mode if calibration data is thin. Mock exams are premium
+    in the Phase 5 proposal.
 - [ ] **Re-evaluate storage.** Analytics aggregations on KV get awkward. Decide
       whether to keep KV with precomputed aggregates or add Postgres (Deno
       Deploy offers managed Postgres) for attempts and analytics.
@@ -515,6 +589,25 @@ up front for the trial, and the free-tier limits.
       an admin bulk import from Printful.
 - [ ] **Subscriber perks** (later): a discount code for subscribers, connecting
       the shop to Phase 5.
+- [ ] **"I passed!" reward.** A learner who reports passing the NREMT gets a
+      celebration screen and a one-time shop discount.
+  - Why: passing is the happiest moment in a learner's journey; turning it into
+    merch they wear (and a shareable "I passed" moment) is word of mouth no prep
+    app can copy.
+  - Done when: a signed-in user can mark "I passed" (level and date) from the
+    profile; they see a celebration screen with a share card and a single-use
+    Stripe promotion code (one per user, per certification level) that works in
+    checkout; the pass is recorded on the user and visible in admin; optionally
+    a "Certified" badge on the profile and leaderboard.
+  - Test: unit tests that a user gets exactly one code per level; E2E marking a
+    seed user as passed and applying the code at checkout in Stripe test mode.
+  - Design: needs a design (celebration screen, share card); a natural place for
+    the mascot.
+  - Notes: decide on verification (honor system vs. a check against the NREMT's
+    public certification lookup) and the discount size. Pass reports are also
+    our best outcome data for calibrating the readiness score and the adaptive
+    mock exam (Phase 3), so ask for the exam date and attempt number. Featuring
+    "Merch for the newly certified" in the shop pairs well with it.
 
 ---
 
@@ -558,3 +651,8 @@ up front for the trial, and the free-tier limits.
 | KV vs. Postgres for analytics                    | 3     | Both  |
 | Pricing, trial length, free-tier limits          | 5     | Human |
 | ~~Shipping approach (a) vs. (b)~~ quote up front | 6     | Both  |
+| "I passed" verification and discount size        | 6     | Human |
+
+**Parked:** instructor and class accounts (B2B: assigned sets, cohort
+dashboards, class leagues). Not now (decided 2026-10-11); revisit once there are
+paying individual users.
