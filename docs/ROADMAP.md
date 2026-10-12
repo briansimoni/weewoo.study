@@ -358,9 +358,10 @@ than inventing them. That's essential before the Duolingo-style overhaul.
       toasts and confirm dialogs, no full-page reloads, and a seed-catalog
       Printful stub (`lib/printful_catalog.ts`) so CI can test it (2026-10-11,
       PR #26). Still open: the users and database page bodies are unchanged.
-      Follow-up: `/admin/debug` renders sessions with their OAuth access tokens.
-      ~~The landing page's 6 feature cards and promo cards are hand-copied~~:
-      done with the landing redesign below (`FeatureCard`).
+      `/admin/debug` (raw KV edits, sessions with OAuth access tokens) was
+      removed (2026-10-12): `/admin/database` and the admin API cover it. ~~The
+      landing page's 6 feature cards and promo cards are hand-copied~~: done
+      with the landing redesign below (`FeatureCard`).
 - [x] **Redesign the landing page** (the first screen through the full design →
       implement → review loop). Done 2026-10-11 in PR #23; design approved on
       the [landing canvas](https://claude.ai/artifact/4rcpjQgA7pKJfyU7ej62hr).

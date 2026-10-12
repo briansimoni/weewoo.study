@@ -1,7 +1,6 @@
 import { page, type PageProps } from "fresh";
 import { Handlers } from "fresh/compat";
 import {
-  Bug,
   Database,
   FileQuestion,
   Library,
@@ -62,12 +61,6 @@ const TOOLS: {
     description: "Download a backup or restore one.",
     href: "/admin/database",
     icon: Database,
-  },
-  {
-    title: "Debug",
-    description: "Environment and system diagnostics.",
-    href: "/admin/debug",
-    icon: Bug,
   },
 ];
 

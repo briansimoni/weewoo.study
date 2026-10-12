@@ -124,9 +124,9 @@ test("every admin page renders in the shell", async ({ page }) => {
   }
 });
 
-test("the debug page is for the real admin only", async ({ page }) => {
+test("the debug page is gone", async ({ page }) => {
   const response = await page.goto("/admin/debug");
-  expect(response?.status()).toBe(403);
+  expect(response?.status()).toBe(404);
 });
 
 test("resetting a user's stats asks first", async ({ page }) => {
