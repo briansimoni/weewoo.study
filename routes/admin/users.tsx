@@ -1,8 +1,9 @@
 import { page, type PageProps } from "fresh";
 import { User, UserStore } from "../../lib/user_store.ts";
-import { AlertTriangle, RotateCcw } from "lucide-preact";
+import { AlertTriangle } from "lucide-preact";
 import { Handlers } from "fresh/compat";
 import { AdminPage } from "../../components/admin/AdminPage.tsx";
+import ResetStatsButton from "../../islands/admin/ResetStatsButton.tsx";
 
 interface UserManagementData {
   users: User[];
@@ -164,26 +165,11 @@ export default function UserManagement(
                         </td>
                         <td>
                           <div class="flex gap-2">
-                            <form method="POST" class="inline">
-                              <input
-                                type="hidden"
-                                name="action"
-                                value="reset_stats"
-                              />
-                              <input
-                                type="hidden"
-                                name="userId"
-                                value={user.user_id}
-                              />
-                              <button
-                                type="submit"
-                                class="btn btn-warning btn-xs"
-                                disabled={user.stats.questions_answered === 0}
-                              >
-                                <RotateCcw className="w-3 h-3 mr-1" />
-                                Reset Stats
-                              </button>
-                            </form>
+                            <ResetStatsButton
+                              userId={user.user_id}
+                              displayName={user.display_name}
+                              answered={user.stats.questions_answered}
+                            />
                           </div>
                         </td>
                       </tr>

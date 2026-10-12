@@ -124,7 +124,45 @@ test("every admin page renders in the shell", async ({ page }) => {
   }
 });
 
-test("the debug page is for the real admin only", async ({ page }) => {
+test("the debug page is gone", async ({ page }) => {
   const response = await page.goto("/admin/debug");
-  expect(response?.status()).toBe(403);
+  expect(response?.status()).toBe(404);
+});
+
+test("resetting a user's stats asks first", async ({ page }) => {
+  // Other specs rely on the seed users' stats, so answer the reset here.
+  const posted: string[] = [];
+  await page.route("**/admin/users", (route) => {
+    if (route.request().method() !== "POST") return route.fallback();
+    posted.push(route.request().postData() ?? "");
+    return route.fulfill({
+      status: 303,
+      headers: { location: "/admin/users" },
+    });
+  });
+  await page.goto("/admin/users");
+  const reset = page.getByRole("button", {
+    name: "Reset stats for Seed Expert",
+  });
+  const dialog = page.getByRole("dialog", {
+    name: "Reset Seed Expert's stats?",
+  });
+
+  await reset.click();
+  await expect(dialog.getByText("can't be undone")).toBeVisible();
+  await dialog.getByRole("button", { name: "Cancel" }).click();
+  await expect(dialog).toBeHidden();
+
+  // A click outside the dialog closes it without submitting.
+  await reset.click();
+  await expect(dialog).toBeVisible();
+  await page.mouse.click(5, 5);
+  await expect(dialog).toBeHidden();
+  expect(posted).toEqual([]);
+
+  await reset.click();
+  await dialog.getByRole("button", { name: "Reset stats" }).click();
+  await expect.poll(() => posted.length).toBe(1);
+  expect(posted[0]).toContain("action=reset_stats");
+  expect(posted[0]).toContain(`userId=${encodeURIComponent("seed|expert")}`);
 });
