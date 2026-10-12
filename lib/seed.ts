@@ -1,5 +1,5 @@
 import { CATEGORIES, type Category } from "./categories.ts";
-import { QuestionStore } from "./question_store.ts";
+import { type NewQuestion, QuestionStore } from "./question_store.ts";
 import { type UserStats, UserStore } from "./user_store.ts";
 import { type Attempt, AttemptStore } from "./attempt_store.ts";
 import type { Streak } from "./streak_store.ts";
@@ -97,7 +97,11 @@ function rng(seed: number) {
   };
 }
 
-function seedQuestion(scope: Scope, category: Category, n: number) {
+function seedQuestion(
+  scope: Scope,
+  category: Category,
+  n: number,
+): NewQuestion {
   const correct = n % 4;
   const choices = [0, 1, 2, 3].map((i) =>
     i === correct
@@ -112,8 +116,34 @@ function seedQuestion(scope: Scope, category: Category, n: number) {
     explanation:
       `[Seed] Seed questions always mark the "Correct answer" choice as correct.`,
     category,
+    author: n % 5 === 0 ? "human" : "ai",
+    difficulty: (n % 10) + 1,
+    tags: ["seed"],
+    references: ["[Seed] National EMS Education Standards (example)"],
+    explanation_per_choice: choices.map((_, i) =>
+      i === correct
+        ? "[Seed] This is the choice marked correct."
+        : "[Seed] Seed distractors are always wrong."
+    ),
   };
 }
+
+/** Seed questions that are never served, for the admin pages and tests. */
+export const UNSERVED_SEED_QUESTIONS: NewQuestion[] = [
+  { status: "draft", label: "Draft" },
+  { status: "retired", label: "Retired" },
+].map(({ status, label }) => ({
+  question:
+    `[Seed] ${label} question: practice never serves this. Pick "Correct answer".`,
+  choices: ["Correct answer", "Distractor 2", "Distractor 3", "Distractor 4"],
+  correct_answer: 0,
+  explanation: `[Seed] ${label} questions stay out of practice.`,
+  category: CATEGORIES[0],
+  status: status as NewQuestion["status"],
+  author: "ai",
+  tags: ["seed"],
+  references: [],
+}));
 
 async function seedQuestions(kv: Deno.Kv) {
   const added: Record<Scope, { id: string; category: Category }[]> = {
@@ -157,6 +187,18 @@ async function seedQuestions(kv: Deno.Kv) {
         q.question === data.question
       );
       if (existing) added[scope].push({ id: existing.id, category });
+    }
+  }
+  for (const data of UNSERVED_SEED_QUESTIONS) {
+    try {
+      await stores.emt.add(data);
+      created++;
+    } catch (error) {
+      if (
+        !(error instanceof Error && error.message.includes("already exists"))
+      ) {
+        throw error;
+      }
     }
   }
   return { created, emt: added.emt, emtStore: stores.emt };
@@ -345,13 +387,18 @@ async function seedProducts(kv: Deno.Kv) {
  * 4: interrupted seeds are detected and redone (forces a reseed everywhere).
  * 5: product thumbnails point at CloudFront instead of expiring Printful URLs.
  * 6: a seed admin user (seed|admin) for the admin pages.
+ * 7: question metadata (status, author, difficulty, tags, references,
+ *    explanation_per_choice) and two unserved questions (a draft, a retired).
  */
-export const SEED_VERSION = 6;
+export const SEED_VERSION = 7;
 const VERSION_KEY = ["seed", "version"];
 const LOCK_KEY = ["seed", "lock"];
 const STARTED_KEY = ["seed", "started"];
-/** Present in every seeded database, including those seeded before versioning. */
-const MARKER_USER = SEED_USERS[SEED_USERS.length - 1].user_id;
+/**
+ * Present in every seeded database, including those seeded before versioning,
+ * so it must stay a user that was seeded then (not simply the last one).
+ */
+const MARKER_USER = "seed|expert";
 
 /**
  * Seed the given database. Safe to re-run: existing seed records are kept and

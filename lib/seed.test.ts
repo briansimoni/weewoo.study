@@ -22,7 +22,7 @@ Deno.test("seed populates every store with consistent data", async () => {
     const summary = await seed(kv, { now, stage: "DEV" });
     const expectedAttempts = SEED_USERS.reduce((n, u) => n + u.attempts, 0);
     assertEquals(summary, {
-      questions: CATEGORIES.length * 3 + 20,
+      questions: CATEGORIES.length * 3 + 20 + 2,
       users: SEED_USERS.length,
       attempts: expectedAttempts,
       reports: 6,
@@ -34,6 +34,11 @@ Deno.test("seed populates every store with consistent data", async () => {
     const emt = await QuestionStore.make(kv, "emt");
     assertEquals(await emt.size(), CATEGORIES.length * 3);
     assertEquals(await emt.size(CATEGORIES[0]), 3);
+    // The draft and retired seed questions are stored but never served.
+    const statuses = (await emt.listQuestions()).map((q) => q.status);
+    assertEquals(statuses.filter((s) => s === "draft").length, 1);
+    assertEquals(statuses.filter((s) => s === "retired").length, 1);
+    assertEquals(statuses.length, CATEGORIES.length * 3 + 2);
     const random = await emt.getRandom();
     assert(random.question.startsWith("[Seed]"));
     assertEquals(

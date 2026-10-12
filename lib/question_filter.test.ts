@@ -13,6 +13,10 @@ function question(id: string, overrides: Partial<Question> = {}): Question {
     explanation: "Because.",
     category: "Shock",
     scope: "emt",
+    status: "published",
+    tags: [],
+    references: [],
+    version: 1,
     ...overrides,
   };
 }
@@ -47,4 +51,17 @@ Deno.test("filterQuestions narrows by category", () => {
     ) => q.id),
     ["a1"],
   );
+});
+
+Deno.test("filterQuestions narrows by status", () => {
+  const mixed = [
+    question("p1"),
+    question("d1", { status: "draft" }),
+    question("r1", { status: "retired" }),
+  ];
+  assertEquals(
+    filterQuestions(mixed, { status: "draft" }).map((q) => q.id),
+    ["d1"],
+  );
+  assertEquals(filterQuestions(mixed, {}).length, 3);
 });

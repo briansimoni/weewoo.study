@@ -414,7 +414,29 @@ schema is done.
       retired`),
       `tags`, `references` (protocol or textbook section),
       `explanation_per_choice`, `version`, `author` (`ai | human`), and
-      `reviewed_by`. Migrate existing questions and update the seed data.
+      `reviewed_by`. Migrate existing questions and update the seed data. Code
+      done in PR #29 (2026-10-12): only published questions are indexed and
+      served, `setStatus` moves them in and out, admin shows and changes status.
+      Decided: existing questions become `published` with `author` unset (some
+      are AI-generated, some hand-written); migrate rather than fill on read.
+      Still to do: run the migration on test, then prod.
+- [ ] **AI first-pass review of the question bank (Claude Sonnet).** A script
+      (`scripts/review_questions.ts`, Message Batches API, structured output)
+      asks `claude-sonnet-5-5` for a verdict per question (`pass`, `minor_fix`,
+      `major_issue`, `wrong_answer`, with reasons), a difficulty, tags,
+      `explanation_per_choice`, suggested references, and suggested rewrites. A
+      `review-questions` skill is the playbook around it: export read-only, run,
+      summarize, apply after approval.
+  - Order (decided 2026-10-12): calibrate on 2–3 questions the human reviews
+    first; then run the whole prod bank. `wrong_answer` and `major_issue`
+    questions move to `in_review` (out of practice) without per-question
+    approval; passes get their metadata and `reviewed_by: ai:claude-sonnet-5-5`.
+    Suggested rewrites are never applied automatically; they wait for the review
+    queue.
+  - Cost: about $5 per 500 questions at batch prices (Sonnet 5.5: $2/$10 per
+    MTok, halved by batching). Needs an Anthropic API key in the local `.env`.
+  - The same reviewer later checks every generated draft before the review
+    queue.
 - [ ] **Make the generation pipeline a repeatable job.** It should be
       idempotent, resumable, and produce `draft` questions with a similarity
       check against the full bank. Decide which model to use; evaluate Claude
@@ -480,10 +502,13 @@ schema is done.
     feed mastery (Phase 3). Supersedes "scenario chains" below.
 - [ ] **Add new formats** (later): image-based questions and multi-select.
 
-**Risks.** Medical accuracy: a credentialed human must review before a question
-is published. Copyright: generated questions must be original and not paraphrase
-copyrighted textbook text. Review the `split_book_into_chapters` inputs with
-that in mind.
+**Risks.** Medical accuracy: for now an AI review (Claude Sonnet) is the gate,
+recorded honestly as `reviewed_by: ai:<model>`; human medical review comes later
+(see the "Medical reviewer" decision). Until a credentialed human reviews a
+question, learners don't see a "Reviewed by" badge for it, and AI-suggested
+`references` count as unverified. Changed 2026-10-12, by the human's decision.
+Copyright: generated questions must be original and not paraphrase copyrighted
+textbook text. Review the `split_book_into_chapters` inputs with that in mind.
 
 ---
 

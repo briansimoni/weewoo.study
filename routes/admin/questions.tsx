@@ -3,6 +3,8 @@ import { Handlers } from "fresh/compat";
 import {
   parseScope,
   Question,
+  QUESTION_STATUSES,
+  type QuestionStatus,
   QuestionStore,
   type Scope,
 } from "../../lib/question_store.ts";
@@ -10,6 +12,10 @@ import { AdminPage } from "../../components/admin/AdminPage.tsx";
 import { ScopeTabs } from "../../components/admin/ScopeTabs.tsx";
 import { Alert } from "../../components/ui/Alert.tsx";
 import { Badge } from "../../components/ui/Badge.tsx";
+import {
+  QuestionStatusBadge,
+  STATUS_LABELS,
+} from "../../components/admin/QuestionStatusBadge.tsx";
 import { Button, LinkButton } from "../../components/ui/Button.tsx";
 import { filterQuestions } from "../../lib/question_filter.ts";
 
@@ -22,6 +28,7 @@ interface Data {
   scope: Scope;
   category: string;
   search: string;
+  status?: QuestionStatus;
   deleted: boolean;
 }
 
@@ -31,10 +38,11 @@ export const handler: Handlers<Data> = {
     const scope = parseScope(params.get("scope")) ?? "emt";
     const category = params.get("category") ?? "";
     const search = (params.get("q") ?? "").trim();
+    const status = QUESTION_STATUSES.find((s) => s === params.get("status"));
 
     const store = await QuestionStore.make(undefined, scope);
     const all = await store.listQuestions();
-    const questions = filterQuestions(all, { category, search })
+    const questions = filterQuestions(all, { category, search, status })
       .sort((a, b) => b.created_at.localeCompare(a.created_at));
     const categories = [...new Set(all.map((q) => q.category))].sort();
 
@@ -45,15 +53,24 @@ export const handler: Handlers<Data> = {
       scope,
       category,
       search,
+      status,
       deleted: params.has("deleted"),
     });
   },
 };
 
 export default function QuestionsPage({ data }: PageProps<Data>) {
-  const { questions, categories, total, scope, category, search, deleted } =
-    data;
-  const filtered = Boolean(category || search);
+  const {
+    questions,
+    categories,
+    total,
+    scope,
+    category,
+    search,
+    status,
+    deleted,
+  } = data;
+  const filtered = Boolean(category || search || status);
 
   return (
     <AdminPage
@@ -84,6 +101,18 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
             <option value="">All categories</option>
             {categories.map((c) => (
               <option key={c} value={c} selected={c === category}>{c}</option>
+            ))}
+          </select>
+          <select
+            name="status"
+            class="select select-sm w-auto"
+            aria-label="Status"
+          >
+            <option value="">All statuses</option>
+            {QUESTION_STATUSES.map((value) => (
+              <option key={value} value={value} selected={value === status}>
+                {STATUS_LABELS[value]}
+              </option>
             ))}
           </select>
           <input
@@ -124,6 +153,7 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
                 <tr>
                   <th>Question</th>
                   <th>Category</th>
+                  <th>Status</th>
                   <th class="whitespace-nowrap">Created</th>
                 </tr>
               </thead>
@@ -145,6 +175,9 @@ export default function QuestionsPage({ data }: PageProps<Data>) {
                       <Badge tone="ghost" class="h-auto py-1">
                         {q.category}
                       </Badge>
+                    </td>
+                    <td>
+                      <QuestionStatusBadge status={q.status} />
                     </td>
                     <td class="whitespace-nowrap text-sm text-base-content/70">
                       {new Date(q.created_at).toLocaleDateString()}

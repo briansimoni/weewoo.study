@@ -104,6 +104,7 @@ async function main() {
         try {
           // Attempt to add the question to the database
           await questionStore.add({
+            author: "ai",
             question: question.question,
             choices: question.choices,
             correct_answer: question.correct_answer,
@@ -161,6 +162,7 @@ async function main() {
               ); // Exponential backoff
 
               await questionStore.add({
+                author: "ai",
                 question: question.question,
                 choices: question.choices,
                 correct_answer: question.correct_answer,

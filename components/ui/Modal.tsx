@@ -1,5 +1,10 @@
 import type { ComponentChildren } from "preact";
-import { useEffect, useId, useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
+
+// Shared by every island on the page (islands share modules in the browser),
+// so title IDs are unique page-wide. useId() isn't: each island is its own
+// Preact root, and two islands' modals got the same ID.
+let nextTitleId = 0;
 
 interface ModalProps {
   open: boolean;
@@ -24,7 +29,13 @@ export function Modal(
     ModalProps,
 ) {
   const ref = useRef<HTMLDialogElement>(null);
-  const titleId = useId();
+  // A plain-text title names the dialog directly. Anything richer (an icon)
+  // is referenced by an ID assigned in the browser, where it's unique.
+  const label = typeof title === "string" ? title : undefined;
+  const [titleId, setTitleId] = useState<string>();
+  useEffect(() => {
+    if (title && !label) setTitleId(`modal-title-${++nextTitleId}`);
+  }, []);
 
   useEffect(() => {
     const dialog = ref.current;
@@ -38,10 +49,15 @@ export function Modal(
       ref={ref}
       class="modal"
       onClose={onClose}
-      aria-labelledby={title ? titleId : undefined}
+      aria-label={label}
+      aria-labelledby={label ? undefined : titleId}
     >
       <div class={["modal-box", extra, className].filter(Boolean).join(" ")}>
-        {title && <h3 id={titleId} class="font-bold text-lg">{title}</h3>}
+        {title && (
+          <h3 id={label ? undefined : titleId} class="font-bold text-lg">
+            {title}
+          </h3>
+        )}
         {children}
         {actions && <div class="modal-action">{actions}</div>}
       </div>

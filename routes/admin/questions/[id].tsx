@@ -1,3 +1,4 @@
+import { Fragment } from "preact";
 import { page, type PageProps } from "fresh";
 import { Handlers } from "fresh/compat";
 import {
@@ -14,6 +15,8 @@ import { Card } from "../../../components/ui/Card.tsx";
 import QuestionEditor from "../../../islands/QuestionEditor.tsx";
 import DeleteQuestionButton from "../../../islands/DeleteQuestionButton.tsx";
 import ReportCard from "../../../islands/admin/ReportCard.tsx";
+import QuestionStatusControl from "../../../islands/admin/QuestionStatusControl.tsx";
+import { QuestionStatusBadge } from "../../../components/admin/QuestionStatusBadge.tsx";
 
 interface Data {
   question: Question | null;
@@ -75,8 +78,23 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
       }
     >
       <div class="flex flex-col gap-6">
+        <Card bodyClass="gap-3">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <p class="text-sm text-base-content/70">
+              {question.status === "published"
+                ? "Published: served in practice."
+                : "Not published: practice never serves it."}
+            </p>
+            <QuestionStatusControl
+              questionId={question.id}
+              scope={scope}
+              status={question.status}
+            />
+          </div>
+        </Card>
         <Card bodyClass="gap-5">
           <div class="flex flex-wrap items-center gap-2">
+            <QuestionStatusBadge status={question.status} />
             <Badge tone="primary">{SCOPE_LABELS[scope]}</Badge>
             <Badge tone="ghost">{question.category}</Badge>
             <span class="text-sm text-base-content/60">
@@ -105,7 +123,14 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
                   >
                     {String.fromCharCode(65 + index)}
                   </span>
-                  <span class="flex-1">{choice}</span>
+                  <span class="flex-1">
+                    {choice}
+                    {question.explanation_per_choice?.[index] && (
+                      <span class="mt-1 block text-sm text-base-content/70">
+                        {question.explanation_per_choice[index]}
+                      </span>
+                    )}
+                  </span>
                   {correct && (
                     <span class="text-sm font-medium text-success">
                       Correct
@@ -122,6 +147,8 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
             </h2>
             <p>{question.explanation}</p>
           </div>
+
+          <QuestionMetadata question={question} />
 
           <details class="text-sm">
             <summary class="cursor-pointer text-base-content/70">
@@ -155,5 +182,54 @@ export default function QuestionDetailsPage({ data }: PageProps<Data>) {
         </section>
       </div>
     </AdminPage>
+  );
+}
+
+/** Review and authoring metadata, with gaps shown as gaps. */
+function QuestionMetadata({ question }: { question: Question }) {
+  const rows: [string, string][] = [
+    ["Version", String(question.version)],
+    [
+      "Author",
+      question.author === "ai"
+        ? "AI"
+        : question.author === "human"
+        ? "Human"
+        : "Unknown",
+    ],
+    ["Difficulty", question.difficulty ? `${question.difficulty} / 10` : "—"],
+    ["Tags", question.tags.length ? question.tags.join(", ") : "—"],
+    [
+      "Reviewed",
+      question.reviewed_by
+        ? `${question.reviewed_by}${
+          question.reviewed_at
+            ? ` · ${new Date(question.reviewed_at).toLocaleDateString()}`
+            : ""
+        }`
+        : "Not reviewed",
+    ],
+  ];
+  return (
+    <div>
+      <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+        {rows.map(([label, value]) => (
+          <Fragment key={label}>
+            <dt class="text-base-content/60">{label}</dt>
+            <dd>{value}</dd>
+          </Fragment>
+        ))}
+      </dl>
+      <h2 class="mt-4 mb-1 text-sm font-semibold uppercase tracking-wide text-base-content/60">
+        References
+      </h2>
+      {question.references.length
+        ? (
+          <ul class="list-disc pl-5 text-sm">
+            {question.references.map((ref) => <li key={ref}>{ref}</li>)}
+          </ul>
+        )
+        : <p class="text-sm text-base-content/60">None yet.</p>}
+    </div>
   );
 }
