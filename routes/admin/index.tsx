@@ -89,7 +89,7 @@ export default function AdminIndex({ data }: PageProps<Data>) {
           {SCOPES.map((scope) => (
             <a key={scope} href={`/admin/questions?scope=${scope}`}>
               <Stat
-                title={`${SCOPE_LABELS[scope]} questions`}
+                title={`${SCOPE_LABELS[scope]} questions published`}
                 value={data.questions[scope]}
               />
             </a>

@@ -57,11 +57,13 @@ Deno.test("Modal renders a labelled dialog with its actions", () => {
       Body
     </Modal>,
   );
-  assertStringIncludes(html, '<dialog class="modal" aria-labelledby=');
+  // A text title names the dialog itself: no ID that could collide with
+  // another island's modal.
+  assertStringIncludes(html, '<dialog class="modal" aria-label="Delete?"');
+  assert(!html.includes("aria-labelledby"));
+  assertStringIncludes(html, '<h3 class="font-bold text-lg">Delete?</h3>');
   assertStringIncludes(html, '<div class="modal-action">Buttons</div>');
   assertStringIncludes(html, 'class="modal-backdrop"');
-  const titleId = /aria-labelledby="([^"]+)"/.exec(html)![1];
-  assertStringIncludes(html, `<h3 id="${titleId}" class="font-bold text-lg">`);
   // Closed on the server; the browser opens it with showModal().
   assert(!/<dialog[^>]* open/.test(html));
 });

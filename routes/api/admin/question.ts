@@ -163,7 +163,9 @@ export const handler: AppHandlers = {
     // Default scope to "emt", this could be made configurable
     const scope = "emt";
     const questionStore = await QuestionStore.make(undefined, scope);
-    await questionStore.add(question);
+    // Generator questions are AI-written; they go live, as before, until the
+    // review queue exists (docs/ROADMAP.md, Phase 2).
+    await questionStore.add({ ...question, author: "ai" });
     return new Response(JSON.stringify(question), { status: 200 });
   },
 };

@@ -23,8 +23,8 @@ theme and trial preferences (`preferences` cookie, base64 JSON, parsed in
 
 | Key                                                             | Value               | Owner           | Notes                                                                                                                                                                         |
 | --------------------------------------------------------------- | ------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `[<scope>, "question_content", questionId]`                     | `Question`          | `QuestionStore` | Primary record. `questionId` is a hash of the question text.                                                                                                                  |
-| `[<scope>, "global_question_index", n]`                         | `questionId`        | `QuestionStore` | Dense array `0..count-1` for O(1) random picks.                                                                                                                               |
+| `[<scope>, "question_content", questionId]`                     | `Question`          | `QuestionStore` | Primary record, every status. `questionId` is a hash of the question text.                                                                                                    |
+| `[<scope>, "global_question_index", n]`                         | `questionId`        | `QuestionStore` | Dense array `0..count-1` for O(1) random picks. **Published questions only**: this is what practice serves.                                                                   |
 | `[<scope>, "global_question_map", questionId]`                  | `n`                 | `QuestionStore` | Reverse of the index. Deletes swap the last entry into the hole.                                                                                                              |
 | `[<scope>, "global_question_count"]`                            | `number`            | `QuestionStore` |                                                                                                                                                                               |
 | `[<scope>, "category_question_index", category, n]`             | `questionId`        | `QuestionStore` | Same array/map scheme per category.                                                                                                                                           |
@@ -42,6 +42,27 @@ theme and trial preferences (`preferences` cookie, base64 JSON, parsed in
 | `["variants", printfulProductId, variantId]`                    | `ProductVariant`    | `ProductStore`  |                                                                                                                                                                               |
 | `["stripe_variants", stripeProductId, variantId]`               | `ProductVariant`    | `ProductStore`  | Lookup by Stripe product (used by the webhook).                                                                                                                               |
 | `["stripe_events", eventId]`                                    | `StripeEventRecord` | Stripe webhook  | Idempotency for `checkout.session.completed`: `processing` (`expireIn` 10 min) while fulfilling, then `done` (`expireIn` 30 days). Deleted on failure so Stripe's retry runs. |
+
+### Question status and metadata (2026-10)
+
+`Question` has `status` (`draft | in_review | published | retired`), `author`
+(`ai | human`, unset when unknown), `difficulty` (1–10), `tags`, `references`,
+`explanation_per_choice` (one entry per choice), `version` (1, then +1 per
+edit), `reviewed_by` (`ai:<model>` or a credential, never a name) and
+`reviewed_at`.
+
+- **Only published questions are in the global and category indexes**, so
+  `getRandom`, `getRandomByCategory` and `size` see published questions only.
+  Every status has a `question_content` record and its category copy.
+- Change status only with `QuestionStore.setStatus`, which moves the question in
+  or out of the indexes in the same atomic write (admin:
+  `POST api/admin/questions/status`). `updateQuestion` keeps the status.
+- `add` publishes by default, so the generator still goes live as before; pass
+  `status: "draft"` to hold a question back.
+- Records written before 2026-10 lack these fields. Readers fill them with
+  `withQuestionDefaults` (published, version 1, empty lists), and
+  `lib/question_migration.ts` writes the same defaults
+  (`POST api/admin/questions/migrate`, a dry run unless `{"dry_run": false}`).
 
 Types are defined in the owning store module: `Question` and `QuestionReport` in
 `lib/question_store.ts`, `User` in `lib/user_store.ts`, `Attempt` in

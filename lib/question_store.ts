@@ -9,6 +9,18 @@ export function parseScope(value: unknown): Scope | undefined {
   return SCOPES.find((scope) => scope === value);
 }
 
+/**
+ * Where a question is in its life. Only `published` questions are served:
+ * they're the only ones in the random-pick indexes.
+ */
+export const QUESTION_STATUSES = [
+  "draft",
+  "in_review",
+  "published",
+  "retired",
+] as const;
+export type QuestionStatus = (typeof QUESTION_STATUSES)[number];
+
 export interface Question {
   id: string;
   created_at: string;
@@ -19,6 +31,75 @@ export interface Question {
   explanation: string;
   category: string;
   scope: Scope;
+  status: QuestionStatus;
+  /** Who wrote it. Unset for questions that predate the field. */
+  author?: "ai" | "human";
+  /** 1 (easy) to 10 (hard). */
+  difficulty?: number;
+  tags: string[];
+  /** Protocol or textbook sections that back the answer. */
+  references: string[];
+  /** Why each choice is right or wrong, in the order of `choices`. */
+  explanation_per_choice?: string[];
+  /** 1 when created, plus one for every edit. */
+  version: number;
+  /** Who last reviewed it: `ai:<model>`, or a credential (never a name). */
+  reviewed_by?: string;
+  reviewed_at?: string;
+}
+
+/** What a caller supplies to add a question; the rest gets defaults. */
+export type NewQuestion =
+  & Pick<
+    Question,
+    "question" | "choices" | "correct_answer" | "explanation" | "category"
+  >
+  & Partial<
+    Pick<
+      Question,
+      | "status"
+      | "author"
+      | "difficulty"
+      | "tags"
+      | "references"
+      | "explanation_per_choice"
+      | "reviewed_by"
+      | "reviewed_at"
+    >
+  >;
+
+/** The review fields setStatus can record along with a status change. */
+export type QuestionReview = Partial<
+  Pick<
+    Question,
+    | "author"
+    | "difficulty"
+    | "tags"
+    | "references"
+    | "explanation_per_choice"
+    | "reviewed_by"
+    | "reviewed_at"
+  >
+>;
+
+/** A question as stored before 2026-10, without the fields added then. */
+export type StoredQuestion =
+  & Omit<Question, "status" | "tags" | "references" | "version">
+  & Partial<Pick<Question, "status" | "tags" | "references" | "version">>;
+
+/**
+ * A stored question with the fields added in 2026-10 filled in. Records saved
+ * before then were all served, so they read as published, version 1.
+ * lib/question_migration.ts writes the same defaults to the database.
+ */
+export function withQuestionDefaults(question: StoredQuestion): Question {
+  return {
+    ...question,
+    status: question.status ?? "published",
+    tags: question.tags ?? [],
+    references: question.references ?? [],
+    version: question.version ?? 1,
+  };
 }
 
 export interface QuestionReport {
@@ -31,14 +112,24 @@ export interface QuestionReport {
   resolved_at?: string;
 }
 
+/** Reads to check and writes to apply, as part of one atomic operation. */
+interface IndexPlan {
+  checks: Deno.KvEntryMaybe<unknown>[];
+  apply: (tx: Deno.AtomicOperation) => void;
+}
+
 /**
- * This class provides thread-safe ways to both add and delete questions.
- * It also provides a way to get questions at random from either the global
- * store or a specific category.
+ * This class provides thread-safe ways to add, change and delete questions,
+ * and to get published questions at random from either the global store or a
+ * specific category.
  *
- * It works by using two data structures to keep track of where the questions are.
+ * Every question has a content record (plus a copy per category, for
+ * listing). Published questions are also in two indexes, one global and one
+ * per category, each made of:
  * 1. An "array" - the keys are integers, and the values are the question IDs.
  * 2. A "map" - the keys are the question IDs, and the values are the indices in the array.
+ * Drafts, questions in review and retired questions stay out of the indexes, so
+ * they're never served.
  */
 export class QuestionStore {
   private maxRetries = 5;
@@ -55,217 +146,219 @@ export class QuestionStore {
     return new QuestionStore(kv, scope);
   }
 
-  async add(
-    question: Omit<Question, "id" | "created_at" | "updated_at" | "scope">,
-  ): Promise<Question> {
-    const questionId = await this.hashQuestion(question.question);
-    const category = question.category;
+  /** Adds a question. It's published (served) unless `status` says otherwise. */
+  async add(question: NewQuestion): Promise<Question> {
+    const now = new Date().toISOString();
+    return await this.insert({
+      tags: [],
+      references: [],
+      ...question,
+      id: await this.hashQuestion(question.question),
+      scope: this.scope,
+      status: question.status ?? "published",
+      version: 1,
+      created_at: now,
+      updated_at: now,
+    });
+  }
 
+  /** Stores a complete question, indexing it if it's published. */
+  private async insert(question: Question): Promise<Question> {
+    const { id, category } = question;
     for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
-      /* lookups */
-      const globalQuestionMapping = await this.kv.get([
-        this.scope,
-        "global_question_map",
-        questionId,
-      ]);
-      if (globalQuestionMapping.value !== null) {
+      const existing = await this.kv.get([this.scope, "question_content", id]);
+      if (existing.value !== null) {
         throw new Error("Question already exists");
       }
-
-      const globalQuestionCountResult = await this.kv.get<number>([
-        this.scope,
-        "global_question_count",
-      ]);
-      const globalQuestionCount = globalQuestionCountResult.value ?? 0;
-
-      const categoryQuestionCountResult = await this.kv.get<number>([
-        this.scope,
-        "category_question_count",
-        category,
-      ]);
-      const categoryQuestionCount = categoryQuestionCountResult.value ?? 0;
-
-      const questionToInsert = {
-        ...question,
-        id: questionId,
-        scope: this.scope,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-
       const transaction = this.kv.atomic()
-        /* ensure nothing changed meanwhile */
-        .check(globalQuestionMapping)
-        .check(globalQuestionCountResult)
-        .check(categoryQuestionCountResult)
-        /* store question body */
-        .set([this.scope, "question_content", questionId], questionToInsert)
-        /* --- global index updates --- */
+        .check(existing)
+        .set([this.scope, "question_content", id], question)
         .set(
-          [this.scope, "global_question_index", globalQuestionCount],
-          questionId,
-        )
-        .set(
-          [this.scope, "global_question_map", questionId],
-          globalQuestionCount,
-        )
-        .set([this.scope, "global_question_count"], globalQuestionCount + 1)
-        /* --- category index updates --- */
-        .set(
-          [
-            this.scope,
-            "category_question_index",
-            category,
-            categoryQuestionCount,
-          ],
-          questionId,
-        )
-        .set(
-          [this.scope, "category_question_map", category, questionId],
-          categoryQuestionCount,
-        )
-        .set(
-          [this.scope, "category_question_content", category, questionId],
-          questionToInsert,
-        )
-        .set(
-          [this.scope, "category_question_count", category],
-          categoryQuestionCount + 1,
+          [this.scope, "category_question_content", category, id],
+          question,
         );
-
+      if (question.status === "published") {
+        const plan = await this.indexAppend(id, category);
+        transaction.check(...plan.checks);
+        plan.apply(transaction);
+      }
       if ((await transaction.commit()).ok) {
-        return questionToInsert;
+        return question;
       }
       await this.backoff(attempt); // retry after contention
     }
     throw new Error("Insert failed after max retries");
   }
 
-  /**
-   * The way delete works is by first finding the index that the question exists at
-   * and then swapping it with the question at the last index. Then we update the map
-   * by deleting the question that we wanted to delete, and then updating the index
-   * of the question that we swapped with. The total question count is then decremented.
-   * It does not delete the related question reports.
-   */
-  async delete(questionId: string): Promise<void> {
-    const questionResult = await this.kv.get<Question>([
+  /** Appends a question to the end of the global and category indexes. */
+  private async indexAppend(
+    questionId: string,
+    category: string,
+  ): Promise<IndexPlan> {
+    const map = await this.kv.get<number>([
       this.scope,
-      "question_content",
+      "global_question_map",
       questionId,
     ]);
-    if (questionResult.value === null) {
-      throw new Error("Question not found");
+    if (map.value !== null) {
+      throw new Error("Question is already indexed");
     }
-    const category = questionResult.value.category;
-
-    for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
-      /* lookups we must keep consistent */
-      const globalIndexMapping = await this.kv.get<number>([
-        this.scope,
-        "global_question_map",
-        questionId,
-      ]);
-      const globalIndex = globalIndexMapping.value;
-      if (globalIndex === null) {
-        throw new Error("Question not found");
-      }
-
-      const globalCountResult = await this.kv.get<number>([
-        this.scope,
-        "global_question_count",
-      ]);
-      const globalCount = globalCountResult.value ?? 0;
-      const globalLastIndex = globalCount - 1;
-      const globalLastIdResult = await this.kv.get<string>([
-        this.scope,
-        "global_question_index",
-        globalLastIndex,
-      ]);
-      const globalLastId = globalLastIdResult.value;
-
-      const categoryIndexMapping = await this.kv.get<number>([
-        this.scope,
-        "category_question_map",
-        category,
-        questionId,
-      ]);
-      const categoryIndex = categoryIndexMapping.value;
-      if (categoryIndex === null) {
-        throw new Error("Question not found");
-      }
-      const categoryCountResult = await this.kv.get<number>([
-        this.scope,
-        "category_question_count",
-        category,
-      ]);
-      const categoryCount = categoryCountResult.value ?? 0;
-      const categoryLastIndex = categoryCount - 1;
-      const categoryLastIdResult = await this.kv.get<string>([
-        this.scope,
-        "category_question_index",
-        category,
-        categoryLastIndex,
-      ]);
-      const categoryLastId = categoryLastIdResult.value;
-
-      const transaction = this.kv.atomic()
-        .check(globalIndexMapping)
-        .check(globalCountResult)
-        .check(globalLastIdResult)
-        .check(categoryIndexMapping)
-        .check(categoryCountResult)
-        .check(categoryLastIdResult)
-        /* ---------- global swap-delete ---------- */
-        .delete([this.scope, "global_question_map", questionId])
-        .delete([this.scope, "global_question_index", globalLastIndex])
-        .set([this.scope, "global_question_count"], globalLastIndex);
-
-      if (globalLastId && globalLastId !== questionId) {
-        transaction.set(
-          [this.scope, "global_question_index", globalIndex],
-          globalLastId,
-        )
-          .set([this.scope, "global_question_map", globalLastId], globalIndex);
-      }
-
-      /* ---------- category swap-delete ---------- */
-      transaction.delete([
-        this.scope,
-        "category_question_map",
-        category,
-        questionId,
-      ]);
-      transaction.delete([
-        this.scope,
-        "category_question_index",
-        category,
-        categoryLastIndex,
-      ]);
-      transaction.set(
-        [this.scope, "category_question_count", category],
-        categoryLastIndex,
-      );
-
-      if (categoryLastId && categoryLastId !== questionId) {
-        transaction.set(
-          [this.scope, "category_question_index", category, categoryIndex],
-          categoryLastId,
-        )
+    const globalCount = await this.kv.get<number>([
+      this.scope,
+      "global_question_count",
+    ]);
+    const categoryCount = await this.kv.get<number>([
+      this.scope,
+      "category_question_count",
+      category,
+    ]);
+    const g = globalCount.value ?? 0;
+    const c = categoryCount.value ?? 0;
+    return {
+      checks: [map, globalCount, categoryCount],
+      apply: (tx) => {
+        tx
+          .set([this.scope, "global_question_index", g], questionId)
+          .set([this.scope, "global_question_map", questionId], g)
+          .set([this.scope, "global_question_count"], g + 1)
           .set(
-            [this.scope, "category_question_map", category, categoryLastId],
-            categoryIndex,
-          );
-      }
+            [this.scope, "category_question_index", category, c],
+            questionId,
+          )
+          .set(
+            [this.scope, "category_question_map", category, questionId],
+            c,
+          )
+          .set([this.scope, "category_question_count", category], c + 1);
+      },
+    };
+  }
 
-      transaction.delete([this.scope, "question_content", questionId]);
-      transaction.delete([
+  /**
+   * Removes a question from the indexes by moving the last entry of each into
+   * its slot. Resolves null when the question isn't indexed (not published).
+   */
+  private async indexRemove(
+    questionId: string,
+    category: string,
+  ): Promise<IndexPlan | null> {
+    const globalMap = await this.kv.get<number>([
+      this.scope,
+      "global_question_map",
+      questionId,
+    ]);
+    const categoryMap = await this.kv.get<number>([
+      this.scope,
+      "category_question_map",
+      category,
+      questionId,
+    ]);
+    if (globalMap.value === null && categoryMap.value === null) return null;
+    if (globalMap.value === null || categoryMap.value === null) {
+      throw new Error(`Question ${questionId} is only half indexed`);
+    }
+    const globalIndex = globalMap.value;
+    const categoryIndex = categoryMap.value;
+
+    const globalCount = await this.kv.get<number>([
+      this.scope,
+      "global_question_count",
+    ]);
+    const globalLastIndex = (globalCount.value ?? 0) - 1;
+    const globalLast = await this.kv.get<string>([
+      this.scope,
+      "global_question_index",
+      globalLastIndex,
+    ]);
+    const categoryCount = await this.kv.get<number>([
+      this.scope,
+      "category_question_count",
+      category,
+    ]);
+    const categoryLastIndex = (categoryCount.value ?? 0) - 1;
+    const categoryLast = await this.kv.get<string>([
+      this.scope,
+      "category_question_index",
+      category,
+      categoryLastIndex,
+    ]);
+
+    return {
+      checks: [
+        globalMap,
+        categoryMap,
+        globalCount,
+        globalLast,
+        categoryCount,
+        categoryLast,
+      ],
+      apply: (tx) => {
+        tx
+          .delete([this.scope, "global_question_map", questionId])
+          .delete([this.scope, "global_question_index", globalLastIndex])
+          .set([this.scope, "global_question_count"], globalLastIndex)
+          .delete([this.scope, "category_question_map", category, questionId])
+          .delete([
+            this.scope,
+            "category_question_index",
+            category,
+            categoryLastIndex,
+          ])
+          .set(
+            [this.scope, "category_question_count", category],
+            categoryLastIndex,
+          );
+        const lastId = globalLast.value;
+        if (lastId && lastId !== questionId) {
+          tx
+            .set([this.scope, "global_question_index", globalIndex], lastId)
+            .set([this.scope, "global_question_map", lastId], globalIndex);
+        }
+        const categoryLastId = categoryLast.value;
+        if (categoryLastId && categoryLastId !== questionId) {
+          tx
+            .set(
+              [this.scope, "category_question_index", category, categoryIndex],
+              categoryLastId,
+            )
+            .set(
+              [this.scope, "category_question_map", category, categoryLastId],
+              categoryIndex,
+            );
+        }
+      },
+    };
+  }
+
+  /**
+   * Deletes a question, taking it out of the indexes if it's published. It
+   * does not delete the related question reports.
+   */
+  async delete(questionId: string): Promise<void> {
+    for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+      const entry = await this.kv.get<StoredQuestion>([
         this.scope,
-        "category_question_content",
-        category,
+        "question_content",
         questionId,
       ]);
-
+      if (entry.value === null) {
+        throw new Error("Question not found");
+      }
+      const { category } = entry.value;
+      const transaction = this.kv.atomic()
+        .check(entry)
+        .delete([this.scope, "question_content", questionId])
+        .delete([
+          this.scope,
+          "category_question_content",
+          category,
+          questionId,
+        ]);
+      const plan = await this.indexRemove(questionId, category);
+      if (plan) {
+        transaction.check(...plan.checks);
+        plan.apply(transaction);
+      }
       if ((await transaction.commit()).ok) {
         return;
       }
@@ -275,38 +368,98 @@ export class QuestionStore {
   }
 
   /**
-   * Updates an existing question. If the question text changes significantly enough to
-   * generate a new hash/ID, this method will handle removing the old question and adding
-   * the new one with all references updated properly.
+   * Changes a question's status, and with it whether it's served: publishing
+   * adds it to the indexes, any other status takes it out. `review` records
+   * review metadata in the same write.
+   */
+  async setStatus(
+    questionId: string,
+    status: QuestionStatus,
+    review: QuestionReview = {},
+  ): Promise<Question> {
+    for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+      const entry = await this.kv.get<StoredQuestion>([
+        this.scope,
+        "question_content",
+        questionId,
+      ]);
+      if (entry.value === null) {
+        throw new Error("Question not found");
+      }
+      const current = withQuestionDefaults(entry.value);
+      const updated: Question = {
+        ...current,
+        ...review,
+        status,
+        updated_at: new Date().toISOString(),
+      };
+      const transaction = this.kv.atomic()
+        .check(entry)
+        .set([this.scope, "question_content", questionId], updated)
+        .set(
+          [
+            this.scope,
+            "category_question_content",
+            current.category,
+            questionId,
+          ],
+          updated,
+        );
+      // The indexes, not the stored status, say whether it's served now.
+      const indexed = (await this.kv.get<number>([
+        this.scope,
+        "global_question_map",
+        questionId,
+      ])).value !== null;
+      const plan = status === "published" && !indexed
+        ? await this.indexAppend(questionId, current.category)
+        : status !== "published" && indexed
+        ? await this.indexRemove(questionId, current.category)
+        : null;
+      if (plan) {
+        transaction.check(...plan.checks);
+        plan.apply(transaction);
+      }
+      if ((await transaction.commit()).ok) {
+        return updated;
+      }
+      await this.backoff(attempt);
+    }
+    throw new Error("Status change failed after max retries");
+  }
+
+  /**
+   * Updates an existing question's content. Its status can't change here
+   * (use setStatus), and its version goes up by one. If the question text
+   * changes enough to generate a new hash/ID, or the category changes, the old
+   * question is replaced by one with the new ID and its reports move with it.
    *
    * @param question The question to update with all fields including ID
    * @returns The updated question, which may have a new ID if content changed significantly
    */
   async updateQuestion(question: Question): Promise<Question> {
-    // First, verify the question exists
     const oldQuestion = await this.getQuestionById(question.id);
-
-    const oldCategory = oldQuestion.category;
-    const newCategory = question.category;
-
-    // Calculate what the ID should be based on the new question text
     const calculatedId = await this.hashQuestion(question.question);
+    const updatedQuestion: Question = {
+      ...question,
+      status: oldQuestion.status,
+      version: oldQuestion.version + 1,
+      created_at: oldQuestion.created_at,
+      updated_at: new Date().toISOString(),
+    };
 
-    // If the question text hasn't changed enough to affect the ID, we can do a simple update
-    if (calculatedId === question.id && oldCategory === newCategory) {
-      // The ID is the same, so we just need to update the content
-      const updatedQuestion = {
-        ...question,
-        updated_at: new Date().toISOString(),
-      };
-
+    // Same ID and category: the indexes don't change.
+    if (
+      calculatedId === question.id &&
+      oldQuestion.category === question.category
+    ) {
       for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
         const transaction = this.kv.atomic()
           .set([this.scope, "question_content", question.id], updatedQuestion)
           .set([
             this.scope,
             "category_question_content",
-            newCategory,
+            question.category,
             question.id,
           ], updatedQuestion);
 
@@ -318,75 +471,32 @@ export class QuestionStore {
       throw new Error("Update failed after max retries");
     }
 
-    // The hash/ID has changed or the category changed, so we need to do a more complex update
-    // This requires deleting the old question and adding a new one
-    const newQuestion = {
-      ...question,
-      id: calculatedId, // Use the new calculated ID
-      updated_at: new Date().toISOString(),
-    };
+    // A new ID or category: replace the old question.
+    const questionReports = await this.getQuestionReports(question.id);
+    await this.delete(question.id);
+    const addedQuestion = await this.insert({
+      ...updatedQuestion,
+      id: calculatedId,
+    });
 
-    // Start a transaction for the complex case
-    for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
-      try {
-        const questionReports = await this.getQuestionReports(question.id);
-
-        // Delete the old question
-        await this.delete(question.id);
-
-        // Now add the new question with the new ID/hash
-        // We have to modify this to work with our add method which expects certain fields to be omitted
-        const {
-          id: _id,
-          created_at: _created_at,
-          updated_at: _updated_at,
-          scope: _scope,
-          ...addableQuestion
-        } = newQuestion;
-        const addedQuestion = await this.add(addableQuestion);
-
-        // Update all reports to reference the new question ID
-        if (questionReports.length > 0) {
-          // Process each report entry
-
-          for (const report of questionReports) {
-            await this.kv.delete([
-              this.scope,
-              "question_reports",
-              question.id,
-              report.report_id,
-            ]);
-
-            // Create a new report with the updated question_id but preserving all other data
-            await this.kv.set(
-              [
-                this.scope,
-                "question_reports",
-                addedQuestion.id,
-                report.report_id,
-              ],
-              { ...report, question_id: addedQuestion.id },
-            );
-          }
-        }
-
-        return addedQuestion;
-      } catch (error: unknown) {
-        if (attempt >= this.maxRetries) {
-          const errorMessage = error instanceof Error
-            ? error.message
-            : String(error);
-          throw new Error(`Complex update failed: ${errorMessage}`);
-        }
-        await this.backoff(attempt);
-      }
+    // Move the reports to the new question ID.
+    for (const report of questionReports) {
+      await this.kv.delete([
+        this.scope,
+        "question_reports",
+        question.id,
+        report.report_id,
+      ]);
+      await this.kv.set(
+        [this.scope, "question_reports", addedQuestion.id, report.report_id],
+        { ...report, question_id: addedQuestion.id },
+      );
     }
-
-    throw new Error("Update failed after max retries");
+    return addedQuestion;
   }
 
   async getQuestionById(questionId: string): Promise<Question> {
-    const questionResult = await this.kv.get<Question>([
+    const questionResult = await this.kv.get<StoredQuestion>([
       this.scope,
       "question_content",
       questionId,
@@ -394,7 +504,7 @@ export class QuestionStore {
     if (!questionResult.value) {
       throw new Error("Question not found");
     }
-    return questionResult.value;
+    return withQuestionDefaults(questionResult.value);
   }
 
   /**
@@ -408,25 +518,25 @@ export class QuestionStore {
     if (category) {
       // If a category is provided, use the category content index for optimal performance
       // This uses the category_question_content index directly with a cursor
-      const cursor = this.kv.list<Question>({
+      const cursor = this.kv.list<StoredQuestion>({
         prefix: [this.scope, "category_question_content", category],
       });
 
       // Collect all questions for this category using the cursor
       for await (const { value } of cursor) {
         if (value) {
-          questions.push(value);
+          questions.push(withQuestionDefaults(value));
         }
       }
     } else {
       // If no category is provided, scan all questions
-      const cursor = this.kv.list<Question>({
+      const cursor = this.kv.list<StoredQuestion>({
         prefix: [this.scope, "question_content"],
       });
 
       for await (const { value } of cursor) {
         if (value) {
-          questions.push(value);
+          questions.push(withQuestionDefaults(value));
         }
       }
     }
@@ -454,14 +564,14 @@ export class QuestionStore {
     ]);
     if (!questionIdResult.value) throw new Error("No questions");
 
-    const question = (await this.kv.get<Question>([
+    const question = (await this.kv.get<StoredQuestion>([
       this.scope,
       "question_content",
       questionIdResult.value,
     ])).value;
     if (!question) throw new Error("No questions");
 
-    return question;
+    return withQuestionDefaults(question);
   }
 
   /** Random question limited to a category */
@@ -486,7 +596,7 @@ export class QuestionStore {
       throw new Error("No questions in category");
     }
 
-    const question = (await this.kv.get<Question>([
+    const question = (await this.kv.get<StoredQuestion>([
       this.scope,
       "question_content",
       questionIdResult.value,
@@ -495,9 +605,10 @@ export class QuestionStore {
       throw new Error("No questions in category");
     }
 
-    return question;
+    return withQuestionDefaults(question);
   }
 
+  /** How many questions are published (served), optionally in a category. */
   async size(category?: string): Promise<number> {
     if (category) {
       return (await this.kv.get<number>([

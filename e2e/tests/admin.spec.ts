@@ -166,3 +166,56 @@ test("resetting a user's stats asks first", async ({ page }) => {
   expect(posted[0]).toContain("action=reset_stats");
   expect(posted[0]).toContain(`userId=${encodeURIComponent("seed|expert")}`);
 });
+
+test("questions filter by status, and drafts stay out of practice", async ({ page }) => {
+  await page.goto("/admin/questions?scope=emt&status=draft");
+  const rows = page.getByRole("table").getByRole("row");
+  await expect(rows).toHaveCount(2); // header + the seed draft
+  await expect(rows.nth(1)).toContainText("[Seed] Draft question");
+  await expect(rows.nth(1).getByText("Draft", { exact: true })).toBeVisible();
+
+  await page.goto("/admin/questions?scope=emt&status=retired");
+  await expect(rows.nth(1)).toContainText("[Seed] Retired question");
+});
+
+test("an admin moves a draft between unserved statuses", async ({ page }) => {
+  // Only between unserved statuses: publishing the seed draft would put it in
+  // practice while other specs run.
+  await page.goto("/admin/questions?scope=emt&status=draft");
+  await page.getByRole("link", { name: /\[Seed\] Draft question/ }).click();
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByText("Not published: practice never serves it."))
+    .toBeVisible();
+
+  const status = page.getByLabel("Status", { exact: true });
+  await status.selectOption("in_review");
+  await page.getByRole("button", { name: "Change status" }).click();
+  // No confirmation: it wasn't in practice to begin with.
+  await expect(page.locator(".badge", { hasText: /^In review$/ }))
+    .toBeVisible();
+  await page.waitForLoadState("networkidle");
+
+  await status.selectOption("draft");
+  await page.getByRole("button", { name: "Change status" }).click();
+  await expect(status).toHaveValue("draft");
+  await page.waitForLoadState("networkidle");
+  await expect(page.locator(".badge", { hasText: /^Draft$/ })).toBeVisible();
+});
+
+test("taking a published question out of practice asks first", async ({ page }) => {
+  await page.goto("/admin/questions?scope=emt&status=published");
+  await page.getByRole("table").getByRole("link").first().click();
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByText("Published: served in practice.")).toBeVisible();
+
+  await page.getByLabel("Status", { exact: true }).selectOption("retired");
+  await page.getByRole("button", { name: "Change status" }).click();
+  const dialog = page.getByRole("dialog", {
+    name: "Take this question out of practice?",
+  });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "Cancel" }).click();
+  await expect(dialog).toBeHidden();
+  await page.reload();
+  await expect(page.getByText("Published: served in practice.")).toBeVisible();
+});
