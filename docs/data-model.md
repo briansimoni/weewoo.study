@@ -51,8 +51,7 @@ Types are defined in the owning store module: `Question` and `QuestionReport` in
 
 ## Admin and backup tooling
 
-- `/admin/debug` and `/admin/database` read and write raw keys. Use them
-  carefully.
+- `/admin/database` downloads and restores raw keys. Use it carefully.
 - `/api/admin/kv/export` and `/api/admin/kv/import` (`lib/kv_backup.ts`) dump
   and restore every key. Import upserts; it does not clear the database first.
 - `infra/kv-backup.tf` provisions a versioned S3 bucket
@@ -72,11 +71,11 @@ Types are defined in the owning store module: `Question` and `QuestionReport` in
 `lib/seed.ts` writes deterministic test data through the stores, and refuses to
 run when `STAGE=PROD`. What works where:
 
-| Data                                                         | Source                                                     | Works for                                                                                                                                                                                                                                                                                            |
-| ------------------------------------------------------------ | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 143 `[Seed]` questions, all categories and scopes            | Synthetic (the repo is public, so the real bank stays out) | Practice, admin, reports                                                                                                                                                                                                                                                                             |
-| 6 `seed\|…` users with attempts, stats, leaderboard, streaks | Synthetic, KV only                                         | Leaderboard and stats pages. **They can't sign in through Auth0**; E2E uses a test-only login (ROADMAP 0.3). `seed\|admin` is an admin, but only in a session made by the test login with `STAGE` DEV or TEST (`isAdmin()` in `lib/admin_only_middleware.ts`); `/admin/debug` stays real-admin only. |
-| 15 products, 217 variants (`lib/seed_catalog.json`)          | Copy of the **TEST** database's catalog                    | Shop pages and Stripe checkout with a test-mode key: the Stripe IDs are test-mode products and the Printful IDs are the real store's                                                                                                                                                                 |
+| Data                                                         | Source                                                     | Works for                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 143 `[Seed]` questions, all categories and scopes            | Synthetic (the repo is public, so the real bank stays out) | Practice, admin, reports                                                                                                                                                                                                                                       |
+| 6 `seed\|…` users with attempts, stats, leaderboard, streaks | Synthetic, KV only                                         | Leaderboard and stats pages. **They can't sign in through Auth0**; E2E uses a test-only login (ROADMAP 0.3). `seed\|admin` is an admin, but only in a session made by the test login with `STAGE` DEV or TEST (`isAdmin()` in `lib/admin_only_middleware.ts`); |
+| 15 products, 217 variants (`lib/seed_catalog.json`)          | Copy of the **TEST** database's catalog                    | Shop pages and Stripe checkout with a test-mode key: the Stripe IDs are test-mode products and the Printful IDs are the real store's                                                                                                                           |
 
 Regenerate the catalog from a test backup with
 `deno run --allow-read --allow-write scripts/export_seed_catalog.ts <TEST-kv-backup.json>`.

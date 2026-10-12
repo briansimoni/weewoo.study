@@ -10,7 +10,6 @@ export const ADMIN_SECTIONS = {
   products: { href: "/admin/product-manager", label: "Products" },
   users: { href: "/admin/users", label: "Users" },
   database: { href: "/admin/database", label: "Database" },
-  debug: { href: "/admin/debug", label: "Debug" },
 } as const;
 
 export type AdminSection = keyof typeof ADMIN_SECTIONS;
