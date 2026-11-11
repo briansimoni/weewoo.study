@@ -1,3 +1,4 @@
+import type { Db } from "./db.ts";
 import { CATEGORIES, type Category } from "./categories.ts";
 import { QuestionStore } from "./question_store.ts";
 import { type UserStats, UserStore } from "./user_store.ts";
@@ -115,7 +116,7 @@ function seedQuestion(scope: Scope, category: Category, n: number) {
   };
 }
 
-async function seedQuestions(kv: Deno.Kv) {
+async function seedQuestions(kv: Db) {
   const added: Record<Scope, { id: string; category: Category }[]> = {
     emt: [],
     advanced: [],
@@ -163,7 +164,7 @@ async function seedQuestions(kv: Deno.Kv) {
 }
 
 async function seedUsers(
-  kv: Deno.Kv,
+  kv: Db,
   questions: { id: string; category: Category }[],
   now: Date,
 ) {
@@ -244,7 +245,7 @@ async function seedUsers(
 
 type SeedUser = (typeof SEED_USERS)[number];
 
-async function writeSeedStreak(kv: Deno.Kv, profile: SeedUser, now: Date) {
+async function writeSeedStreak(kv: Db, profile: SeedUser, now: Date) {
   if (profile.streak <= 0) return;
   // StreakStore only advances streaks in real time, so write the record
   // directly (same key and shape as StreakStore).
@@ -265,7 +266,7 @@ async function writeSeedStreak(kv: Deno.Kv, profile: SeedUser, now: Date) {
  * to keep a seed user's profile as seeded. A live streak is left alone.
  */
 export async function refreshSeedStreak(
-  kv: Deno.Kv,
+  kv: Db,
   userId: string,
   now = new Date(),
 ) {
@@ -317,7 +318,7 @@ async function seedReports(
  * test-mode products and its Printful IDs are the real store's, so checkout
  * works with Stripe test cards wherever a test-mode STRIPE_API_KEY is set.
  */
-async function seedProducts(kv: Deno.Kv) {
+async function seedProducts(kv: Db) {
   const productStore = await ProductStore.make(kv);
   const catalog = seedCatalog as {
     products: Product[];
@@ -358,7 +359,7 @@ const MARKER_USER = SEED_USERS[SEED_USERS.length - 1].user_id;
  * only missing ones are added.
  */
 export async function seed(
-  kv: Deno.Kv,
+  kv: Db,
   options: { now?: Date; stage?: string } = {},
 ): Promise<SeedSummary> {
   assertSeedAllowed(options.stage ?? Deno.env.get("STAGE"));
@@ -384,7 +385,7 @@ export async function seed(
  * twice. Returns null when nothing was done.
  */
 export async function ensureSeeded(
-  kv: Deno.Kv,
+  kv: Db,
   options: { now?: Date; stage?: string } = {},
 ): Promise<SeedSummary | null> {
   assertSeedAllowed(options.stage ?? Deno.env.get("STAGE"));
@@ -418,7 +419,7 @@ export async function ensureSeeded(
   }
 }
 
-async function isSeedOwned(kv: Deno.Kv) {
+async function isSeedOwned(kv: Db) {
   if ((await kv.get(VERSION_KEY)).value !== null) return true;
   if ((await kv.get(STARTED_KEY)).value !== null) return true;
   if ((await kv.get(["users", MARKER_USER])).value !== null) return true;
@@ -432,7 +433,7 @@ async function isSeedOwned(kv: Deno.Kv) {
  * Delete every key except the seed lock and "started" marker. Only called on
  * seed-owned databases.
  */
-async function wipe(kv: Deno.Kv) {
+async function wipe(kv: Db) {
   for await (const entry of kv.list({ prefix: [] })) {
     const [a, b] = entry.key;
     if (a === "seed" && (b === LOCK_KEY[1] || b === STARTED_KEY[1])) continue;
@@ -441,7 +442,7 @@ async function wipe(kv: Deno.Kv) {
 }
 
 /** Wait until another isolate finishes seeding (the version key is set last). */
-async function waitForSeed(kv: Deno.Kv, timeoutMs = 3 * 60 * 1000) {
+async function waitForSeed(kv: Db, timeoutMs = 3 * 60 * 1000) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     if ((await kv.get<number>(VERSION_KEY)).value === SEED_VERSION) return;

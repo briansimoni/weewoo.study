@@ -8,9 +8,65 @@ context. Deploy creates **one database per git branch** (`<app>--<branch>`) next
 to `production`, `preview` and `local`, so every branch preview starts empty
 (see "Seed data").
 
-Stores take an optional `Deno.Kv` in `make()`, so tests pass
+Stores take an optional `Db` in `make()`, so tests pass
 `Deno.openKv(":memory:")`. **Only touch KV through the owning store.** Several
 stores keep secondary indexes that must be updated in the same atomic operation.
+
+## Storage backends (`Db`)
+
+Deno Deploy is going away, so the stores no longer depend on `Deno.Kv`. They use
+`Db` (`lib/db.ts`): the subset of the KV API the app needs (`get`, `set` with
+`expireIn`, `delete`, `list` by prefix with `start`/`end`/`reverse`/`limit`, and
+`atomic()` with `check`/`set`/`delete`). Two things implement it:
+
+- **Deno KV.** A `Deno.Kv` satisfies `Db` as is. Used locally, in unit tests and
+  in E2E.
+- **DynamoDB** (`DynamoKv` in `lib/dynamo_kv.ts`). `main.ts` installs it at
+  startup when `DYNAMODB_TABLE` is set.
+
+`lib/db_contract.ts` is the shared behavior, as test cases. It runs on Deno KV
+in `deno task test` and on DynamoDB in `deno task test:dynamo` (CI job
+`dynamodb`, against DynamoDB Local; with `DYNAMODB_TEST_AWS=1` and AWS
+credentials it runs against a temporary table in AWS). **Anything added to `Db`
+needs a contract case.** Don't add KV features DynamoDB can't do (queues,
+`watch`, `sum`/`min`/`max` mutations).
+
+### DynamoDB layout
+
+One table per stage, `weewoo-study-test` and `weewoo-study-prod`
+(`infra/dynamodb.tf`: on-demand billing, point-in-time recovery, TTL on `ttl`).
+Every KV entry in the key reference below is one item:
+
+| Attribute | Holds                                                                 |
+| --------- | --------------------------------------------------------------------- |
+| `pk`      | The leading key parts, encoded.                                       |
+| `sk`      | The remaining key parts, encoded; `-` when there are none.            |
+| `key`     | The original key array.                                               |
+| `value`   | The value, as native DynamoDB types.                                  |
+| `v`       | Versionstamp: a new random ID on every write (`atomic().check` uses). |
+| `ttl`     | Expiry in epoch seconds, for entries written with `expireIn`.         |
+
+Key parts are encoded as `s<string>!` or `x<16 hex digits>!` (a number's IEEE
+754 bits, so numbers sort numerically), which keeps DynamoDB's sort order equal
+to KV's. `PARTITION_DEPTH` in `lib/dynamo_kv.ts` says how many leading parts go
+in `pk`, per keyspace: 2 for the question scopes, `leaderboard`, `variants`,
+`stripe_variants`, `sessions`, `streaks` and `stripe_events`; 3 for `attempts`;
+1 for everything else. For example `["attempts", "by_attempt_id", userId, at]`
+is `pk = sattempts!sby_attempt_id!s<userId>!`, `sk = s<at>!`. **Add new
+keyspaces to `PARTITION_DEPTH`**, and don't change an existing depth without
+rewriting that keyspace's items.
+
+Differences from Deno KV to keep in mind:
+
+- Listing a prefix at least as long as the partition key is a Query. A shorter
+  prefix (`["sessions"]`, `[]`) scans the whole table and sorts in memory: fine
+  for admin tools, backups and the seeder, not for request paths.
+- A transaction holds at most 100 entries (checks and writes), and only strings
+  and numbers work as key parts.
+- Expired entries read as missing at once (DynamoDB deletes them up to days
+  later; Deno KV returns them until its own sweep).
+- Values must be JSON-like (no `Date`, `Map`, `Set`, `bigint`); `undefined`
+  properties are dropped.
 
 Not in KV: the shopping cart (browser `localStorage`, `lib/cart_store.ts`),
 theme and trial preferences (`preferences` cookie, base64 JSON, parsed in

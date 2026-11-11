@@ -28,6 +28,26 @@ jobs:
       - run: deno install
       - run: deno task verify
 
+  # Runs the Db contract (lib/db_contract.ts) against DynamoDB Local, so the
+  # DynamoDB backend keeps behaving like Deno KV.
+  dynamodb:
+    name: dynamodb
+    runs-on: ubuntu-latest
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:2.5.4
+        ports:
+          - 8000:8000
+    env:
+      DYNAMODB_ENDPOINT: http://localhost:8000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno install
+      - run: deno task test:dynamo
+
   e2e:
     name: e2e
     runs-on: ubuntu-latest
