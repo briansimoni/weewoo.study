@@ -1,3 +1,4 @@
+import type { Db } from "./db.ts";
 // Types only: importing the Stripe SDK reads env vars (AI-agent detection) at
 // load time, which unit tests don't allow. The route injects the real SDK.
 import type Stripe from "stripe";
@@ -91,7 +92,7 @@ export interface StripeWebhookDeps {
   printfulSecret?: string;
   stage?: string;
   printfulDraftOrders?: boolean;
-  kv: Deno.Kv;
+  kv: Db;
   email: Pick<EmailService, "sendEmail" | "sendOrderConfirmation">;
   adminEmail?: string;
   /** Used for Printful requests. */

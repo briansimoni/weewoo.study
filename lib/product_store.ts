@@ -1,3 +1,4 @@
+import type { Db } from "./db.ts";
 import { getKv } from "./kv.ts";
 
 export const productCategories = [
@@ -55,9 +56,9 @@ export interface ProductVariant {
 }
 
 export class ProductStore {
-  private constructor(private kv: Deno.Kv) {}
+  private constructor(private kv: Db) {}
 
-  static async make(kv?: Deno.Kv) {
+  static async make(kv?: Db) {
     if (!kv) {
       kv = await getKv();
     }

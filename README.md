@@ -34,6 +34,7 @@ payments, or email.
 | `deno task build`       | Production build into `_fresh/`                                 |
 | `deno task start`       | Serve the production build (`_fresh/server.js`)                 |
 | `deno task test`        | Unit tests (in-memory KV)                                       |
+| `deno task test:dynamo` | `Db` contract on DynamoDB (`DYNAMODB_ENDPOINT`, or AWS itself)  |
 | `deno task check`       | `deno fmt --check`, `deno lint`, `deno check` on the whole repo |
 | `deno task verify`      | `check` + `test`: **run this before every commit or PR**        |
 | `deno task seed`        | Seed `.kv/seed.sqlite3` with test data (run with `KV_PATH`)     |
@@ -160,6 +161,9 @@ This application uses various environment variables for configuration. Create a
 - `KV_PATH`: Optional local KV file, e.g. `.kv/seed.sqlite3` from
   `deno task seed`. Unset, `Deno.openKv()` uses Deno's default local database
   (or the Deploy-attached one).
+- `DYNAMODB_TABLE`: Use this DynamoDB table instead of Deno KV (AWS:
+  `weewoo-study-test` or `weewoo-study-prod`). Credentials and region come from
+  the usual AWS environment. `DYNAMODB_ENDPOINT` points it at DynamoDB Local.
 - `SEED_ON_EMPTY`: `true` seeds an empty database at startup (never when
   `STAGE=PROD`). Set on both Deploy apps (all contexts; see data-model.md).
 - `STAGE`: Environment identifier. `PROD` enables cron jobs, real Printful

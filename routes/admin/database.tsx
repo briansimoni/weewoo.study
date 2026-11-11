@@ -1,3 +1,4 @@
+import type { Db } from "../../lib/db.ts";
 import { page, type PageProps } from "fresh";
 import {
   assertKvImportAllowed,
@@ -26,7 +27,7 @@ interface ImportFromJsonOptions {
   progressInterval?: number;
 }
 
-export async function buildDownloadResponse(kv: Deno.Kv): Promise<Response> {
+export async function buildDownloadResponse(kv: Db): Promise<Response> {
   const blob = await exportKv(kv);
   const filename = `kv-backup-${
     new Date().toISOString().replace(/[:.]/g, "-")
@@ -42,7 +43,7 @@ export async function buildDownloadResponse(kv: Deno.Kv): Promise<Response> {
 }
 
 export async function importFromJsonText(
-  kv: Deno.Kv,
+  kv: Db,
   jsonText: string,
   stage?: string,
   options?: ImportFromJsonOptions,

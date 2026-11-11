@@ -1,3 +1,4 @@
+import type { Db } from "./db.ts";
 import { getKv } from "./kv.ts";
 
 export interface Session {
@@ -13,9 +14,9 @@ export interface Session {
 }
 
 export class SessionStore {
-  private constructor(private kv: Deno.Kv) {}
+  private constructor(private kv: Db) {}
 
-  static async make(kv?: Deno.Kv) {
+  static async make(kv?: Db) {
     if (!kv) {
       kv = await getKv();
     }

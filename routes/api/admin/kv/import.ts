@@ -1,3 +1,4 @@
+import type { Db } from "../../../../lib/db.ts";
 import {
   assertKvImportAllowed,
   importKvUpsert,
@@ -8,7 +9,7 @@ import { getKv } from "../../../../lib/kv.ts";
 import { AppHandlers } from "../../../_middleware.ts";
 
 export async function importKvResponse(
-  kv: Deno.Kv,
+  kv: Db,
   payload: unknown,
   stage = Deno.env.get("STAGE"),
 ): Promise<Response> {

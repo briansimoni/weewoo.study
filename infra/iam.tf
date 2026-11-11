@@ -87,6 +87,20 @@ resource "aws_iam_policy" "ses_email_sending" {
           "sqs:GetQueueAttributes"
         ],
         Resource = aws_sqs_queue.weewoo_ops_listener.arn
+      },
+      # DynamoDB: exactly what lib/dynamo_kv.ts calls, on the test table only.
+      # Add the prod table when weewoo.study moves to DynamoDB.
+      {
+        Effect = "Allow",
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:ConditionCheckItem",
+          "dynamodb:Query",
+          "dynamodb:Scan"
+        ],
+        Resource = aws_dynamodb_table.app["test"].arn
       }
     ]
   })
