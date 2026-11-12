@@ -1,3 +1,4 @@
+import type { Db } from "./db.ts";
 export interface KvBackupEntry {
   key: Deno.KvKey;
   value: unknown;
@@ -20,7 +21,7 @@ export interface ImportKvUpsertOptions {
   progressInterval?: number;
 }
 
-export async function exportKv(kv: Deno.Kv): Promise<KvBackupBlob> {
+export async function exportKv(kv: Db): Promise<KvBackupBlob> {
   const entries: KvBackupEntry[] = [];
   for await (const entry of kv.list<unknown>({ prefix: [] })) {
     entries.push({
@@ -32,7 +33,7 @@ export async function exportKv(kv: Deno.Kv): Promise<KvBackupBlob> {
 }
 
 export async function importKvUpsert(
-  kv: Deno.Kv,
+  kv: Db,
   blob: KvBackupBlob,
   options?: ImportKvUpsertOptions,
 ): Promise<void> {

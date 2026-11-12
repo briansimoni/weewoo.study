@@ -1,3 +1,4 @@
+import type { Db } from "./db.ts";
 import { getKv } from "./kv.ts";
 
 /** Question banks: EMT, advanced (AEMT) and medic (paramedic). */
@@ -44,11 +45,11 @@ export class QuestionStore {
   private maxRetries = 5;
 
   constructor(
-    private kv: Deno.Kv,
+    private kv: Db,
     private scope: Scope = "emt",
   ) {}
 
-  static async make(kv?: Deno.Kv, scope: Scope = "emt") {
+  static async make(kv?: Db, scope: Scope = "emt") {
     if (!kv) {
       kv = await getKv();
     }

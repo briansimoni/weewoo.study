@@ -1,3 +1,4 @@
+import type { Db } from "./db.ts";
 import { getKv } from "./kv.ts";
 import { Category, CategoryStats } from "./categories.ts";
 
@@ -21,9 +22,9 @@ export interface LeaderBoardEntry {
 }
 
 export class UserStore {
-  private constructor(private kv: Deno.Kv) {}
+  private constructor(private kv: Db) {}
 
-  static async make(kv?: Deno.Kv) {
+  static async make(kv?: Db) {
     if (!kv) {
       kv = await getKv();
     }
@@ -118,11 +119,7 @@ export class UserStore {
     const newCorrect = proposedUpdate.stats?.questions_correct ?? 0;
 
     const txn = this.kv.atomic()
-      .mutate({
-        type: "set",
-        key: ["users", user.user_id],
-        value: proposedUpdate,
-      });
+      .set(["users", user.user_id], proposedUpdate);
 
     // Only delete old entry if it exists
     // and the stats have actually changed
@@ -131,20 +128,18 @@ export class UserStore {
       initialUser.stats.questions_answered !==
         proposedUpdate.stats.questions_answered
     ) {
-      txn.mutate({
-        type: "delete",
-        key: ["leaderboard", "questions_correct", oldCorrect, user.user_id],
-      });
+      txn.delete([
+        "leaderboard",
+        "questions_correct",
+        oldCorrect,
+        user.user_id,
+      ]);
     }
 
-    txn.mutate({
-      type: "set",
-      key: ["leaderboard", "questions_correct", newCorrect, user.user_id],
-      value: {
-        user_id: user.user_id,
-        display_name: user.display_name,
-        questions_correct: newCorrect,
-      },
+    txn.set(["leaderboard", "questions_correct", newCorrect, user.user_id], {
+      user_id: user.user_id,
+      display_name: user.display_name,
+      questions_correct: newCorrect,
     });
 
     const result = await txn.commit();

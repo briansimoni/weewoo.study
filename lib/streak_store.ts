@@ -1,3 +1,4 @@
+import type { Db } from "./db.ts";
 import dayjs from "dayjs";
 import { getKv } from "./kv.ts";
 
@@ -9,9 +10,9 @@ export type Streak = {
 };
 
 export class StreakStore {
-  private constructor(private kv: Deno.Kv) {}
+  private constructor(private kv: Db) {}
 
-  static async make(kv?: Deno.Kv) {
+  static async make(kv?: Db) {
     if (!kv) {
       kv = await getKv();
     }

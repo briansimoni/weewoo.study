@@ -72,6 +72,49 @@ Every task follows the same loop:
 
 ---
 
+## Phase A: Move off Deno Deploy to AWS
+
+Deno Deploy is going away (2026-11). The target is the existing AWS account
+(502859415194, us-east-1, resources named `weewoo-study-*`): Lambda behind
+CloudFront, DynamoDB, SQS, and CloudWatch Events for the cron jobs. This phase
+comes before everything else still open below, and it replaces the Deno Deploy
+parts of "How we work" and Phase 0 as it lands.
+
+- [x] **DynamoDB behind the stores.** Done 2026-11-11: the stores use the `Db`
+      interface (`lib/db.ts`), which Deno KV satisfies and `DynamoKv`
+      (`lib/dynamo_kv.ts`) implements on a single table; a shared contract
+      (`lib/db_contract.ts`) runs on both, and passed against real DynamoDB. See
+      `docs/data-model.md`, "Storage backends". The tables `weewoo-study-test`
+      and `weewoo-study-prod` exist (created with the AWS CLI to match
+      `infra/dynamodb.tf`, both still empty), and the production build passed
+      the E2E suite on a scratch DynamoDB table (28 passed).
+- [x] **Adopt the tables in Terraform.** Done 2026-11-11: both tables were
+      imported into the `weewoo-study` workspace and a full plan shows no
+      changes. Planning needs `infra/image-converter-lambda.zip` (gitignored);
+      download the deployed zip with `aws lambda get-function` so its hash
+      matches and the Lambda isn't redeployed.
+- [ ] **Copy the data.**
+      `scripts/migrate_kv_to_dynamo.ts <export.json>
+      <table>` copies a KV
+      export into a table (`lib/kv_migration.ts`): it restores expiry on
+      sessions, streaks and Stripe event records (exports don't carry it) and
+      drops the legacy keys. Test is done (2026-11-11): 5,582 entries from
+      test.weewoo.study are in `weewoo-study-test`, every one compared equal to
+      the export, and the app passed the smoke test on that table. It is a
+      snapshot: test.weewoo.study still writes to Deno KV, so copy again at
+      cutover (`--allow-non-empty` upserts). Still open: prod, at cutover, with
+      the human's go-ahead (`--confirm-prod`).
+- [ ] **Compute.** Run the Fresh server on Lambda behind CloudFront. Decide Deno
+      or Node on Lambda, and what replaces per-branch previews and their
+      self-seeding databases.
+- [ ] **Cron.** Move the two `Deno.cron` jobs in `main.ts` to CloudWatch Events.
+- [ ] **CI and release.** Replace the Deno Deploy steps (`preview-e2e`,
+      `Deploy production`, the `verify-preview` and `release` skills).
+- [ ] **Cut over DNS and retire the Deploy apps**, the unused KV-backup bucket
+      (`infra/kv-backup.tf`) included.
+
+---
+
 ## Phase 0: Foundation (tooling, tests, AI-friendliness)
 
 Everything else depends on this. The goal is that an agent can make a change,

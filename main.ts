@@ -13,7 +13,8 @@ import type { AppState } from "./routes/_middleware.ts";
 import { CronTime } from "cron-time-generator";
 import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
 import { asyncLocalStorage, log } from "./lib/logger.ts";
-import { getKv } from "./lib/kv.ts";
+import { getKv, setKv } from "./lib/kv.ts";
+import { DynamoKv } from "./lib/dynamo_kv.ts";
 import { ensureSeeded } from "./lib/seed.ts";
 import { assertStripeKeyMatchesStage } from "./lib/stripe_webhook.ts";
 
@@ -56,6 +57,17 @@ if (import.meta.env.PROD) {
     CronTime.everySaturdayAt(9),
     prepare(sendReport),
   );
+}
+
+// On AWS the database is a DynamoDB table instead of Deno KV (see
+// docs/data-model.md, "Storage backends").
+const dynamoTable = Deno.env.get("DYNAMODB_TABLE");
+if (dynamoTable) {
+  setKv(DynamoKv.make({
+    table: dynamoTable,
+    endpoint: Deno.env.get("DYNAMODB_ENDPOINT") || undefined,
+  }));
+  log.info("using DynamoDB", { table: dynamoTable });
 }
 
 // Deno Deploy gives every branch preview an empty KV database. With
