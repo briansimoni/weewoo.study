@@ -39,6 +39,7 @@ payments, or email.
 | `deno task verify`      | `check` + `test`: **run this before every commit or PR**        |
 | `deno task seed`        | Seed `.kv/seed.sqlite3` with test data (run with `KV_PATH`)     |
 | `deno task smoke <url>` | Read-only smoke test of a running site                          |
+| `deno task console`     | Open the AWS console in your browser (`prod`, `logs` optional)  |
 | `deno task e2e`         | Build, seed a fresh `.kv/e2e.sqlite3`, run Playwright on :8123  |
 | `deno task e2e:remote`  | Playwright against `BASE_URL` (e.g. a branch preview)           |
 | `deno task e2e:install` | One-time: download the Chromium build Playwright uses           |
