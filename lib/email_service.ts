@@ -4,13 +4,12 @@ import {
   SendEmailCommandInput,
   SESClient,
 } from "@aws-sdk/client-ses";
+import { awsCredentials } from "./aws_credentials.ts";
 import { log } from "./logger.ts";
 
 // Environment variable names
 const AWS_REGION = Deno.env.get("AWS_REGION") || "us-east-1";
 const SES_FROM_EMAIL = Deno.env.get("SES_FROM_EMAIL");
-const AWS_ACCESS_KEY_ID = Deno.env.get("AWS_ACCESS_KEY_ID");
-const AWS_SECRET_ACCESS_KEY = Deno.env.get("AWS_SECRET_ACCESS_KEY");
 
 // Interface for email options
 export interface EmailOptions {
@@ -34,10 +33,7 @@ export class EmailService {
     // Initialize SES client with credentials
     this.client = new SESClient({
       region: options?.region || AWS_REGION,
-      credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID || "",
-        secretAccessKey: AWS_SECRET_ACCESS_KEY || "",
-      },
+      credentials: awsCredentials(),
     });
 
     // Set the from email address

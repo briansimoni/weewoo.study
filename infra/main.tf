@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.0"
+    }
   }
 
   cloud {
@@ -134,7 +138,7 @@ resource "aws_s3_bucket_notification" "static_assets_notification" {
   queue {
     queue_arn = aws_sqs_queue.image_processing_queue.arn
     events    = ["s3:ObjectCreated:*"]
-    
+
     # Only trigger for image files in the root directory (not processed/)
     filter_prefix = ""
     filter_suffix = ""

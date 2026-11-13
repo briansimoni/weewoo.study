@@ -78,7 +78,8 @@ resource "aws_iam_policy" "ses_email_sending" {
           "${aws_cloudwatch_log_group.test.arn}:*"
         ]
       },
-      # SQS permissions
+      # SQS permissions. The app no longer polls the queue (the ses-events
+      # Lambda in jobs.tf does): remove this once that release is on prod.
       {
         Effect = "Allow",
         Action = [

@@ -40,10 +40,15 @@ const consoleFormat = winston.format.combine(
   }),
 );
 
+/** Lambda and Deno Deploy both collect stdout: log one JSON object per line. */
+function logsAreCollected(): boolean {
+  return isRunningInDenoDeploy() || !!Deno.env.get("AWS_LAMBDA_FUNCTION_NAME");
+}
+
 // Create base logger with console transport
 const logger = winston.createLogger({
   level: Deno.env.get("LOG_LEVEL") || "debug",
-  format: isRunningInDenoDeploy() ? jsonFormat : consoleFormat,
+  format: logsAreCollected() ? jsonFormat : consoleFormat,
   transports: [
     // forceConsole: without it winston writes to console._stdout (which Deno
     // defines) instead of calling console.*, and Deno Deploy only collects
