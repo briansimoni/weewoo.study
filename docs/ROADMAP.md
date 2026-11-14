@@ -110,17 +110,14 @@ parts of "How we work" and Phase 0 as it lands.
 - [ ] **Compute.** Run the Fresh server on Lambda behind CloudFront. Decide Deno
       or Node on Lambda, and what replaces per-branch previews and their
       self-seeding databases.
-- [ ] **Cron.** Move the two `Deno.cron` jobs off the web app. In code: both are
-      Lambda functions built from `lambda/main.ts` (Deno compiled to a
-      `provided.al2023` executable, which also answers "Deno or Node on Lambda"
-      for these jobs), defined in `infra/jobs.tf`. The weekly report runs on a
+- [x] **Cron.** The two `Deno.cron` jobs left the web app (2026-11-14, PR #32,
+      release `34a7ef7`). Both are Lambda functions built from `lambda/main.ts`
+      (Deno compiled to a `provided.al2023` executable, which also answers "Deno
+      or Node on Lambda" for these jobs), defined in `infra/jobs.tf` and
+      deployed with `deno task deploy:jobs`. The weekly report runs on a
       CloudWatch Events schedule. The 15-minute SQS poll is gone: the queue
-      invokes the `ses-events` function for each message. `main.ts` no longer
-      registers cron jobs. Still to do: apply the Terraform, deploy the code
-      (`deno task deploy:jobs`), release the app without `Deno.cron` to prod,
-      then drop the app user's SQS permission in `infra/iam.tf`. Do the
-      Terraform apply and the prod release between two Saturdays 09:00 UTC, or
-      the weekly report is sent twice (or not at all) that week.
+      invokes the `ses-events` function for each message. The app's IAM user no
+      longer has SQS access.
 - [ ] **CI and release.** Replace the Deno Deploy steps (`preview-e2e`,
       `Deploy production`, the `verify-preview` and `release` skills).
 - [ ] **Cut over DNS and retire the Deploy apps**, the unused KV-backup bucket
