@@ -93,21 +93,34 @@ parts of "How we work" and Phase 0 as it lands.
       changes. Planning needs `infra/image-converter-lambda.zip` (gitignored);
       download the deployed zip with `aws lambda get-function` so its hash
       matches and the Lambda isn't redeployed.
-- [ ] **Copy the data.**
+- [x] **Copy the data.**
       `scripts/migrate_kv_to_dynamo.ts <export.json>
       <table>` copies a KV
       export into a table (`lib/kv_migration.ts`): it restores expiry on
       sessions, streaks and Stripe event records (exports don't carry it) and
-      drops the legacy keys. Test is done (2026-11-11): 5,582 entries from
-      test.weewoo.study are in `weewoo-study-test`, every one compared equal to
-      the export, and the app passed the smoke test on that table. It is a
-      snapshot: test.weewoo.study still writes to Deno KV, so copy again at
-      cutover (`--allow-non-empty` upserts). Still open: prod, at cutover, with
-      the human's go-ahead (`--confirm-prod`).
+      drops the legacy keys. Test is done (2026-11-11, PR #30): 5,582 entries
+      from test.weewoo.study were copied to `weewoo-study-test` and compared
+      equal to the export, and **test.weewoo.study now runs on DynamoDB**
+      (`DYNAMODB_TABLE` on the test app, Production context only; branch
+      previews stay on Deno KV). Prod followed the same day: 8,221 entries in
+      `weewoo-study-prod`, equal to the export, and **weewoo.study runs on
+      DynamoDB** since release `f999ffd` (`DYNAMODB_TABLE` on the prod app,
+      Production context). Neither app writes to its old KV database any more.
+      `deno task console` opens the table in the AWS console.
 - [ ] **Compute.** Run the Fresh server on Lambda behind CloudFront. Decide Deno
       or Node on Lambda, and what replaces per-branch previews and their
       self-seeding databases.
-- [ ] **Cron.** Move the two `Deno.cron` jobs in `main.ts` to CloudWatch Events.
+- [ ] **Cron.** Move the two `Deno.cron` jobs off the web app. In code: both are
+      Lambda functions built from `lambda/main.ts` (Deno compiled to a
+      `provided.al2023` executable, which also answers "Deno or Node on Lambda"
+      for these jobs), defined in `infra/jobs.tf`. The weekly report runs on a
+      CloudWatch Events schedule. The 15-minute SQS poll is gone: the queue
+      invokes the `ses-events` function for each message. `main.ts` no longer
+      registers cron jobs. Still to do: apply the Terraform, deploy the code
+      (`deno task deploy:jobs`), release the app without `Deno.cron` to prod,
+      then drop the app user's SQS permission in `infra/iam.tf`. Do the
+      Terraform apply and the prod release between two Saturdays 09:00 UTC, or
+      the weekly report is sent twice (or not at all) that week.
 - [ ] **CI and release.** Replace the Deno Deploy steps (`preview-e2e`,
       `Deploy production`, the `verify-preview` and `release` skills).
 - [ ] **Cut over DNS and retire the Deploy apps**, the unused KV-backup bucket

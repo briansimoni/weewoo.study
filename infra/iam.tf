@@ -78,7 +78,8 @@ resource "aws_iam_policy" "ses_email_sending" {
           "${aws_cloudwatch_log_group.test.arn}:*"
         ]
       },
-      # SQS permissions
+      # SQS permissions. The app no longer polls the queue (the ses-events
+      # Lambda in jobs.tf does): remove this once that release is on prod.
       {
         Effect = "Allow",
         Action = [
@@ -88,8 +89,8 @@ resource "aws_iam_policy" "ses_email_sending" {
         ],
         Resource = aws_sqs_queue.weewoo_ops_listener.arn
       },
-      # DynamoDB: exactly what lib/dynamo_kv.ts calls, on the test table only.
-      # Add the prod table when weewoo.study moves to DynamoDB.
+      # DynamoDB: exactly what lib/dynamo_kv.ts calls, on the app tables. Test
+      # and prod share this IAM user (one access key on both Deploy apps).
       {
         Effect = "Allow",
         Action = [
@@ -100,7 +101,7 @@ resource "aws_iam_policy" "ses_email_sending" {
           "dynamodb:Query",
           "dynamodb:Scan"
         ],
-        Resource = aws_dynamodb_table.app["test"].arn
+        Resource = [for table in aws_dynamodb_table.app : table.arn]
       }
     ]
   })

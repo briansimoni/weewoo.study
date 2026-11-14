@@ -10,9 +10,7 @@ import "@std/dotenv/load";
 import { App, staticFiles, trailingSlashes } from "fresh";
 import type { AppState } from "./routes/_middleware.ts";
 
-import { CronTime } from "cron-time-generator";
-import { pollWeeWooOpsSQSMessages, sendReport } from "./lib/cron_tasks.ts";
-import { asyncLocalStorage, log } from "./lib/logger.ts";
+import { log } from "./lib/logger.ts";
 import { getKv, setKv } from "./lib/kv.ts";
 import { DynamoKv } from "./lib/dynamo_kv.ts";
 import { ensureSeeded } from "./lib/seed.ts";
@@ -24,40 +22,6 @@ assertStripeKeyMatchesStage(
   Deno.env.get("STAGE"),
   Deno.env.get("STRIPE_API_KEY"),
 );
-
-/**
- * Wrap a cron job in a request ID and logging context
- */
-function prepare<T extends () => Promise<void>>(fn: T) {
-  return () => {
-    return asyncLocalStorage.run(crypto.randomUUID(), async () => {
-      if (Deno.env.get("STAGE") !== "PROD") {
-        log.info("skipping cron because env is not prod");
-        return;
-      }
-      const start = Date.now();
-      log.info("cron job started");
-      await fn();
-      log.info("cron job finished", {
-        duration: Date.now() - start,
-      });
-    });
-  };
-}
-
-if (import.meta.env.PROD) {
-  Deno.cron(
-    "Poll WeeWoo Ops SQS Messages",
-    CronTime.every(15).minutes(),
-    prepare(pollWeeWooOpsSQSMessages),
-  );
-
-  Deno.cron(
-    "Weekly Question Report",
-    CronTime.everySaturdayAt(9),
-    prepare(sendReport),
-  );
-}
 
 // On AWS the database is a DynamoDB table instead of Deno KV (see
 // docs/data-model.md, "Storage backends").
