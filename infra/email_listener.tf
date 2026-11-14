@@ -6,6 +6,9 @@ resource "aws_sqs_queue" "weewoo_ops_listener_dlq" {
 
 resource "aws_sqs_queue" "weewoo_ops_listener" {
   name = "weewoo_ops_listener"
+  # At least six times the ses-events function timeout (infra/jobs.tf), as
+  # AWS recommends for a queue that invokes a Lambda function.
+  visibility_timeout_seconds = 180
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.weewoo_ops_listener_dlq.arn
     maxReceiveCount     = 3
@@ -16,7 +19,7 @@ resource "aws_sqs_queue_policy" "allow_sns" {
   queue_url = aws_sqs_queue.weewoo_ops_listener.id
 
   policy = jsonencode({
-    Version   = "2012-10-17",
+    Version = "2012-10-17",
     Statement = [{
       Sid       = "AllowSNSToSend",
       Effect    = "Allow",

@@ -38,8 +38,10 @@ architecture map and environment variables.
   to avoid Fresh's CommonJS bundling incompatibilities. Keep browser
   dependencies bundled. Development uses bare package names; production uses npm
   specifiers.
-- Cron jobs register only in production builds; Vite reloads must not register
-  duplicate jobs. Callbacks additionally require `STAGE=PROD` to perform work.
+- Background jobs (the weekly question report, SES event alerts) are Lambda
+  functions, not part of the web app: code in `lambda/` and `lib/jobs.ts`,
+  infrastructure in `infra/jobs.tf` (README, "Background jobs"). Invoking one
+  sends a real email to the admin, so ask the human first.
 - For local smoke checks, use `STAGE=DEV`; do not trigger real email, payment,
   webhook, or production-data operations. Full OAuth and commerce flows require
   separate staging verification.

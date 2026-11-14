@@ -40,6 +40,8 @@ payments, or email.
 | `deno task seed`        | Seed `.kv/seed.sqlite3` with test data (run with `KV_PATH`)     |
 | `deno task smoke <url>` | Read-only smoke test of a running site                          |
 | `deno task console`     | Open the AWS console in your browser (`prod`, `logs` optional)  |
+| `deno task build:jobs`  | Build the background-job Lambda package (`.lambda/jobs.zip`)    |
+| `deno task deploy:jobs` | Build and upload it: `test`, or `prod --confirm-prod`           |
 | `deno task e2e`         | Build, seed a fresh `.kv/e2e.sqlite3`, run Playwright on :8123  |
 | `deno task e2e:remote`  | Playwright against `BASE_URL` (e.g. a branch preview)           |
 | `deno task e2e:install` | One-time: download the Chromium build Playwright uses           |
@@ -92,10 +94,11 @@ islands/           Interactive Preact components hydrated on the client
 components/        Server-rendered components; ui/ holds the shared primitives
                    (Button, Card, Stat, Modal, Page...), see docs/ui-audit.md
 lib/               Business logic: *_store.ts wrap Deno KV (one store per entity),
-                   plus email, logging, cron tasks, the Printful client
+                   plus email, logging, background jobs, the Printful client
+lambda/            Background jobs as Lambda functions (see "Background jobs")
 scripts/           One-off and admin scripts (products, Stripe, question generation)
 infra/             Terraform for the AWS resources
-main.ts            App entry: middleware, cron registration (prod builds only)
+main.ts            App entry: middleware, database selection, seeding
 client.ts          Client entry (global CSS)
 vite.config.ts     Vite + Fresh + Tailwind; externalizes server-only deps
 ```
@@ -150,6 +153,38 @@ database**, which seeds itself with test data (`lib/seed.ts`) on startup because
   in the local CI job. Without it that spec is skipped. A live key makes the run
   fail.
 
+### Background jobs
+
+Two jobs run as AWS Lambda functions instead of inside the web app. Their code
+is `lambda/main.ts` (entry point) and `lib/jobs.ts`; the functions, triggers and
+permissions are in `infra/jobs.tf`.
+
+| Function                          | Trigger                                | What it does                                     |
+| --------------------------------- | -------------------------------------- | ------------------------------------------------ |
+| `weewoo-study-prod-weekly-report` | Schedule: Saturdays 09:00 UTC          | Mails the admin the week's reported questions    |
+| `weewoo-study-test-weekly-report` | None; invoke it by hand to try a build | The same, from the test table                    |
+| `weewoo-study-prod-ses-events`    | Each message on `weewoo_ops_listener`  | Mails the admin about an SES bounce or complaint |
+
+All of them share one package. `deno task build:jobs` bundles `lambda/main.ts`
+and compiles it with the Deno runtime into a Linux ARM executable named
+`bootstrap` (what Lambda's `provided.al2023` runtime starts), zipped as
+`.lambda/jobs.zip`. Each function picks its job by its handler setting.
+
+- **Deploy code:** `deno task deploy:jobs test`, or
+  `deno task deploy:jobs prod --confirm-prod`. It builds and uploads with the
+  AWS CLI and your local AWS credentials. Terraform does not deploy code: a
+  newly created function holds a placeholder that fails until the first deploy.
+- **Try a build:**
+  `aws lambda invoke --function-name weewoo-study-test-weekly-report out.json`
+  sends the admin a real report email built from the test table.
+- **Settings:** the functions get `ADMIN_EMAIL` and `SES_FROM_EMAIL` from the
+  Parameter Store entries `weewoo-study-admin-email` and
+  `weewoo-study-ses-from-email` (read by Terraform), and use their execution
+  role for AWS access, so they have no access keys.
+- **Failures:** an SES event that can't be handled is retried and, after three
+  attempts, lands in the `weewoo_ops_listener_dlq` queue. Logs are in the
+  `/aws/lambda/<function name>` log groups.
+
 ## Environment variables
 
 This application uses various environment variables for configuration. Create a
@@ -167,9 +202,9 @@ This application uses various environment variables for configuration. Create a
   the usual AWS environment. `DYNAMODB_ENDPOINT` points it at DynamoDB Local.
 - `SEED_ON_EMPTY`: `true` seeds an empty database at startup (never when
   `STAGE=PROD`). Set on both Deploy apps (all contexts; see data-model.md).
-- `STAGE`: Environment identifier. `PROD` enables cron jobs, real Printful
-  orders and order emails. Non-`PROD` values skip production-only cron work, and
-  the Stripe webhook only logs the order it would place (a dry run).
+- `STAGE`: Environment identifier. `PROD` enables real Printful orders and order
+  emails. With any other value the Stripe webhook only logs the order it would
+  place (a dry run).
 - `LOG_LEVEL`: Optional logger level. Defaults to `debug`.
 
 ### Admin API access from a workstation
@@ -192,11 +227,9 @@ This application uses various environment variables for configuration. Create a
 
 ### AWS
 
-- `AWS_ACCESS_KEY_ID`: AWS access key used by SES, SQS, S3, and logging.
+- `AWS_ACCESS_KEY_ID`: AWS access key used by SES, S3, DynamoDB and logging.
 - `AWS_SECRET_ACCESS_KEY`: AWS secret access key paired with the access key ID.
 - `AWS_REGION`: Optional AWS region. Defaults to `us-east-1`.
-- `WEEWOO_OPS_QUEUE_URL`: SQS queue URL used by the cron task that polls
-  operational notifications.
 
 ### Commerce
 

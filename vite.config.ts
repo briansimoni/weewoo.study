@@ -8,7 +8,6 @@ const serverDependencies: Record<string, string> = {
   "@aws-sdk/client-dynamodb": imports["@aws-sdk/client-dynamodb"],
   "@aws-sdk/lib-dynamodb": imports["@aws-sdk/lib-dynamodb"],
   "@aws-sdk/client-s3": imports["@aws-sdk/client-s3"],
-  "@aws-sdk/client-sqs": imports["@aws-sdk/client-sqs"],
   "@aws-sdk/client-ses": imports["@aws-sdk/client-ses"],
   "winston": imports.winston,
   "winston-cloudwatch": imports["winston-cloudwatch"],

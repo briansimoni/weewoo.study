@@ -71,7 +71,13 @@ conversation.** Approval of a PR or a merge to main is not approval to release.
 5. Smoke-test production (read-only; never run E2E against prod):
    `deno task smoke https://weewoo.study`.
 
-6. Report: the release commit, the build ID, the smoke result, and the commits
+6. If the commits going out touch `lambda/`, `lib/jobs.ts`, `lib/ses_events.ts`
+   or anything those import, deploy the background jobs from the release commit
+   (README, "Background jobs"). Do it in a temporary worktree of
+   `origin/production`, not the human's working tree:
+   `deno task deploy:jobs prod --confirm-prod`.
+
+7. Report: the release commit, the build ID, the smoke result, and the commits
    included.
 
 **Rollback.** The fastest way is to roll back to the previous deployment in the
