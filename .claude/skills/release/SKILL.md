@@ -9,10 +9,11 @@ test.weewoo.study runs on Lambda; the `Deploy test` workflow
 (`.github/workflows/deploy-test.yml`) deploys every push to `main`. The
 `Deploy production` workflow (`.github/workflows/deploy-production.yml`) deploys
 weewoo.study whenever the `production` branch moves: the web app and background
-jobs to Lambda and, until weewoo.study's DNS is switched, the app to Deno Deploy
-(the `weewoo-study` app) too. A release merges `main` into `production` with
-`--no-ff`. That gives a release commit whose tree is identical to the tested
-`main`, and the push triggers the workflow.
+jobs to Lambda, which serves the site, and the app to the old Deno Deploy prod
+app (`weewoo-study`), which is kept current as a DNS rollback target. A release
+merges `main` into `production` with `--no-ff`. That gives a release commit
+whose tree is identical to the tested `main`, and the push triggers the
+workflow.
 
 **Only release when the human has explicitly asked for it in this
 conversation.** Approval of a PR or a merge to main is not approval to release.
@@ -76,9 +77,8 @@ conversation.** Approval of a PR or a merge to main is not approval to release.
 6. Report: the release commit, the build ID, the smoke result, and the commits
    included.
 
-**Rollback.** While weewoo.study is on Deno Deploy, the fastest way is to roll
-back to the previous deployment in its console (weewoo-study → Deployments). On
-Lambda, deploy the previous release commit by hand from a temporary worktree of
-it: `deno task deploy:web prod --confirm-prod` (and `deploy:jobs` if the jobs
-changed). Then fix forward on `main` and release again. Don't force-push
-`production`.
+**Rollback.** Deploy the previous release commit to Lambda by hand from a
+temporary worktree of it: `deno task deploy:web prod --confirm-prod` (and
+`deploy:jobs` if the jobs changed). If Lambda itself is the problem, the human
+can point weewoo.study's DNS record back at `alias.deno.net` (Namecheap). Then
+fix forward on `main` and release again. Don't force-push `production`.
