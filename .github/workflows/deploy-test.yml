@@ -1,0 +1,41 @@
+name: Deploy test
+
+# test.weewoo.study runs on Lambda (infra/web.tf). Every push to `main`
+# rebuilds the web app and the background jobs and uploads them to the test
+# functions. CI must already be green for a PR to merge, so this doesn't wait
+# for it, which matches how Deno Deploy used to deploy `main`.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-test
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write # exchange GitHub's OIDC token for the deploy role
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno install
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::502859415194:role/weewoo-study-github-deploy-test
+          aws-region: us-east-1
+      - name: Deploy the web app
+        run: deno task deploy:web test
+      - name: Deploy the background jobs
+        run: deno task deploy:jobs test
+      - name: Smoke test test.weewoo.study
+        run: deno task smoke https://test.weewoo.study
+      - name: Summary
+        run: echo "### Deployed $(git rev-parse --short HEAD) to test.weewoo.study" >> "$GITHUB_STEP_SUMMARY"

@@ -123,6 +123,15 @@ packaged for it. A prop added to a `components/ui/` component also belongs in
 
 ## Deployment
 
+Both sites are moving to Lambda ("Web app on AWS" below). Since 2026-11-15
+test.weewoo.study is served from Lambda and deployed by the `Deploy test`
+workflow (`.github/workflows/deploy-test.yml`) on every push to `main`. The
+`Deploy production` workflow deploys a release to both Lambda and Deno Deploy
+until weewoo.study's DNS is switched. Both workflows use AWS roles that trust
+GitHub's OIDC tokens (`infra/github_deploy.tf`), so no AWS keys are stored in
+GitHub. The rest of this section describes the Deno Deploy apps, which still
+build branch previews for CI.
+
 The test app (`test-weewoo-study`) is linked to GitHub: Deno Deploy builds every
 push, deploys `main` to test.weewoo.study, and builds a preview of every branch.
 The prod app (`weewoo-study`) is **not** linked: the `Deploy production`
@@ -173,10 +182,12 @@ and compiles it with the Deno runtime into a Linux ARM executable named
 `bootstrap` (what Lambda's `provided.al2023` runtime starts), zipped as
 `.lambda/jobs.zip`. Each function picks its job by its handler setting.
 
-- **Deploy code:** `deno task deploy:jobs test`, or
+- **Deploy code:** the deploy workflows do it: `main` goes to test, a release to
+  prod. By hand: `deno task deploy:jobs test`, or
   `deno task deploy:jobs prod --confirm-prod`. It builds and uploads with the
-  AWS CLI and your local AWS credentials. Terraform does not deploy code: a
-  newly created function holds a placeholder that fails until the first deploy.
+  AWS CLI and the AWS credentials in the environment. Terraform does not deploy
+  code: a newly created function holds a placeholder that fails until the first
+  deploy.
 - **Try a build:**
   `aws lambda invoke --function-name weewoo-study-test-weekly-report out.json`
   sends the admin a real report email built from the test table.
@@ -205,8 +216,11 @@ viewer -> CloudFront -> API Gateway (HTTP API) -> Lambda (weewoo-study-<stage>-w
   (`_fresh/client`) embedded, into one Linux ARM `bootstrap` executable
   (`.lambda/web/web.zip`, about 42 MB). `lambda/http.ts` turns each HTTP API
   event into a `Request` for the app and its `Response` back.
-- **Deploy code:** `deno task deploy:web test` (`prod --confirm-prod` once that
-  stage exists). Terraform (`infra/web.tf`) owns everything else.
+- **Deploy code:** `Deploy test` deploys every push to `main`;
+  `Deploy
+  production` deploys each release. By hand:
+  `deno task deploy:web test` or `deno task deploy:web prod --confirm-prod`.
+  Terraform (`infra/web.tf`) owns everything else.
 - **Settings:** the function reads its settings at startup from Parameter Store,
   under `/weewoo-study/<stage>/`. Put them there from an env file kept outside
   the repository: `deno task config:push test <file>` (`--dry-run` lists what
