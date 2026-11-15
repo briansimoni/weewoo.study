@@ -1,3 +1,4 @@
+import { awsCredentials } from "../../../lib/aws_credentials.ts";
 import { AppHandlers } from "../../_middleware.ts";
 import {
   GetObjectCommand,
@@ -11,10 +12,7 @@ const S3_BUCKET_NAME = Deno.env.get("S3_BUCKET_NAME") ||
 const S3_PREFIX_KEY = Deno.env.get("S3_PREFIX_KEY") || "emt-book/";
 const s3Client = new S3Client({
   region: Deno.env.get("AWS_REGION") || "us-east-1",
-  credentials: {
-    accessKeyId: Deno.env.get("AWS_ACCESS_KEY_ID") || "",
-    secretAccessKey: Deno.env.get("AWS_SECRET_ACCESS_KEY") || "",
-  },
+  credentials: awsCredentials(),
 });
 
 export const handler: AppHandlers = {

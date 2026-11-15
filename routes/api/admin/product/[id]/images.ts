@@ -1,3 +1,4 @@
+import { awsCredentials } from "../../../../../lib/aws_credentials.ts";
 import {
   _Object,
   ListObjectsV2Command,
@@ -11,10 +12,7 @@ import { Handlers } from "fresh/compat";
 // S3 client instance
 const s3Client = new S3Client({
   region: Deno.env.get("AWS_REGION") || "us-east-1",
-  credentials: {
-    accessKeyId: Deno.env.get("AWS_ACCESS_KEY_ID") || "",
-    secretAccessKey: Deno.env.get("AWS_SECRET_ACCESS_KEY") || "",
-  },
+  credentials: awsCredentials(),
 });
 
 // Bucket name from environment variable
