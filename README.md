@@ -191,9 +191,10 @@ and compiles it with the Deno runtime into a Linux ARM executable named
 ### Web app on AWS
 
 The web app runs on AWS Lambda behind CloudFront, replacing the Deno Deploy
-apps. **test.weewoo.study is served from here** (since 2026-11-15); weewoo.study
-is still on Deno Deploy until the prod stage exists. Each stage also answers at
-its CloudFront name (`terraform -chdir=infra output web_urls`).
+apps. **test.weewoo.study is served from here** (since 2026-11-15). The prod
+stage exists and has the weewoo.study certificate, but weewoo.study's DNS still
+points at Deno Deploy until the cutover. Each stage also answers at its
+CloudFront name (`terraform -chdir=infra output web_urls`).
 
 ```
 viewer -> CloudFront -> API Gateway (HTTP API) -> Lambda (weewoo-study-<stage>-web)

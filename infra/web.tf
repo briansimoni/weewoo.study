@@ -25,6 +25,7 @@
 locals {
   web_stages = {
     test = { stage = "TEST", domain = "test.weewoo.study" }
+    prod = { stage = "PROD", domain = "weewoo.study" }
   }
 
   # AWS managed CloudFront policies.
