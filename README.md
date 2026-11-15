@@ -190,10 +190,10 @@ and compiles it with the Deno runtime into a Linux ARM executable named
 
 ### Web app on AWS
 
-The web app also runs on AWS Lambda behind CloudFront. This replaces the Deno
-Deploy apps; until DNS is moved, each stage is only reachable at its CloudFront
-name (`terraform -chdir=infra output web_urls`). Only the test stage exists so
-far.
+The web app runs on AWS Lambda behind CloudFront, replacing the Deno Deploy
+apps. **test.weewoo.study is served from here** (since 2026-11-15); weewoo.study
+is still on Deno Deploy until the prod stage exists. Each stage also answers at
+its CloudFront name (`terraform -chdir=infra output web_urls`).
 
 ```
 viewer -> CloudFront -> API Gateway (HTTP API) -> Lambda (weewoo-study-<stage>-web)
@@ -220,6 +220,12 @@ viewer -> CloudFront -> API Gateway (HTTP API) -> Lambda (weewoo-study-<stage>-w
   `x-forwarded-host`, which is what the app sees as its own host (OAuth redirect
   URLs are built from it). A new host name must be added to the Auth0
   application's allowed callback and logout URLs.
+- **Domain:** DNS for weewoo.study is at the registrar, not in Route 53, so a
+  stage's two records are added there by hand: the certificate's validation
+  CNAME (`terraform -chdir=infra output web_certificate_validation`; keep it,
+  renewal needs it) and a CNAME from the domain to the distribution
+  (`output web_dns_targets`). To send test.weewoo.study back to Deno Deploy,
+  point its CNAME at `alias.deno.net`.
 - **Logs:** `/aws/lambda/weewoo-study-<stage>-web`.
 - **Limits:** a response can be at most 6 MB and a request takes at most 30
   seconds.

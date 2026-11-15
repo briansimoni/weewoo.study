@@ -111,12 +111,13 @@ parts of "How we work" and Phase 0 as it lands.
       Deno, compiled into a `provided.al2023` executable with the static files
       embedded (`deno task build:web`), invoked through an API Gateway HTTP API
       that only CloudFront may use (`infra/web.tf`; README, "Web app on AWS").
-      The test stage is up at its CloudFront name and passes the smoke test
-      against `weewoo-study-test` (2026-11-14). Still to do: put the test
-      stage's settings in Parameter Store (`deno task config:push`) and allow
-      its host name in Auth0, so sign-in, checkout and the admin pages can be
-      tested; add the prod stage (`web_stages` in `infra/web.tf`); decide what
-      replaces per-branch previews and their self-seeding databases.
+      **test.weewoo.study is served from Lambda** since 2026-11-15: settings are
+      in Parameter Store, the domain and certificate are on the distribution,
+      and DNS points at CloudFront. Smoke test and sign-in pass. It is deployed
+      by hand (`deno task deploy:web test`) until CI does it. Still to do: check
+      checkout and the admin pages there; add the prod stage (`web_stages` in
+      `infra/web.tf`); decide what replaces per-branch previews and their
+      self-seeding databases.
 - [x] **Cron.** The two `Deno.cron` jobs left the web app (2026-11-14, PR #32,
       release `34a7ef7`). Both are Lambda functions built from `lambda/main.ts`
       (Deno compiled to a `provided.al2023` executable, which also answers "Deno
