@@ -4,10 +4,10 @@ name: Deploy production
 # `release` skill) merges `main` into `production` with --no-ff, so the
 # deployed tree is exactly what was tested on test.weewoo.study.
 #
-# The app is moving from Deno Deploy to Lambda (infra/web.tf). Until
-# weewoo.study's DNS is switched, a release deploys to both, so whichever one
-# serves the domain runs the released code. After the switch, delete the Deno
-# Deploy step and the DENO_DEPLOY_TOKEN secret.
+# weewoo.study is served from Lambda (infra/web.tf) since 2026-11-15. A release
+# still deploys to the old Deno Deploy prod app too, so pointing DNS back at it
+# is a working rollback. When the Deploy apps are retired, delete that step
+# and the DENO_DEPLOY_TOKEN secret.
 on:
   push:
     branches: [production]

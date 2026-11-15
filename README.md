@@ -123,14 +123,15 @@ packaged for it. A prop added to a `components/ui/` component also belongs in
 
 ## Deployment
 
-Both sites are moving to Lambda ("Web app on AWS" below). Since 2026-11-15
-test.weewoo.study is served from Lambda and deployed by the `Deploy test`
-workflow (`.github/workflows/deploy-test.yml`) on every push to `main`. The
-`Deploy production` workflow deploys a release to both Lambda and Deno Deploy
-until weewoo.study's DNS is switched. Both workflows use AWS roles that trust
-GitHub's OIDC tokens (`infra/github_deploy.tf`), so no AWS keys are stored in
-GitHub. The rest of this section describes the Deno Deploy apps, which still
-build branch previews for CI.
+Both sites are served from Lambda since 2026-11-15 ("Web app on AWS" below). The
+`Deploy test` workflow (`.github/workflows/deploy-test.yml`) deploys every push
+to `main` to test.weewoo.study, and the `Deploy production` workflow deploys
+each release to weewoo.study. A release still deploys to the Deno Deploy prod
+app as well, so it stays current as a DNS rollback target until the Deploy apps
+are retired. Both workflows use AWS roles that trust GitHub's OIDC tokens
+(`infra/github_deploy.tf`), so no AWS keys are stored in GitHub. The rest of
+this section describes the Deno Deploy apps, which still build branch previews
+for CI.
 
 The test app (`test-weewoo-study`) is linked to GitHub: Deno Deploy builds every
 push, deploys `main` to test.weewoo.study, and builds a preview of every branch.
@@ -202,10 +203,10 @@ and compiles it with the Deno runtime into a Linux ARM executable named
 ### Web app on AWS
 
 The web app runs on AWS Lambda behind CloudFront, replacing the Deno Deploy
-apps. **test.weewoo.study is served from here** (since 2026-11-15). The prod
-stage exists and has the weewoo.study certificate, but weewoo.study's DNS still
-points at Deno Deploy until the cutover. Each stage also answers at its
-CloudFront name (`terraform -chdir=infra output web_urls`).
+apps. **Both test.weewoo.study and weewoo.study are served from here** (since
+2026-11-15). To send a site back to Deno Deploy, point its DNS record at
+`alias.deno.net` again. Each stage also answers at its CloudFront name
+(`terraform -chdir=infra output web_urls`).
 
 ```
 viewer -> CloudFront -> API Gateway (HTTP API) -> Lambda (weewoo-study-<stage>-web)

@@ -117,8 +117,12 @@ parts of "How we work" and Phase 0 as it lands.
       stage** is up (2026-11-15): settings in Parameter Store, the weewoo.study
       certificate on its distribution, and requests for weewoo.study sent
       straight to it pass the smoke test with the same data as the live site.
-      DNS still points at Deno Deploy. Still to do: switch weewoo.study's DNS;
+      **weewoo.study is served from Lambda** since 2026-11-15 (DNS switched;
+      smoke test passes, real traffic with no errors but 404s). Still to do:
       decide what replaces per-branch previews and their self-seeding databases.
+      Known Lambda limits, admin-only: request bodies over about 4.5 MB (product
+      image zips, database import) and requests over 30 s (large AI question
+      batches) fail.
 - [x] **Cron.** The two `Deno.cron` jobs left the web app (2026-11-14, PR #32,
       release `34a7ef7`). Both are Lambda functions built from `lambda/main.ts`
       (Deno compiled to a `provided.al2023` executable, which also answers "Deno
@@ -130,11 +134,12 @@ parts of "How we work" and Phase 0 as it lands.
 - [ ] **CI and release.** Deploys run from GitHub Actions with OIDC roles
       (`infra/github_deploy.tf`, no stored AWS keys): `Deploy test` on every
       push to `main`, and `Deploy production` on a release, which also deploys
-      to Deno Deploy until the DNS switch. The release skill uses them. Still to
-      do: drop the Deno Deploy step after the switch, and replace `preview-e2e`
-      and the `verify-preview` skill.
+      to the old Deno Deploy prod app as a rollback target. The release skill
+      uses them. Still to do: drop the Deno Deploy step when the apps are
+      retired, and replace `preview-e2e` and the `verify-preview` skill.
 - [ ] **Cut over DNS and retire the Deploy apps**, the unused KV-backup bucket
-      (`infra/kv-backup.tf`) included.
+      (`infra/kv-backup.tf`) included. DNS for both sites points at CloudFront
+      since 2026-11-15; the Deploy apps still run as rollback targets.
 
 ---
 

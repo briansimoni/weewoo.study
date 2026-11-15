@@ -12,11 +12,13 @@ resource "aws_cloudwatch_log_group" "test" {
   retention_in_days = 7 # Lower retention for test environment to save costs
 }
 
-# CloudWatch Log Metric Filter for Error Logs (production)
+# CloudWatch Log Metric Filter for Error Logs (production). weewoo.study runs
+# on Lambda, whose function logs JSON lines to its own log group (web.tf).
+# Not-found pages are logged at error level too, so they're left out.
 resource "aws_cloudwatch_log_metric_filter" "error_logs_production" {
   name           = "ErrorLogsProduction"
-  pattern        = "ERROR"
-  log_group_name = aws_cloudwatch_log_group.production.name
+  pattern        = "{ $.level = \"error\" && ($.error.status != 404 || $.error.status NOT EXISTS) }"
+  log_group_name = aws_cloudwatch_log_group.web["prod"].name
 
   metric_transformation {
     name      = "ProductionErrorCount"

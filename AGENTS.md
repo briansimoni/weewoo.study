@@ -67,11 +67,12 @@ architecture map and environment variables.
 - test.weewoo.study runs on Lambda behind CloudFront (README, "Web app on AWS").
   Merging to `main` deploys it through the `Deploy test` workflow (web app and
   background jobs). Deno Deploy still builds branch previews, which CI uses.
-  weewoo.study is deployed only by the `Deploy production` workflow when
-  `production` moves; until its DNS is switched, that deploys to both Lambda and
-  Deno Deploy. Do not merge or push to `main` without the human's explicit
-  go-ahead, and release to prod only with the `release` skill when the human
-  asks for a release. Never push to `production` any other way.
+  weewoo.study also runs on Lambda and is deployed only by the
+  `Deploy production` workflow when `production` moves (it also keeps the old
+  Deno Deploy prod app current, as a rollback target). Do not merge or push to
+  `main` without the human's explicit go-ahead, and release to prod only with
+  the `release` skill when the human asks for a release. Never push to
+  `production` any other way.
 - CI (`.github/workflows/ci.yml`) must be green before merging: `verify`, `e2e`
   (local) and `preview-e2e` (against the branch preview).
 
