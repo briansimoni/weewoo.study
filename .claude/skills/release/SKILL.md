@@ -5,13 +5,14 @@ description: Release to production (weewoo.study) by promoting the main commit t
 
 # Release to weewoo.study
 
-test.weewoo.study runs on Lambda and is deployed by hand from `main`
-(`deno task deploy:web test`). Production (the `weewoo-study` app) is **not**
-linked to GitHub. The `Deploy production` workflow
-(`.github/workflows/deploy-production.yml`) deploys it with the Deno Deploy CLI
-whenever the `production` branch moves. A release merges `main` into
-`production` with `--no-ff`. That gives a release commit whose tree is identical
-to the tested `main`, and the push triggers the workflow.
+test.weewoo.study runs on Lambda; the `Deploy test` workflow
+(`.github/workflows/deploy-test.yml`) deploys every push to `main`. The
+`Deploy production` workflow (`.github/workflows/deploy-production.yml`) deploys
+weewoo.study whenever the `production` branch moves: the web app and background
+jobs to Lambda and, until weewoo.study's DNS is switched, the app to Deno Deploy
+(the `weewoo-study` app) too. A release merges `main` into `production` with
+`--no-ff`. That gives a release commit whose tree is identical to the tested
+`main`, and the push triggers the workflow.
 
 **Only release when the human has explicitly asked for it in this
 conversation.** Approval of a PR or a merge to main is not approval to release.
@@ -30,9 +31,9 @@ conversation.** Approval of a PR or a merge to main is not approval to release.
      `gh run list --branch main --workflow CI -L 1 --json headSha,conclusion`
      (the `headSha` must equal `git rev-parse origin/main`, and the conclusion
      must be `success`).
-   - test.weewoo.study runs it: nothing records which commit the test function
-     runs, so from a checkout at that SHA run `deno task deploy:web test`, then
-     `deno task smoke https://test.weewoo.study`.
+   - test.weewoo.study runs it: the latest `Deploy test` run is for that SHA and
+     succeeded:
+     `gh run list --workflow "Deploy test" --branch main -L 1 --json headSha,conclusion`.
    - Tell the human the SHA and the commit list from step 1, and ask them to
      confirm they tested it on test.weewoo.study. Wait for a yes.
 
@@ -53,7 +54,8 @@ conversation.** Approval of a PR or a merge to main is not approval to release.
    Stop and tell the human; don't resolve them yourself.
 
 4. Watch the `Deploy production` workflow run for the release commit. It deploys
-   with `--prod` and then smoke-tests weewoo.study:
+   to Lambda and smoke-tests the prod distribution, then deploys to Deno Deploy
+   with `--prod` and smoke-tests weewoo.study:
 
    ```sh
    gh run list --workflow "Deploy production" -L 1 --json databaseId,headSha,status
@@ -71,15 +73,12 @@ conversation.** Approval of a PR or a merge to main is not approval to release.
 5. Smoke-test production (read-only; never run E2E against prod):
    `deno task smoke https://weewoo.study`.
 
-6. If the commits going out touch `lambda/`, `lib/jobs.ts`, `lib/ses_events.ts`
-   or anything those import, deploy the background jobs from the release commit
-   (README, "Background jobs"). Do it in a temporary worktree of
-   `origin/production`, not the human's working tree:
-   `deno task deploy:jobs prod --confirm-prod`.
-
-7. Report: the release commit, the build ID, the smoke result, and the commits
+6. Report: the release commit, the build ID, the smoke result, and the commits
    included.
 
-**Rollback.** The fastest way is to roll back to the previous deployment in the
-Deno Deploy console (weewoo-study → Deployments). Then fix forward on `main` and
-release again. Don't force-push `production`.
+**Rollback.** While weewoo.study is on Deno Deploy, the fastest way is to roll
+back to the previous deployment in its console (weewoo-study → Deployments). On
+Lambda, deploy the previous release commit by hand from a temporary worktree of
+it: `deno task deploy:web prod --confirm-prod` (and `deploy:jobs` if the jobs
+changed). Then fix forward on `main` and release again. Don't force-push
+`production`.

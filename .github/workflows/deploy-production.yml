@@ -1,9 +1,13 @@
 name: Deploy production
 
-# weewoo.study (Deno Deploy app `weewoo-study`) is not linked to GitHub: it is
-# deployed only from here, when the `production` branch moves. A release
-# (the `release` skill) merges `main` into `production` with --no-ff, so the
+# Deploys weewoo.study when the `production` branch moves. A release (the
+# `release` skill) merges `main` into `production` with --no-ff, so the
 # deployed tree is exactly what was tested on test.weewoo.study.
+#
+# The app is moving from Deno Deploy to Lambda (infra/web.tf). Until
+# weewoo.study's DNS is switched, a release deploys to both, so whichever one
+# serves the domain runs the released code. After the switch, delete the Deno
+# Deploy step and the DENO_DEPLOY_TOKEN secret.
 on:
   push:
     branches: [production]
@@ -15,32 +19,50 @@ concurrency:
 
 permissions:
   contents: read
+  id-token: write # exchange GitHub's OIDC token for the deploy role
 
 env:
   DEPLOY_CLI: jsr:@deno/deploy@0.0.9908
+  # The prod distribution's own name: reaches the Lambda app whatever DNS says.
+  LAMBDA_URL: https://d22rx91bf2rti1.cloudfront.net
 
 jobs:
   deploy:
     name: deploy
     runs-on: ubuntu-latest
+    # The prod deploy role only trusts jobs in this environment.
     environment: production
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-      - name: Deploy to production
+      - run: deno install
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::502859415194:role/weewoo-study-github-deploy-prod
+          aws-region: us-east-1
+      - name: Deploy the web app to Lambda
+        run: deno task deploy:web prod --confirm-prod
+      - name: Deploy the background jobs
+        run: deno task deploy:jobs prod --confirm-prod
+      - name: Smoke test the Lambda app
+        run: deno task smoke "$LAMBDA_URL"
+      - name: Deploy to Deno Deploy
         env:
           DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
         # Run the CLI outside the repo and pass the repo as root-path: run
         # inside it, the CLI writes its own dependencies into deno.lock, which
-        # would be uploaded with the source.
+        # would be uploaded with the source. The Lambda build leaves .lambda/
+        # and _fresh/ behind, so upload a clean copy of the commit instead.
         run: |
+          git -C "$GITHUB_WORKSPACE" worktree add --detach "$RUNNER_TEMP/src" HEAD
           cd "$RUNNER_TEMP"
-          deno run -A "$DEPLOY_CLI" "$GITHUB_WORKSPACE" \
+          deno run -A "$DEPLOY_CLI" "$RUNNER_TEMP/src" \
             --org briansimoni --app weewoo-study --prod \
             --json --non-interactive | tee deploy.json
-          echo "### Deployed $(git -C "$GITHUB_WORKSPACE" rev-parse --short HEAD)" >> "$GITHUB_STEP_SUMMARY"
           cat deploy.json >> "$GITHUB_STEP_SUMMARY"
       - name: Smoke test weewoo.study
         run: deno task smoke https://weewoo.study
+      - name: Summary
+        run: echo "### Deployed $(git rev-parse --short HEAD) to weewoo.study" >> "$GITHUB_STEP_SUMMARY"

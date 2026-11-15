@@ -64,15 +64,14 @@ architecture map and environment variables.
   with `/auth/test-login`.
 - Local test data: `deno task seed`, then run with `KV_PATH=.kv/seed.sqlite3`.
   Never seed the developer's default local database or any production one.
-- test.weewoo.study runs on Lambda behind CloudFront (README, "Web app on AWS")
-  and is not updated by merging: after a merge to `main`, run
-  `deno task deploy:web test` from an up-to-date `main` checkout. (Deno Deploy
-  still builds `main` and branch previews, which CI uses, but the domain no
-  longer points there.) weewoo.study is deployed only by the `Deploy production`
-  workflow when `production` moves (the prod app isn't linked to GitHub). Do not
-  merge or push to `main` without the human's explicit go-ahead, and release to
-  prod only with the `release` skill when the human asks for a release. Never
-  push to `production` any other way.
+- test.weewoo.study runs on Lambda behind CloudFront (README, "Web app on AWS").
+  Merging to `main` deploys it through the `Deploy test` workflow (web app and
+  background jobs). Deno Deploy still builds branch previews, which CI uses.
+  weewoo.study is deployed only by the `Deploy production` workflow when
+  `production` moves; until its DNS is switched, that deploys to both Lambda and
+  Deno Deploy. Do not merge or push to `main` without the human's explicit
+  go-ahead, and release to prod only with the `release` skill when the human
+  asks for a release. Never push to `production` any other way.
 - CI (`.github/workflows/ci.yml`) must be green before merging: `verify`, `e2e`
   (local) and `preview-e2e` (against the branch preview).
 

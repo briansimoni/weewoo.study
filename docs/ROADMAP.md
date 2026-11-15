@@ -113,14 +113,12 @@ parts of "How we work" and Phase 0 as it lands.
       that only CloudFront may use (`infra/web.tf`; README, "Web app on AWS").
       **test.weewoo.study is served from Lambda** since 2026-11-15: settings are
       in Parameter Store, the domain and certificate are on the distribution,
-      and DNS points at CloudFront. Smoke test and sign-in pass. It is deployed
-      by hand (`deno task deploy:web test`) until CI does it. The **prod stage**
-      is up (2026-11-15): settings in Parameter Store, the weewoo.study
+      and DNS points at CloudFront. Smoke test and sign-in pass. The **prod
+      stage** is up (2026-11-15): settings in Parameter Store, the weewoo.study
       certificate on its distribution, and requests for weewoo.study sent
       straight to it pass the smoke test with the same data as the live site.
-      DNS still points at Deno Deploy. Still to do: deploy both stages from CI
-      and releases; switch weewoo.study's DNS; decide what replaces per-branch
-      previews and their self-seeding databases.
+      DNS still points at Deno Deploy. Still to do: switch weewoo.study's DNS;
+      decide what replaces per-branch previews and their self-seeding databases.
 - [x] **Cron.** The two `Deno.cron` jobs left the web app (2026-11-14, PR #32,
       release `34a7ef7`). Both are Lambda functions built from `lambda/main.ts`
       (Deno compiled to a `provided.al2023` executable, which also answers "Deno
@@ -129,8 +127,12 @@ parts of "How we work" and Phase 0 as it lands.
       CloudWatch Events schedule. The 15-minute SQS poll is gone: the queue
       invokes the `ses-events` function for each message. The app's IAM user no
       longer has SQS access.
-- [ ] **CI and release.** Replace the Deno Deploy steps (`preview-e2e`,
-      `Deploy production`, the `verify-preview` and `release` skills).
+- [ ] **CI and release.** Deploys run from GitHub Actions with OIDC roles
+      (`infra/github_deploy.tf`, no stored AWS keys): `Deploy test` on every
+      push to `main`, and `Deploy production` on a release, which also deploys
+      to Deno Deploy until the DNS switch. The release skill uses them. Still to
+      do: drop the Deno Deploy step after the switch, and replace `preview-e2e`
+      and the `verify-preview` skill.
 - [ ] **Cut over DNS and retire the Deploy apps**, the unused KV-backup bucket
       (`infra/kv-backup.tf`) included.
 
