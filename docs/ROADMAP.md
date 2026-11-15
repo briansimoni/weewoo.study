@@ -114,10 +114,13 @@ parts of "How we work" and Phase 0 as it lands.
       **test.weewoo.study is served from Lambda** since 2026-11-15: settings are
       in Parameter Store, the domain and certificate are on the distribution,
       and DNS points at CloudFront. Smoke test and sign-in pass. It is deployed
-      by hand (`deno task deploy:web test`) until CI does it. Still to do: check
-      checkout and the admin pages there; add the prod stage (`web_stages` in
-      `infra/web.tf`); decide what replaces per-branch previews and their
-      self-seeding databases.
+      by hand (`deno task deploy:web test`) until CI does it. The **prod stage**
+      is up (2026-11-15): settings in Parameter Store, the weewoo.study
+      certificate on its distribution, and requests for weewoo.study sent
+      straight to it pass the smoke test with the same data as the live site.
+      DNS still points at Deno Deploy. Still to do: deploy both stages from CI
+      and releases; switch weewoo.study's DNS; decide what replaces per-branch
+      previews and their self-seeding databases.
 - [x] **Cron.** The two `Deno.cron` jobs left the web app (2026-11-14, PR #32,
       release `34a7ef7`). Both are Lambda functions built from `lambda/main.ts`
       (Deno compiled to a `provided.al2023` executable, which also answers "Deno
