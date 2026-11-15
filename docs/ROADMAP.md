@@ -107,9 +107,16 @@ parts of "How we work" and Phase 0 as it lands.
       DynamoDB** since release `f999ffd` (`DYNAMODB_TABLE` on the prod app,
       Production context). Neither app writes to its old KV database any more.
       `deno task console` opens the table in the AWS console.
-- [ ] **Compute.** Run the Fresh server on Lambda behind CloudFront. Decide Deno
-      or Node on Lambda, and what replaces per-branch previews and their
-      self-seeding databases.
+- [ ] **Compute.** Run the Fresh server on Lambda behind CloudFront. Decided:
+      Deno, compiled into a `provided.al2023` executable with the static files
+      embedded (`deno task build:web`), invoked through an API Gateway HTTP API
+      that only CloudFront may use (`infra/web.tf`; README, "Web app on AWS").
+      The test stage is up at its CloudFront name and passes the smoke test
+      against `weewoo-study-test` (2026-11-14). Still to do: put the test
+      stage's settings in Parameter Store (`deno task config:push`) and allow
+      its host name in Auth0, so sign-in, checkout and the admin pages can be
+      tested; add the prod stage (`web_stages` in `infra/web.tf`); decide what
+      replaces per-branch previews and their self-seeding databases.
 - [x] **Cron.** The two `Deno.cron` jobs left the web app (2026-11-14, PR #32,
       release `34a7ef7`). Both are Lambda functions built from `lambda/main.ts`
       (Deno compiled to a `provided.al2023` executable, which also answers "Deno

@@ -42,6 +42,9 @@ payments, or email.
 | `deno task console`     | Open the AWS console in your browser (`prod`, `logs` optional)  |
 | `deno task build:jobs`  | Build the background-job Lambda package (`.lambda/jobs.zip`)    |
 | `deno task deploy:jobs` | Build and upload it: `test`, or `prod --confirm-prod`           |
+| `deno task build:web`   | Build the web app's Lambda package (`.lambda/web/web.zip`)      |
+| `deno task deploy:web`  | Build and upload it: `test` (see "Web app on AWS")              |
+| `deno task config:push` | Copy an env file's settings to Parameter Store for a stage      |
 | `deno task e2e`         | Build, seed a fresh `.kv/e2e.sqlite3`, run Playwright on :8123  |
 | `deno task e2e:remote`  | Playwright against `BASE_URL` (e.g. a branch preview)           |
 | `deno task e2e:install` | One-time: download the Chromium build Playwright uses           |
@@ -95,7 +98,7 @@ components/        Server-rendered components; ui/ holds the shared primitives
                    (Button, Card, Stat, Modal, Page...), see docs/ui-audit.md
 lib/               Business logic: *_store.ts wrap Deno KV (one store per entity),
                    plus email, logging, background jobs, the Printful client
-lambda/            Background jobs as Lambda functions (see "Background jobs")
+lambda/            Lambda entry points: the web app and the background jobs
 scripts/           One-off and admin scripts (products, Stripe, question generation)
 infra/             Terraform for the AWS resources
 main.ts            App entry: middleware, database selection, seeding
@@ -184,6 +187,42 @@ and compiles it with the Deno runtime into a Linux ARM executable named
 - **Failures:** an SES event that can't be handled is retried and, after three
   attempts, lands in the `weewoo_ops_listener_dlq` queue. Logs are in the
   `/aws/lambda/<function name>` log groups.
+
+### Web app on AWS
+
+The web app also runs on AWS Lambda behind CloudFront. This replaces the Deno
+Deploy apps; until DNS is moved, each stage is only reachable at its CloudFront
+name (`terraform -chdir=infra output web_urls`). Only the test stage exists so
+far.
+
+```
+viewer -> CloudFront -> API Gateway (HTTP API) -> Lambda (weewoo-study-<stage>-web)
+```
+
+- **Package:** `deno task build:web` runs the production build, bundles it with
+  `lambda/web.ts` and compiles it, with the Deno runtime and the static files
+  (`_fresh/client`) embedded, into one Linux ARM `bootstrap` executable
+  (`.lambda/web/web.zip`, about 42 MB). `lambda/http.ts` turns each HTTP API
+  event into a `Request` for the app and its `Response` back.
+- **Deploy code:** `deno task deploy:web test` (`prod --confirm-prod` once that
+  stage exists). Terraform (`infra/web.tf`) owns everything else.
+- **Settings:** the function reads its settings at startup from Parameter Store,
+  under `/weewoo-study/<stage>/`. Put them there from an env file kept outside
+  the repository: `deno task config:push test <file>` (`--dry-run` lists what
+  would be written). AWS keys are not needed: the function uses its execution
+  role. `STAGE` and `DYNAMODB_TABLE` are set by Terraform. Deploy again after
+  changing settings.
+- **Caching:** CloudFront caches `/assets/*` (hashed file names) and passes
+  every other request to the function uncached.
+- **Direct access:** the HTTP API's own URL is public, so CloudFront sends a
+  secret `x-origin-secret` header and the function answers 403 without it.
+- **Host name:** a CloudFront Function copies the viewer's `Host` into
+  `x-forwarded-host`, which is what the app sees as its own host (OAuth redirect
+  URLs are built from it). A new host name must be added to the Auth0
+  application's allowed callback and logout URLs.
+- **Logs:** `/aws/lambda/weewoo-study-<stage>-web`.
+- **Limits:** a response can be at most 6 MB and a request takes at most 30
+  seconds.
 
 ## Environment variables
 
