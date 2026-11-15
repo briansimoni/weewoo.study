@@ -5,13 +5,13 @@ description: Release to production (weewoo.study) by promoting the main commit t
 
 # Release to weewoo.study
 
-`main` deploys test.weewoo.study through Deno Deploy's GitHub integration.
-Production (the `weewoo-study` app) is **not** linked to GitHub. The
-`Deploy production` workflow (`.github/workflows/deploy-production.yml`) deploys
-it with the Deno Deploy CLI whenever the `production` branch moves. A release
-merges `main` into `production` with `--no-ff`. That gives a release commit
-whose tree is identical to the tested `main`, and the push triggers the
-workflow.
+test.weewoo.study runs on Lambda and is deployed by hand from `main`
+(`deno task deploy:web test`). Production (the `weewoo-study` app) is **not**
+linked to GitHub. The `Deploy production` workflow
+(`.github/workflows/deploy-production.yml`) deploys it with the Deno Deploy CLI
+whenever the `production` branch moves. A release merges `main` into
+`production` with `--no-ff`. That gives a release commit whose tree is identical
+to the tested `main`, and the push triggers the workflow.
 
 **Only release when the human has explicitly asked for it in this
 conversation.** Approval of a PR or a merge to main is not approval to release.
@@ -30,9 +30,9 @@ conversation.** Approval of a PR or a merge to main is not approval to release.
      `gh run list --branch main --workflow CI -L 1 --json headSha,conclusion`
      (the `headSha` must equal `git rev-parse origin/main`, and the conclusion
      must be `success`).
-   - test.weewoo.study runs it: the `deploy/briansimoni/test-weewoo-study`
-     status for that SHA is `success`
-     (`gh api repos/briansimoni/weewoo.study/commits/<sha>/statuses`).
+   - test.weewoo.study runs it: nothing records which commit the test function
+     runs, so from a checkout at that SHA run `deno task deploy:web test`, then
+     `deno task smoke https://test.weewoo.study`.
    - Tell the human the SHA and the commit list from step 1, and ask them to
      confirm they tested it on test.weewoo.study. Wait for a yes.
 

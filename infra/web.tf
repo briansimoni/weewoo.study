@@ -15,11 +15,16 @@
 #   Parameter Store, under /weewoo-study/<stage>/ (`deno task config:push`).
 #
 # Only the stages listed in web_stages exist. Each is reachable at its
-# distribution's cloudfront.net name until DNS is pointed at it.
+# distribution's cloudfront.net name (output web_urls) as well as its domain.
+#
+# DNS for weewoo.study is not in Route 53, so two records per stage are added
+# by hand at the registrar: the certificate's validation record (output
+# web_certificate_validation) before the distribution can use the domain, and
+# then a CNAME from the domain to the distribution (output web_dns_targets).
 
 locals {
   web_stages = {
-    test = { stage = "TEST" }
+    test = { stage = "TEST", domain = "test.weewoo.study" }
   }
 
   # AWS managed CloudFront policies.
@@ -182,6 +187,26 @@ resource "aws_lambda_permission" "web_api" {
   source_arn    = "${aws_apigatewayv2_api.web[each.key].execution_arn}/*/*"
 }
 
+# --- Certificate ---
+
+# CloudFront only takes certificates from us-east-1, the provider's region.
+resource "aws_acm_certificate" "web" {
+  for_each          = local.web_stages
+  domain_name       = each.value.domain
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Waits until the validation record exists in DNS and the certificate is
+# issued. The record itself is created by hand (see the top of this file).
+resource "aws_acm_certificate_validation" "web" {
+  for_each        = local.web_stages
+  certificate_arn = aws_acm_certificate.web[each.key].arn
+}
+
 # --- CloudFront ---
 
 # The origin can't be sent the viewer's Host header (API Gateway routes on its
@@ -208,6 +233,7 @@ resource "aws_cloudfront_distribution" "web" {
   http_version    = "http2and3"
   price_class     = "PriceClass_100"
   comment         = "weewoo.study web app (${each.key})"
+  aliases         = [each.value.domain]
 
   origin {
     origin_id   = "web"
@@ -266,11 +292,31 @@ resource "aws_cloudfront_distribution" "web" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = aws_acm_certificate_validation.web[each.key].certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 }
 
 output "web_urls" {
   description = "Where each stage's web app on Lambda is reachable"
   value       = { for stage, dist in aws_cloudfront_distribution.web : stage => "https://${dist.domain_name}" }
+}
+
+output "web_certificate_validation" {
+  description = "CNAME records to add at the registrar so each stage's certificate is issued"
+  value = {
+    for stage, cert in aws_acm_certificate.web : stage => [
+      for option in cert.domain_validation_options : {
+        name  = option.resource_record_name
+        type  = option.resource_record_type
+        value = option.resource_record_value
+      }
+    ]
+  }
+}
+
+output "web_dns_targets" {
+  description = "CNAME target for each stage's domain"
+  value       = { for stage, dist in aws_cloudfront_distribution.web : local.web_stages[stage].domain => dist.domain_name }
 }
